@@ -100,7 +100,7 @@ namespace LunyScript.Blocks
 		/// Returns the variable value as a specific struct type. Subclasses can override to avoid boxing.
 		/// Default implementation uses GetValue() and converts via Unsafe.As (JIT-eliminated typeof checks).
 		/// </summary>
-		protected virtual T GetValue<T>(IScriptRuntimeContext runtimeContext) where T : struct
+		internal virtual T GetValue<T>(IScriptRuntimeContext runtimeContext) where T : struct
 		{
 			var v = GetValue(runtimeContext);
 			if (typeof(T) == typeof(Double))

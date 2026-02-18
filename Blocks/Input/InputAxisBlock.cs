@@ -19,7 +19,7 @@ namespace LunyScript.Blocks
 		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
 			Variable.FromVector2(LunyEngine.Instance.Input.GetAxisValue(_actionName));
 
-		protected override T GetValue<T>(IScriptRuntimeContext runtimeContext)
+		internal override T GetValue<T>(IScriptRuntimeContext runtimeContext)
 		{
 			if (typeof(T) == typeof(LunyVector2))
 			{
