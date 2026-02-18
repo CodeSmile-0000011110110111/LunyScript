@@ -18,9 +18,9 @@ namespace LunyScript.Blocks
 		private NotBlock(ScriptConditionBlock condition) => _condition = condition;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
+		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => _condition == null || !_condition.Evaluate(runtimeContext);
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => _condition == null || !_condition.Evaluate(runtimeContext);
 	}
 }

@@ -68,7 +68,7 @@ namespace LunyScript.Blocks.Coroutines
 		public ScriptActionBlock Pause() => new CoroutinePauseBlock(_coroutine);
 		public ScriptActionBlock Resume() => new CoroutineResumeBlock(_coroutine);
 
-		public override void Execute(IScriptRuntimeContext runtimeContext) =>
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
 			throw new NotImplementedException($"{nameof(CoroutineBlock)} cannot be used in a block sequence");
 	}
 

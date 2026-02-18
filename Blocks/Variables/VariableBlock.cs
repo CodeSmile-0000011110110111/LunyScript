@@ -92,15 +92,15 @@ namespace LunyScript.Blocks
 		// Unary Operators
 		public static VariableBlock operator !(VariableBlock operand) => NotBlock.Create(operand);
 
-		public override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue(runtimeContext).AsBoolean();
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue(runtimeContext).AsBoolean();
 
-		public abstract Variable GetValue(IScriptRuntimeContext runtimeContext);
+		internal abstract Variable GetValue(IScriptRuntimeContext runtimeContext);
 
 		/// <summary>
 		/// Returns the variable value as a specific struct type. Subclasses can override to avoid boxing.
 		/// Default implementation uses GetValue() and converts via Unsafe.As (JIT-eliminated typeof checks).
 		/// </summary>
-		public virtual T GetValue<T>(IScriptRuntimeContext runtimeContext) where T : struct
+		protected virtual T GetValue<T>(IScriptRuntimeContext runtimeContext) where T : struct
 		{
 			var v = GetValue(runtimeContext);
 			if (typeof(T) == typeof(Double))

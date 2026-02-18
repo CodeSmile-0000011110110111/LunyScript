@@ -17,7 +17,7 @@ namespace LunyScript.Blocks
 		private DebugBreakBlock() {}
 		private DebugBreakBlock(String message = null) => _message = message;
 
-		public override void Execute(IScriptRuntimeContext runtimeContext) => DoBreak(runtimeContext);
+		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) => DoBreak(runtimeContext);
 
 		[Conditional("DEBUG")] [Conditional("LUNYSCRIPT_DEBUG")]
 		private void DoBreak(IScriptRuntimeContext runtimeContext)

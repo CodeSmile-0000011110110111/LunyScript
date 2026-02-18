@@ -5,6 +5,6 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class ScriptActionBlock : ScriptBlock
 	{
-		public abstract void Execute(IScriptRuntimeContext runtimeContext);
+		protected internal abstract void Execute(IScriptRuntimeContext runtimeContext);
 	}
 }

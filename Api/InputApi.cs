@@ -34,12 +34,12 @@ namespace LunyScript.Api
 		/// <summary>
 		/// True only on the frame the button was pressed (transition).
 		/// </summary>
-		public ScriptConditionBlock IsJustPressed => InputIsJustPressedBlock.Create(_actionName);
+		public VariableBlock IsJustPressed => InputIsJustPressedBlock.Create(_actionName);
 
 		/// <summary>
 		/// True while the button is held down.
 		/// </summary>
-		public ScriptConditionBlock IsPressed => InputIsPressedBlock.Create(_actionName);
+		public VariableBlock IsPressed => InputIsPressedBlock.Create(_actionName);
 
 		/// <summary>
 		/// Analog trigger value (0.0–1.0).

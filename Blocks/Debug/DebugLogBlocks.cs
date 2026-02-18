@@ -20,7 +20,7 @@ namespace LunyScript.Blocks
 			_logLevel = logLevel;
 		}
 
-		public override void Execute(IScriptRuntimeContext runtimeContext) => DoLog(runtimeContext);
+		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) => DoLog(runtimeContext);
 
 		[Conditional("DEBUG")] [Conditional("LUNYSCRIPT_DEBUG")]
 		private void DoLog(IScriptRuntimeContext runtimeContext)

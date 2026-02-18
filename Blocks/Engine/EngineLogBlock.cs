@@ -14,6 +14,6 @@ namespace LunyScript.Blocks
 
 		private EngineLogBlock(String message) => _message = message ?? throw new ArgumentNullException(nameof(message));
 
-		public override void Execute(IScriptRuntimeContext runtimeContext) => LunyLogger.LogInfo(_message, this);
+		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) => LunyLogger.LogInfo(_message, this);
 	}
 }

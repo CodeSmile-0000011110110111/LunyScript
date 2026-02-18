@@ -8,7 +8,7 @@ namespace LunyScript.Blocks
 
 		private ObjectDisableSelfBlock() {}
 
-		public override void Execute(IScriptRuntimeContext runtimeContext) => runtimeContext.LunyObject.IsEnabled = false;
+		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) => runtimeContext.LunyObject.IsEnabled = false;
 	}
 
 	internal sealed class ObjectDisableTargetBlock : ScriptActionBlock
@@ -19,7 +19,7 @@ namespace LunyScript.Blocks
 
 		private ObjectDisableTargetBlock(String name) => _name = name;
 
-		public override void Execute(IScriptRuntimeContext runtimeContext) =>
+		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) =>
 			throw new NotImplementedException($"{nameof(ObjectDisableTargetBlock)} with name '{_name}' not implemented");
 	}
 }

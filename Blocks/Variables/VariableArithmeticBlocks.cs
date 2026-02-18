@@ -26,7 +26,7 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
+		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
 			_left.GetValue(runtimeContext) + (Double)_right.GetValue(runtimeContext);
 	}
 
@@ -38,7 +38,7 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
+		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
 			_left.GetValue(runtimeContext) - (Double)_right.GetValue(runtimeContext);
 	}
 
@@ -50,7 +50,7 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
+		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
 			_left.GetValue(runtimeContext) * (Double)_right.GetValue(runtimeContext);
 	}
 
@@ -62,7 +62,7 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
+		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
 			_left.GetValue(runtimeContext) / (Double)_right.GetValue(runtimeContext);
 	}
 }

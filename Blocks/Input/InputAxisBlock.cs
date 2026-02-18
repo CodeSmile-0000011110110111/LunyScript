@@ -16,10 +16,10 @@ namespace LunyScript.Blocks
 		private InputAxisBlock(String actionName) => _actionName = actionName;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
+		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
 			Variable.FromVector2(LunyEngine.Instance.Input.GetAxisValue(_actionName));
 
-		public override T GetValue<T>(IScriptRuntimeContext runtimeContext)
+		protected override T GetValue<T>(IScriptRuntimeContext runtimeContext)
 		{
 			if (typeof(T) == typeof(LunyVector2))
 			{

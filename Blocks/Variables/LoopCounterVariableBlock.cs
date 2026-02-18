@@ -12,6 +12,6 @@ namespace LunyScript.Blocks
 		private LoopCounterVariableBlock() {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Variable GetValue(IScriptRuntimeContext runtimeContext) => runtimeContext.LoopCount;
+		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => runtimeContext.LoopCount;
 	}
 }

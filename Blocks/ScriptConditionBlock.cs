@@ -7,6 +7,6 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class ScriptConditionBlock : ScriptBlock
 	{
-		public abstract Boolean Evaluate(IScriptRuntimeContext runtimeContext);
+		protected internal abstract Boolean Evaluate(IScriptRuntimeContext runtimeContext);
 	}
 }

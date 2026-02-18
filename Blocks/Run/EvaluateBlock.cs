@@ -14,6 +14,6 @@ namespace LunyScript.Blocks
 
 		private EvaluateBlock(Func<IScriptRuntimeContext, Boolean> func) => _func = func ?? throw new ArgumentNullException(nameof(func));
 
-		public override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => _func(runtimeContext);
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => _func(runtimeContext);
 	}
 }

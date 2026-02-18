@@ -9,7 +9,7 @@ namespace LunyScript.Blocks
 
 		private ObjectDestroySelfBlock() {}
 
-		public override void Execute(IScriptRuntimeContext runtimeContext) => runtimeContext.LunyObject.Destroy();
+		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) => runtimeContext.LunyObject.Destroy();
 	}
 
 	internal sealed class ObjectDestroyTargetBlock : ScriptActionBlock
@@ -20,6 +20,6 @@ namespace LunyScript.Blocks
 
 		private ObjectDestroyTargetBlock(String name) => _name = name;
 
-		public override void Execute(IScriptRuntimeContext runtimeContext) => LunyEngine.Instance.Objects.GetByName(_name)?.Destroy();
+		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) => LunyEngine.Instance.Objects.GetByName(_name)?.Destroy();
 	}
 }

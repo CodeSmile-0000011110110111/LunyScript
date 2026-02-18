@@ -8,6 +8,6 @@ namespace LunyScript.Blocks
 
 		private SceneReloadBlock() {}
 
-		public override void Execute(IScriptRuntimeContext runtimeContext) => LunyEngine.Instance.Scene.ReloadScene();
+		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) => LunyEngine.Instance.Scene.ReloadScene();
 	}
 }

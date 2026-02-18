@@ -16,10 +16,10 @@ namespace LunyScript.Blocks
 		private AndBlock(ScriptConditionBlock[] conditions) => _conditions = conditions ?? throw new ArgumentNullException(nameof(conditions));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
+		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Boolean Evaluate(IScriptRuntimeContext runtimeContext)
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext)
 		{
 			foreach (var condition in _conditions)
 			{

@@ -15,7 +15,7 @@ namespace LunyScript.Blocks
 		private InputButtonValueBlock(String actionName) => _actionName = actionName;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
+		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
 			(Variable)(Double)LunyEngine.Instance.Input.GetButtonValue(_actionName);
 
 		public override String ToString() => $"Input.Button(\"{_actionName}\").Value";

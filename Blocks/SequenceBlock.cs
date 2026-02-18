@@ -23,7 +23,7 @@ namespace LunyScript.Blocks
 			Blocks = blocks;
 		}
 
-		public override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
 			if (runtimeContext == null)
 				return;

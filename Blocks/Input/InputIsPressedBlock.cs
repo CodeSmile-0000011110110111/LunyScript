@@ -7,7 +7,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Condition block: true while the named button is held down.
 	/// </summary>
-	internal sealed class InputIsPressedBlock : ScriptConditionBlock
+	internal sealed class InputIsPressedBlock : VariableBlock
 	{
 		private readonly String _actionName;
 
@@ -15,8 +15,9 @@ namespace LunyScript.Blocks
 		private InputIsPressedBlock(String actionName) => _actionName = actionName;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			LunyEngine.Instance.Input.GetButtonPressed(_actionName);
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => LunyEngine.Instance.Input.GetButtonPressed(_actionName);
+
+		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
 
 		public override String ToString() => $"Input.Button(\"{_actionName}\").IsPressed";
 	}
