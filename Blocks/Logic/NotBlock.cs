@@ -11,7 +11,7 @@ namespace LunyScript.Blocks
 	{
 		private readonly ScriptConditionBlock _condition;
 
-		internal override Table.VarHandle TargetHandle => (_condition as VariableBlock)?.TargetHandle;
+		internal override Table.ScalarVarHandle TargetHandle => (_condition as VariableBlock)?.TargetHandle;
 
 		public static NotBlock Create(ScriptConditionBlock condition) => new(condition);
 

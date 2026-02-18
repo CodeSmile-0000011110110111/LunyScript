@@ -6,12 +6,12 @@ namespace LunyScript.Blocks
 {
 	internal sealed class VariableSetValueBlock : ScriptActionBlock
 	{
-		private readonly Table.VarHandle _handle;
+		private readonly Table.ScalarVarHandle _handle;
 		private readonly VariableBlock _value;
 
-		public static VariableSetValueBlock Create(Table.VarHandle handle, VariableBlock value) => new(handle, value);
+		public static VariableSetValueBlock Create(Table.ScalarVarHandle handle, VariableBlock value) => new(handle, value);
 
-		private VariableSetValueBlock(Table.VarHandle handle, VariableBlock value)
+		private VariableSetValueBlock(Table.ScalarVarHandle handle, VariableBlock value)
 		{
 			_handle = handle ?? throw new ArgumentNullException(nameof(handle));
 			_value = value ?? throw new ArgumentNullException(nameof(value));

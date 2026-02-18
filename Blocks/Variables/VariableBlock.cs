@@ -11,7 +11,7 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class VariableBlock : ScriptConditionBlock
 	{
-		internal virtual Table.VarHandle TargetHandle => null;
+		internal virtual Table.ScalarVarHandle TargetHandle => null;
 
 		public static implicit operator VariableBlock(Variable value) => ConstantVariableBlock.Create(value);
 		public static implicit operator VariableBlock(Int32 value) => ConstantVariableBlock.Create(value);
@@ -112,7 +112,7 @@ namespace LunyScript.Blocks
 		public override Int32 GetHashCode() => throw new NotImplementedException($"{nameof(VariableBlock)}.{nameof(GetHashCode)}()");
 
 		// Actions
-		private Table.VarHandle GetHandleOrThrow()
+		private Table.ScalarVarHandle GetHandleOrThrow()
 		{
 			var handle = TargetHandle;
 			if (handle == null)

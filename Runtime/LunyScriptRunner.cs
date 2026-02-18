@@ -28,9 +28,9 @@ namespace LunyScript
 		[NotNull] private ScriptSceneEventHandler _sceneEventHandler;
 
 		private ILunyTimeService _engineTime;
-		private Table.VarHandle gvar_Time_HeartbeatCount;
-		private Table.VarHandle gvar_Time_FrameCount;
-		private Table.VarHandle gvar_Time_ElapsedSeconds;
+		private Table.ScalarVarHandle gvar_Time_HeartbeatCount;
+		private Table.ScalarVarHandle gvar_Time_FrameCount;
+		private Table.ScalarVarHandle gvar_Time_ElapsedSeconds;
 
 		internal ScriptDefinitionRegistry Scripts => _scripts;
 		internal ScriptRuntimeContextRegistry Contexts => _contexts;

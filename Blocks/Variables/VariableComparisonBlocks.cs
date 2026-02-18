@@ -9,7 +9,7 @@ namespace LunyScript.Blocks
 		protected readonly VariableBlock _left;
 		protected readonly VariableBlock _right;
 
-		internal override Table.VarHandle TargetHandle => _left?.TargetHandle ?? _right?.TargetHandle;
+		internal override Table.ScalarVarHandle TargetHandle => _left?.TargetHandle ?? _right?.TargetHandle;
 
 		protected VariableComparisonBlock(VariableBlock left, VariableBlock right = null)
 		{
