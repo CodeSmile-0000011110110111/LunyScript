@@ -44,12 +44,6 @@
 			internal HUDApi(IScript script) => _script = script;
 		}
 
-		public readonly struct InputApi
-		{
-			private readonly IScript _script;
-			internal InputApi(IScript script) => _script = script;
-		}
-
 		public readonly struct MenuApi
 		{
 			private readonly IScript _script;

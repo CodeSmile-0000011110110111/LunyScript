@@ -114,7 +114,7 @@ namespace LunyScript
 		public ApiPlaceholders.CameraApi Camera => new(this);
 		public ApiPlaceholders.DiagnosticsApi Diagnostics => new(this);
 		public ApiPlaceholders.HUDApi HUD => new(this);
-		public ApiPlaceholders.InputApi Input => new(this);
+		public InputApi Input => new(this);
 		public ApiPlaceholders.MenuApi Menu => new(this);
 		public ApiPlaceholders.PhysicsApi Physics => new(this);
 		public ApiPlaceholders.PlayerApi Player => new(this);

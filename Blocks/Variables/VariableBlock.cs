@@ -1,6 +1,7 @@
 ﻿using Luny;
 using LunyScript.Exceptions;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace LunyScript.Blocks
 {
@@ -94,6 +95,47 @@ namespace LunyScript.Blocks
 		public override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue(runtimeContext).AsBoolean();
 
 		public abstract Variable GetValue(IScriptRuntimeContext runtimeContext);
+
+		/// <summary>
+		/// Returns the variable value as a specific struct type. Subclasses can override to avoid boxing.
+		/// Default implementation uses GetValue() and converts via Unsafe.As (JIT-eliminated typeof checks).
+		/// </summary>
+		public virtual T GetValue<T>(IScriptRuntimeContext runtimeContext) where T : struct
+		{
+			var v = GetValue(runtimeContext);
+			if (typeof(T) == typeof(Double))
+			{
+				var d = v.AsDouble();
+				return Unsafe.As<Double, T>(ref d);
+			}
+			if (typeof(T) == typeof(Single))
+			{
+				var f = v.AsSingle();
+				return Unsafe.As<Single, T>(ref f);
+			}
+			if (typeof(T) == typeof(Boolean))
+			{
+				var b = v.AsBoolean();
+				return Unsafe.As<Boolean, T>(ref b);
+			}
+			if (typeof(T) == typeof(Int32))
+			{
+				var i = v.AsInt32();
+				return Unsafe.As<Int32, T>(ref i);
+			}
+			if (typeof(T) == typeof(LunyVector2))
+			{
+				var vec2 = v.AsVector2();
+				return Unsafe.As<LunyVector2, T>(ref vec2);
+			}
+			if (typeof(T) == typeof(LunyVector3))
+			{
+				var vec3 = v.AsVector3();
+				return Unsafe.As<LunyVector3, T>(ref vec3);
+			}
+
+			throw new LunyScriptVariableException($"Cannot convert {v.Type} to {typeof(T).Name}");
+		}
 
 		private Boolean Equals(VariableBlock other) => throw new NotImplementedException($"{nameof(VariableBlock)}.{nameof(Equals)}()");
 
