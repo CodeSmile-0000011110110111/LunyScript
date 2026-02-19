@@ -44,6 +44,10 @@ namespace LunyScript.BlockBuilders
 		/// True while the button is held down.
 		/// </summary>
 		public VariableBlock IsPressed => InputButtonIsPressedBlock.Create(_actionName);
+		/// <summary>
+		/// Returns button's value while held down.
+		/// </summary>
+		public VariableBlock Strength => InputButtonStrengthBlock.Create(_actionName);
 	}
 
 	/// <summary>

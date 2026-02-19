@@ -1,23 +1,29 @@
 ﻿namespace LunyScript.SmokeTests.Input
 {
-	public sealed class InputTestScript : Script
+	public sealed class InputToTransformMove : Script
+	{
+		public override void Build(ScriptContext context)
+		{
+			On.FrameUpdate(
+				If(Input.Direction("Move")).Then(Var["move count"].Inc()),
+				If(Input.Button("Jump").IsJustPressed).Then(Var["jump count"].Inc()),
+				If(Input.Button("Crouch").IsJustPressed).Then(Var["crouch count"].Inc()),
+				If(AND(Var["move count"] > 0), Var["jump count"] > 0, Var["crouch count"] > 0).Then(Debug.LogInfo("yay"))
+			);
+
+			On.FrameUpdate(
+				Transform.MoveBy(Input.Direction("Move"), 4),
+				Transform.MoveUp(Input.Button("Jump").Strength, 4),
+				Transform.MoveDown(Input.Button("Crouch").Strength, 4)
+			);
+		}
+	}
+
+	public sealed class InputToTransformShift : Script
 	{
 		public override void Build(ScriptContext context) => On.FrameUpdate(
-			If(Input.Button("Jump").IsPressed).Then(Debug.LogInfo("JUMP!"))
-			// GVar["Jump"].Set(Input.Button("Jump").IsPressed),
-			// Debug.LogInfo($"JUMP: {GVar["Jump"]}"),
-			// GVar["lookdir"].Set(Input.Direction("Look")),
-			// Debug.LogInfo(GVar["lookdir"])
-		);
-	}
-
-	public sealed class InputMoveInLocalSpace : Script
-	{
-		public override void Build(ScriptContext context) => On.FrameUpdate(Transform.Move(Input.Direction("Move"), 4));
-	}
-
-	public sealed class InputMoveInWorldSpace : Script
-	{
-		public override void Build(ScriptContext context) => On.FrameUpdate(Transform.Shift(Input.Direction("Move"), 4));
+			Transform.ShiftBy(Input.Direction("Move"), 4),
+			Transform.ShiftUp(Input.Button("Jump").Strength, 4),
+			Transform.ShiftDown(Input.Button("Crouch").Strength, 4));
 	}
 }

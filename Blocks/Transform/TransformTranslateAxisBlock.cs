@@ -1,0 +1,36 @@
+using Luny;
+using Luny.Engine.Bridge;
+using System;
+
+namespace LunyScript.Blocks.Transform
+{
+	public sealed class TransformTranslateAxisBlock : ScriptActionBlock
+	{
+		private VariableBlock _distance;
+		private LunyVector3 _axis;
+		private VariableBlock _speed;
+		private LunySpace _space;
+
+		public static TransformTranslateAxisBlock Create(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunySpace space) =>
+			new(distance, axis, speed, space);
+
+		private TransformTranslateAxisBlock(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunySpace space)
+		{
+			_distance = distance;
+			_axis = axis;
+			_speed = speed;
+			_space = space;
+		}
+
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		{
+			var transform = runtimeContext.LunyObject.Transform;
+			var deltaTime = LunyEngine.Instance.Time.DeltaTime;
+			var distance = _distance.GetValue<Double>(runtimeContext);
+			var speed = _speed.GetValue<Double>(runtimeContext);
+			transform.Translate(distance * _axis * (speed * deltaTime), _space);
+		}
+
+		public override String ToString() => $"{GetType().Name}({_distance}, {_axis}, {_speed}, {_space})";
+	}
+}

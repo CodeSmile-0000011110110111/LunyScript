@@ -104,7 +104,6 @@ namespace LunyScript.Blocks
 
 		public static VariableBlock operator <=(VariableBlock left, VariableBlock right) => VariableIsAtMostBlock.Create(left, right);
 
-		// Unary Operators
 		public static VariableBlock operator !(VariableBlock operand) => NotBlock.Create(operand);
 
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue(runtimeContext).AsBoolean();
