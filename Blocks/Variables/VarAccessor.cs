@@ -1,8 +1,7 @@
 ﻿using Luny;
-using LunyScript.Blocks;
 using System;
 
-namespace LunyScript
+namespace LunyScript.Blocks
 {
 	/// <summary>
 	/// Provides indexed access to script variables.

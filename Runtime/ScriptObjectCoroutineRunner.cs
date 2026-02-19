@@ -1,11 +1,10 @@
 ﻿using Luny;
 using Luny.Engine.Services;
 using LunyScript.Blocks;
-using LunyScript.Blocks.Coroutines;
 using LunyScript.Coroutines;
 using System;
 using System.Collections.Generic;
-using CoroutineBlock = LunyScript.Blocks.Coroutines.CoroutineBlock;
+using CoroutineBlock = LunyScript.Blocks.CoroutineBlock;
 
 namespace LunyScript
 {

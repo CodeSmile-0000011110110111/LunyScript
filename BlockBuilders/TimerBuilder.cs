@@ -1,8 +1,8 @@
 using LunyScript.Blocks;
-using LunyScript.Blocks.Coroutines;
+using LunyScript.Coroutines;
 using System;
 
-namespace LunyScript.Coroutines.Builders
+namespace LunyScript.BlockBuilders
 {
 	/// <summary>
 	/// Entry point for the Timer fluent builder chain.

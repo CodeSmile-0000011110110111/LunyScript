@@ -1,7 +1,7 @@
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript.BlockBuilders
 {
 	/// <summary>
 	/// Provides access to input action values. Blocks poll the input service for last known state.
@@ -20,16 +20,16 @@ namespace LunyScript.Api
 		/// <summary>
 		/// Returns a button handle with condition and value accessors for the named action.
 		/// </summary>
-		public InputButtonApi Button(String actionName) => new(actionName);
+		public InputButtonBuilder Button(String actionName) => new(actionName);
 	}
 
 	/// <summary>
 	/// Provides condition and value accessors for a named button input action.
 	/// </summary>
-	public readonly struct InputButtonApi
+	public readonly struct InputButtonBuilder
 	{
 		private readonly String _actionName;
-		internal InputButtonApi(String actionName) => _actionName = actionName;
+		internal InputButtonBuilder(String actionName) => _actionName = actionName;
 
 		/// <summary>
 		/// True only on the frame the button was pressed (transition).

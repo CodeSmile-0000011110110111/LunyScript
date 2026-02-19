@@ -1,14 +1,13 @@
 using Luny;
 using Luny.Engine.Bridge;
-using LunyScript.Api;
 using LunyScript.Blocks;
-using LunyScript.Blocks.Coroutines;
+using LunyScript.Coroutines;
 using System;
 
-namespace LunyScript.Coroutines.Builders
+namespace LunyScript.BlockBuilders
 {
 	/// <summary>
-	/// Shared utilities for coroutine builders.
+	/// Shared utilities for LunyScript builder pattern.
 	/// </summary>
 	internal static class BuilderUtility
 	{
@@ -60,7 +59,7 @@ namespace LunyScript.Coroutines.Builders
 				},
 				ObjectCreationMode.Prefab => ObjectCreatePrefabBlock.Create(options.Name, options.AssetName),
 				ObjectCreationMode.Clone => ObjectCreateCloneBlock.Create(options.Name, options.AssetName),
-				var _ => throw new NotImplementedException($"{nameof(ObjectBuilder<StateNameSet>)}: Mode {options.Mode} is not implemented."),
+				var _ => throw new NotImplementedException($"{nameof(ObjectBuilder<ObjectBuilderNameSet>)}: Mode {options.Mode} is not implemented."),
 			};
 
 			((ILunyScriptInternal)script).FinalizeToken(token);

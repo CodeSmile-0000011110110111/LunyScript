@@ -3,8 +3,11 @@ using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace LunyScript.Coroutines.Builders
+namespace LunyScript.BlockBuilders
 {
+	/// <summary>
+	/// Used to detect and report any 'unfinished' builders after a script's Build() method returns.
+	/// </summary>
 	internal sealed class BuilderToken
 	{
 		private readonly String _name;

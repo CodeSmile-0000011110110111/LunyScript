@@ -1,4 +1,5 @@
 ﻿using Luny;
+using Luny.Engine.Bridge;
 using LunyScript.Exceptions;
 using System;
 using System.Runtime.CompilerServices;

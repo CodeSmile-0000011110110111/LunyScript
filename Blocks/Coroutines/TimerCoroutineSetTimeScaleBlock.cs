@@ -1,7 +1,7 @@
 using LunyScript.Coroutines;
 using System;
 
-namespace LunyScript.Blocks.Coroutines
+namespace LunyScript.Blocks
 {
 	internal sealed class TimerCoroutineSetTimeScaleBlock : CoroutineControlBlock
 	{
