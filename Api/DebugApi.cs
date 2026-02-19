@@ -12,6 +12,8 @@ namespace LunyScript.Api
 		private readonly IScript _script;
 		internal DebugApi(IScript script) => _script = script;
 
+		public ScriptActionBlock LogInfo(VariableBlock variableBlock) => DebugLogInfoBlock.Create(variableBlock);
+
 		/// <summary>
 		/// Logs a debug message that is completely stripped in release builds.
 		/// Only logs when DEBUG or LUNYSCRIPT_DEBUG is defined.

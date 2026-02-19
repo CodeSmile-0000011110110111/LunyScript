@@ -7,12 +7,12 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Condition block: true only on the frame the named button was pressed (transition).
 	/// </summary>
-	internal sealed class InputIsJustPressedBlock : VariableBlock
+	internal sealed class InputButtonIsJustPressedBlock : VariableBlock
 	{
 		private readonly String _actionName;
 
-		internal static InputIsJustPressedBlock Create(String actionName) => new(actionName);
-		private InputIsJustPressedBlock(String actionName) => _actionName = actionName;
+		internal static InputButtonIsJustPressedBlock Create(String actionName) => new(actionName);
+		private InputButtonIsJustPressedBlock(String actionName) => _actionName = actionName;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>

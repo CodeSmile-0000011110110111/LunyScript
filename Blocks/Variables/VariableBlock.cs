@@ -60,15 +60,29 @@ namespace LunyScript.Blocks
 		public static VariableBlock operator --(VariableBlock a) => a - 1;
 
 		// Comparison Operators
-		public static VariableBlock operator ==(VariableBlock left, Variable right) =>
-			VariableIsEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
+		public static VariableBlock operator ==(VariableBlock left, Variable right)
+		{
+			if (left is null) return right.Object is null;
+			return VariableIsEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
+		}
 
-		public static VariableBlock operator ==(VariableBlock left, VariableBlock right) => VariableIsEqualToBlock.Create(left, right);
+		public static VariableBlock operator ==(VariableBlock left, VariableBlock right)
+		{
+			if (left is null) return right is null;
+			return VariableIsEqualToBlock.Create(left, right);
+		}
 
-		public static VariableBlock operator !=(VariableBlock left, Variable right) =>
-			VariableIsNotEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
+		public static VariableBlock operator !=(VariableBlock left, Variable right)
+		{
+			if (left is null) return right.Object is not null;
+			return VariableIsNotEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
+		}
 
-		public static VariableBlock operator !=(VariableBlock left, VariableBlock right) => VariableIsNotEqualToBlock.Create(left, right);
+		public static VariableBlock operator !=(VariableBlock left, VariableBlock right)
+		{
+			if (left is null) return right is null;
+			return VariableIsNotEqualToBlock.Create(left, right);
+		}
 
 		public static VariableBlock operator >(VariableBlock left, Variable right) =>
 			VariableIsGreaterThanBlock.Create(left, ConstantVariableBlock.Create(right));

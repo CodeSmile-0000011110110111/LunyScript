@@ -9,15 +9,22 @@ namespace LunyScript.Blocks
 	/// </summary>
 	internal class DebugLogBlock : ScriptActionBlock
 	{
-		protected String _message;
-		private LogLevel _logLevel;
-
 		private DebugLogBlock() {}
 
 		protected DebugLogBlock(String message, LogLevel logLevel)
 		{
+#if DEBUG || LUNYSCRIPT_DEBUG
 			_message = message;
 			_logLevel = logLevel;
+#endif
+		}
+
+		protected DebugLogBlock(VariableBlock variableBlock, LogLevel logLevel)
+		{
+#if DEBUG || LUNYSCRIPT_DEBUG
+			_variableBlock = variableBlock;
+			_logLevel = logLevel;
+#endif
 		}
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => DoLog(runtimeContext);
@@ -26,6 +33,9 @@ namespace LunyScript.Blocks
 		private void DoLog(IScriptRuntimeContext runtimeContext)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
+			if (_variableBlock is not null)
+				_message = _variableBlock.ToString();
+
 			switch (_logLevel)
 			{
 				case LogLevel.Info:
@@ -44,6 +54,12 @@ namespace LunyScript.Blocks
 		}
 
 		public override String ToString() => $"{GetType().Name}(\"{_message}\")";
+
+#if DEBUG || LUNYSCRIPT_DEBUG
+		protected String _message;
+		protected VariableBlock _variableBlock;
+		private LogLevel _logLevel;
+#endif
 	}
 
 	/// <summary>
@@ -61,8 +77,20 @@ namespace LunyScript.Blocks
 #endif
 		}
 
+		public static ScriptActionBlock Create(VariableBlock variableBlock)
+		{
+#if DEBUG || LUNYSCRIPT_DEBUG
+			return new DebugLogInfoBlock(variableBlock);
+#else
+			return null;
+#endif
+		}
+
 		private DebugLogInfoBlock(String message)
 			: base(message, LogLevel.Info) {}
+
+		private DebugLogInfoBlock(VariableBlock variableBlock)
+			: base(variableBlock, LogLevel.Info) {}
 	}
 
 	/// <summary>

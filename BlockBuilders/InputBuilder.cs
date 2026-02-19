@@ -15,12 +15,16 @@ namespace LunyScript.BlockBuilders
 		/// Returns a VariableBlock reading the last known axis value (LunyVector2) for the named action.
 		/// Works inside On.Input(), On.FrameUpdate(), or any other context.
 		/// </summary>
-		public VariableBlock Axis(String actionName) => InputAxisBlock.Create(actionName);
+		public VariableBlock Direction(String actionName) => InputDirectionBlock.Create(actionName);
 
 		/// <summary>
 		/// Returns a button handle with condition and value accessors for the named action.
 		/// </summary>
 		public InputButtonBuilder Button(String actionName) => new(actionName);
+		/// <summary>
+		/// Returns a axis handle with condition and value accessors for the named action.
+		/// </summary>
+		public InputAxisBuilder Axis(String actionName) => new(actionName);
 	}
 
 	/// <summary>
@@ -34,16 +38,25 @@ namespace LunyScript.BlockBuilders
 		/// <summary>
 		/// True only on the frame the button was pressed (transition).
 		/// </summary>
-		public VariableBlock IsJustPressed => InputIsJustPressedBlock.Create(_actionName);
+		public VariableBlock IsJustPressed => InputButtonIsJustPressedBlock.Create(_actionName);
 
 		/// <summary>
 		/// True while the button is held down.
 		/// </summary>
-		public VariableBlock IsPressed => InputIsPressedBlock.Create(_actionName);
+		public VariableBlock IsPressed => InputButtonIsPressedBlock.Create(_actionName);
+	}
+
+	/// <summary>
+	/// Provides condition and value accessors for a named axis input action.
+	/// </summary>
+	public readonly struct InputAxisBuilder
+	{
+		private readonly String _actionName;
+		internal InputAxisBuilder(String actionName) => _actionName = actionName;
 
 		/// <summary>
 		/// Analog trigger value (0.0–1.0).
 		/// </summary>
-		public VariableBlock Value => InputButtonValueBlock.Create(_actionName);
+		public VariableBlock Value => InputAxisValueBlock.Create(_actionName);
 	}
 }

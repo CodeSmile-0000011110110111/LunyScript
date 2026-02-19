@@ -7,12 +7,12 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Condition block: true while the named button is held down.
 	/// </summary>
-	internal sealed class InputIsPressedBlock : VariableBlock
+	internal sealed class InputButtonIsPressedBlock : VariableBlock
 	{
 		private readonly String _actionName;
 
-		internal static InputIsPressedBlock Create(String actionName) => new(actionName);
-		private InputIsPressedBlock(String actionName) => _actionName = actionName;
+		internal static InputButtonIsPressedBlock Create(String actionName) => new(actionName);
+		private InputButtonIsPressedBlock(String actionName) => _actionName = actionName;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>

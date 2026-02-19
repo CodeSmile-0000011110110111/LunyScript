@@ -6,7 +6,7 @@
 			If(Input.Button("Jump").IsPressed).Then(Debug.LogInfo("JUMP!")),
 			// GVar["Jump"].Set(Input.Button("Jump").IsPressed),
 			// Debug.LogInfo($"JUMP: {GVar["Jump"]}"),
-			GVar["Move"].Set(Input.Axis("Move")),
+			GVar["Move"].Set(Input.Direction("Move")),
 			Debug.LogInfo($"MOVE: {GVar["Move"]}")
 		);
 	}
