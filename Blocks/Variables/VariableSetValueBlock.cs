@@ -18,7 +18,7 @@ namespace LunyScript.Blocks
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) => _handle.Value = _value.GetValue(runtimeContext);
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => _handle.Value = _value.GetValue(runtimeContext);
 
 		public override String ToString() => $"{_handle} = {_value}";
 	}

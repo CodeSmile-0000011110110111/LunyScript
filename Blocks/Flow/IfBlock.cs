@@ -14,7 +14,7 @@ namespace LunyScript.Blocks
 
 		internal IfBlockBuilder(ScriptConditionBlock[] conditions) => _branches.Add((conditions, Array.Empty<ScriptActionBlock>()));
 
-		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) => (_cachedBlock ??= Build()).Execute(runtimeContext);
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => (_cachedBlock ??= Build()).Execute(runtimeContext);
 
 		public IfBlockBuilder Then(params ScriptActionBlock[] blocks)
 		{
@@ -55,7 +55,7 @@ namespace LunyScript.Blocks
 			_elseBlocks = elseBlocks;
 		}
 
-		protected internal  override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
 			foreach (var (conditions, blocks) in _branches)
 			{

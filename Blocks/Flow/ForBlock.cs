@@ -19,7 +19,7 @@ namespace LunyScript.Blocks
 			_step = step;
 		}
 
-		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) => (_cachedBlock ??= Build()).Execute(runtimeContext);
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => (_cachedBlock ??= Build()).Execute(runtimeContext);
 
 		public ScriptActionBlock Do(params ScriptActionBlock[] blocks)
 		{
@@ -48,7 +48,7 @@ namespace LunyScript.Blocks
 			_blocks = blocks;
 		}
 
-		protected internal  override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
 #if DEBUG || UNITY_EDITOR
 			var iterations = 0;

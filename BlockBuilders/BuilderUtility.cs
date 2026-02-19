@@ -59,7 +59,8 @@ namespace LunyScript.BlockBuilders
 				},
 				ObjectCreationMode.Prefab => ObjectCreatePrefabBlock.Create(options.Name, options.AssetName),
 				ObjectCreationMode.Clone => ObjectCreateCloneBlock.Create(options.Name, options.AssetName),
-				var _ => throw new NotImplementedException($"{nameof(ObjectBuilder<ObjectBuilderNameSet>)}: Mode {options.Mode} is not implemented."),
+				var _ => throw new NotImplementedException(
+					$"{nameof(ObjectBuilder<ObjectBuilderNameSet>)}: Mode {options.Mode} is not implemented."),
 			};
 
 			((ILunyScriptInternal)script).FinalizeToken(token);

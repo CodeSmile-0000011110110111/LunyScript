@@ -21,6 +21,7 @@ namespace LunyScript.Blocks
 		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => _condition == null || !_condition.Evaluate(runtimeContext);
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
+			_condition == null || !_condition.Evaluate(runtimeContext);
 	}
 }

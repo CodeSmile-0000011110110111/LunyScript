@@ -15,7 +15,8 @@ namespace LunyScript.Blocks
 		private InputIsPressedBlock(String actionName) => _actionName = actionName;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => LunyEngine.Instance.Input.GetButtonPressed(_actionName);
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
+			LunyEngine.Instance.Input.GetButtonPressed(_actionName);
 
 		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
 

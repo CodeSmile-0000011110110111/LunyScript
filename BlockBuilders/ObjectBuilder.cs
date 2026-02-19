@@ -76,7 +76,8 @@ namespace LunyScript.BlockBuilders
 		public static ObjectBuilder<ObjectBuilderNameSet> AsQuad<T>(this ObjectBuilder<T> b) where T : struct, IObjectBuilderNameSet =>
 			b.WithPrimitive(LunyPrimitiveType.Quad);
 
-		public static ObjectBuilder<ObjectBuilderNameSet> From<T>(this ObjectBuilder<T> b, String prefabName) where T : struct, IObjectBuilderNameSet
+		public static ObjectBuilder<ObjectBuilderNameSet> From<T>(this ObjectBuilder<T> b, String prefabName)
+			where T : struct, IObjectBuilderNameSet
 		{
 			var options = b.Options;
 			options.Mode = ObjectCreationMode.Prefab;
@@ -84,7 +85,8 @@ namespace LunyScript.BlockBuilders
 			return new ObjectBuilder<ObjectBuilderNameSet>(b.Script, options, b.Token);
 		}
 
-		public static ObjectBuilder<ObjectBuilderNameSet> Clone<T>(this ObjectBuilder<T> b, String existingName) where T : struct, IObjectBuilderNameSet
+		public static ObjectBuilder<ObjectBuilderNameSet> Clone<T>(this ObjectBuilder<T> b, String existingName)
+			where T : struct, IObjectBuilderNameSet
 		{
 			var options = b.Options;
 			options.Mode = ObjectCreationMode.Clone;

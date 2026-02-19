@@ -20,6 +20,6 @@ namespace LunyScript.Blocks
 
 		private ExecuteBlock(Action<IScriptRuntimeContext> action) => _action = action ?? throw new ArgumentNullException(nameof(action));
 
-		protected internal  override void Execute(IScriptRuntimeContext runtimeContext) => _action(runtimeContext);
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => _action(runtimeContext);
 	}
 }
