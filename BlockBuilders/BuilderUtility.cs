@@ -27,7 +27,7 @@ namespace LunyScript.BlockBuilders
 			return result;
 		}
 
-		public static ICoroutineBlock Finalize(IScript script, in Coroutine.Options options, BuilderToken token)
+		public static ICoroutineBlock Finalize(Script script, in Coroutine.Options options, BuilderToken token)
 		{
 			if (options.OnFrameUpdate == null && options.OnHeartbeat == null && options.OnElapsed == null &&
 			    options.OnStarted == null && options.OnStopped == null && options.OnPaused == null && options.OnResumed == null)
@@ -36,13 +36,13 @@ namespace LunyScript.BlockBuilders
 				                      "It will run but perform no actions.", script);
 			}
 
-			var scriptInternal = (ILunyScriptInternal)script;
-			var block = scriptInternal.RuntimeContext.Coroutines.Register(script, in options);
+			var scriptInternal = script;
+			var block = scriptInternal.RuntimeContext.Coroutines.Register(in options);
 			scriptInternal.FinalizeToken(token);
 			return block;
 		}
 
-		public static ScriptActionBlock Finalize(IScript script, in ObjectCreateOptions options, BuilderToken token)
+		public static ScriptActionBlock Finalize(Script script, in ObjectCreateOptions options, BuilderToken token)
 		{
 			var block = options.Mode switch
 			{
@@ -63,7 +63,7 @@ namespace LunyScript.BlockBuilders
 					$"{nameof(ObjectBuilder<ObjectBuilderNameSet>)}: Mode {options.Mode} is not implemented."),
 			};
 
-			((ILunyScriptInternal)script).FinalizeToken(token);
+			script.FinalizeToken(token);
 			return block;
 		}
 	}

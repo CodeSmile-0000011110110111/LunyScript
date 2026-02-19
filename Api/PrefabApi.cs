@@ -6,8 +6,8 @@ namespace LunyScript.Api
 {
 	public readonly struct PrefabApi
 	{
-		private readonly IScript _script;
-		internal PrefabApi(IScript script) => _script = script;
+		private readonly Script _script;
+		internal PrefabApi(Script script) => _script = script;
 
 		public ScriptActionBlock Instantiate(String prefabName) => _script.Object.Create(prefabName).From(prefabName).Do();
 	}

@@ -5,8 +5,8 @@ namespace LunyScript.Api
 {
 	public readonly struct EngineApi
 	{
-		private readonly IScript _script;
-		internal EngineApi(IScript script) => _script = script;
+		private readonly Script _script;
+		internal EngineApi(Script script) => _script = script;
 
 		/// <summary>
 		/// Logs a message that appears in both debug and release builds.

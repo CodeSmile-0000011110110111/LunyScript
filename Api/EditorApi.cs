@@ -9,8 +9,8 @@ namespace LunyScript.Api
 	/// </summary>
 	public readonly struct EditorApi
 	{
-		private readonly IScript _script;
-		internal EditorApi(IScript script) => _script = script;
+		private readonly Script _script;
+		internal EditorApi(Script script) => _script = script;
 
 		/// <summary>
 		/// Pauses playmode.

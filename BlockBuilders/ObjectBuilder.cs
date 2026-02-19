@@ -17,8 +17,8 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct ObjectApi
 	{
-		private readonly IScript _script;
-		internal ObjectApi(IScript script) => _script = script;
+		private readonly Script _script;
+		internal ObjectApi(Script script) => _script = script;
 
 		public ScriptActionBlock Enable(String name = null) =>
 			String.IsNullOrEmpty(name) ? ObjectEnableSelfBlock.Create() : ObjectEnableTargetBlock.Create(name);
@@ -29,7 +29,7 @@ namespace LunyScript.BlockBuilders
 		public ObjectBuilder<ObjectBuilderNameSet> Create(String name)
 		{
 			var options = new ObjectCreateOptions { Name = name, Mode = ObjectCreationMode.Empty };
-			var token = ((ILunyScriptInternal)_script).CreateToken(name, "ObjectCreate");
+			var token = _script.CreateToken(name, "ObjectCreate");
 			return new ObjectBuilder<ObjectBuilderNameSet>(_script, options, token);
 		}
 
@@ -39,11 +39,11 @@ namespace LunyScript.BlockBuilders
 
 	public readonly struct ObjectBuilder<T> where T : struct, IObjectBuilderState
 	{
-		internal readonly IScript Script;
+		internal readonly Script Script;
 		internal readonly ObjectCreateOptions Options;
 		internal readonly BuilderToken Token;
 
-		internal ObjectBuilder(IScript script, ObjectCreateOptions options, BuilderToken token)
+		internal ObjectBuilder(Script script, ObjectCreateOptions options, BuilderToken token)
 		{
 			Script = script;
 			Options = options;

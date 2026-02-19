@@ -70,7 +70,7 @@ namespace LunyScript
 		/// <summary>
 		/// Registers a new coroutine. Throws if name already exists.
 		/// </summary>
-		internal ICoroutineBlock Register(IScript script, in Coroutine.Options options)
+		internal ICoroutineBlock Register(in Coroutine.Options options)
 		{
 			if (_registry.ContainsKey(options.Name))
 				throw new InvalidOperationException($"Coroutine '{options.Name}' already exists. Duplicate names are not allowed.");

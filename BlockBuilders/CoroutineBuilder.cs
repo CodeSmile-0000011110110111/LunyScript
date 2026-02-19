@@ -10,15 +10,15 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct CoroutineBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly String _name;
 		private readonly BuilderToken _token;
 
-		internal CoroutineBuilder(IScript script, String name)
+		internal CoroutineBuilder(Script script, String name)
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_name = !String.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Coroutine name is null or empty", nameof(name));
-			_token = ((ILunyScriptInternal)script).CreateToken(_name, "Coroutine");
+			_token = script.CreateToken(_name, "Coroutine");
 		}
 
 		/// <summary>
@@ -44,12 +44,12 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct CoroutineDurationBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly String _name;
 		private readonly BuilderToken _token;
 		private readonly Double _duration;
 
-		internal CoroutineDurationBuilder(IScript script, String name, BuilderToken token, Double duration)
+		internal CoroutineDurationBuilder(Script script, String name, BuilderToken token, Double duration)
 		{
 			_script = script;
 			_name = name;
@@ -96,11 +96,11 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct FiniteFrameCoroutineBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly BuilderToken _token;
 		private readonly Coroutine.Options _options;
 
-		internal FiniteFrameCoroutineBuilder(IScript script, BuilderToken token, in Coroutine.Options options)
+		internal FiniteFrameCoroutineBuilder(Script script, BuilderToken token, in Coroutine.Options options)
 		{
 			_script = script;
 			_token = token;
@@ -136,11 +136,11 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct FiniteHeartbeatCoroutineBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly BuilderToken _token;
 		private readonly Coroutine.Options _options;
 
-		internal FiniteHeartbeatCoroutineBuilder(IScript script, BuilderToken token, in Coroutine.Options options)
+		internal FiniteHeartbeatCoroutineBuilder(Script script, BuilderToken token, in Coroutine.Options options)
 		{
 			_script = script;
 			_token = token;
@@ -176,11 +176,11 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct OpenEndedFrameCoroutineBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly BuilderToken _token;
 		private readonly Coroutine.Options _options;
 
-		internal OpenEndedFrameCoroutineBuilder(IScript script, BuilderToken token, in Coroutine.Options options)
+		internal OpenEndedFrameCoroutineBuilder(Script script, BuilderToken token, in Coroutine.Options options)
 		{
 			_script = script;
 			_token = token;
@@ -210,11 +210,11 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct OpenEndedHeartbeatCoroutineBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly BuilderToken _token;
 		private readonly Coroutine.Options _options;
 
-		internal OpenEndedHeartbeatCoroutineBuilder(IScript script, BuilderToken token, in Coroutine.Options options)
+		internal OpenEndedHeartbeatCoroutineBuilder(Script script, BuilderToken token, in Coroutine.Options options)
 		{
 			_script = script;
 			_token = token;

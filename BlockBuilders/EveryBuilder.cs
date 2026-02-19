@@ -10,15 +10,15 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct EveryBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly Int32 _interval;
 		private readonly BuilderToken _token;
 
-		internal EveryBuilder(IScript script, Int32 interval)
+		internal EveryBuilder(Script script, Int32 interval)
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_interval = interval;
-			_token = ((ILunyScriptInternal)script).CreateToken($"Every({interval})", "Every");
+			_token = script.CreateToken($"Every({interval})", "Every");
 		}
 
 		/// <summary>
@@ -37,13 +37,13 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct EveryUnitBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly BuilderToken _token;
 		private readonly Int32 _interval;
 		private readonly Int32 _delay;
 		private readonly Coroutine.Process _process;
 
-		internal EveryUnitBuilder(IScript script, BuilderToken token, Int32 interval, Coroutine.Process process, Int32 delay = 0)
+		internal EveryUnitBuilder(Script script, BuilderToken token, Int32 interval, Coroutine.Process process, Int32 delay = 0)
 		{
 			_script = script;
 			_token = token;

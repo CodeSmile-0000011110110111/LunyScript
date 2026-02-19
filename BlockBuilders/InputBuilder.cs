@@ -8,8 +8,8 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct InputApi
 	{
-		private readonly IScript _script;
-		internal InputApi(IScript script) => _script = script;
+		private readonly Script _script;
+		internal InputApi(Script script) => _script = script;
 
 		/// <summary>
 		/// Returns a VariableBlock reading the last known axis value (LunyVector2) for the named action.

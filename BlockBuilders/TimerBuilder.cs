@@ -10,15 +10,15 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct TimerBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly String _name;
 		private readonly BuilderToken _token;
 
-		internal TimerBuilder(IScript script, String name)
+		internal TimerBuilder(Script script, String name)
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_name = !String.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Timer name is null or empty", nameof(name));
-			_token = ((ILunyScriptInternal)script).CreateToken(_name, "Timer");
+			_token = script.CreateToken(_name, "Timer");
 		}
 
 		/// <summary>
@@ -37,13 +37,13 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct TimerDurationBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly String _name;
 		private readonly BuilderToken _token;
 		private readonly Double _amount;
 		private readonly Coroutine.Continuation _continuation;
 
-		internal TimerDurationBuilder(IScript script, String name, BuilderToken token, Double amount, Coroutine.Continuation continuation)
+		internal TimerDurationBuilder(Script script, String name, BuilderToken token, Double amount, Coroutine.Continuation continuation)
 		{
 			_script = script;
 			_name = name;
@@ -81,18 +81,18 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct TimerFinalBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly BuilderToken _token;
 		private readonly Coroutine.Options _options;
 
-		private TimerFinalBuilder(IScript script, BuilderToken token, in Coroutine.Options options)
+		private TimerFinalBuilder(Script script, BuilderToken token, in Coroutine.Options options)
 		{
 			_script = script;
 			_token = token;
 			_options = options;
 		}
 
-		internal static TimerFinalBuilder FromOptions(IScript script, BuilderToken token, in Coroutine.Options options) =>
+		internal static TimerFinalBuilder FromOptions(Script script, BuilderToken token, in Coroutine.Options options) =>
 			new(script, token, options);
 
 		/// <summary>

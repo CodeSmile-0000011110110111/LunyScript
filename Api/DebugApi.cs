@@ -9,8 +9,8 @@ namespace LunyScript.Api
 	/// </summary>
 	public readonly struct DebugApi
 	{
-		private readonly IScript _script;
-		internal DebugApi(IScript script) => _script = script;
+		private readonly Script _script;
+		internal DebugApi(Script script) => _script = script;
 
 		public ScriptActionBlock LogInfo(VariableBlock variableBlock) => DebugLogInfoBlock.Create(variableBlock);
 

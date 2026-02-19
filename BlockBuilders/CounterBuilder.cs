@@ -10,15 +10,15 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct CounterBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly String _name;
 		private readonly BuilderToken _token;
 
-		internal CounterBuilder(IScript script, String name)
+		internal CounterBuilder(Script script, String name)
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_name = !String.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Counter name is null or empty", nameof(name));
-			_token = ((ILunyScriptInternal)script).CreateToken(_name, "Counter");
+			_token = script.CreateToken(_name, "Counter");
 		}
 
 		/// <summary>
@@ -37,13 +37,13 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct CounterDurationBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly String _name;
 		private readonly BuilderToken _token;
 		private readonly Int32 _amount;
 		private readonly Coroutine.Continuation _continuation;
 
-		internal CounterDurationBuilder(IScript script, String name, BuilderToken token, Int32 amount, Coroutine.Continuation continuation)
+		internal CounterDurationBuilder(Script script, String name, BuilderToken token, Int32 amount, Coroutine.Continuation continuation)
 		{
 			_script = script;
 			_name = name;
@@ -73,11 +73,11 @@ namespace LunyScript.BlockBuilders
 	/// </summary>
 	public readonly struct CounterFinalBuilder
 	{
-		private readonly IScript _script;
+		private readonly Script _script;
 		private readonly BuilderToken _token;
 		private readonly Coroutine.Options _options;
 
-		internal CounterFinalBuilder(IScript script, BuilderToken token, in Coroutine.Options options)
+		internal CounterFinalBuilder(Script script, BuilderToken token, in Coroutine.Options options)
 		{
 			_script = script;
 			_token = token;

@@ -12,34 +12,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LunyScript
 {
-	public interface IScript
-	{
-		ScriptDefID ScriptDefId { get; }
-		ILunyObject LunyObject { get; }
-		Boolean IsEditor { get; }
-
-		DebugApi Debug { get; }
-		EditorApi Editor { get; }
-		EngineApi Engine { get; }
-		MethodApi Method { get; }
-		ObjectApi Object { get; }
-		OnApi On { get; }
-		PrefabApi Prefab { get; }
-		SceneApi Scene { get; }
-		WhenApi When { get; }
-		VarAccessor Var { get; }
-		VarAccessor GVar { get; }
-
-		VariableBlock Define(String name, Variable value);
-	}
-
-	internal interface ILunyScriptInternal
+	/*internal interface IScriptInternal
 	{
 		ScriptEventScheduler Scheduler { get; }
 		ScriptRuntimeContext RuntimeContext { get; }
 		BuilderToken CreateToken(String name, String type);
 		void FinalizeToken(BuilderToken token);
-	}
+	}*/
 
 	/// <summary>
 	/// Abstract base class for all LunyScripts.
@@ -58,7 +37,7 @@ namespace LunyScript
 	///			}
 	///		}
 	/// </remarks>
-	public abstract class Script : IScript, ILunyScriptInternal
+	public abstract class Script
 	{
 		private IScriptRuntimeContext _runtimeContext;
 		private VarAccessor _gVar;
@@ -89,8 +68,8 @@ namespace LunyScript
 		/// </summary>
 		public Boolean IsEditor => LunyEngine.Instance.Application.IsEditor;
 
-		ScriptEventScheduler ILunyScriptInternal.Scheduler => _runtimeContext is ScriptRuntimeContext context ? context.Scheduler : null;
-		ScriptRuntimeContext ILunyScriptInternal.RuntimeContext => _runtimeContext as ScriptRuntimeContext;
+		internal ScriptEventScheduler Scheduler => _runtimeContext is ScriptRuntimeContext context ? context.Scheduler : null;
+		internal ScriptRuntimeContext RuntimeContext => _runtimeContext as ScriptRuntimeContext;
 
 		// implemented APIs
 		public DebugApi Debug => new(this);
@@ -166,7 +145,7 @@ namespace LunyScript
 			_var = new VarAccessor(_runtimeContext.LocalVariables);
 		}
 
-		BuilderToken ILunyScriptInternal.CreateToken(String name, String type)
+		internal BuilderToken CreateToken(String name, String type)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
 			if (_pendingBuilderTokens == null)
@@ -181,7 +160,7 @@ namespace LunyScript
 #endif
 		}
 
-		void ILunyScriptInternal.FinalizeToken(BuilderToken token)
+		internal void FinalizeToken(BuilderToken token)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
 			token?.MarkFinished();
