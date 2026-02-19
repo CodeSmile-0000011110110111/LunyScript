@@ -15,7 +15,7 @@ namespace LunyScript.BlockBuilders
 		/// Returns a VariableBlock reading the last known axis value (LunyVector2) for the named action.
 		/// Works inside On.Input(), On.FrameUpdate(), or any other context.
 		/// </summary>
-		public VariableBlock Direction(String actionName) => InputDirectionBlock.Create(actionName);
+		public VariableBlock Direction(String actionName) => InputBlock.Create(actionName);
 
 		/// <summary>
 		/// Returns a button handle with condition and value accessors for the named action.

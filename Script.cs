@@ -12,14 +12,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LunyScript
 {
-	/*internal interface IScriptInternal
-	{
-		ScriptEventScheduler Scheduler { get; }
-		ScriptRuntimeContext RuntimeContext { get; }
-		BuilderToken CreateToken(String name, String type);
-		void FinalizeToken(BuilderToken token);
-	}*/
-
 	/// <summary>
 	/// Abstract base class for all LunyScripts.
 	/// Provides the API interface for beginner-friendly visual scripting in C#.
@@ -55,15 +47,6 @@ namespace LunyScript
 		/// </summary>
 		[MaybeNull] public ILunyObject LunyObject => _runtimeContext.LunyObject;
 		/// <summary>
-		/// Global variables which all objects and scripts can read/write.
-		/// </summary>
-		//[NotNull] public ITable GlobalVariables => _context.GlobalVariables;
-		/// <summary>
-		/// Local variables the current object and script owns.
-		/// If multiple objects run the same script, each object has its own unique set of local variables.
-		/// </summary>
-		//[NotNull] public ITable LocalVariables => _context.LocalVariables;
-		/// <summary>
 		/// True if the script runs within the engine's editor (play mode). False in builds.
 		/// </summary>
 		public Boolean IsEditor => LunyEngine.Instance.Application.IsEditor;
@@ -75,17 +58,19 @@ namespace LunyScript
 		public DebugApi Debug => new(this);
 		public EditorApi Editor => new(this);
 		public EngineApi Engine => new(this);
+		public InputApi Input => new(this);
 		public LoopApi Loop => new(this);
 		public MethodApi Method => new(this);
 		public ObjectApi Object => new(this);
 		public OnApi On => new(this);
 		public PrefabApi Prefab => new(this);
 		public SceneApi Scene => new(this);
+		public TimeApi Time => new(this);
+		public TransformApi Transform => new(this);
 		public WhenApi When => new(this);
 
 		// these API outlines exist to get a feel for the intellisense/autocompletion behaviour ...
-
-		// planned API outline
+		// planned API outline (consider this the TODO list)
 		public ApiPlaceholders.AnimationApi Animation => new(this);
 		public ApiPlaceholders.ApplicationApi Application => new(this);
 		public ApiPlaceholders.AssetApi Asset => new(this);
@@ -93,12 +78,10 @@ namespace LunyScript
 		public ApiPlaceholders.CameraApi Camera => new(this);
 		public ApiPlaceholders.DiagnosticsApi Diagnostics => new(this);
 		public ApiPlaceholders.HUDApi HUD => new(this);
-		public InputApi Input => new(this);
 		public ApiPlaceholders.MenuApi Menu => new(this);
 		public ApiPlaceholders.PhysicsApi Physics => new(this);
 		public ApiPlaceholders.PlayerApi Player => new(this);
 		public ApiPlaceholders.StorageApi Storage => new(this);
-		public TimeApi Time => new(this);
 
 		// possible future expansions
 		public ApiPlaceholders.AccessibilityApi Accessibility => new(this);
@@ -122,7 +105,6 @@ namespace LunyScript
 		public ApiPlaceholders.PostFxApi PostFx => new(this);
 		public ApiPlaceholders.ProgressApi Progress => new(this);
 		public ApiPlaceholders.QualityApi Quality => new(this);
-		//public ApiPlaceholders.ScriptApi Script => new(this);
 		public ApiPlaceholders.SessionApi Session => new(this);
 		public ApiPlaceholders.SettingsApi Settings => new(this);
 		public ApiPlaceholders.SpawnApi Spawn => new(this);
@@ -135,6 +117,7 @@ namespace LunyScript
 		public ApiPlaceholders.UIApi UI => new(this);
 		public ApiPlaceholders.VFXApi VFX => new(this);
 		public ApiPlaceholders.VideoApi Video => new(this);
+
 		public VarAccessor GVar => _gVar;
 		public VarAccessor Var => _var;
 

@@ -8,12 +8,12 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Reads the last known axis value (LunyVector2) for a named input action from the input service.
 	/// </summary>
-	internal sealed class InputDirectionBlock : ComputedVariableBlock
+	internal sealed class InputBlock : ComputedVariableBlock
 	{
 		private readonly String _actionName;
 
-		internal static InputDirectionBlock Create(String actionName) => new(actionName);
-		private InputDirectionBlock(String actionName) => _actionName = actionName;
+		internal static InputBlock Create(String actionName) => new(actionName);
+		private InputBlock(String actionName) => _actionName = actionName;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
