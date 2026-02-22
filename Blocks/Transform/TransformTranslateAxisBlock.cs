@@ -26,9 +26,10 @@ namespace LunyScript.Blocks.Transform
 		{
 			var transform = runtimeContext.LunyObject.Transform;
 			var deltaTime = LunyEngine.Instance.Time.DeltaTime;
-			var distance = _distance.GetValue<Double>(runtimeContext);
-			var speed = _speed.GetValue<Double>(runtimeContext);
-			transform.Translate(distance * _axis * (speed * deltaTime), _space);
+			var distance = _distance.GetValue<Double>();
+			var speed = _speed.GetValue<Double>();
+			var translation = distance * _axis * (speed * deltaTime);
+			transform.Translate(translation, _space);
 		}
 
 		public override String ToString() => $"{GetType().Name}({_distance}, {_axis}, {_speed}, {_space})";

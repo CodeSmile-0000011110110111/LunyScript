@@ -26,11 +26,11 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
+		internal override Variable GetValue() => Evaluate(null);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue(runtimeContext) == _right.GetValue(runtimeContext);
+			_left.GetValue() == _right.GetValue();
 
 		public override String ToString() => $"{_left} == {_right}";
 	}
@@ -43,11 +43,11 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
+		internal override Variable GetValue() => Evaluate(null);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue(runtimeContext) != _right.GetValue(runtimeContext);
+			_left.GetValue() != _right.GetValue();
 	}
 
 	internal sealed class VariableIsGreaterThanBlock : VariableComparisonBlock
@@ -58,11 +58,11 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
+		internal override Variable GetValue() => Evaluate(null);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue(runtimeContext) > (Double)_right.GetValue(runtimeContext);
+			_left.GetValue() > (Double)_right.GetValue();
 	}
 
 	internal sealed class VariableIsAtLeastBlock : VariableComparisonBlock
@@ -73,11 +73,11 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
+		internal override Variable GetValue() => Evaluate(null);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue(runtimeContext) >= (Double)_right.GetValue(runtimeContext);
+			_left.GetValue() >= (Double)_right.GetValue();
 	}
 
 	internal sealed class VariableIsLessThanBlock : VariableComparisonBlock
@@ -88,11 +88,11 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
+		internal override Variable GetValue() => Evaluate(null);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue(runtimeContext) < (Double)_right.GetValue(runtimeContext);
+			_left.GetValue() < (Double)_right.GetValue();
 	}
 
 	internal sealed class VariableIsAtMostBlock : VariableComparisonBlock
@@ -103,10 +103,10 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => Evaluate(runtimeContext);
+		internal override Variable GetValue() => Evaluate(null);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue(runtimeContext) <= (Double)_right.GetValue(runtimeContext);
+			_left.GetValue() <= (Double)_right.GetValue();
 	}
 }

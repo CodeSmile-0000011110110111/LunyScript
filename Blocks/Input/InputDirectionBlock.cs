@@ -16,17 +16,17 @@ namespace LunyScript.Blocks
 		private InputBlock(String actionName) => _actionName = actionName;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
+		internal override Variable GetValue() =>
 			Variable.FromVector2(LunyEngine.Instance.Input.GetDirection(_actionName));
 
-		internal override T GetValue<T>(IScriptRuntimeContext runtimeContext)
+		internal override T GetValue<T>()
 		{
 			if (typeof(T) == typeof(LunyVector2))
 			{
 				var val = LunyEngine.Instance.Input.GetDirection(_actionName);
 				return Unsafe.As<LunyVector2, T>(ref val);
 			}
-			return base.GetValue<T>(runtimeContext);
+			return base.GetValue<T>();
 		}
 
 		public override String ToString() => $"Input.Axis(\"{_actionName}\")";

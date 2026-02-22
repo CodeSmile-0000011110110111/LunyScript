@@ -25,6 +25,6 @@ namespace LunyScript.Blocks
 
 		// VariableBlock
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => _handle.Value;
+		internal override Variable GetValue() => _handle.Value;
 	}
 }

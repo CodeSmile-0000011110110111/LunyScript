@@ -18,7 +18,7 @@ namespace LunyScript.Blocks
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
 			LunyEngine.Instance.Input.GetButtonStrength(_actionName) > Single.Epsilon;
 
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => LunyEngine.Instance.Input.GetButtonStrength(_actionName);
+		internal override Variable GetValue() => LunyEngine.Instance.Input.GetButtonStrength(_actionName);
 
 		public override String ToString() => $"Input.Button(\"{_actionName}\").Strength";
 	}

@@ -1,4 +1,5 @@
 using Luny;
+using System;
 using System.Runtime.CompilerServices;
 
 namespace LunyScript.Blocks
@@ -12,6 +13,7 @@ namespace LunyScript.Blocks
 		private LoopCounterVariableBlock() {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) => runtimeContext.LoopCount;
+		internal override Variable GetValue() => throw new NotImplementedException($"{nameof(LoopCounterVariableBlock)}.{nameof(GetValue)}()");
+			//runtimeContext.LoopCount;
 	}
 }

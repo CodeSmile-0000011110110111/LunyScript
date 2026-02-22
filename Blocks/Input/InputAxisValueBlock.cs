@@ -15,7 +15,7 @@ namespace LunyScript.Blocks
 		private InputAxisValueBlock(String actionName) => _actionName = actionName;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
+		internal override Variable GetValue() =>
 			(Double)LunyEngine.Instance.Input.GetAxis(_actionName);
 
 		public override String ToString() => $"Input.Button(\"{_actionName}\").Value";

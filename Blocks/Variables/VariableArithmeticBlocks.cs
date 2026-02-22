@@ -26,8 +26,8 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue(runtimeContext) + (Double)_right.GetValue(runtimeContext);
+		internal override Variable GetValue() =>
+			_left.GetValue() + (Double)_right.GetValue();
 	}
 
 	internal sealed class VariableSubtractBlock : VariableArithmeticBlock
@@ -38,8 +38,8 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue(runtimeContext) - (Double)_right.GetValue(runtimeContext);
+		internal override Variable GetValue() =>
+			_left.GetValue() - (Double)_right.GetValue();
 	}
 
 	internal sealed class VariableMultiplyBlock : VariableArithmeticBlock
@@ -50,8 +50,8 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue(runtimeContext) * (Double)_right.GetValue(runtimeContext);
+		internal override Variable GetValue() =>
+			_left.GetValue() * (Double)_right.GetValue();
 	}
 
 	internal sealed class VariableDivideBlock : VariableArithmeticBlock
@@ -62,7 +62,7 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue(runtimeContext) / (Double)_right.GetValue(runtimeContext);
+		internal override Variable GetValue() =>
+			_left.GetValue() / (Double)_right.GetValue();
 	}
 }
