@@ -147,6 +147,11 @@ namespace LunyScript.Blocks
 				var vec3 = v.AsVector3();
 				return Unsafe.As<LunyVector3, T>(ref vec3);
 			}
+			if (typeof(T) == typeof(LunyQuaternion))
+			{
+				var q = v.AsQuaternion();
+				return Unsafe.As<LunyQuaternion, T>(ref q);
+			}
 
 			throw new LunyScriptVariableException($"Cannot convert {v.Type} to {typeof(T).Name}");
 		}

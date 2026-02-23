@@ -12,15 +12,20 @@ namespace LunyScript.BlockBuilders
 		internal InputApi(Script script) => _script = script;
 
 		/// <summary>
-		/// Returns a VariableBlock reading the last known axis value (LunyVector2) for the named action.
-		/// Works inside On.Input(), On.FrameUpdate(), or any other context.
+		/// Returns a VariableBlock reading the last known axis value (Vector2) for the named action.
 		/// </summary>
-		public VariableBlock Direction(String actionName) => InputBlock.Create(actionName);
+		public VariableBlock Direction(String actionName) => InputAxisDirectionBlock.Create(actionName);
+
+		/// <summary>
+		/// Returns a VariableBlock reading the last known axis value (Vector2) for the named action.
+		/// </summary>
+		public VariableBlock Rotation(String actionName) => InputAxisRotationBlock.Create(actionName);
 
 		/// <summary>
 		/// Returns a button handle with condition and value accessors for the named action.
 		/// </summary>
 		public InputButtonBuilder Button(String actionName) => new(actionName);
+
 		/// <summary>
 		/// Returns a axis handle with condition and value accessors for the named action.
 		/// </summary>

@@ -13,6 +13,7 @@ namespace LunyScript.Api
 		private readonly Script _script;
 		internal WhenApi(Script script) => _script = script;
 
+		public InputApi Input => new(_script);
 		public SceneApi Scene => new(_script);
 
 		/// <summary>
@@ -57,6 +58,13 @@ namespace LunyScript.Api
 			/// <exception cref="NotImplementedException"></exception>
 			public SequenceBlock Unloads(String sceneName, params ScriptActionBlock[] blocks) =>
 				throw new NotImplementedException(nameof(Unloads));
+		}
+
+		public readonly struct InputApi
+		{
+			private readonly Script _script;
+			internal InputApi(Script script) => _script = script;
+			private ScriptEventScheduler Scheduler => _script.Scheduler;
 		}
 	}
 }
