@@ -2,6 +2,7 @@ using LunyScript.Blocks;
 
 namespace LunyScript.Api
 {
+	/*
 	public readonly struct LoopApi
 	{
 		private readonly Script _script;
@@ -13,4 +14,5 @@ namespace LunyScript.Api
 		/// </summary>
 		public VariableBlock Counter => LoopCounterVariableBlock.Instance;
 	}
+*/
 }

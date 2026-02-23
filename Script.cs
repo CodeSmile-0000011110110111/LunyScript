@@ -59,7 +59,7 @@ namespace LunyScript
 		public EditorApi Editor => new(this);
 		public EngineApi Engine => new(this);
 		public InputApi Input => new(this);
-		public LoopApi Loop => new(this);
+		//public LoopApi Loop => new(this);
 		public MethodApi Method => new(this);
 		public ObjectApi Object => new(this);
 		public OnApi On => new(this);

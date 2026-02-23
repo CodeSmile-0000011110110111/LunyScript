@@ -54,7 +54,7 @@ namespace LunyScript.Blocks
 			var iterations = 0;
 #endif
 
-			var loopStack = runtimeContext.LoopStack;
+			//var loopStack = runtimeContext.LoopStack;
 			var maxLimit = ScriptEngine.MaxLoopIterations;
 
 			if (_step > 0)
@@ -65,14 +65,14 @@ namespace LunyScript.Blocks
 					if (++iterations > maxLimit)
 						throw new LunyScriptMaxIterationException(nameof(ForBlock), maxLimit);
 #endif
-					loopStack.Push(i);
+					//loopStack.Push(i);
 					try
 					{
 						ExecuteAll(runtimeContext);
 					}
 					finally
 					{
-						loopStack.Pop();
+						//loopStack.Pop();
 					}
 				}
 			}
@@ -84,14 +84,14 @@ namespace LunyScript.Blocks
 					if (++iterations > maxLimit)
 						throw new LunyScriptMaxIterationException(nameof(ForBlock), maxLimit);
 #endif
-					loopStack.Push(i);
+					//loopStack.Push(i);
 					try
 					{
 						ExecuteAll(runtimeContext);
 					}
 					finally
 					{
-						loopStack.Pop();
+						//loopStack.Pop();
 					}
 				}
 			}

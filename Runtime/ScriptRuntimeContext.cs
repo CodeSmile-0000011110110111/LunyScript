@@ -18,8 +18,8 @@ namespace LunyScript
 		ILunyObject LunyObject { get; }
 		ITable GlobalVariables { get; }
 		ITable LocalVariables { get; }
-		Stack<Int32> LoopStack { get; }
-		Int32 LoopCount { get; }
+		//Stack<Int32> LoopStack { get; }
+		//Int32 LoopCount { get; }
 	}
 
 	internal interface IScriptContextInternal {}
@@ -65,11 +65,11 @@ namespace LunyScript
 		/// <summary>
 		/// Stack for loop iteration counters.
 		/// </summary>
-		public Stack<Int32> LoopStack => _loopStack ??= new Stack<Int32>();
+		//public Stack<Int32> LoopStack => _loopStack ??= new Stack<Int32>();
 		/// <summary>
 		/// Current loop iteration count. Returns 0 outside of loops.
 		/// </summary>
-		public Int32 LoopCount => LoopStack?.Count > 0 ? LoopStack.Peek() : 0;
+		//public Int32 LoopCount => LoopStack?.Count > 0 ? LoopStack.Peek() : 0;
 		/// <summary>
 		/// Debugging hooks for execution tracing and breakpoints.
 		/// </summary>
