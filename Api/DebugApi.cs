@@ -12,6 +12,9 @@ namespace LunyScript.Api
 		private readonly Script _script;
 		internal DebugApi(Script script) => _script = script;
 
+		public ScriptActionBlock Log(VariableBlock variableBlock) => LogInfo(variableBlock);
+		public ScriptActionBlock Log(String message) => LogInfo(message);
+
 		public ScriptActionBlock LogInfo(VariableBlock variableBlock) => DebugLogInfoBlock.Create(variableBlock);
 
 		/// <summary>
