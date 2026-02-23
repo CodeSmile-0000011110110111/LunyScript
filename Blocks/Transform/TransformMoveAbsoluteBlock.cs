@@ -4,17 +4,17 @@ using System;
 
 namespace LunyScript.Blocks.Transform
 {
-	public sealed class TransformTranslateAxisBlock : ScriptActionBlock
+	public sealed class TransformMoveAbsoluteBlock : ScriptActionBlock
 	{
 		private VariableBlock _distance;
 		private LunyVector3 _axis;
 		private VariableBlock _speed;
 		private LunySpace _space;
 
-		public static TransformTranslateAxisBlock Create(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunySpace space) =>
+		public static TransformMoveAbsoluteBlock Create(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunySpace space) =>
 			new(distance, axis, speed, space);
 
-		private TransformTranslateAxisBlock(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunySpace space)
+		private TransformMoveAbsoluteBlock(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunySpace space)
 		{
 			_distance = distance;
 			_axis = axis;

@@ -4,16 +4,16 @@ using System;
 
 namespace LunyScript.Blocks.Transform
 {
-	public sealed class TransformTranslateBlock : ScriptActionBlock
+	public sealed class TransformMoveForwardBlock : ScriptActionBlock
 	{
 		private VariableBlock _direction;
 		private VariableBlock _speed;
 		private LunySpace _space;
 
-		public static TransformTranslateBlock Create(VariableBlock direction, VariableBlock speed, LunySpace space) =>
+		public static TransformMoveForwardBlock Create(VariableBlock direction, VariableBlock speed, LunySpace space) =>
 			new(direction, speed, space);
 
-		private TransformTranslateBlock(VariableBlock direction, VariableBlock speed, LunySpace space)
+		private TransformMoveForwardBlock(VariableBlock direction, VariableBlock speed, LunySpace space)
 		{
 			_direction = direction;
 			_speed = speed;

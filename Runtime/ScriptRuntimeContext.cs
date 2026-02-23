@@ -40,7 +40,7 @@ namespace LunyScript
 		private ScriptDebugHooks _debugHooks;
 		private ScriptBlockProfiler _blockProfiler;
 		private ITable _localVariables;
-		private Stack<Int32> _loopStack;
+		//private Stack<Int32> _loopStack;
 
 		/// <summary>
 		/// The ID of the script definition this context executes.
