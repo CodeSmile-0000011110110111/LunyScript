@@ -55,6 +55,7 @@ namespace LunyScript
 		internal ScriptRuntimeContext RuntimeContext => _runtimeContext as ScriptRuntimeContext;
 
 		// implemented APIs
+		public ComponentApi Component => new(this);
 		public DebugApi Debug => new(this);
 		public EditorApi Editor => new(this);
 		public EngineApi Engine => new(this);
@@ -224,7 +225,7 @@ namespace LunyScript
 		/// Supports optional phase offset: Every(n).Frames().DelayBy(offset).Do(blocks).
 		/// Use Even or Odd constants for alternating execution.
 		/// </summary>
-		protected EveryBuilder Every(Int32 interval) => new(this, interval);
+		protected EveryBuilder Every(Int32 interval = 0) => new(this, interval);
 
 		~Script() => LunyTraceLogger.LogInfoFinalized(this);
 

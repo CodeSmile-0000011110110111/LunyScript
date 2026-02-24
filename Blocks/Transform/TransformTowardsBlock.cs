@@ -22,13 +22,12 @@ namespace LunyScript.Blocks.Transform
 			Boolean lockZ,
 			Double responsiveness)
 		{
-			Speed = (Single)speed;
+			Speed = speed > 0f ? (Single)speed : 1f;
 			DeadZone = (Single)deadZone;
 			AxisLock = new LunyVector3(lockX ? 0d : 1d, lockY ? 0d : 1d, lockZ ? 0d : 1d);
-			Responsiveness = (Single)responsiveness;
+			Responsiveness = responsiveness > 0f ? (Single)responsiveness : 1f;
 		}
 
-		protected String TowardsToString() =>
-			$"speed={Speed}, deadZone={DeadZone}, axisLock={AxisLock}, responsiveness={Responsiveness}";
+		protected String TowardsToString() => $"speed={Speed}, deadZone={DeadZone}, axisLock={AxisLock}, responsiveness={Responsiveness}";
 	}
 }

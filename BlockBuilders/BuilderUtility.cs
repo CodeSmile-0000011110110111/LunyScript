@@ -42,29 +42,6 @@ namespace LunyScript.BlockBuilders
 			return block;
 		}
 
-		public static ScriptActionBlock Finalize(Script script, in ObjectCreateOptions options, BuilderToken token)
-		{
-			var block = options.Mode switch
-			{
-				ObjectCreationMode.Empty => ObjectCreateEmptyBlock.Create(options.Name),
-				ObjectCreationMode.Primitive => options.PrimitiveType switch
-				{
-					LunyPrimitiveType.Cube => ObjectCreateCubeBlock.Create(options.Name),
-					LunyPrimitiveType.Sphere => ObjectCreateSphereBlock.Create(options.Name),
-					LunyPrimitiveType.Capsule => ObjectCreateCapsuleBlock.Create(options.Name),
-					LunyPrimitiveType.Cylinder => ObjectCreateCylinderBlock.Create(options.Name),
-					LunyPrimitiveType.Plane => ObjectCreatePlaneBlock.Create(options.Name),
-					LunyPrimitiveType.Quad => ObjectCreateQuadBlock.Create(options.Name),
-					var _ => ObjectCreateEmptyBlock.Create(options.Name),
-				},
-				ObjectCreationMode.Prefab => ObjectCreatePrefabBlock.Create(options.Name, options.AssetName),
-				ObjectCreationMode.Clone => ObjectCreateCloneBlock.Create(options.Name, options.AssetName),
-				var _ => throw new NotImplementedException(
-					$"{nameof(ObjectBuilder<ObjectBuilderNameSet>)}: Mode {options.Mode} is not implemented."),
-			};
 
-			script.FinalizeToken(token);
-			return block;
-		}
 	}
 }
