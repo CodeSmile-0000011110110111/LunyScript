@@ -13,12 +13,20 @@ namespace LunyScript
 		IScriptRuntimeContext GetScriptContext(LunyNativeObjectID lunyNativeObjectID);
 	}
 
+	internal interface IScriptEngineInternal
+	{
+		event Action<ScriptRuntimeContext> OnScriptBuilt;
+	}
+
 	/// <summary>
 	/// Public interface for LunyScript
 	/// </summary>
-	public sealed class ScriptEngine : IScriptEngine
+	public sealed class ScriptEngine : IScriptEngine, IScriptEngineInternal
 	{
+		public event Action<ScriptRuntimeContext> OnScriptBuilt;
+
 		private LunyScriptRunner _runner;
+
 		public static IScriptEngine Instance { get; private set; }
 		public ITable GlobalVariables => ScriptRuntimeContext.GetGlobalVariables();
 
@@ -62,5 +70,7 @@ namespace LunyScript
 			GC.SuppressFinalize(this);
 			LunyTraceLogger.LogInfoShutdownComplete(this);
 		}
+
+		internal void InvokeOnScriptBuilt(ScriptRuntimeContext runtimeContext) => OnScriptBuilt?.Invoke(runtimeContext);
 	}
 }

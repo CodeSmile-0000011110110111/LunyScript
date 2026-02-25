@@ -7,10 +7,9 @@ using System.Diagnostics.CodeAnalysis;
 namespace LunyScript.Events
 {
 	/// <summary>
-	/// Manages object lifecycle events by attaching hooks to LunyObjects and handling event dispatch.
-	/// Coordinates enable/disable state changes and deferred object destruction.
+	/// Manages scene events by attaching hooks to LunyObjects and handling event dispatch.
 	/// </summary>
-	internal sealed class ScriptSceneEventHandler : ILunyScriptLifecycleInternal
+	internal sealed class ScriptSceneEventHandler
 	{
 		[NotNull] private readonly ScriptRuntimeContextRegistry _contexts;
 
@@ -21,10 +20,6 @@ namespace LunyScript.Events
 
 		~ScriptSceneEventHandler() => LunyTraceLogger.LogInfoFinalized(this);
 
-		/// <summary>
-		/// Registers lifecycle hooks on a LunyObject for the given context.
-		/// Called during ScriptContext construction.
-		/// </summary>
 		internal void Register(ScriptRuntimeContext runtimeContext)
 		{
 			if (runtimeContext.Scheduler.IsObservingAnyOf(typeof(LunySceneEvent)))

@@ -58,5 +58,25 @@ namespace LunyScript.Api
 		/// May run multiple times per frame and may not run in every frame.
 		/// </summary>
 		public SequenceBlock Heartbeat(params ScriptActionBlock[] blocks) => Scheduler?.ScheduleSequence(blocks, LunyObjectEvent.OnHeartbeat);
+
+		// Collision events
+		public SequenceBlock CollisionStarted(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleSequence(blocks, LunyCollisionEvent.OnCollisionStarted);
+
+		public SequenceBlock CollisionEnded(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleSequence(blocks, LunyCollisionEvent.OnCollisionEnded);
+
+		public SequenceBlock Colliding(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleSequence(blocks, LunyCollisionEvent.OnColliding);
+
+		// Trigger events
+		public SequenceBlock TriggerEntered(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleSequence(blocks, LunyTriggerEvent.OnTriggerEntered);
+
+		public SequenceBlock TriggerExited(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleSequence(blocks, LunyTriggerEvent.OnTriggerExited);
+
+		public SequenceBlock Triggering(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleSequence(blocks, LunyTriggerEvent.OnTriggering);
 	}
 }

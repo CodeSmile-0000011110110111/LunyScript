@@ -28,7 +28,7 @@ namespace LunyScript
 	/// Runtime context for a LunyScript instance operating on a specific object.
 	/// Contains the script metadata, object reference, variables, and registered sequences.
 	/// </summary>
-	internal sealed class ScriptRuntimeContext : IScriptRuntimeContext, IScriptContextInternal
+	public sealed class ScriptRuntimeContext : IScriptRuntimeContext, IScriptContextInternal
 	{
 		private static readonly ITable s_GlobalVariables = new Table();
 
@@ -95,7 +95,7 @@ namespace LunyScript
 		{
 			_scriptDef = definition ?? throw new ArgumentNullException(nameof(definition));
 			_lunyObject = lunyObject ?? throw new ArgumentNullException(nameof(lunyObject));
-			LunyLogger.LogInfo($"NEW {this} ({GetHashCode()})", this);
+			//LunyLogger.LogInfo($"new {this} ({GetHashCode()})", this);
 		}
 
 		internal void Activate() => _lunyObject.Initialize();

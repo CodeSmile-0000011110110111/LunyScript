@@ -13,10 +13,18 @@ namespace LunyScript.Events
 	{
 		private static readonly Int32 s_ObjectEventCount = Enum.GetNames(typeof(LunyObjectEvent)).Length;
 		private static readonly Int32 s_SceneEventCount = Enum.GetNames(typeof(LunySceneEvent)).Length;
+		private static readonly Int32 s_CollisionEventCount = Enum.GetNames(typeof(LunyCollisionEvent)).Length;
+		private static readonly Int32 s_TriggerEventCount = Enum.GetNames(typeof(LunyTriggerEvent)).Length;
+		private static readonly Int32 s_Collision2DEventCount = Enum.GetNames(typeof(LunyCollision2DEvent)).Length;
+		private static readonly Int32 s_Trigger2DEventCount = Enum.GetNames(typeof(LunyTrigger2DEvent)).Length;
 
 		// Fast array-based storage for lifecycle events (hot path)
-		private List<SequenceBlock>[] _objectEventSequences;
-		private List<SequenceBlock>[] _sceneEventSequences;
+		private List<SequenceBlock>[] _objectSequences;
+		private List<SequenceBlock>[] _sceneSequences;
+		private List<SequenceBlock>[] _collisionSequences;
+		private List<SequenceBlock>[] _triggerSequences;
+		private List<SequenceBlock>[] _collision2DSequences;
+		private List<SequenceBlock>[] _trigger2DSequences;
 
 		private static SequenceBlock ScheduleSequence(ref List<SequenceBlock>[] sequencesRef, SequenceBlock sequence,
 			Int32 eventIndex, Int32 eventCount)
@@ -33,40 +41,72 @@ namespace LunyScript.Events
 
 		~ScriptEventScheduler() => LunyTraceLogger.LogInfoFinalized(this);
 
+		/// Schedule Events
 		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunyObjectEvent objectEvent) =>
-			ScheduleSequence(ref _objectEventSequences, SequenceBlock.TryCreate(blocks), (Int32)objectEvent, s_ObjectEventCount);
+			ScheduleSequence(ref _objectSequences, SequenceBlock.TryCreate(blocks), (Int32)objectEvent, s_ObjectEventCount);
 
-		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunySceneEvent sceneEvent) =>
-			ScheduleSequence(ref _sceneEventSequences, SequenceBlock.TryCreate(blocks), (Int32)sceneEvent, s_SceneEventCount);
+		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunySceneEvent sceneEvent) => ScheduleSequence(ref _sceneSequences,
+			SequenceBlock.TryCreate(blocks), (Int32)sceneEvent, s_SceneEventCount);
 
-		/// <summary>
+		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunyCollisionEvent collisionEvent) =>
+			ScheduleSequence(ref _collisionSequences, SequenceBlock.TryCreate(blocks), (Int32)collisionEvent, s_CollisionEventCount);
+
+		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunyTriggerEvent triggerEvent) =>
+			ScheduleSequence(ref _triggerSequences, SequenceBlock.TryCreate(blocks), (Int32)triggerEvent, s_TriggerEventCount);
+
+		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunyCollision2DEvent collision2DEvent) =>
+			ScheduleSequence(ref _collision2DSequences, SequenceBlock.TryCreate(blocks), (Int32)collision2DEvent, s_Collision2DEventCount);
+
+		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunyTrigger2DEvent trigger2DEvent) =>
+			ScheduleSequence(ref _trigger2DSequences, SequenceBlock.TryCreate(blocks), (Int32)trigger2DEvent, s_Trigger2DEventCount);
+
 		/// Gets all sequences scheduled for a specific lifecycle event.
-		/// </summary>
 		internal IEnumerable<SequenceBlock> GetSequences(LunyObjectEvent objectEvent) =>
-			IsObserving((Int32)objectEvent, ref _objectEventSequences) ? _objectEventSequences[(Int32)objectEvent] : null;
+			IsObserving((Int32)objectEvent, ref _objectSequences) ? _objectSequences[(Int32)objectEvent] : null;
 
-		internal IEnumerable<SequenceBlock> GetSequences(LunySceneEvent sceneEvent) => IsObserving((Int32)sceneEvent, ref _objectEventSequences)
-			? _objectEventSequences[(Int32)sceneEvent]
+		internal IEnumerable<SequenceBlock> GetSequences(LunySceneEvent sceneEvent) => IsObserving((Int32)sceneEvent, ref _objectSequences)
+			? _objectSequences[(Int32)sceneEvent]
 			: null;
 
-		internal Boolean IsObserving(Int32 eventIndex, ref List<SequenceBlock>[] sequencesRef)
-		{
-			if (sequencesRef == null)
-				return false;
+		internal IEnumerable<SequenceBlock> GetSequences(LunyCollisionEvent collisionEvent) =>
+			IsObserving((Int32)collisionEvent, ref _collisionSequences)
+				? _collisionSequences[(Int32)collisionEvent]
+				: null;
 
-			var eventSequences = sequencesRef[eventIndex];
-			return eventSequences != null && eventSequences.Count > 0;
-		}
+		internal IEnumerable<SequenceBlock> GetSequences(LunyTriggerEvent triggerEvent) =>
+			IsObserving((Int32)triggerEvent, ref _triggerSequences)
+				? _triggerSequences[(Int32)triggerEvent]
+				: null;
+
+		internal IEnumerable<SequenceBlock> GetSequences(LunyCollision2DEvent collisionEvent) =>
+			IsObserving((Int32)collisionEvent, ref _collisionSequences)
+				? _collisionSequences[(Int32)collisionEvent]
+				: null;
+
+		internal IEnumerable<SequenceBlock> GetSequences(LunyTrigger2DEvent triggerEvent) =>
+			IsObserving((Int32)triggerEvent, ref _triggerSequences)
+				? _triggerSequences[(Int32)triggerEvent]
+				: null;
+
+		internal Boolean IsObserving(Int32 eventIndex, ref List<SequenceBlock>[] sequencesRef) =>
+			sequencesRef != null && sequencesRef[eventIndex] != null && sequencesRef[eventIndex].Count > 0;
 
 		internal Boolean IsObservingAnyOf(Type enumType)
 		{
 			switch (enumType)
 			{
 				case not null when enumType == typeof(LunyObjectEvent):
-					return _objectEventSequences != null;
+					return _objectSequences != null;
 				case not null when enumType == typeof(LunySceneEvent):
-					return _sceneEventSequences != null;
-
+					return _sceneSequences != null;
+				case not null when enumType == typeof(LunyCollisionEvent):
+					return _collisionSequences != null;
+				case not null when enumType == typeof(LunyTriggerEvent):
+					return _triggerSequences != null;
+				case not null when enumType == typeof(LunyCollision2DEvent):
+					return _collision2DSequences != null;
+				case not null when enumType == typeof(LunyTrigger2DEvent):
+					return _trigger2DSequences != null;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(enumType), enumType?.ToString());
 			}
@@ -74,10 +114,10 @@ namespace LunyScript.Events
 
 		internal void Unschedule(LunyObjectEvent objectEvent)
 		{
-			if (_objectEventSequences == null)
+			if (_objectSequences == null)
 				return;
 
-			_objectEventSequences[(Int32)objectEvent] = null;
+			_objectSequences[(Int32)objectEvent] = null;
 		}
 
 		public void Shutdown() => GC.SuppressFinalize(this);

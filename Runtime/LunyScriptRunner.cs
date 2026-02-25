@@ -24,7 +24,7 @@ namespace LunyScript
 		[NotNull] private ScriptEngine _scriptEngine;
 		[NotNull] private ScriptDefinitionRegistry _scripts;
 		[NotNull] private ScriptRuntimeContextRegistry _contexts;
-		[NotNull] private ScriptLifecycle _scriptLifecycle;
+		[NotNull] private ScriptObjectEventHandler _objectEventHandler;
 		[NotNull] private ScriptSceneEventHandler _sceneEventHandler;
 
 		private ILunyTimeService _engineTime;
@@ -34,7 +34,7 @@ namespace LunyScript
 
 		internal ScriptDefinitionRegistry Scripts => _scripts;
 		internal ScriptRuntimeContextRegistry Contexts => _contexts;
-		internal ScriptLifecycle ScriptLifecycle => _scriptLifecycle;
+		internal ScriptObjectEventHandler ObjectEventHandler => _objectEventHandler;
 		internal ScriptSceneEventHandler SceneEventHandler => _sceneEventHandler;
 
 		internal static void Run(IEnumerable<SequenceBlock> sequences, ScriptRuntimeContext runtimeContext)
@@ -98,7 +98,7 @@ namespace LunyScript
 			_scriptEngine = new ScriptEngine(this); // public API interface (split to ensure users don't call OnStartup etc)
 			_scripts = new ScriptDefinitionRegistry(); // performs LunyScript type discovery
 			_contexts = new ScriptRuntimeContextRegistry();
-			_scriptLifecycle = new ScriptLifecycle(_contexts);
+			_objectEventHandler = new ScriptObjectEventHandler(_contexts);
 			_sceneEventHandler = new ScriptSceneEventHandler(_contexts);
 			_engineTime = LunyEngine.Instance.Time;
 
@@ -138,7 +138,7 @@ namespace LunyScript
 					context.LunyObject.Destroy();
 
 				// final cleanup of pending object destroy
-				_scriptLifecycle.Shutdown();
+				_objectEventHandler.Shutdown();
 				_sceneEventHandler.Shutdown();
 				_contexts.Shutdown();
 				_scripts.Shutdown();
@@ -152,7 +152,7 @@ namespace LunyScript
 			finally
 			{
 				_scriptEngine = null;
-				_scriptLifecycle = null;
+				_objectEventHandler = null;
 				GC.SuppressFinalize(this);
 
 				LunyTraceLogger.LogInfoShutdownComplete(this);
@@ -212,7 +212,7 @@ namespace LunyScript
 			gvar_Time_HeartbeatCount.Value = _engineTime.HeartbeatCount;
 
 			foreach (var context in _contexts.AllContexts)
-				_scriptLifecycle.OnHeartbeat(context);
+				_objectEventHandler.OnHeartbeat(context);
 		}
 
 		public void OnEngineFrameUpdate()
@@ -221,16 +221,18 @@ namespace LunyScript
 			gvar_Time_FrameCount.Value = _engineTime.FrameCount;
 
 			foreach (var context in _contexts.AllContexts)
-				_scriptLifecycle.OnFrameUpdate(context);
+				_objectEventHandler.OnFrameUpdate(context);
 		}
 
 		public void OnEngineFrameLateUpdate()
 		{
 			// Run all LateUpdate runnables
 			foreach (var context in _contexts.AllContexts)
-				_scriptLifecycle.OnFrameLateUpdate(context);
+				_objectEventHandler.OnFrameLateUpdate(context);
 		}
 
 		~LunyScriptRunner() => LunyTraceLogger.LogInfoFinalized(this);
+
+		internal void InvokeOnScriptBuilt(ScriptRuntimeContext runtimeContext) => _scriptEngine.InvokeOnScriptBuilt(runtimeContext);
 	}
 }

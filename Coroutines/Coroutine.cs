@@ -70,7 +70,7 @@ namespace LunyScript.Coroutines
 			if (!IsNew)
 				Stop(fireStartStopEvents);
 
-			LunyLogger.LogInfo($"{nameof(Start)}({_name})", this);
+			//LunyLogger.LogInfo($"{nameof(Start)}({_name})", this);
 			_state = CoroutineState.Running;
 			if (fireStartStopEvents)
 				_pendingEvents |= CoroutineEvents.Started;
@@ -89,7 +89,7 @@ namespace LunyScript.Coroutines
 			if (IsStopped)
 				return;
 
-			LunyLogger.LogInfo($"{nameof(Stop)}({_name})", this);
+			//LunyLogger.LogInfo($"{nameof(Stop)}({_name})", this);
 			_state = CoroutineState.Stopped;
 			if (fireStopEvent)
 				_pendingEvents |= CoroutineEvents.Stopped;
@@ -108,7 +108,7 @@ namespace LunyScript.Coroutines
 			if (IsPaused)
 				return;
 
-			LunyLogger.LogInfo($"{nameof(Pause)}({_name})", this);
+			//LunyLogger.LogInfo($"{nameof(Pause)}({_name})", this);
 			_state = CoroutineState.Paused;
 			_pendingEvents |= CoroutineEvents.Paused;
 			OnPaused();
@@ -123,7 +123,7 @@ namespace LunyScript.Coroutines
 			if (IsRunning || IsNew)
 				return;
 
-			LunyLogger.LogInfo($"{nameof(Resume)}({_name})", this);
+			//LunyLogger.LogInfo($"{nameof(Resume)}({_name})", this);
 			_state = CoroutineState.Running;
 			_pendingEvents |= CoroutineEvents.Resumed;
 			OnResumed();
