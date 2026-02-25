@@ -27,7 +27,7 @@ namespace LunyScript.Events
 		/// </summary>
 		internal void Register(ScriptRuntimeContext runtimeContext)
 		{
-			var subscriber = new ObjectEventHandler(this, _contexts, runtimeContext);
+			var subscriber = new ObjectEventHandler(this, runtimeContext);
 			_subscribers[runtimeContext] = subscriber;
 		}
 
@@ -35,7 +35,11 @@ namespace LunyScript.Events
 		/// Unregisters lifecycle hooks from a LunyObject.
 		/// Called during context cleanup or shutdown.
 		/// </summary>
-		private void Unregister(ScriptRuntimeContext runtimeContext) => _subscribers.Remove(runtimeContext);
+		private void Unregister(ScriptRuntimeContext runtimeContext)
+		{
+			_subscribers.Remove(runtimeContext);
+			_contexts.Unregister(runtimeContext);
+		}
 
 		public void OnHeartbeat(ScriptRuntimeContext runtimeContext)
 		{
@@ -50,7 +54,8 @@ namespace LunyScript.Events
 
 		public void OnFrameUpdate(ScriptRuntimeContext runtimeContext)
 		{
-			if (runtimeContext.LunyObject.IsEnabled)
+			var lunyObject = runtimeContext.LunyObject;
+			if (lunyObject.IsEnabled)
 			{
 				var sequences = runtimeContext.Scheduler.GetSequences(LunyObjectEvent.OnFrameUpdate);
 				LunyScriptRunner.Run(sequences, runtimeContext);
@@ -81,19 +86,16 @@ namespace LunyScript.Events
 		private struct ObjectEventHandler
 		{
 			private readonly ScriptObjectEventHandler _objectEventHandler;
-			private readonly ScriptRuntimeContextRegistry _contexts;
 			private readonly ScriptRuntimeContext _runtimeContext;
 
-			public ObjectEventHandler(ScriptObjectEventHandler objectEventHandler, ScriptRuntimeContextRegistry contexts,
-				ScriptRuntimeContext runtimeContext)
+			public ObjectEventHandler(ScriptObjectEventHandler objectEventHandler, ScriptRuntimeContext runtimeContext)
 			{
 				_objectEventHandler = objectEventHandler;
-				_contexts = contexts;
 				_runtimeContext = runtimeContext;
 				RegisterAllCallbacks();
 			}
 
-			private void RegisterAllCallbacks()
+ 		private void RegisterAllCallbacks()
 			{
 				var lunyObject = _runtimeContext.LunyObject;
 				lunyObject.OnCreate += OnCreate;
@@ -140,11 +142,43 @@ namespace LunyScript.Events
 			private void RunObjectEventSequences(LunyObjectEvent objectEvent) =>
 				LunyScriptRunner.Run(_runtimeContext.Scheduler?.GetSequences(objectEvent), _runtimeContext);
 
-			private void RunCollisionEventSequences(LunyCollisionEvent collisionEvent) =>
+			private void RunCollisionEventSequences(LunyCollisionEvent collisionEvent, LunyCollision collision)
+			{
 				LunyScriptRunner.Run(_runtimeContext.Scheduler?.GetSequences(collisionEvent), _runtimeContext);
 
-			private void RunTriggerEventSequences(LunyTriggerEvent triggerEvent) =>
+				var physicsSequences = _runtimeContext.Scheduler?.GetPhysicsSequences(collisionEvent);
+				if (physicsSequences != null)
+				{
+					_runtimeContext.SetEventArgs(collision);
+					try
+					{
+						LunyScriptRunner.Run(physicsSequences, _runtimeContext);
+					}
+					finally
+					{
+						_runtimeContext.SetEventArgs(null);
+					}
+				}
+			}
+
+			private void RunTriggerEventSequences(LunyTriggerEvent triggerEvent, LunyCollider collider)
+			{
 				LunyScriptRunner.Run(_runtimeContext.Scheduler?.GetSequences(triggerEvent), _runtimeContext);
+
+				var physicsSequences = _runtimeContext.Scheduler?.GetPhysicsSequences(triggerEvent);
+				if (physicsSequences != null)
+				{
+					_runtimeContext.SetEventArgs(collider);
+					try
+					{
+						LunyScriptRunner.Run(physicsSequences, _runtimeContext);
+					}
+					finally
+					{
+						_runtimeContext.SetEventArgs(null);
+					}
+				}
+			}
 
 			private void RunCollision2DEventSequences(LunyCollision2DEvent collision2DEvent) =>
 				LunyScriptRunner.Run(_runtimeContext.Scheduler?.GetSequences(collision2DEvent), _runtimeContext);
@@ -183,7 +217,6 @@ namespace LunyScript.Events
 				UnregisterAllCallbacks(); // no more events
 				_runtimeContext.Shutdown();
 				_objectEventHandler.Unregister(_runtimeContext);
-				_contexts.Unregister(_runtimeContext);
 			}
 
 			private void OnReady()
@@ -195,17 +228,17 @@ namespace LunyScript.Events
 			private void OnEnable() => RunObjectEventSequences(LunyObjectEvent.OnEnabled);
 			private void OnDisable() => RunObjectEventSequences(LunyObjectEvent.OnDisabled);
 
-			private void OnCollisionStarted(LunyCollision collision) => RunCollisionEventSequences(LunyCollisionEvent.OnCollisionStarted);
+ 		private void OnCollisionStarted(LunyCollision collision) => RunCollisionEventSequences(LunyCollisionEvent.OnCollisionEntered, collision);
 
-			private void OnCollisionEnded(LunyCollision collision) => RunCollisionEventSequences(LunyCollisionEvent.OnCollisionEnded);
+			private void OnCollisionEnded(LunyCollision collision) => RunCollisionEventSequences(LunyCollisionEvent.OnCollisionExited, collision);
 
-			private void OnColliding(LunyCollision collision) => RunCollisionEventSequences(LunyCollisionEvent.OnColliding);
+			private void OnColliding(LunyCollision collision) => RunCollisionEventSequences(LunyCollisionEvent.OnCollisionUpdate, collision);
 
-			private void OnTriggerEntered() => RunTriggerEventSequences(LunyTriggerEvent.OnTriggerEntered);
+			private void OnTriggerEntered(LunyCollider collider) => RunTriggerEventSequences(LunyTriggerEvent.OnTriggerEntered, collider);
 
-			private void OnTriggerExited() => RunTriggerEventSequences(LunyTriggerEvent.OnTriggerExited);
+			private void OnTriggerExited(LunyCollider collider) => RunTriggerEventSequences(LunyTriggerEvent.OnTriggerExited, collider);
 
-			private void OnTriggering() => RunTriggerEventSequences(LunyTriggerEvent.OnTriggering);
+			private void OnTriggering(LunyCollider collider) => RunTriggerEventSequences(LunyTriggerEvent.OnTriggerUpdate, collider);
 
 			private void OnCollisionStarted2D(LunyCollision2D collision) =>
 				RunCollision2DEventSequences(LunyCollision2DEvent.OnCollisionStarted2D);
@@ -214,11 +247,11 @@ namespace LunyScript.Events
 
 			private void OnColliding2D(LunyCollision2D collision) => RunCollision2DEventSequences(LunyCollision2DEvent.OnColliding2D);
 
-			private void OnTriggerEntered2D() => RunTrigger2DEventSequences(LunyTrigger2DEvent.OnTriggerEntered2D);
+			private void OnTriggerEntered2D(LunyCollider2D collider) => RunTrigger2DEventSequences(LunyTrigger2DEvent.OnTriggerEntered2D);
 
-			private void OnTriggerExited2D() => RunTrigger2DEventSequences(LunyTrigger2DEvent.OnTriggerExited2D);
+			private void OnTriggerExited2D(LunyCollider2D collider) => RunTrigger2DEventSequences(LunyTrigger2DEvent.OnTriggerExited2D);
 
-			private void OnTriggering2D() => RunTrigger2DEventSequences(LunyTrigger2DEvent.OnTriggering2D);
+			private void OnTriggering2D(LunyCollider2D collider) => RunTrigger2DEventSequences(LunyTrigger2DEvent.OnTriggering2D);
 		}
 	}
 }

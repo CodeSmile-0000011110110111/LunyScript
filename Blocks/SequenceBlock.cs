@@ -3,10 +3,17 @@ using System.Collections.Generic;
 
 namespace LunyScript.Blocks
 {
+	public interface ISequenceBlock
+	{
+		ScriptBlockID ID { get; }
+		IReadOnlyList<ScriptActionBlock> Blocks { get; }
+		Boolean IsEmpty => Blocks.Count == 0;
+	}
+
 	/// <summary>
 	/// Abstract base for sequence blocks that contain child action blocks.
 	/// </summary>
-	public sealed class SequenceBlock : ScriptActionBlock
+	public sealed class SequenceBlock : ScriptActionBlock, ISequenceBlock
 	{
 		public ScriptBlockID ID { get; }
 		public IReadOnlyList<ScriptActionBlock> Blocks { get; }

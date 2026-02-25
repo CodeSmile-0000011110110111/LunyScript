@@ -37,7 +37,7 @@ namespace LunyScript
 		internal ScriptObjectEventHandler ObjectEventHandler => _objectEventHandler;
 		internal ScriptSceneEventHandler SceneEventHandler => _sceneEventHandler;
 
-		internal static void Run(IEnumerable<SequenceBlock> sequences, ScriptRuntimeContext runtimeContext)
+ 	internal static void Run(IEnumerable<SequenceBlock> sequences, ScriptRuntimeContext runtimeContext)
 		{
 			if (sequences == null)
 				return;
@@ -46,7 +46,16 @@ namespace LunyScript
 				Run(sequence, runtimeContext);
 		}
 
-		internal static void Run(SequenceBlock sequence, ScriptRuntimeContext runtimeContext)
+		internal static void Run(IEnumerable<ISequenceBlock> sequences, ScriptRuntimeContext runtimeContext)
+		{
+			if (sequences == null)
+				return;
+
+			foreach (var sequence in sequences)
+				Run(sequence, runtimeContext);
+		}
+
+		internal static void Run(ISequenceBlock sequence, ScriptRuntimeContext runtimeContext)
 		{
 			if (sequence == null)
 				return;
@@ -72,7 +81,7 @@ namespace LunyScript
 
 			try
 			{
-				sequence.Execute(runtimeContext);
+				((ScriptActionBlock)sequence).Execute(runtimeContext);
 			}
 			catch (Exception ex)
 			{

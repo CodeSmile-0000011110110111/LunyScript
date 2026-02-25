@@ -23,8 +23,6 @@ namespace LunyScript
 	/// </summary>
 	public sealed class ScriptEngine : IScriptEngine, IScriptEngineInternal
 	{
-		public event Action<ScriptRuntimeContext> OnScriptBuilt;
-
 		private LunyScriptRunner _runner;
 
 		public static IScriptEngine Instance { get; private set; }
@@ -59,6 +57,13 @@ namespace LunyScript
 
 		public IScriptRuntimeContext GetScriptContext(LunyNativeObjectID lunyNativeObjectID) =>
 			_runner.Contexts.GetByNativeObjectID(lunyNativeObjectID);
+
+		event Action<ScriptRuntimeContext> IScriptEngineInternal.OnScriptBuilt
+		{
+			add => OnScriptBuilt += value;
+			remove => OnScriptBuilt -= value;
+		}
+		private event Action<ScriptRuntimeContext> OnScriptBuilt;
 
 		~ScriptEngine() => LunyTraceLogger.LogInfoFinalized(this);
 

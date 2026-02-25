@@ -18,6 +18,12 @@ namespace LunyScript
 		ILunyObject LunyObject { get; }
 		ITable GlobalVariables { get; }
 		ITable LocalVariables { get; }
+		/// <summary>
+		/// Generic event arguments for the currently executing event.
+		/// Blocks cast this to the expected type (e.g. LunyCollision, LunyCollider).
+		/// Null outside of event execution.
+		/// </summary>
+		Object EventArgs { get; }
 		//Stack<Int32> LoopStack { get; }
 		//Int32 LoopCount { get; }
 	}
@@ -28,18 +34,19 @@ namespace LunyScript
 	/// Runtime context for a LunyScript instance operating on a specific object.
 	/// Contains the script metadata, object reference, variables, and registered sequences.
 	/// </summary>
-	public sealed class ScriptRuntimeContext : IScriptRuntimeContext, IScriptContextInternal
+	internal sealed class ScriptRuntimeContext : IScriptRuntimeContext, IScriptContextInternal
 	{
 		private static readonly ITable s_GlobalVariables = new Table();
 
 		private readonly IScriptDefinition _scriptDef;
 		private readonly ILunyObject _lunyObject;
 
-		private ScriptEventScheduler _scheduler;
+ 	private ScriptEventScheduler _scheduler;
 		private ScriptObjectCoroutineRunner _coroutines;
 		private ScriptDebugHooks _debugHooks;
 		private ScriptBlockProfiler _blockProfiler;
 		private ITable _localVariables;
+		private Object _eventArgs;
 		//private Stack<Int32> _loopStack;
 
 		/// <summary>
@@ -62,6 +69,13 @@ namespace LunyScript
 		/// Per-object variables for this script instance.
 		/// </summary>
 		public ITable LocalVariables => _localVariables ??= new Table();
+		/// <summary>
+		/// Generic event arguments for the currently executing event.
+		/// Blocks cast this to the expected type (e.g. LunyCollision, LunyCollider).
+		/// Null outside of event execution.
+		/// </summary>
+		public Object EventArgs => _eventArgs;
+		internal void SetEventArgs(Object eventArgs) => _eventArgs = eventArgs;
 		/// <summary>
 		/// Stack for loop iteration counters.
 		/// </summary>
