@@ -245,7 +245,7 @@ namespace LunyScript
 
 		public override String ToString() => _runtimeContext != null ? _runtimeContext.ToString() : GetType().FullName;
 
-		[Conditional("DEBUG")] [Conditional("LUNYSCRIPT_DEBUG")]
+		//[Conditional("DEBUG")] [Conditional("LUNYSCRIPT_DEBUG")]
 		private void ReportPendingBuilderTokens()
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
@@ -259,7 +259,7 @@ namespace LunyScript
 			}
 
 			if (_pendingBuilderTokens.Count > 0)
-				throw new LunyScriptException($"{GetType().Name}: Unfinished Coroutine builder(s): see warning messages for details.");
+				throw new LunyScriptException($"{GetType().Name} script has unfinished Block Builder(s): see above warning messages.");
 
 			_pendingBuilderTokens.Clear();
 #endif

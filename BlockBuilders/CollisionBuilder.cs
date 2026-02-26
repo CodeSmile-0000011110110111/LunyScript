@@ -6,6 +6,44 @@ using System;
 
 namespace LunyScript.BlockBuilders
 {
+	/// <summary>
+	/// Options DTO for collision/trigger event builders.
+	/// Holds filter options, event handler blocks, and optional cooldown.
+	/// </summary>
+	public struct CollisionEventOptions
+	{
+		public CollisionFilterOptions Filter;
+		public ScriptActionBlock[] BeginsBlocks;
+		public ScriptActionBlock[] UpdatesBlocks;
+		public ScriptActionBlock[] EndsBlocks;
+		public Boolean IsTrigger;
+		/// <summary>Minimum seconds between successive reactions. Zero means no cooldown.</summary>
+		public Double Cooldown;
+	}
+
+	/// <summary>
+	/// Immutable filter options for collision/trigger event builders.
+	/// Each predicate is compiled once when the corresponding filter method is called.
+	/// Null predicate means that filter kind is inactive (no check performed).
+	/// Parameters within a kind are OR-combined; different kinds are AND-combined.
+	/// </summary>
+	public struct CollisionFilterOptions
+	{
+		// Raw filter data (kept for diagnostics and for re-compiling trigger predicates from collision filter)
+		public String[] Tags;
+		public String[] Names;
+		public String[] Layers;
+		public Int32? LayerMask;
+		public Type[] ComponentTypes;
+
+		// Per-kind compiled predicates for collision events — AND-combined at runtime by CollisionSequenceBlock.
+		// Each predicate encodes OR logic within its kind.
+		public Predicate<LunyCollision> TagPredicate;
+		public Predicate<LunyCollision> NamePredicate;
+		public Predicate<LunyCollision> LayerPredicate;
+		public Predicate<LunyCollision> TypePredicate;
+	}
+
 	// ── State tokens & interfaces ─────────────────────────────────────────────
 
 	public interface ICollisionBuilderState {}
@@ -217,43 +255,58 @@ namespace LunyScript.BlockBuilders
 		private static Predicate<LunyCollision>[] BuildCollisionPredicates(in CollisionFilterOptions filter)
 		{
 			var count = 0;
-			if (filter.TagPredicate != null) count++;
-			if (filter.NamePredicate != null) count++;
-			if (filter.LayerPredicate != null) count++;
-			if (filter.TypePredicate != null) count++;
+			if (filter.TagPredicate != null)
+				count++;
+			if (filter.NamePredicate != null)
+				count++;
+			if (filter.LayerPredicate != null)
+				count++;
+			if (filter.TypePredicate != null)
+				count++;
 
 			if (count == 0)
 				return null;
 
 			var predicates = new Predicate<LunyCollision>[count];
 			var i = 0;
-			if (filter.TagPredicate != null) predicates[i++] = filter.TagPredicate;
-			if (filter.NamePredicate != null) predicates[i++] = filter.NamePredicate;
-			if (filter.LayerPredicate != null) predicates[i++] = filter.LayerPredicate;
-			if (filter.TypePredicate != null) predicates[i++] = filter.TypePredicate;
+			if (filter.TagPredicate != null)
+				predicates[i++] = filter.TagPredicate;
+			if (filter.NamePredicate != null)
+				predicates[i++] = filter.NamePredicate;
+			if (filter.LayerPredicate != null)
+				predicates[i++] = filter.LayerPredicate;
+			if (filter.TypePredicate != null)
+				predicates[i++] = filter.TypePredicate;
 			return predicates;
 		}
 
 		private static Predicate<LunyCollider>[] BuildTriggerPredicates(in CollisionFilterOptions filter)
 		{
 			var count = 0;
-			if (filter.Tags != null) count++;
-			if (filter.Names != null) count++;
-			if (filter.Layers != null || filter.LayerMask.HasValue) count++;
-			if (filter.ComponentTypes != null) count++;
+			if (filter.Tags != null)
+				count++;
+			if (filter.Names != null)
+				count++;
+			if (filter.Layers != null || filter.LayerMask.HasValue)
+				count++;
+			if (filter.ComponentTypes != null)
+				count++;
 
 			if (count == 0)
 				return null;
 
 			var predicates = new Predicate<LunyCollider>[count];
 			var i = 0;
-			if (filter.Tags != null) predicates[i++] = TriggerPredicates.ForTags(filter.Tags);
-			if (filter.Names != null) predicates[i++] = TriggerPredicates.ForNames(filter.Names);
+			if (filter.Tags != null)
+				predicates[i++] = TriggerPredicates.ForTags(filter.Tags);
+			if (filter.Names != null)
+				predicates[i++] = TriggerPredicates.ForNames(filter.Names);
 			if (filter.Layers != null)
 				predicates[i++] = TriggerPredicates.ForLayers(filter.Layers);
 			else if (filter.LayerMask.HasValue)
 				predicates[i++] = TriggerPredicates.ForLayerMask(filter.LayerMask.Value);
-			if (filter.ComponentTypes != null) predicates[i++] = TriggerPredicates.ForComponentTypes(filter.ComponentTypes);
+			if (filter.ComponentTypes != null)
+				predicates[i++] = TriggerPredicates.ForComponentTypes(filter.ComponentTypes);
 			return predicates;
 		}
 
@@ -294,6 +347,72 @@ namespace LunyScript.BlockBuilders
 			options.Filter.Layers = layerNames;
 			options.Filter.LayerPredicate = CollisionPredicates.ForLayers(layerNames);
 			return new CollisionBuilder<CollisionBuilderMasked>(b.Script, options, b.Token);
+		}
+	}
+
+	/// <summary>
+	/// Factory methods for per-kind collision predicates (Predicate&lt;LunyCollision&gt;).
+	/// Each predicate encodes OR logic within its kind.
+	/// Predicates are compiled once at builder call time and evaluated at each physics event.
+	/// </summary>
+	internal static class CollisionPredicates
+	{
+		public static Predicate<LunyCollision> ForTags(String[] tags)
+		{
+			var captured = tags;
+			return collision =>
+			{
+				foreach (var tag in captured)
+				{
+					if (collision.Tag == tag)
+						return true;
+				}
+				return false;
+			};
+		}
+
+		public static Predicate<LunyCollision> ForNames(String[] names)
+		{
+			var captured = names;
+			return collision =>
+			{
+				foreach (var name in captured)
+				{
+					if (collision.Name == name)
+						return true;
+				}
+				return false;
+			};
+		}
+
+		public static Predicate<LunyCollision> ForLayers(String[] layerNames)
+		{
+			var captured = layerNames;
+			return collision =>
+			{
+				foreach (var layer in captured)
+				{
+					if (collision.LayerName == layer)
+						return true;
+				}
+				return false;
+			};
+		}
+
+		public static Predicate<LunyCollision> ForLayerMask(Int32 mask) => collision => (mask & 1 << collision.LayerIndex) != 0;
+
+		public static Predicate<LunyCollision> ForComponentTypes(Type[] types)
+		{
+			var captured = types;
+			return collision =>
+			{
+				foreach (var type in captured)
+				{
+					if (collision.HasComponent(type))
+						return true;
+				}
+				return false;
+			};
 		}
 	}
 }
