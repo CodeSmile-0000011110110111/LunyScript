@@ -188,19 +188,19 @@ namespace LunyScript.BlockBuilders
 				if (options.BeginsBlocks != null)
 				{
 					var block = new TriggerSequenceBlock(options.BeginsBlocks, guards, predicates);
-					script.Scheduler?.SchedulePhysicsSequence(block, LunyTriggerEvent.OnTriggerEntered);
+					script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerEntered);
 				}
 
 				if (options.UpdatesBlocks != null)
 				{
 					var block = new TriggerSequenceBlock(options.UpdatesBlocks, guards, predicates);
-					script.Scheduler?.SchedulePhysicsSequence(block, LunyTriggerEvent.OnTriggerUpdate);
+					script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerUpdate);
 				}
 
 				if (options.EndsBlocks != null)
 				{
 					var block = new TriggerSequenceBlock(options.EndsBlocks, guards, predicates);
-					script.Scheduler?.SchedulePhysicsSequence(block, LunyTriggerEvent.OnTriggerExited);
+					script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerExited);
 				}
 			}
 			else
@@ -210,19 +210,19 @@ namespace LunyScript.BlockBuilders
 				if (options.BeginsBlocks != null)
 				{
 					var block = new CollisionSequenceBlock(options.BeginsBlocks, guards, predicates);
-					script.Scheduler?.SchedulePhysicsSequence(block, LunyCollisionEvent.OnCollisionEntered);
+					script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionEntered);
 				}
 
 				if (options.UpdatesBlocks != null)
 				{
 					var block = new CollisionSequenceBlock(options.UpdatesBlocks, guards, predicates);
-					script.Scheduler?.SchedulePhysicsSequence(block, LunyCollisionEvent.OnCollisionUpdate);
+					script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionUpdate);
 				}
 
 				if (options.EndsBlocks != null)
 				{
 					var block = new CollisionSequenceBlock(options.EndsBlocks, guards, predicates);
-					script.Scheduler?.SchedulePhysicsSequence(block, LunyCollisionEvent.OnCollisionExited);
+					script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionExited);
 				}
 			}
 

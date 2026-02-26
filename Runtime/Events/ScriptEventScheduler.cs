@@ -18,32 +18,15 @@ namespace LunyScript.Events
 		private static readonly Int32 s_Collision2DEventCount = Enum.GetNames(typeof(LunyCollision2DEvent)).Length;
 		private static readonly Int32 s_Trigger2DEventCount = Enum.GetNames(typeof(LunyTrigger2DEvent)).Length;
 
- 	// Fast array-based storage for lifecycle events (hot path)
-		private List<SequenceBlock>[] _objectSequences;
-		private List<SequenceBlock>[] _sceneSequences;
-		private List<SequenceBlock>[] _collisionSequences;
-		private List<SequenceBlock>[] _triggerSequences;
-		private List<SequenceBlock>[] _collision2DSequences;
-		private List<SequenceBlock>[] _trigger2DSequences;
+		// Fast array-based storage for lifecycle events (hot path)
+		private List<ISequenceBlock>[] _objectSequences;
+		private List<ISequenceBlock>[] _sceneSequences;
+		private List<ISequenceBlock>[] _collisionSequences;
+		private List<ISequenceBlock>[] _triggerSequences;
+		private List<ISequenceBlock>[] _collision2DSequences;
+		private List<ISequenceBlock>[] _trigger2DSequences;
 
-		// Physics event sequences with filtering (CollisionSequenceBlock / TriggerSequenceBlock)
-		private List<ISequenceBlock>[] _physicsCollisionSequences;
-		private List<ISequenceBlock>[] _physicsTriggerSequences;
-
- 	private static SequenceBlock ScheduleSequence(ref List<SequenceBlock>[] sequencesRef, SequenceBlock sequence,
-			Int32 eventIndex, Int32 eventCount)
-		{
-			if (sequence != null && !sequence.IsEmpty)
-			{
-				sequencesRef ??= new List<SequenceBlock>[eventCount];
-				sequencesRef[eventIndex] ??= new List<SequenceBlock>();
-				sequencesRef[eventIndex].Add(sequence);
-			}
-
-			return sequence;
-		}
-
-		private static void SchedulePhysicsSequence(ref List<ISequenceBlock>[] sequencesRef, ISequenceBlock sequence,
+		internal static ISequenceBlock SchedulePhysicsSequence(ref List<ISequenceBlock>[] sequencesRef, ISequenceBlock sequence,
 			Int32 eventIndex, Int32 eventCount)
 		{
 			if (sequence != null && !sequence.IsEmpty)
@@ -52,76 +35,85 @@ namespace LunyScript.Events
 				sequencesRef[eventIndex] ??= new List<ISequenceBlock>();
 				sequencesRef[eventIndex].Add(sequence);
 			}
+
+			return sequence;
+		}
+
+		private static ISequenceBlock ScheduleSequence(ref List<ISequenceBlock>[] sequencesRef, ISequenceBlock sequence,
+			Int32 eventIndex, Int32 eventCount)
+		{
+			if (sequence != null && !sequence.IsEmpty)
+			{
+				sequencesRef ??= new List<ISequenceBlock>[eventCount];
+				sequencesRef[eventIndex] ??= new List<ISequenceBlock>();
+				sequencesRef[eventIndex].Add(sequence);
+			}
+
+			return sequence;
 		}
 
 		~ScriptEventScheduler() => LunyTraceLogger.LogInfoFinalized(this);
 
 		/// Schedule Events
-		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunyObjectEvent objectEvent) =>
+		internal ISequenceBlock ScheduleObjectEventSequence(ScriptActionBlock[] blocks, LunyObjectEvent objectEvent) =>
 			ScheduleSequence(ref _objectSequences, SequenceBlock.TryCreate(blocks), (Int32)objectEvent, s_ObjectEventCount);
 
-		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunySceneEvent sceneEvent) => ScheduleSequence(ref _sceneSequences,
-			SequenceBlock.TryCreate(blocks), (Int32)sceneEvent, s_SceneEventCount);
+		internal ISequenceBlock ScheduleSceneEventSequence(ScriptActionBlock[] blocks, LunySceneEvent sceneEvent) =>
+			ScheduleSequence(ref _sceneSequences, SequenceBlock.TryCreate(blocks), (Int32)sceneEvent, s_SceneEventCount);
 
-		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunyCollisionEvent collisionEvent) =>
-			ScheduleSequence(ref _collisionSequences, SequenceBlock.TryCreate(blocks), (Int32)collisionEvent, s_CollisionEventCount);
+		internal ISequenceBlock ScheduleCollisionEventSequence(CollisionSequenceBlock blocks, LunyCollisionEvent collisionEvent) =>
+			SchedulePhysicsSequence(ref _collisionSequences, blocks, (Int32)collisionEvent, s_CollisionEventCount);
 
-		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunyTriggerEvent triggerEvent) =>
-			ScheduleSequence(ref _triggerSequences, SequenceBlock.TryCreate(blocks), (Int32)triggerEvent, s_TriggerEventCount);
+		internal ISequenceBlock ScheduleTriggerEventSequence(TriggerSequenceBlock blocks, LunyTriggerEvent triggerEvent) =>
+			SchedulePhysicsSequence(ref _triggerSequences, blocks, (Int32)triggerEvent, s_TriggerEventCount);
 
-		internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunyCollision2DEvent collision2DEvent) =>
-			ScheduleSequence(ref _collision2DSequences, SequenceBlock.TryCreate(blocks), (Int32)collision2DEvent, s_Collision2DEventCount);
-
- 	internal SequenceBlock ScheduleSequence(ScriptActionBlock[] blocks, LunyTrigger2DEvent trigger2DEvent) =>
-			ScheduleSequence(ref _trigger2DSequences, SequenceBlock.TryCreate(blocks), (Int32)trigger2DEvent, s_Trigger2DEventCount);
-
-		internal void SchedulePhysicsSequence(ISequenceBlock sequence, LunyCollisionEvent collisionEvent) =>
-			SchedulePhysicsSequence(ref _physicsCollisionSequences, sequence, (Int32)collisionEvent, s_CollisionEventCount);
-
-		internal void SchedulePhysicsSequence(ISequenceBlock sequence, LunyTriggerEvent triggerEvent) =>
-			SchedulePhysicsSequence(ref _physicsTriggerSequences, sequence, (Int32)triggerEvent, s_TriggerEventCount);
+		// internal ISequenceBlock ScheduleCollision2DEventSequence(CollisionSequence2DBlock[] blocks, LunyCollision2DEvent collision2DEvent) =>
+		// 	SchedulePhysicsSequence(ref _collision2DSequences, SequenceBlock.TryCreate(blocks), (Int32)collision2DEvent, s_Collision2DEventCount);
+		//
+		// internal ISequenceBlock ScheduleTrigger2DEventSequence(TriggerSequence2DBlock[] blocks, LunyTrigger2DEvent trigger2DEvent) =>
+		// 	SchedulePhysicsSequence(ref _trigger2DSequences, SequenceBlock.TryCreate(blocks), (Int32)trigger2DEvent, s_Trigger2DEventCount);
 
 		/// Gets all sequences scheduled for a specific lifecycle event.
-		internal IEnumerable<SequenceBlock> GetSequences(LunyObjectEvent objectEvent) =>
+		internal IEnumerable<ISequenceBlock> GetSequences(LunyObjectEvent objectEvent) =>
 			IsObserving((Int32)objectEvent, ref _objectSequences) ? _objectSequences[(Int32)objectEvent] : null;
 
-		internal IEnumerable<SequenceBlock> GetSequences(LunySceneEvent sceneEvent) => IsObserving((Int32)sceneEvent, ref _objectSequences)
+		internal IEnumerable<ISequenceBlock> GetSequences(LunySceneEvent sceneEvent) => IsObserving((Int32)sceneEvent, ref _objectSequences)
 			? _objectSequences[(Int32)sceneEvent]
 			: null;
 
-		internal IEnumerable<SequenceBlock> GetSequences(LunyCollisionEvent collisionEvent) =>
+		internal IEnumerable<ISequenceBlock> GetSequences(LunyCollisionEvent collisionEvent) =>
 			IsObserving((Int32)collisionEvent, ref _collisionSequences)
 				? _collisionSequences[(Int32)collisionEvent]
 				: null;
 
-		internal IEnumerable<SequenceBlock> GetSequences(LunyTriggerEvent triggerEvent) =>
+		internal IEnumerable<ISequenceBlock> GetSequences(LunyTriggerEvent triggerEvent) =>
 			IsObserving((Int32)triggerEvent, ref _triggerSequences)
 				? _triggerSequences[(Int32)triggerEvent]
 				: null;
 
-		internal IEnumerable<SequenceBlock> GetSequences(LunyCollision2DEvent collisionEvent) =>
+		internal IEnumerable<ISequenceBlock> GetSequences(LunyCollision2DEvent collisionEvent) =>
 			IsObserving((Int32)collisionEvent, ref _collisionSequences)
 				? _collisionSequences[(Int32)collisionEvent]
 				: null;
 
- 	internal IEnumerable<SequenceBlock> GetSequences(LunyTrigger2DEvent triggerEvent) =>
+		internal IEnumerable<ISequenceBlock> GetSequences(LunyTrigger2DEvent triggerEvent) =>
 			IsObserving((Int32)triggerEvent, ref _triggerSequences)
 				? _triggerSequences[(Int32)triggerEvent]
 				: null;
 
-		internal IEnumerable<ISequenceBlock> GetPhysicsSequences(LunyCollisionEvent collisionEvent) =>
-			_physicsCollisionSequences != null && _physicsCollisionSequences[(Int32)collisionEvent] != null &&
-			_physicsCollisionSequences[(Int32)collisionEvent].Count > 0
-				? _physicsCollisionSequences[(Int32)collisionEvent]
+		internal IEnumerable<ISequenceBlock> GetPhysicsSequences(LunyCollisionEvent collisionEvent) => _collisionSequences != null &&
+			_collisionSequences[(Int32)collisionEvent] != null &&
+			_collisionSequences[(Int32)collisionEvent].Count > 0
+				? _collisionSequences[(Int32)collisionEvent]
 				: null;
 
-		internal IEnumerable<ISequenceBlock> GetPhysicsSequences(LunyTriggerEvent triggerEvent) =>
-			_physicsTriggerSequences != null && _physicsTriggerSequences[(Int32)triggerEvent] != null &&
-			_physicsTriggerSequences[(Int32)triggerEvent].Count > 0
-				? _physicsTriggerSequences[(Int32)triggerEvent]
+		internal IEnumerable<ISequenceBlock> GetPhysicsSequences(LunyTriggerEvent triggerEvent) => _triggerSequences != null &&
+			_triggerSequences[(Int32)triggerEvent] != null &&
+			_triggerSequences[(Int32)triggerEvent].Count > 0
+				? _triggerSequences[(Int32)triggerEvent]
 				: null;
 
-		internal Boolean IsObserving(Int32 eventIndex, ref List<SequenceBlock>[] sequencesRef) =>
+		internal Boolean IsObserving(Int32 eventIndex, ref List<ISequenceBlock>[] sequencesRef) =>
 			sequencesRef != null && sequencesRef[eventIndex] != null && sequencesRef[eventIndex].Count > 0;
 
 		internal Boolean IsObservingAnyOf(Type enumType)

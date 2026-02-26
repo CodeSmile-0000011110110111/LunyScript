@@ -17,48 +17,54 @@ namespace LunyScript.Api
 		/// <summary>
 		/// Runs once the moment when the object is instantiated.
 		/// </summary>
-		public SequenceBlock Created(params ScriptActionBlock[] blocks) => Scheduler?.ScheduleSequence(blocks, LunyObjectEvent.OnCreated);
+		public ISequenceBlock Created(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnCreated);
 
 		/// <summary>
 		/// Runs every time the object's state changes to 'enabled' (visible and participating).
 		/// Runs directly after 'Created' if the object was just instantiated.
 		/// </summary>
-		public SequenceBlock Enabled(params ScriptActionBlock[] blocks) => Scheduler?.ScheduleSequence(blocks, LunyObjectEvent.OnEnabled);
+		public ISequenceBlock Enabled(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnEnabled);
 
 		/// <summary>
 		/// Runs once per lifetime just before the object starts processing frame/time-step events.
 		/// </summary>
-		public SequenceBlock Ready(params ScriptActionBlock[] blocks) => Scheduler?.ScheduleSequence(blocks, LunyObjectEvent.OnReady);
+		public ISequenceBlock Ready(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnReady);
 
 		/// <summary>
 		/// Runs every time the object's state changes to 'disabled' (not visible, not participating).
 		/// Runs directly before 'Destroyed' if the object was enabled as it got destroyed.
 		/// </summary>
-		public SequenceBlock Disabled(params ScriptActionBlock[] blocks) => Scheduler?.ScheduleSequence(blocks, LunyObjectEvent.OnDisabled);
+		public ISequenceBlock Disabled(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnDisabled);
 
 		/// <summary>
 		/// Runs once when the object gets destroyed. The object is already disabled, the native engine instance still exists.
 		/// </summary>
-		public SequenceBlock Destroyed(params ScriptActionBlock[] blocks) => Scheduler?.ScheduleSequence(blocks, LunyObjectEvent.OnDestroyed);
+		public ISequenceBlock Destroyed(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnDestroyed);
 
 		/// <summary>
 		/// Runs every frame while object is enabled.
 		/// </summary>
-		public SequenceBlock FrameUpdate(params ScriptActionBlock[] blocks) =>
-			Scheduler?.ScheduleSequence(blocks, LunyObjectEvent.OnFrameUpdate);
+		public ISequenceBlock FrameUpdate(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnFrameUpdate);
 
 		/// <summary>
 		/// Runs after frame update while object is enabled.
 		/// </summary>
-		public SequenceBlock AfterFrameUpdate(params ScriptActionBlock[] blocks) =>
-			Scheduler?.ScheduleSequence(blocks, LunyObjectEvent.OnFrameLateUpdate);
+		public ISequenceBlock AfterFrameUpdate(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnFrameLateUpdate);
 
 		/// <summary>
 		/// Runs on fixed-rate stepping while object is enabled.
 		/// Scheduling depends on engine and Time settings, but typically runs 30 or 50 times per second.
 		/// May run multiple times per frame and may not run in every frame.
 		/// </summary>
-		public SequenceBlock Heartbeat(params ScriptActionBlock[] blocks) => Scheduler?.ScheduleSequence(blocks, LunyObjectEvent.OnHeartbeat);
+		public ISequenceBlock Heartbeat(params ScriptActionBlock[] blocks) =>
+			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnHeartbeat);
 
 		// TODO:
 		// only singular "with"
@@ -77,64 +83,44 @@ namespace LunyScript.Api
 		// On.CollisionStarted(blocks)
 		// Trigger.Entered(blocks)
 
-		 /*
-		 On.Collision/Trigger.Tagged("tag").Named("name").Layered("Ground", "Player").Masked(string[] or int)
-			.Begins(blocks).Updates(blocks).Ends(blocks)
+		/*
+		On.Collision/Trigger.Tagged("tag").Named("name").Layered("Ground", "Player").Masked(string[] or int)
+		   .Begins(blocks).Updates(blocks).Ends(blocks)
 
-			Layered and Masked are mutually exclusive
-			the parameters should be 'params string[]' to allow for multiple which are logically OR combinations
-			Masked should have an override with an int to allow passing in a layer bitmask
-		 */
+		   Layered and Masked are mutually exclusive
+		   the parameters should be 'params string[]' to allow for multiple which are logically OR combinations
+		   Masked should have an override with an int to allow passing in a layer bitmask
+		*/
 
- 	// Filtered collision/trigger builders
- 	/// <summary>
- 	/// Starts a filtered 3D collision event builder.
- 	/// Chain filter methods (Tagged, Named, Layered, Masked, Typed, Cooldown) then event handlers
- 	/// (Begins, Updates, Ends) and finalize with Do().
- 	/// </summary>
- 	public CollisionBuilder<CollisionBuilderStart> Collision
- 		{
- 			get
- 			{
- 				var options = new CollisionEventOptions { IsTrigger = false };
- 				var token = _script.CreateToken("Collision", "CollisionBuilder");
- 				return new CollisionBuilder<CollisionBuilderStart>(_script, options, token);
- 			}
- 		}
+		// Filtered collision/trigger builders
+		/// <summary>
+		/// Starts a filtered 3D collision event builder.
+		/// Chain filter methods (Tagged, Named, Layered, Masked, Typed, Cooldown) then event handlers
+		/// (Begins, Updates, Ends) and finalize with Do().
+		/// </summary>
+		public CollisionBuilder<CollisionBuilderStart> Collision
+		{
+			get
+			{
+				var options = new CollisionEventOptions { IsTrigger = false };
+				var token = _script.CreateToken("Collision", "CollisionBuilder");
+				return new CollisionBuilder<CollisionBuilderStart>(_script, options, token);
+			}
+		}
 
- 		/// <summary>
- 		/// Starts a filtered 3D trigger event builder.
- 		/// Chain filter methods (Tagged, Named, Layered, Masked, Typed, Cooldown) then event handlers
- 		/// (Begins, Updates, Ends) and finalize with Do().
- 		/// </summary>
- 		public CollisionBuilder<CollisionBuilderStart> Trigger
- 		{
- 			get
- 			{
- 				var options = new CollisionEventOptions { IsTrigger = true };
- 				var token = _script.CreateToken("Trigger", "CollisionBuilder");
- 				return new CollisionBuilder<CollisionBuilderStart>(_script, options, token);
- 			}
- 		}
-
- 		// Collision events
- 	public SequenceBlock CollisionEntered(params ScriptActionBlock[] blocks) =>
- 			Scheduler?.ScheduleSequence(blocks, LunyCollisionEvent.OnCollisionEntered);
-
-		public SequenceBlock CollisionExited(params ScriptActionBlock[] blocks) =>
-			Scheduler?.ScheduleSequence(blocks, LunyCollisionEvent.OnCollisionExited);
-
-		public SequenceBlock CollisionUpdate(params ScriptActionBlock[] blocks) =>
-			Scheduler?.ScheduleSequence(blocks, LunyCollisionEvent.OnCollisionUpdate);
-
-		// Trigger events
-		public SequenceBlock TriggerEntered(params ScriptActionBlock[] blocks) =>
-			Scheduler?.ScheduleSequence(blocks, LunyTriggerEvent.OnTriggerEntered);
-
-		public SequenceBlock TriggerExited(params ScriptActionBlock[] blocks) =>
-			Scheduler?.ScheduleSequence(blocks, LunyTriggerEvent.OnTriggerExited);
-
-		public SequenceBlock TriggerUpdate(params ScriptActionBlock[] blocks) =>
-			Scheduler?.ScheduleSequence(blocks, LunyTriggerEvent.OnTriggerUpdate);
+		/// <summary>
+		/// Starts a filtered 3D trigger event builder.
+		/// Chain filter methods (Tagged, Named, Layered, Masked, Typed, Cooldown) then event handlers
+		/// (Begins, Updates, Ends) and finalize with Do().
+		/// </summary>
+		public CollisionBuilder<CollisionBuilderStart> Trigger
+		{
+			get
+			{
+				var options = new CollisionEventOptions { IsTrigger = true };
+				var token = _script.CreateToken("Trigger", "CollisionBuilder");
+				return new CollisionBuilder<CollisionBuilderStart>(_script, options, token);
+			}
+		}
 	}
 }
