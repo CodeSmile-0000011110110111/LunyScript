@@ -2,6 +2,7 @@ using Luny.Engine.Bridge;
 using LunyScript.BlockBuilders;
 using LunyScript.Blocks;
 using LunyScript.Events;
+using System;
 
 namespace LunyScript.Api
 {
@@ -66,33 +67,6 @@ namespace LunyScript.Api
 		public ISequenceBlock Heartbeat(params ScriptActionBlock[] blocks) =>
 			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnHeartbeat);
 
-		// TODO:
-		// only singular "with"
-		// With("") => name filter
-		// With(Type) => component type filter
-		// WithLayer("") => layer filter (or: WithGroup)
-		// On.Collision.With("").Started(blocks).Continues(blocks).Ended(blocks)
-		//
-		// On.Collision/Trigger.Tagged("").*
-		// On.Collision/Trigger.Named("").*
-		// On.Collision/Trigger.Layered("").*  (InLayer, OfLayer?)
-		// On.Collision/Trigger.Masked("").*
-		//
-		// On.Collision.Started(blocks).With("") ??
-		// On.Collision.Started(blocks)
-		// On.CollisionStarted(blocks)
-		// Trigger.Entered(blocks)
-
-		/*
-		On.Collision/Trigger.Tagged("tag").Named("name").Layered("Ground", "Player").Masked(string[] or int)
-		   .Begins(blocks).Updates(blocks).Ends(blocks)
-
-		   Layered and Masked are mutually exclusive
-		   the parameters should be 'params string[]' to allow for multiple which are logically OR combinations
-		   Masked should have an override with an int to allow passing in a layer bitmask
-		*/
-
-		// Filtered collision/trigger builders
 		/// <summary>
 		/// Starts a filtered 3D collision event builder.
 		/// Chain filter methods (Tagged, Named, Layered, Masked, Typed, Cooldown) then event handlers
@@ -103,10 +77,58 @@ namespace LunyScript.Api
 			get
 			{
 				var options = new CollisionEventOptions { IsTrigger = false };
-				var token = _script.CreateToken("Collision", "CollisionBuilder");
+				var token = _script.CreateToken(nameof(Collision), "CollisionBuilder (3D)");
 				return new CollisionBuilder<CollisionBuilderStart>(_script, options, token);
 			}
 		}
+
+		/// <summary>
+		/// Starts a filtered 3D collision event builder.
+		/// Chain filter methods (Cooldown) then event handlers
+		/// (Begins, Updates, Ends) and finalize with Do().
+		/// </summary>
+		/*public CollisionBuilder<CollisionBuilderReady> CollisionWith(String name = null, String tag = null, String layer = null,
+			Type type = null)
+		{
+			var options = new CollisionEventOptions { IsTrigger = false };
+			var token = _script.CreateToken(nameof(CollisionWith), "CollisionBuilder (3D)");
+			var startBuilder = new CollisionBuilder<CollisionBuilderStart>(_script, options, token);
+
+			var hasName = !string.IsNullOrEmpty(name);
+			var hasTag = !string.IsNullOrEmpty(tag);
+			var hasLayer = !string.IsNullOrEmpty(layer);
+			var hasType = type != null;
+			if (!hasName && !hasTag && !hasLayer && !hasType)
+				throw new ArgumentException($"{nameof(CollisionWith)}: at least one argument must be specified");
+
+			throw new NotImplementedException(nameof(CollisionWith));
+
+			// Bundle parameters into a tuple to match against
+			var with = (name, tag, layer, type);
+			CollisionBuilder<CollisionBuilderReady> readyBuilder = with switch
+			{
+				// 5. All parameters provided
+				(not null, not null, not null, not null) => startBuilder,
+
+				// 1. All are null
+				(null, null, null, null) => startBuilder,
+
+				// 2. Exact matches (Example: Only name is provided)
+				(not null, null, null, null) => startBuilder,
+
+				// 3. Complex combinations (Example: Tag and Type provided)
+				(null, not null, null, not null) => startBuilder,
+
+				// 4. Partial matches using discards (_)
+				// This matches ANY case where 'layer' is provided, regardless of others
+				(_, _, not null, _) => startBuilder,
+
+
+				_ => throw new ArgumentOutOfRangeException(nameof(CollisionWith))
+			};
+
+			return readyBuilder;
+		}*/
 
 		/// <summary>
 		/// Starts a filtered 3D trigger event builder.
@@ -118,9 +140,24 @@ namespace LunyScript.Api
 			get
 			{
 				var options = new CollisionEventOptions { IsTrigger = true };
-				var token = _script.CreateToken("Trigger", "CollisionBuilder");
+				var token = _script.CreateToken(nameof(Trigger), "CollisionBuilder (Trigger, 3D)");
 				return new CollisionBuilder<CollisionBuilderStart>(_script, options, token);
 			}
 		}
+
+		/// <summary>
+		/// Starts a filtered 3D trigger event builder.
+		/// Chain filter methods (Cooldown) then event handlers
+		/// (Begins, Updates, Ends) and finalize with Do().
+		/// </summary>
+		/*public CollisionBuilder<CollisionBuilderReady> TriggerWith(String name = null, String tag = null, String layer = null,
+			Type type = null)
+		{
+			throw new NotImplementedException(nameof(TriggerWith));
+
+			var options = new CollisionEventOptions { IsTrigger = true };
+			var token = _script.CreateToken(nameof(TriggerWith), "CollisionBuilder (Trigger, 3D)");
+			return new CollisionBuilder<CollisionBuilderReady>(_script, options, token).Named(name).Tagged(tag).Layered(layer).Typed(type);
+		}*/
 	}
 }

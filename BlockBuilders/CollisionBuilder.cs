@@ -1,6 +1,6 @@
 using Luny;
-using Luny.Engine.Bridge;
 using Luny.Engine.Bridge.Physics;
+using Luny.Engine.Services;
 using LunyScript.Blocks;
 using System;
 
@@ -149,7 +149,7 @@ namespace LunyScript.BlockBuilders
 		}
 
 		/// <summary>Blocks to run each physics step while the collision/trigger persists.</summary>
-		public CollisionBuilder<CollisionBuilderReady> Updates(params ScriptActionBlock[] blocks)
+		public CollisionBuilder<CollisionBuilderReady> Continues(params ScriptActionBlock[] blocks)
 		{
 			var options = Options;
 			options.UpdatesBlocks = blocks;
@@ -229,35 +229,12 @@ namespace LunyScript.BlockBuilders
 			script.FinalizeToken(token);
 		}
 
-		private static Func<Boolean>[] BuildGuards(Double cooldownSeconds)
-		{
-			if (cooldownSeconds <= 0.0)
-				return null;
-
-			// Capture the time service once at build time to avoid repeated instance lookups at runtime
-			var time = LunyEngine.Instance.Time;
-			var state = new CooldownState();
-
-			return new Func<Boolean>[]
-			{
-				() =>
-				{
-					var now = time.ElapsedSeconds;
-					if (now - state.LastExecutionTime < cooldownSeconds)
-						return false;
-
-					state.LastExecutionTime = now;
-					return true;
-				},
-			};
-		}
-
 		private static Predicate<LunyCollision>[] BuildCollisionPredicates(in CollisionFilterOptions filter)
 		{
 			var count = 0;
-			if (filter.TagPredicate != null)
-				count++;
 			if (filter.NamePredicate != null)
+				count++;
+			if (filter.TagPredicate != null)
 				count++;
 			if (filter.LayerPredicate != null)
 				count++;
@@ -269,10 +246,10 @@ namespace LunyScript.BlockBuilders
 
 			var predicates = new Predicate<LunyCollision>[count];
 			var i = 0;
-			if (filter.TagPredicate != null)
-				predicates[i++] = filter.TagPredicate;
 			if (filter.NamePredicate != null)
 				predicates[i++] = filter.NamePredicate;
+			if (filter.TagPredicate != null)
+				predicates[i++] = filter.TagPredicate;
 			if (filter.LayerPredicate != null)
 				predicates[i++] = filter.LayerPredicate;
 			if (filter.TypePredicate != null)
@@ -283,9 +260,9 @@ namespace LunyScript.BlockBuilders
 		private static Predicate<LunyCollider>[] BuildTriggerPredicates(in CollisionFilterOptions filter)
 		{
 			var count = 0;
-			if (filter.Tags != null)
-				count++;
 			if (filter.Names != null)
+				count++;
+			if (filter.Tags != null)
 				count++;
 			if (filter.Layers != null || filter.LayerMask.HasValue)
 				count++;
@@ -297,10 +274,10 @@ namespace LunyScript.BlockBuilders
 
 			var predicates = new Predicate<LunyCollider>[count];
 			var i = 0;
-			if (filter.Tags != null)
-				predicates[i++] = TriggerPredicates.ForTags(filter.Tags);
 			if (filter.Names != null)
 				predicates[i++] = TriggerPredicates.ForNames(filter.Names);
+			if (filter.Tags != null)
+				predicates[i++] = TriggerPredicates.ForTags(filter.Tags);
 			if (filter.Layers != null)
 				predicates[i++] = TriggerPredicates.ForLayers(filter.Layers);
 			else if (filter.LayerMask.HasValue)
@@ -310,11 +287,42 @@ namespace LunyScript.BlockBuilders
 			return predicates;
 		}
 
-		/// <summary>Tiny heap object to hold mutable last-execution time for the cooldown guard closure.</summary>
-		private sealed class CooldownState
+		private static EventGuard[] BuildGuards(Double cooldownInSeconds)
 		{
-			public Double LastExecutionTime = Double.MinValue;
+			if (cooldownInSeconds <= 0.0)
+				return null;
+
+			return new EventGuard[] { new CooldownGuard<T>(cooldownInSeconds, LunyEngine.Instance.Time) };
 		}
+	}
+
+	internal sealed class CooldownGuard<T> : EventGuard where T : struct, ICollisionBuilderState
+	{
+		private ILunyTimeService _time;
+		private Double _lastExecutionTime;
+		private Double _cooldownInSeconds;
+
+		public CooldownGuard(Double cooldownInSeconds, ILunyTimeService time)
+		{
+			_cooldownInSeconds = cooldownInSeconds;
+			_time = time;
+		}
+
+		public override Boolean CanExecute()
+		{
+			var now = _time.ElapsedSeconds;
+			var cooldownElapsedSeconds = now - _lastExecutionTime;
+			var canRunAgain = cooldownElapsedSeconds >= _cooldownInSeconds;
+			return canRunAgain;
+		}
+
+		public override void WillExecute() => _lastExecutionTime = _time.ElapsedSeconds;
+	}
+
+	internal abstract class EventGuard
+	{
+		public abstract Boolean CanExecute();
+		public abstract void WillExecute();
 	}
 
 	// ── Extension methods (mutual exclusivity for Masked) ─────────────────────
@@ -399,7 +407,7 @@ namespace LunyScript.BlockBuilders
 			};
 		}
 
-		public static Predicate<LunyCollision> ForLayerMask(Int32 mask) => collision => (mask & 1 << collision.LayerIndex) != 0;
+		public static Predicate<LunyCollision> ForLayerMask(Int32 mask) => mask != 0 ? collision => (mask & 1 << collision.Layer) != 0 : null;
 
 		public static Predicate<LunyCollision> ForComponentTypes(Type[] types)
 		{

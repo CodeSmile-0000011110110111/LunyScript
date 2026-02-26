@@ -1,3 +1,4 @@
+using LunyScript.Api;
 using LunyScript.Blocks;
 using LunyScript.Coroutines;
 using System;
@@ -18,7 +19,7 @@ namespace LunyScript.BlockBuilders
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_interval = interval;
-			_token = script.CreateToken($"Every({interval})", "Every");
+			_token = script.CreateToken($"Every({interval})", "EveryBuilder");
 		}
 
 		/// <summary>

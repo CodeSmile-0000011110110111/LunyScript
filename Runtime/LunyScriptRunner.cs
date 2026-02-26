@@ -60,7 +60,7 @@ namespace LunyScript
 			if (sequence == null)
 				return;
 
-			// TODO: avoid profiling overhead when not enabled
+			// TODO: avoid profiling overhead when not profiling
 			var timeService = LunyEngine.Instance.Time;
 			var blockType = sequence.GetType();
 			var trace = new ScriptExecutionTrace
@@ -88,7 +88,7 @@ namespace LunyScript
 				trace.Error = ex;
 				blockProfiler.RecordError(trace.ScriptSequenceId, ex);
 				debugHooks.NotifyBlockError(trace);
-				LunyLogger.LogError(ex.ToString(), runtimeContext);
+				//LunyLogger.LogError(ex.ToString(), runtimeContext);
 				throw;
 			}
 			finally

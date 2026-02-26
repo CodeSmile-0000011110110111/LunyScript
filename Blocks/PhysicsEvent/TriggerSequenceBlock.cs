@@ -1,4 +1,5 @@
 using Luny.Engine.Bridge.Physics;
+using LunyScript.BlockBuilders;
 using System;
 using System.Collections.Generic;
 
@@ -11,18 +12,12 @@ namespace LunyScript.Blocks
 	/// All must pass (AND logic) for child blocks to execute.
 	/// Does not cache engine objects; uses IScratchContext for lookups.
 	/// </summary>
-	public sealed class TriggerSequenceBlock : PhysicsEventSequenceBlock
+	internal sealed class TriggerSequenceBlock : PhysicsEventSequenceBlock
 	{
 		private readonly Predicate<LunyCollider>[] _predicates;
 
-		public TriggerSequenceBlock(
-			IReadOnlyList<ScriptActionBlock> blocks,
-			Func<Boolean>[] guards,
-			Predicate<LunyCollider>[] predicates)
-			: base(blocks, guards)
-		{
-			_predicates = predicates;
-		}
+		public TriggerSequenceBlock(IReadOnlyList<ScriptActionBlock> blocks, EventGuard[] guards, Predicate<LunyCollider>[] predicates)
+			: base(blocks, guards) => _predicates = predicates;
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
@@ -34,7 +29,7 @@ namespace LunyScript.Blocks
 
 			if (_predicates != null)
 			{
-				var collider = runtimeContext.EventArgs as LunyCollider;
+				var collider = (LunyCollider)runtimeContext.EventArgs;
 				foreach (var predicate in _predicates)
 				{
 					if (!predicate(collider))
