@@ -12,12 +12,12 @@ namespace LunyScript.SmokeTests.Objects
 
 		public override void Build(ScriptContext context)
 		{
-			On.Created(Object.Create(DestroyedObjectName).Do());
+			On.Created(Object.Create(DestroyedObjectName));
 			On.AfterFrameUpdate(Object.Destroy(DestroyedObjectName));
 
-			On.Ready(Object.Create(EmptyObjectName).Do());
-			On.Ready(Object.Create(CubeObjectName).AsCube().Do());
-			On.Ready(Object.Create(SphereObjectName).AsSphere().Do());
+			On.Ready(Object.Create(EmptyObjectName));
+			On.Ready(Object.Create(CubeObjectName).AsCube());
+			On.Ready(Object.Create(SphereObjectName).AsSphere());
 			On.Ready(Prefab.Instantiate("TestPrefab"));
 		}
 	}

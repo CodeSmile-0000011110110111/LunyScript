@@ -42,9 +42,7 @@ namespace LunyScript.BlockBuilders
 		private readonly Script _script;
 		internal PrefabApi(Script script) => _script = script;
 
-		[Obsolete]
-		public ScriptActionBlock Instantiate(String prefabName) => _script.Object.Create(prefabName).From(prefabName).Do();
-		//public ScriptActionBlock Instantiate(String prefabName, ILunyObject parent) => _script.Object.Create(prefabName).From(prefabName).Parent(parent).Do();
+		public ObjectCreateBuilder<ObjectBuilderNameSet> Instantiate(String prefabName) => new ObjectApi().Create(prefabName).From(prefabName);
 	}
 
 	public readonly struct ObjectCreateBuilder<T> where T : struct, IObjectBuilderState
@@ -58,12 +56,13 @@ namespace LunyScript.BlockBuilders
 			Script = script;
 			Options = options;
 			Token = token;
+			var capturedScript = script;
+			var capturedOptions = options;
+			token?.SetAutoFinalizer(() => FinalizeBuilder(capturedScript, capturedOptions, token));
 		}
 
-		/// <summary>
-		/// Completes the builder and returns the executable block.
-		/// </summary>
-		public ScriptActionBlock Do() => Finalize(Script, Options, Token);
+		public static implicit operator ScriptActionBlock(ObjectCreateBuilder<T> builder) =>
+			FinalizeBuilder(builder.Script, builder.Options, builder.Token);
 
 		public ObjectCreateBuilder<T> Parent(ILunyObject parent)
 		{
@@ -100,7 +99,7 @@ namespace LunyScript.BlockBuilders
 			return new ObjectCreateBuilder<T>(Script, options, Token);
 		}
 
-		private ScriptActionBlock Finalize(Script script, in ObjectCreateOptions options, BuilderToken token)
+		internal static ScriptActionBlock FinalizeBuilder(Script script, in ObjectCreateOptions options, BuilderToken token)
 		{
 			var block = options.Mode switch
 			{

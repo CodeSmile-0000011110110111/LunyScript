@@ -15,10 +15,10 @@ namespace LunyScript.BlockBuilders
 		private readonly String _file;
 		private readonly Int32 _line;
 		private Boolean _isFinished;
+		private Action _autoFinalizeAction;
 
-		public static void LogWarning(BuilderToken token) => LunyLogger.LogWarning(
-			$"{Path.GetFileName(token._file)}({token._line}): Unfinished {token._type} '{token._name}' => " +
-			"Did you forget to call a terminal method like .Do() or .WhenElapsed()?");
+		public static void LogUnfinishedBuilder(BuilderToken token) => LunyLogger.LogWarning(
+			$"{Path.GetFileName(token._file)}({token._line}) Unfinished {token._type} builder: '{token._name}' was never finalized.");
 
 		public BuilderToken(String name, String type, [CallerFilePath] String file = "", [CallerLineNumber] Int32 lineNumber = -1)
 		{
@@ -26,6 +26,26 @@ namespace LunyScript.BlockBuilders
 			_type = type;
 			_file = file;
 			_line = lineNumber;
+		}
+
+		/// <summary>
+		/// Registers an action to be called automatically when the builder is in a finalizable state.
+		/// Replaces any previously registered finalizer.
+		/// </summary>
+		internal void SetAutoFinalizer(Action finalizeAction) => _autoFinalizeAction = finalizeAction;
+
+		/// <summary>
+		/// Invokes the auto-finalizer action and marks the token finished.
+		/// Returns true if the builder was auto-finalized, false if no finalizer was registered.
+		/// </summary>
+		public Boolean FinalizeBuilder()
+		{
+			if (_autoFinalizeAction == null)
+				return false;
+
+			_autoFinalizeAction.Invoke();
+			MarkFinished();
+			return true;
 		}
 
 		public void MarkFinished()
@@ -37,7 +57,7 @@ namespace LunyScript.BlockBuilders
 		~BuilderToken()
 		{
 			if (!_isFinished)
-				LogWarning(this);
+				LogUnfinishedBuilder(this);
 		}
 	}
 }

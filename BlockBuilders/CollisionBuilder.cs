@@ -85,6 +85,9 @@ namespace LunyScript.BlockBuilders
 			Script = script;
 			Options = options;
 			Token = token;
+			var capturedScript = script;
+			var capturedOptions = options;
+			token?.SetAutoFinalizer(() => Finalize(capturedScript, capturedOptions, token));
 		}
 
 		// ── Filters ───────────────────────────────────────────────────────────
@@ -173,9 +176,6 @@ namespace LunyScript.BlockBuilders
 		}
 
 		// ── Finalize ──────────────────────────────────────────────────────────
-
-		/// <summary>Finalizes the builder and schedules all configured event handlers.</summary>
-		public void Do() => Finalize(Script, Options, Token);
 
 		private static void Finalize(Script script, in CollisionEventOptions options, BuilderToken token)
 		{
