@@ -2,7 +2,7 @@
 using Luny.Engine.Bridge;
 using System;
 
-namespace LunyScript.Blocks.Transform
+namespace LunyScript.Blocks
 {
 	public sealed class TransformScaleTowardsLerpBlock : TransformTowardsVariableBlock
 	{

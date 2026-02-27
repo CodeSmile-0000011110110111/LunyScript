@@ -3,7 +3,7 @@ using LunyScript.Blocks.Guards;
 using System;
 using System.Collections.Generic;
 
-namespace LunyScript.Blocks
+namespace LunyScript.Blocks.PhysicsEvent
 {
 	/// <summary>
 	/// Physics event sequence block for 3D collision events.

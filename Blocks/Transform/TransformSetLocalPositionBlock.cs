@@ -1,7 +1,7 @@
 using Luny.Engine.Bridge;
 using System;
 
-namespace LunyScript.Blocks.Transform
+namespace LunyScript.Blocks
 {
 	public sealed class TransformSetLocalPositionBlock : ScriptActionBlock
 	{

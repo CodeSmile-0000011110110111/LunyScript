@@ -1,4 +1,5 @@
 using Luny;
+using LunyScript.ApiBuilders.Coroutine;
 using System;
 
 namespace LunyScript.Coroutines
@@ -17,7 +18,7 @@ namespace LunyScript.Coroutines
 			set => _timer.TimeScale = Math.Max(0.0, value);
 		}
 
-		public TimerCoroutine(in Options options)
+		public TimerCoroutine(in CoroutineOptions options)
 			: base(options)
 		{
 			var duration = Math.Max(0.0, options.TimerDurationInSeconds);

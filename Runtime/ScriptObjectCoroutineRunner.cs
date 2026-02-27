@@ -1,5 +1,6 @@
 ﻿using Luny;
 using Luny.Engine.Services;
+using LunyScript.ApiBuilders.Coroutine;
 using LunyScript.Blocks;
 using LunyScript.Coroutines;
 using System;
@@ -43,25 +44,25 @@ namespace LunyScript
 			return (tickCount - entry.TimeSliceOffset) % entry.TimeSliceInterval == 0;
 		}
 
-		private static void RunSequences(in CoroutineEntry entry, CoroutineEvents events, ScriptRuntimeContext context)
+		private static void RunSequences(in CoroutineEntry entry, Coroutine.Events events, ScriptRuntimeContext context)
 		{
-			if (events == CoroutineEvents.None)
+			if (events == Coroutine.Events.None)
 				return;
 
 			// intentional order
-			if (events.Has(CoroutineEvents.Started))
+			if (events.Has(Coroutine.Events.Started))
 				LunyScriptRunner.Run(entry.Sequences[0], context);
-			if (events.Has(CoroutineEvents.Resumed))
+			if (events.Has(Coroutine.Events.Resumed))
 				LunyScriptRunner.Run(entry.Sequences[1], context);
-			if (events.Has(CoroutineEvents.Heartbeat))
+			if (events.Has(Coroutine.Events.Heartbeat))
 				LunyScriptRunner.Run(entry.Sequences[2], context);
-			if (events.Has(CoroutineEvents.FrameUpdate))
+			if (events.Has(Coroutine.Events.FrameUpdate))
 				LunyScriptRunner.Run(entry.Sequences[3], context);
-			if (events.Has(CoroutineEvents.Paused))
+			if (events.Has(Coroutine.Events.Paused))
 				LunyScriptRunner.Run(entry.Sequences[4], context);
-			if (events.Has(CoroutineEvents.Stopped))
+			if (events.Has(Coroutine.Events.Stopped))
 				LunyScriptRunner.Run(entry.Sequences[5], context);
-			if (events.Has(CoroutineEvents.Elapsed))
+			if (events.Has(Coroutine.Events.Elapsed))
 				LunyScriptRunner.Run(entry.Sequences[6], context);
 		}
 
@@ -70,7 +71,7 @@ namespace LunyScript
 		/// <summary>
 		/// Registers a new coroutine. Throws if name already exists.
 		/// </summary>
-		internal ICoroutineBlock Register(in Coroutine.Options options)
+		internal ICoroutineBlock Register(in CoroutineOptions options)
 		{
 			if (_registry.ContainsKey(options.Name))
 				throw new InvalidOperationException($"Coroutine '{options.Name}' already exists. Duplicate names are not allowed.");
@@ -174,7 +175,7 @@ namespace LunyScript
 			public readonly Coroutine.Process ProcessMode;
 			public Boolean IsTimeSliced => TimeSliceInterval > 0;
 
-			public CoroutineEntry(Coroutine coroutine, in Coroutine.Options options)
+			public CoroutineEntry(Coroutine coroutine, in CoroutineOptions options)
 			{
 				Coroutine = coroutine;
 				TimeSliceInterval = options.TimeSliceInterval;

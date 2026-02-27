@@ -1,28 +1,8 @@
-using Luny;
+using LunyScript.ApiBuilders.Coroutine;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace LunyScript.Coroutines
 {
-	[Flags]
-	internal enum CoroutineEvents
-	{
-		None = 0,
-		Started = 1 << 0,
-		Resumed = 1 << 1,
-		Heartbeat = 1 << 2,
-		FrameUpdate = 1 << 3,
-		Paused = 1 << 4,
-		Stopped = 1 << 5,
-		Elapsed = 1 << 6,
-	}
-
-	internal static class CoroutineEventsExtensions
-	{
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean Has(this CoroutineEvents events, CoroutineEvents flag) => (events & flag) != 0;
-	}
-
 	/// <summary>
 	/// Base class for coroutines and timers with runtime state and control methods.
 	/// </summary>
@@ -32,7 +12,7 @@ namespace LunyScript.Coroutines
 
 		private readonly String _name;
 		private CoroutineState _state = CoroutineState.New;
-		private CoroutineEvents _pendingEvents = CoroutineEvents.None;
+		private Events _pendingEvents = Events.None;
 
 		internal String Name => _name;
 		internal String State => s_StateNames[(Int32)_state];
@@ -45,7 +25,7 @@ namespace LunyScript.Coroutines
 		/// <summary>
 		/// Factory method to create specialized coroutine instances.
 		/// </summary>
-		public static Coroutine Create(in Options options) => options.IsTimer ? new TimerCoroutine(options) :
+		public static Coroutine Create(in CoroutineOptions options) => options.IsTimer ? new TimerCoroutine(options) :
 			options.IsCounter ? new CounterCoroutine(options) : new Coroutine(options);
 
 		// return options.IsTimer ? new TimerCoroutine(options) :
@@ -53,7 +33,7 @@ namespace LunyScript.Coroutines
 		// 	new Coroutine(options);
 		private Coroutine() {} // hide default ctor
 
-		protected Coroutine(in Options options)
+		protected Coroutine(in CoroutineOptions options)
 		{
 			if (String.IsNullOrEmpty(options.Name))
 				throw new ArgumentException("Coroutine name cannot be null or empty", nameof(options.Name));
@@ -73,7 +53,7 @@ namespace LunyScript.Coroutines
 			//LunyLogger.LogInfo($"{nameof(Start)}({_name})", this);
 			_state = CoroutineState.Running;
 			if (fireStartStopEvents)
-				_pendingEvents |= CoroutineEvents.Started;
+				_pendingEvents |= Events.Started;
 			OnStarted();
 		}
 
@@ -92,7 +72,7 @@ namespace LunyScript.Coroutines
 			//LunyLogger.LogInfo($"{nameof(Stop)}({_name})", this);
 			_state = CoroutineState.Stopped;
 			if (fireStopEvent)
-				_pendingEvents |= CoroutineEvents.Stopped;
+				_pendingEvents |= Events.Stopped;
 			OnStopped();
 		}
 
@@ -110,7 +90,7 @@ namespace LunyScript.Coroutines
 
 			//LunyLogger.LogInfo($"{nameof(Pause)}({_name})", this);
 			_state = CoroutineState.Paused;
-			_pendingEvents |= CoroutineEvents.Paused;
+			_pendingEvents |= Events.Paused;
 			OnPaused();
 		}
 
@@ -125,7 +105,7 @@ namespace LunyScript.Coroutines
 
 			//LunyLogger.LogInfo($"{nameof(Resume)}({_name})", this);
 			_state = CoroutineState.Running;
-			_pendingEvents |= CoroutineEvents.Resumed;
+			_pendingEvents |= Events.Resumed;
 			OnResumed();
 		}
 
@@ -134,25 +114,25 @@ namespace LunyScript.Coroutines
 		/// </summary>
 		internal void OnObjectDestroyed() => StopWithoutEvent();
 
-		internal CoroutineEvents GetAndClearPendingEvents()
+		internal Events GetAndClearPendingEvents()
 		{
 			var events = _pendingEvents;
-			_pendingEvents = CoroutineEvents.None;
+			_pendingEvents = Events.None;
 			return events;
 		}
 
 		/// <summary>
 		/// Updates coroutine heartbeat state. Returns events that occurred.
 		/// </summary>
-		internal CoroutineEvents ProcessHeartbeat()
+		internal Events ProcessHeartbeat()
 		{
 			StartIfNew();
 			if (IsRunning)
 			{
-				_pendingEvents |= CoroutineEvents.Heartbeat;
+				_pendingEvents |= Events.Heartbeat;
 				if (ConsumeHeartbeat())
 				{
-					_pendingEvents |= CoroutineEvents.Elapsed;
+					_pendingEvents |= Events.Elapsed;
 					ApplyContinuation();
 				}
 			}
@@ -163,15 +143,15 @@ namespace LunyScript.Coroutines
 		/// <summary>
 		/// Updates coroutine frame update state. Returns events that occurred.
 		/// </summary>
-		internal CoroutineEvents ProcessFrameUpdate()
+		internal Events ProcessFrameUpdate()
 		{
 			StartIfNew();
 			if (IsRunning)
 			{
-				_pendingEvents |= CoroutineEvents.FrameUpdate;
+				_pendingEvents |= Events.FrameUpdate;
 				if (ConsumeFrameUpdate())
 				{
-					_pendingEvents |= CoroutineEvents.Elapsed;
+					_pendingEvents |= Events.Elapsed;
 					ApplyContinuation();
 				}
 			}
@@ -200,5 +180,63 @@ namespace LunyScript.Coroutines
 		protected virtual Boolean ConsumeFrameUpdate() => false;
 		protected virtual Boolean ConsumeHeartbeat() => false;
 		public override String ToString() => $"{GetType().Name}({Name}, {State})";
+
+		[Flags]
+		internal enum Events
+		{
+			None = 0,
+			Started = 1 << 0,
+			Resumed = 1 << 1,
+			Heartbeat = 1 << 2,
+			FrameUpdate = 1 << 3,
+			Paused = 1 << 4,
+			Stopped = 1 << 5,
+			Elapsed = 1 << 6,
+		}
+
+		/// <summary>
+		/// Represents the execution state of a coroutine or timer.
+		/// </summary>
+		private enum CoroutineState
+		{
+			/// <summary>
+			/// Coroutine has not started yet.
+			/// </summary>
+			New,
+
+			/// <summary>
+			/// Coroutine is not running and has no accumulated time.
+			/// </summary>
+			Stopped,
+
+			/// <summary>
+			/// Coroutine is actively running and accumulating time.
+			/// </summary>
+			Running,
+
+			/// <summary>
+			/// Coroutine is frozen at current time, will resume when unpaused.
+			/// </summary>
+			Paused,
+		}
+
+		/// <summary>
+		/// For Counter coroutines: Whether it counts frames or heartbeats.
+		/// </summary>
+		internal enum Process
+		{
+			Always,
+			FrameUpdate,
+			Heartbeat,
+		}
+
+		/// <summary>
+		/// Coroutine behaviour after it ran to completion.
+		/// </summary>
+		internal enum Continuation
+		{
+			Finite,
+			Repeating,
+		}
 	}
 }

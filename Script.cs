@@ -1,9 +1,15 @@
 using Luny;
 using Luny.Engine.Bridge;
-using LunyScript.Api;
-using LunyScript.Api.Coroutine;
-using LunyScript.Api.Input;
-using LunyScript.Api.Object;
+using LunyScript.ApiBuilders;
+using LunyScript.ApiBuilders.Blocks;
+using LunyScript.ApiBuilders.Coroutine;
+using LunyScript.ApiBuilders.Coroutine.Counter;
+using LunyScript.ApiBuilders.Coroutine.Every;
+using LunyScript.ApiBuilders.Coroutine.Timer;
+using LunyScript.ApiBuilders.Event;
+using LunyScript.ApiBuilders.Input;
+using LunyScript.ApiBuilders.Object;
+using LunyScript.ApiBuilders.Transform;
 using LunyScript.Blocks;
 using LunyScript.Events;
 using LunyScript.Exceptions;
@@ -62,16 +68,16 @@ namespace LunyScript
 		protected DebugApi Debug => new(this);
 		protected EditorApi Editor => new(this);
 		//protected EngineApi Engine => new(this);
-		protected InputApi Input => new(this);
+		protected InputBuilder Input => new(this);
 		//public LoopApi Loop => new(this);
 		protected MethodApi Method => new(this);
-		protected ObjectApi Object => new(this);
-		protected OnApi On => new(this);
-		protected PrefabApi Prefab => new(this);
+		protected ObjectBuilder Object => new(this);
+		protected OnEventBuilder On => new(this);
+		protected PrefabBuilder Prefab => new(this);
 		protected SceneApi Scene => new(this);
 		protected TimeApi Time => new(this);
-		protected TransformApi Transform => new(this);
-		protected WhenApi When => new(this);
+		protected TransformBuilder Transform => new(this);
+		protected WhenEventBuilder When => new(this);
 
 		// these API outlines exist to get a feel for the intellisense/autocompletion behaviour ...
 		// planned API outline (consider this the TODO list)

@@ -1,7 +1,7 @@
 using Luny.Engine.Bridge;
 using System;
 
-namespace LunyScript.Blocks.Transform
+namespace LunyScript.Blocks
 {
 	/// <summary>
 	/// Abstract base for Towards blocks whose target is an <see cref="ILunyObject"/> in the scene

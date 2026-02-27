@@ -1,4 +1,5 @@
 using Luny;
+using LunyScript.ApiBuilders.Coroutine;
 using System;
 
 namespace LunyScript.Coroutines
@@ -11,7 +12,7 @@ namespace LunyScript.Coroutines
 		private Counter _counter;
 		private Boolean _elapsedThisTick;
 
-		public CounterCoroutine(in Options options)
+		public CounterCoroutine(in CoroutineOptions options)
 			: base(options)
 		{
 			_counter = new Counter(Math.Max(0, options.CounterTarget));

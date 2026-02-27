@@ -1,6 +1,6 @@
 using System;
 
-namespace LunyScript.Blocks.Transform
+namespace LunyScript.Blocks
 {
 	/// <summary>
 	/// Abstract base for Towards blocks whose target is a <see cref="VariableBlock"/> value

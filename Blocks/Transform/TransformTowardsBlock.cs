@@ -1,7 +1,7 @@
 using Luny.Engine.Bridge;
 using System;
 
-namespace LunyScript.Blocks.Transform
+namespace LunyScript.Blocks
 {
 	/// <summary>
 	/// Abstract base for blocks that interpolate or step a transform property toward a target over time.
