@@ -22,11 +22,11 @@ namespace LunyScript.ApiBuilders.Coroutine.Timer
 		/// <summary>
 		/// Sets the timer to fire once after the specified duration.
 		/// </summary>
-		public TimerDurationBuilder In(Double duration) => new(_script, _name, _token, duration, Coroutines.Coroutine.Continuation.Finite);
+		public TimerDurationBuilder In(Double duration) => new(_script, _token, new TimerOptions { Name = _name, Amount = duration, Continuation = Coroutines.Coroutine.Continuation.Finite });
 
 		/// <summary>
 		/// Sets the timer to fire repeatedly at the specified interval.
 		/// </summary>
-		public TimerDurationBuilder Every(Double interval) => new(_script, _name, _token, interval, Coroutines.Coroutine.Continuation.Repeating);
+		public TimerDurationBuilder Every(Double interval) => new(_script, _token, new TimerOptions { Name = _name, Amount = interval, Continuation = Coroutines.Coroutine.Continuation.Repeating });
 	}
 }

@@ -22,11 +22,10 @@ namespace LunyScript.ApiBuilders.Coroutine.Every
 		/// <summary>
 		/// Selects frame-based execution.
 		/// </summary>
-		public EveryUnitBuilder Frames() => new(_script, _token, _interval, Coroutines.Coroutine.Process.FrameUpdate);
-
+		public EveryUnitBuilder Frames() => new(_script, _token, new EveryOptions { Interval = _interval, Process = Coroutines.Coroutine.Process.FrameUpdate });
 		/// <summary>
 		/// Selects heartbeat-based execution.
 		/// </summary>
-		public EveryUnitBuilder Heartbeats() => new(_script, _token, _interval, Coroutines.Coroutine.Process.Heartbeat);
+		public EveryUnitBuilder Heartbeats() => new(_script, _token, new EveryOptions { Interval = _interval, Process = Coroutines.Coroutine.Process.Heartbeat });
 	}
 }

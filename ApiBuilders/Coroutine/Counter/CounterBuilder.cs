@@ -22,11 +22,11 @@ namespace LunyScript.ApiBuilders.Coroutine.Counter
 		/// <summary>
 		/// Sets the counter to fire once after the specified count.
 		/// </summary>
-		public CounterDurationBuilder In(Int32 targetCount) => new(_script, _name, _token, targetCount, Coroutines.Coroutine.Continuation.Finite);
+		public CounterDurationBuilder In(Int32 targetCount) => new(_script, _token, new CounterOptions { Name = _name, Amount = targetCount, Continuation = Coroutines.Coroutine.Continuation.Finite });
 
 		/// <summary>
 		/// Sets the counter to fire repeatedly at the specified interval.
 		/// </summary>
-		public CounterDurationBuilder Every(Int32 interval) => new(_script, _name, _token, interval, Coroutines.Coroutine.Continuation.Repeating);
+		public CounterDurationBuilder Every(Int32 interval) => new(_script, _token, new CounterOptions { Name = _name, Amount = interval, Continuation = Coroutines.Coroutine.Continuation.Repeating });
 	}
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace LunyScript.ApiBuilders.Coroutine.Counter
 {
@@ -8,33 +8,29 @@ namespace LunyScript.ApiBuilders.Coroutine.Counter
 	public readonly struct CounterDurationBuilder
 	{
 		private readonly Script _script;
-		private readonly String _name;
 		private readonly BuilderToken _token;
-		private readonly Int32 _amount;
-		private readonly Coroutines.Coroutine.Continuation _continuation;
+		private readonly CounterOptions _options;
 
-		internal CounterDurationBuilder(Script script, String name, BuilderToken token, Int32 amount, Coroutines.Coroutine.Continuation continuation)
+		internal CounterDurationBuilder(Script script, BuilderToken token, in CounterOptions options)
 		{
 			_script = script;
-			_name = name;
 			_token = token;
-			_amount = amount;
-			_continuation = continuation;
+			_options = options;
 
-			if (amount < 0)
-				throw new ArgumentException($"Counter duration must be 0 or greater, got: {amount}");
+			if (options.Amount < 0)
+				throw new ArgumentException($"Counter duration must be 0 or greater, got: {options.Amount}");
 		}
 
 		/// <summary>
 		/// Duration in frames (count-based).
 		/// </summary>
 		public CounterFinalBuilder Frames() => new(_script, _token,
-			CoroutineOptions.ForCounter(_name, _amount, _continuation, Coroutines.Coroutine.Process.FrameUpdate));
+			CoroutineOptions.ForCounter(_options.Name, _options.Amount, _options.Continuation, Coroutines.Coroutine.Process.FrameUpdate));
 
 		/// <summary>
 		/// Duration in heartbeats (count-based).
 		/// </summary>
 		public CounterFinalBuilder Heartbeats() => new(_script, _token,
-			CoroutineOptions.ForCounter(_name, _amount, _continuation, Coroutines.Coroutine.Process.Heartbeat));
+			CoroutineOptions.ForCounter(_options.Name, _options.Amount, _options.Continuation, Coroutines.Coroutine.Process.Heartbeat));
 	}
 }
