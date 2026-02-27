@@ -1,72 +1,11 @@
 using Luny;
 using Luny.Engine.Bridge.Physics;
-using Luny.Engine.Services;
 using LunyScript.Blocks;
+using LunyScript.Blocks.Guards;
 using System;
 
-namespace LunyScript.BlockBuilders
+namespace LunyScript.Api.Physics
 {
-	/// <summary>
-	/// Options DTO for collision/trigger event builders.
-	/// Holds filter options, event handler blocks, and optional cooldown.
-	/// </summary>
-	public struct CollisionEventOptions
-	{
-		public CollisionFilterOptions Filter;
-		public ScriptActionBlock[] BeginsBlocks;
-		public ScriptActionBlock[] UpdatesBlocks;
-		public ScriptActionBlock[] EndsBlocks;
-		public Boolean IsTrigger;
-		/// <summary>Minimum seconds between successive reactions. Zero means no cooldown.</summary>
-		public Double Cooldown;
-	}
-
-	/// <summary>
-	/// Immutable filter options for collision/trigger event builders.
-	/// Each predicate is compiled once when the corresponding filter method is called.
-	/// Null predicate means that filter kind is inactive (no check performed).
-	/// Parameters within a kind are OR-combined; different kinds are AND-combined.
-	/// </summary>
-	public struct CollisionFilterOptions
-	{
-		// Raw filter data (kept for diagnostics and for re-compiling trigger predicates from collision filter)
-		public String[] Tags;
-		public String[] Names;
-		public String[] Layers;
-		public Int32? LayerMask;
-		public Type[] ComponentTypes;
-
-		// Per-kind compiled predicates for collision events — AND-combined at runtime by CollisionSequenceBlock.
-		// Each predicate encodes OR logic within its kind.
-		public Predicate<LunyCollision> TagPredicate;
-		public Predicate<LunyCollision> NamePredicate;
-		public Predicate<LunyCollision> LayerPredicate;
-		public Predicate<LunyCollision> TypePredicate;
-	}
-
-	// ── State tokens & interfaces ─────────────────────────────────────────────
-
-	public interface ICollisionBuilderState {}
-
-	/// <summary>Initial state: no filters or event handlers set yet.</summary>
-	public interface ICollisionBuilderStart : ICollisionBuilderState {}
-
-	/// <summary>At least one filter or handler has been set.</summary>
-	public interface ICollisionBuilderReady : ICollisionBuilderState {}
-
-	/// <summary>Layered() has been called — Masked() is now blocked.</summary>
-	public interface ICollisionBuilderLayered : ICollisionBuilderReady {}
-
-	/// <summary>Masked() has been called — Layered() is now blocked.</summary>
-	public interface ICollisionBuilderMasked : ICollisionBuilderReady {}
-
-	public struct CollisionBuilderStart : ICollisionBuilderStart {}
-	public struct CollisionBuilderReady : ICollisionBuilderReady {}
-	public struct CollisionBuilderLayered : ICollisionBuilderLayered {}
-	public struct CollisionBuilderMasked : ICollisionBuilderMasked {}
-
-	// ── Builder ───────────────────────────────────────────────────────────────
-
 	/// <summary>
 	/// Fluent builder for filtered collision/trigger event sequences.
 	/// Filters (Tagged, Named, Layered, Masked, Typed) are order-independent and accumulate.
@@ -77,10 +16,10 @@ namespace LunyScript.BlockBuilders
 	public readonly struct CollisionBuilder<T> where T : struct, ICollisionBuilderState
 	{
 		internal readonly Script Script;
-		internal readonly CollisionEventOptions Options;
+		internal readonly PhysicsEventOptions Options;
 		internal readonly BuilderToken Token;
 
-		internal CollisionBuilder(Script script, CollisionEventOptions options, BuilderToken token)
+		internal CollisionBuilder(Script script, PhysicsEventOptions options, BuilderToken token)
 		{
 			Script = script;
 			Options = options;
@@ -100,18 +39,18 @@ namespace LunyScript.BlockBuilders
 		{
 			var options = Options;
 			options.Filter.Tags = tags;
-			options.Filter.TagPredicate = CollisionPredicates.ForTags(tags);
+			options.Filter.TagPredicate = ColliderPredicates.ForTags(tags);
 			return new CollisionBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
 		/// <summary>
 		/// Only react when the other object's name matches one of the given names (OR logic).
 		/// </summary>
-		public CollisionBuilder<CollisionBuilderReady> Named(params String[] names)
+		public CollisionBuilder<CollisionBuilderReady> With(params String[] names)
 		{
 			var options = Options;
 			options.Filter.Names = names;
-			options.Filter.NamePredicate = CollisionPredicates.ForNames(names);
+			options.Filter.NamePredicate = ColliderPredicates.ForNames(names);
 			return new CollisionBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
@@ -123,7 +62,7 @@ namespace LunyScript.BlockBuilders
 		{
 			var options = Options;
 			options.Filter.Layers = layerNames;
-			options.Filter.LayerPredicate = CollisionPredicates.ForLayers(layerNames);
+			options.Filter.LayerPredicate = ColliderPredicates.ForLayers(layerNames);
 			return new CollisionBuilder<CollisionBuilderLayered>(Script, options, Token);
 		}
 
@@ -134,7 +73,7 @@ namespace LunyScript.BlockBuilders
 		{
 			var options = Options;
 			options.Filter.ComponentTypes = componentTypes;
-			options.Filter.TypePredicate = CollisionPredicates.ForComponentTypes(componentTypes);
+			options.Filter.TypePredicate = ColliderPredicates.ForComponentTypes(componentTypes);
 			return new CollisionBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
@@ -177,7 +116,7 @@ namespace LunyScript.BlockBuilders
 
 		// ── Finalize ──────────────────────────────────────────────────────────
 
-		private static void Finalize(Script script, in CollisionEventOptions options, BuilderToken token)
+		private static void Finalize(Script script, in PhysicsEventOptions options, BuilderToken token)
 		{
 			var guards = BuildGuards(options.Cooldown);
 
@@ -229,7 +168,7 @@ namespace LunyScript.BlockBuilders
 			script.FinalizeToken(token);
 		}
 
-		private static Predicate<LunyCollision>[] BuildCollisionPredicates(in CollisionFilterOptions filter)
+		private static Predicate<LunyCollider>[] BuildCollisionPredicates(in PhysicsEventFilterOptions filter)
 		{
 			var count = 0;
 			if (filter.NamePredicate != null)
@@ -244,7 +183,7 @@ namespace LunyScript.BlockBuilders
 			if (count == 0)
 				return null;
 
-			var predicates = new Predicate<LunyCollision>[count];
+			var predicates = new Predicate<LunyCollider>[count];
 			var i = 0;
 			if (filter.NamePredicate != null)
 				predicates[i++] = filter.NamePredicate;
@@ -257,7 +196,7 @@ namespace LunyScript.BlockBuilders
 			return predicates;
 		}
 
-		private static Predicate<LunyCollider>[] BuildTriggerPredicates(in CollisionFilterOptions filter)
+		private static Predicate<LunyCollider>[] BuildTriggerPredicates(in PhysicsEventFilterOptions filter)
 		{
 			var count = 0;
 			if (filter.Names != null)
@@ -296,38 +235,9 @@ namespace LunyScript.BlockBuilders
 		}
 	}
 
-	internal sealed class CooldownGuard<T> : EventGuard where T : struct, ICollisionBuilderState
-	{
-		private ILunyTimeService _time;
-		private Double _lastExecutionTime;
-		private Double _cooldownInSeconds;
-
-		public CooldownGuard(Double cooldownInSeconds, ILunyTimeService time)
-		{
-			_cooldownInSeconds = cooldownInSeconds;
-			_time = time;
-		}
-
-		public override Boolean CanExecute()
-		{
-			var now = _time.ElapsedSeconds;
-			var cooldownElapsedSeconds = now - _lastExecutionTime;
-			var canRunAgain = cooldownElapsedSeconds >= _cooldownInSeconds;
-			return canRunAgain;
-		}
-
-		public override void WillExecute() => _lastExecutionTime = _time.ElapsedSeconds;
-	}
-
-	internal abstract class EventGuard
-	{
-		public abstract Boolean CanExecute();
-		public abstract void WillExecute();
-	}
-
 	// ── Extension methods (mutual exclusivity for Masked) ─────────────────────
 
-	public static class CollisionBuilderExtensions
+	public static class CollisionBuilderMaskedExtensions
 	{
 		/// <summary>
 		/// Only react when the other object's layer is included in the given bitmask.
@@ -339,7 +249,7 @@ namespace LunyScript.BlockBuilders
 		{
 			var options = b.Options;
 			options.Filter.LayerMask = layerMask;
-			options.Filter.LayerPredicate = CollisionPredicates.ForLayerMask(layerMask);
+			options.Filter.LayerPredicate = ColliderPredicates.ForLayerMask(layerMask);
 			return new CollisionBuilder<CollisionBuilderMasked>(b.Script, options, b.Token);
 		}
 
@@ -353,74 +263,8 @@ namespace LunyScript.BlockBuilders
 		{
 			var options = b.Options;
 			options.Filter.Layers = layerNames;
-			options.Filter.LayerPredicate = CollisionPredicates.ForLayers(layerNames);
+			options.Filter.LayerPredicate = ColliderPredicates.ForLayers(layerNames);
 			return new CollisionBuilder<CollisionBuilderMasked>(b.Script, options, b.Token);
-		}
-	}
-
-	/// <summary>
-	/// Factory methods for per-kind collision predicates (Predicate&lt;LunyCollision&gt;).
-	/// Each predicate encodes OR logic within its kind.
-	/// Predicates are compiled once at builder call time and evaluated at each physics event.
-	/// </summary>
-	internal static class CollisionPredicates
-	{
-		public static Predicate<LunyCollision> ForTags(String[] tags)
-		{
-			var captured = tags;
-			return collision =>
-			{
-				foreach (var tag in captured)
-				{
-					if (collision.Tag == tag)
-						return true;
-				}
-				return false;
-			};
-		}
-
-		public static Predicate<LunyCollision> ForNames(String[] names)
-		{
-			var captured = names;
-			return collision =>
-			{
-				foreach (var name in captured)
-				{
-					if (collision.Name == name)
-						return true;
-				}
-				return false;
-			};
-		}
-
-		public static Predicate<LunyCollision> ForLayers(String[] layerNames)
-		{
-			var captured = layerNames;
-			return collision =>
-			{
-				foreach (var layer in captured)
-				{
-					if (collision.LayerName == layer)
-						return true;
-				}
-				return false;
-			};
-		}
-
-		public static Predicate<LunyCollision> ForLayerMask(Int32 mask) => mask != 0 ? collision => (mask & 1 << collision.Layer) != 0 : null;
-
-		public static Predicate<LunyCollision> ForComponentTypes(Type[] types)
-		{
-			var captured = types;
-			return collision =>
-			{
-				foreach (var type in captured)
-				{
-					if (collision.HasComponent(type))
-						return true;
-				}
-				return false;
-			};
 		}
 	}
 }

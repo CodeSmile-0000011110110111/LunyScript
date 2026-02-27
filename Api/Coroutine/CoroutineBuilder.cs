@@ -1,8 +1,8 @@
+using Luny;
 using LunyScript.Blocks;
-using LunyScript.Coroutines;
 using System;
 
-namespace LunyScript.BlockBuilders
+namespace LunyScript.Api.Coroutine
 {
 	/// <summary>
 	/// Entry point for the Coroutine fluent builder chain.
@@ -30,13 +30,29 @@ namespace LunyScript.BlockBuilders
 		/// Creates an open-ended coroutine (runs until stopped) which runs the blocks every frame.
 		/// </summary>
 		public OpenEndedFrameCoroutineBuilder OnFrameUpdate(params ScriptActionBlock[] blocks) => new(_script, _token,
-			Coroutine.Options.ForOpenEnded(_name, Coroutine.Process.FrameUpdate) with { OnFrameUpdate = blocks });
+			Coroutines.Coroutine.Options.ForOpenEnded(_name, Coroutines.Coroutine.Process.FrameUpdate) with { OnFrameUpdate = blocks });
 
 		/// <summary>
 		/// Creates an open-ended coroutine (runs until stopped) which runs the blocks every heartbeat (fixed step).
 		/// </summary>
 		public OpenEndedHeartbeatCoroutineBuilder OnHeartbeat(params ScriptActionBlock[] blocks) => new(_script, _token,
-			Coroutine.Options.ForOpenEnded(_name, Coroutine.Process.Heartbeat) with { OnHeartbeat = blocks });
+			Coroutines.Coroutine.Options.ForOpenEnded(_name, Coroutines.Coroutine.Process.Heartbeat) with { OnHeartbeat = blocks });
+
+
+		internal static ICoroutineBlock Finalize(Script script, in Coroutines.Coroutine.Options options, BuilderToken token)
+		{
+			if (options.OnFrameUpdate == null && options.OnHeartbeat == null && options.OnElapsed == null &&
+			    options.OnStarted == null && options.OnStopped == null && options.OnPaused == null && options.OnResumed == null)
+			{
+				LunyLogger.LogWarning($"{nameof(Coroutines.Coroutine)} '{options.Name}' was finalized without any action blocks. " +
+				                      "It will run but perform no actions.", script);
+			}
+
+			var scriptInternal = script;
+			var block = scriptInternal.RuntimeContext.Coroutines.Register(in options);
+			scriptInternal.FinalizeToken(token);
+			return block;
+		}
 	}
 
 	/// <summary>
@@ -64,31 +80,31 @@ namespace LunyScript.BlockBuilders
 		/// Duration in seconds (time-based).
 		/// </summary>
 		public FiniteFrameCoroutineBuilder Seconds() => new(_script, _token,
-			Coroutine.Options.ForTimer(_name, _duration, Coroutine.Continuation.Finite, Coroutine.Process.FrameUpdate));
+			Coroutines.Coroutine.Options.ForTimer(_name, _duration, Coroutines.Coroutine.Continuation.Finite, Coroutines.Coroutine.Process.FrameUpdate));
 
 		/// <summary>
 		/// Duration in milliseconds (time-based).
 		/// </summary>
 		public FiniteFrameCoroutineBuilder Milliseconds() => new(_script, _token,
-			Coroutine.Options.ForTimer(_name, _duration / 1000.0, Coroutine.Continuation.Finite, Coroutine.Process.FrameUpdate));
+			Coroutines.Coroutine.Options.ForTimer(_name, _duration / 1000.0, Coroutines.Coroutine.Continuation.Finite, Coroutines.Coroutine.Process.FrameUpdate));
 
 		/// <summary>
 		/// Duration in minutes (time-based).
 		/// </summary>
 		public FiniteFrameCoroutineBuilder Minutes() => new(_script, _token,
-			Coroutine.Options.ForTimer(_name, _duration * 60.0, Coroutine.Continuation.Finite, Coroutine.Process.FrameUpdate));
+			Coroutines.Coroutine.Options.ForTimer(_name, _duration * 60.0, Coroutines.Coroutine.Continuation.Finite, Coroutines.Coroutine.Process.FrameUpdate));
 
 		/// <summary>
 		/// Duration in heartbeats (count-based, counts fixed steps).
 		/// </summary>
 		public FiniteHeartbeatCoroutineBuilder Heartbeats() => new(_script, _token,
-			Coroutine.Options.ForCounter(_name, (Int32)_duration, Coroutine.Continuation.Finite, Coroutine.Process.Heartbeat));
+			Coroutines.Coroutine.Options.ForCounter(_name, (Int32)_duration, Coroutines.Coroutine.Continuation.Finite, Coroutines.Coroutine.Process.Heartbeat));
 
 		/// <summary>
 		/// Duration in frames (count-based, counts frames).
 		/// </summary>
 		public FiniteFrameCoroutineBuilder Frames() => new(_script, _token,
-			Coroutine.Options.ForCounter(_name, (Int32)_duration, Coroutine.Continuation.Finite, Coroutine.Process.FrameUpdate));
+			Coroutines.Coroutine.Options.ForCounter(_name, (Int32)_duration, Coroutines.Coroutine.Continuation.Finite, Coroutines.Coroutine.Process.FrameUpdate));
 	}
 
 	/// <summary>
@@ -98,16 +114,16 @@ namespace LunyScript.BlockBuilders
 	{
 		private readonly Script _script;
 		private readonly BuilderToken _token;
-		private readonly Coroutine.Options _options;
+		private readonly Coroutines.Coroutine.Options _options;
 
-		internal FiniteFrameCoroutineBuilder(Script script, BuilderToken token, in Coroutine.Options options)
+		internal FiniteFrameCoroutineBuilder(Script script, BuilderToken token, in Coroutines.Coroutine.Options options)
 		{
 			_script = script;
 			_token = token;
 			_options = options;
 			var capturedScript = script;
 			var capturedOptions = options;
-			token?.SetAutoFinalizer(() => BuilderUtility.Finalize(capturedScript, capturedOptions, token));
+			token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(capturedScript, capturedOptions, token));
 		}
 
 		public FiniteFrameCoroutineBuilder OnFrameUpdate(params ScriptActionBlock[] blocks) => new(_script, _token,
@@ -125,10 +141,10 @@ namespace LunyScript.BlockBuilders
 		public FiniteFrameCoroutineBuilder WhenResumed(params ScriptActionBlock[] blocks) => new(_script, _token,
 			_options with { OnResumed = BuilderUtility.Append(_options.OnResumed, blocks) });
 
-		public ICoroutineBlock WhenElapsed(params ScriptActionBlock[] blocks) => BuilderUtility.Finalize(_script,
+		public ICoroutineBlock WhenElapsed(params ScriptActionBlock[] blocks) => CoroutineBuilder.Finalize(_script,
 			_options with { OnElapsed = BuilderUtility.Append(_options.OnElapsed, blocks) }, _token);
 
-		public ICoroutineBlock Do(params ScriptActionBlock[] blocks) => BuilderUtility.Finalize(_script,
+		public ICoroutineBlock Do(params ScriptActionBlock[] blocks) => CoroutineBuilder.Finalize(_script,
 			_options with { OnFrameUpdate = BuilderUtility.Append(_options.OnFrameUpdate, blocks) }, _token);
 	}
 
@@ -139,16 +155,16 @@ namespace LunyScript.BlockBuilders
 	{
 		private readonly Script _script;
 		private readonly BuilderToken _token;
-		private readonly Coroutine.Options _options;
+		private readonly Coroutines.Coroutine.Options _options;
 
-		internal FiniteHeartbeatCoroutineBuilder(Script script, BuilderToken token, in Coroutine.Options options)
+		internal FiniteHeartbeatCoroutineBuilder(Script script, BuilderToken token, in Coroutines.Coroutine.Options options)
 		{
 			_script = script;
 			_token = token;
 			_options = options;
 			var capturedScript = script;
 			var capturedOptions = options;
-			token?.SetAutoFinalizer(() => BuilderUtility.Finalize(capturedScript, capturedOptions, token));
+			token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(capturedScript, capturedOptions, token));
 		}
 
 		public FiniteHeartbeatCoroutineBuilder OnHeartbeat(params ScriptActionBlock[] blocks) => new(_script, _token,
@@ -166,10 +182,10 @@ namespace LunyScript.BlockBuilders
 		public FiniteHeartbeatCoroutineBuilder WhenResumed(params ScriptActionBlock[] blocks) => new(_script, _token,
 			_options with { OnResumed = BuilderUtility.Append(_options.OnResumed, blocks) });
 
-		public ICoroutineBlock WhenElapsed(params ScriptActionBlock[] blocks) => BuilderUtility.Finalize(_script,
+		public ICoroutineBlock WhenElapsed(params ScriptActionBlock[] blocks) => CoroutineBuilder.Finalize(_script,
 			_options with { OnElapsed = BuilderUtility.Append(_options.OnElapsed, blocks) }, _token);
 
-		public ICoroutineBlock Do(params ScriptActionBlock[] blocks) => BuilderUtility.Finalize(_script,
+		public ICoroutineBlock Do(params ScriptActionBlock[] blocks) => CoroutineBuilder.Finalize(_script,
 			_options with { OnHeartbeat = BuilderUtility.Append(_options.OnHeartbeat, blocks) }, _token);
 	}
 
@@ -180,16 +196,16 @@ namespace LunyScript.BlockBuilders
 	{
 		private readonly Script _script;
 		private readonly BuilderToken _token;
-		private readonly Coroutine.Options _options;
+		private readonly Coroutines.Coroutine.Options _options;
 
-		internal OpenEndedFrameCoroutineBuilder(Script script, BuilderToken token, in Coroutine.Options options)
+		internal OpenEndedFrameCoroutineBuilder(Script script, BuilderToken token, in Coroutines.Coroutine.Options options)
 		{
 			_script = script;
 			_token = token;
 			_options = options;
 			var capturedScript = script;
 			var capturedOptions = options;
-			token?.SetAutoFinalizer(() => BuilderUtility.Finalize(capturedScript, capturedOptions, token));
+			token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(capturedScript, capturedOptions, token));
 		}
 
 		public OpenEndedFrameCoroutineBuilder WhenStarted(params ScriptActionBlock[] blocks) => new(_script, _token,
@@ -204,7 +220,7 @@ namespace LunyScript.BlockBuilders
 		public OpenEndedFrameCoroutineBuilder WhenResumed(params ScriptActionBlock[] blocks) => new(_script, _token,
 			_options with { OnResumed = BuilderUtility.Append(_options.OnResumed, blocks) });
 
-		public ICoroutineBlock Do(params ScriptActionBlock[] blocks) => BuilderUtility.Finalize(_script,
+		public ICoroutineBlock Do(params ScriptActionBlock[] blocks) => CoroutineBuilder.Finalize(_script,
 			_options with { OnFrameUpdate = BuilderUtility.Append(_options.OnFrameUpdate, blocks) }, _token);
 	}
 
@@ -215,16 +231,16 @@ namespace LunyScript.BlockBuilders
 	{
 		private readonly Script _script;
 		private readonly BuilderToken _token;
-		private readonly Coroutine.Options _options;
+		private readonly Coroutines.Coroutine.Options _options;
 
-		internal OpenEndedHeartbeatCoroutineBuilder(Script script, BuilderToken token, in Coroutine.Options options)
+		internal OpenEndedHeartbeatCoroutineBuilder(Script script, BuilderToken token, in Coroutines.Coroutine.Options options)
 		{
 			_script = script;
 			_token = token;
 			_options = options;
 			var capturedScript = script;
 			var capturedOptions = options;
-			token?.SetAutoFinalizer(() => BuilderUtility.Finalize(capturedScript, capturedOptions, token));
+			token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(capturedScript, capturedOptions, token));
 		}
 
 		public OpenEndedHeartbeatCoroutineBuilder WhenStarted(params ScriptActionBlock[] blocks) => new(_script, _token,
@@ -239,7 +255,8 @@ namespace LunyScript.BlockBuilders
 		public OpenEndedHeartbeatCoroutineBuilder WhenResumed(params ScriptActionBlock[] blocks) => new(_script, _token,
 			_options with { OnResumed = BuilderUtility.Append(_options.OnResumed, blocks) });
 
-		public ICoroutineBlock Do(params ScriptActionBlock[] blocks) => BuilderUtility.Finalize(_script,
+		public ICoroutineBlock Do(params ScriptActionBlock[] blocks) => CoroutineBuilder.Finalize(_script,
 			_options with { OnHeartbeat = BuilderUtility.Append(_options.OnHeartbeat, blocks) }, _token);
 	}
+
 }

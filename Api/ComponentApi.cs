@@ -1,4 +1,4 @@
-﻿namespace LunyScript.Api
+namespace LunyScript.Api
 {
 	public struct ComponentApi
 	{

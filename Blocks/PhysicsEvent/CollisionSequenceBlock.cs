@@ -1,5 +1,5 @@
 using Luny.Engine.Bridge.Physics;
-using LunyScript.BlockBuilders;
+using LunyScript.Blocks.Guards;
 using System;
 using System.Collections.Generic;
 
@@ -14,9 +14,9 @@ namespace LunyScript.Blocks
 	/// </summary>
 	internal sealed class CollisionSequenceBlock : PhysicsEventSequenceBlock
 	{
-		private readonly Predicate<LunyCollision>[] _predicates;
+		private readonly Predicate<LunyCollider>[] _predicates;
 
-		public CollisionSequenceBlock(IReadOnlyList<ScriptActionBlock> blocks, EventGuard[] guards, Predicate<LunyCollision>[] predicates)
+		public CollisionSequenceBlock(IReadOnlyList<ScriptActionBlock> blocks, EventGuard[] guards, Predicate<LunyCollider>[] predicates)
 			: base(blocks, guards) => _predicates = predicates;
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
@@ -30,9 +30,10 @@ namespace LunyScript.Blocks
 			if (_predicates != null)
 			{
 				var collision = (LunyCollision)runtimeContext.EventArgs;
+				var collider = collision.Collider;
 				foreach (var predicate in _predicates)
 				{
-					if (!predicate(collision))
+					if (!predicate(collider))
 						return;
 				}
 			}

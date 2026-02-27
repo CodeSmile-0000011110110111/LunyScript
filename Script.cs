@@ -1,7 +1,9 @@
 using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Api;
-using LunyScript.BlockBuilders;
+using LunyScript.Api.Coroutine;
+using LunyScript.Api.Input;
+using LunyScript.Api.Object;
 using LunyScript.Blocks;
 using LunyScript.Events;
 using LunyScript.Exceptions;
@@ -59,7 +61,7 @@ namespace LunyScript
 		protected ComponentApi Component => new(this);
 		protected DebugApi Debug => new(this);
 		protected EditorApi Editor => new(this);
-		protected EngineApi Engine => new(this);
+		//protected EngineApi Engine => new(this);
 		protected InputApi Input => new(this);
 		//public LoopApi Loop => new(this);
 		protected MethodApi Method => new(this);

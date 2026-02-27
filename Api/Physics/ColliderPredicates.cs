@@ -1,14 +1,14 @@
 using Luny.Engine.Bridge.Physics;
 using System;
 
-namespace LunyScript.BlockBuilders
+namespace LunyScript.Api.Physics
 {
 	/// <summary>
-	/// Factory methods for per-kind trigger predicates (Predicate&lt;LunyCollider&gt;).
+	/// Factory methods for per-kind collision predicates (Predicate&lt;LunyCollision&gt;).
 	/// Each predicate encodes OR logic within its kind.
 	/// Predicates are compiled once at builder call time and evaluated at each physics event.
 	/// </summary>
-	internal static class TriggerPredicates
+	internal static class ColliderPredicates
 	{
 		public static Predicate<LunyCollider> ForTags(String[] tags)
 		{
@@ -52,10 +52,7 @@ namespace LunyScript.BlockBuilders
 			};
 		}
 
-		public static Predicate<LunyCollider> ForLayerMask(Int32 mask)
-		{
-			return collider => (mask & (1 << collider.LayerIndex)) != 0;
-		}
+		public static Predicate<LunyCollider> ForLayerMask(Int32 mask) => mask != 0 ? collider => (mask & 1 << collider.Layer) != 0 : null;
 
 		public static Predicate<LunyCollider> ForComponentTypes(Type[] types)
 		{

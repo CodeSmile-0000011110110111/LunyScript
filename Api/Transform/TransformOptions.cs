@@ -2,7 +2,7 @@ using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.BlockBuilders
+namespace LunyScript.Api.Transform
 {
 	public interface ITransformBuilderState {}
 	public interface ITransformBuilderReady : ITransformBuilderState {}

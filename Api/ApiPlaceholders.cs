@@ -38,12 +38,37 @@
 			internal DiagnosticsApi(Script script) => _script = script;
 		}
 
+		public readonly struct EngineApi
+		{
+			private readonly Script _script;
+			internal EngineApi(Script script) => _script = script;
+
+			/// <summary>
+			/// Logs a message that appears in both debug and release builds.
+			/// Posts to both Luny internal log (if enabled) and engine logging.
+			/// </summary>
+			// public ScriptActionBlock Log(String message) => EngineLogBlock.Create(message);
+		}
+
 		public readonly struct HUDApi
 		{
 			private readonly Script _script;
 			internal HUDApi(Script script) => _script = script;
 		}
 
+		/*
+		public readonly struct LoopApi
+		{
+			private readonly Script _script;
+			internal LoopApi(Script script) => _script = script;
+
+			/// <summary>
+			/// Returns the current iteration count of the innermost surrounding loop.
+			/// Resolves at runtime via ILunyScriptContext.
+			/// </summary>
+			public VariableBlock Counter => LoopCounterVariableBlock.Instance;
+		}
+	*/
 		public readonly struct MenuApi
 		{
 			private readonly Script _script;

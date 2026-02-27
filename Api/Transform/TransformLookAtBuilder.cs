@@ -1,7 +1,7 @@
 ﻿using Luny.Engine.Bridge;
 using LunyScript.Blocks.Transform;
 
-namespace LunyScript.BlockBuilders
+namespace LunyScript.Api.Transform
 {
 	/// <summary>
 	/// Fluent builder for <see cref="TransformLookAtBlock"/>.

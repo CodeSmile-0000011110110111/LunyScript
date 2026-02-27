@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace LunyScript.BlockBuilders
+namespace LunyScript.Api
 {
 	/// <summary>
 	/// Used to detect and report any 'unfinished' builders after a script's Build() method returns.

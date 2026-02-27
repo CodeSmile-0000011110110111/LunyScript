@@ -1,4 +1,4 @@
-using LunyScript.BlockBuilders;
+using LunyScript.Api.Object;
 using System;
 
 namespace LunyScript.SmokeTests.Objects

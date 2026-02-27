@@ -1,8 +1,7 @@
 ﻿using Luny.Engine.Bridge;
-using LunyScript.BlockBuilders;
+using LunyScript.Api.Transform;
 using LunyScript.Blocks;
 using LunyScript.Blocks.Transform;
-using System;
 
 namespace LunyScript.Api
 {
@@ -15,24 +14,19 @@ namespace LunyScript.Api
 		// --- Set (Absolute Snap) ---
 
 		/// <summary> Instantly set the World position. </summary>
-		public TransformSetPositionBlock SetPosition(VariableBlock position) =>
-			TransformSetPositionBlock.Create(position);
+		public TransformSetPositionBlock SetPosition(VariableBlock position) => TransformSetPositionBlock.Create(position);
 
 		/// <summary> Instantly set the Local position. </summary>
-		public TransformSetLocalPositionBlock SetLocalPosition(VariableBlock position) =>
-			TransformSetLocalPositionBlock.Create(position);
+		public TransformSetLocalPositionBlock SetLocalPosition(VariableBlock position) => TransformSetLocalPositionBlock.Create(position);
 
 		/// <summary> Instantly set the World rotation. </summary>
-		public TransformSetRotationBlock SetRotation(VariableBlock rotation) =>
-			TransformSetRotationBlock.Create(rotation);
+		public TransformSetRotationBlock SetRotation(VariableBlock rotation) => TransformSetRotationBlock.Create(rotation);
 
 		/// <summary> Instantly set the Local rotation. </summary>
-		public TransformSetLocalRotationBlock SetLocalRotation(VariableBlock rotation) =>
-			TransformSetLocalRotationBlock.Create(rotation);
+		public TransformSetLocalRotationBlock SetLocalRotation(VariableBlock rotation) => TransformSetLocalRotationBlock.Create(rotation);
 
 		/// <summary> Instantly set the Local scale. </summary>
-		public TransformSetLocalScaleBlock SetLocalScale(VariableBlock scale) =>
-			TransformSetLocalScaleBlock.Create(scale);
+		public TransformSetLocalScaleBlock SetLocalScale(VariableBlock scale) => TransformSetLocalScaleBlock.Create(scale);
 
 		// --- Look At ---
 
