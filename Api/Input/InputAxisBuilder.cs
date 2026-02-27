@@ -1,7 +1,7 @@
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api.Input
+namespace LunyScript
 {
 	/// <summary>
 	/// Provides condition and value accessors for a named axis input action.

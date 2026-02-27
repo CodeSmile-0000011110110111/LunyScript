@@ -1,6 +1,4 @@
-using System;
-
-namespace LunyScript.Api.Blocks
+namespace LunyScript
 {
 	public readonly struct TimeApi
 	{
@@ -9,9 +7,6 @@ namespace LunyScript.Api.Blocks
 		internal TimeApi(Script script)
 		{
 			_script = script;
-			ElapsedSeconds = Double.NaN;
 		}
-
-		public readonly Double ElapsedSeconds; // TODO: implementation
 	}
 }

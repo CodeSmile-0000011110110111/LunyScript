@@ -1,6 +1,6 @@
 using System;
 
-namespace LunyScript.Api.Object
+namespace LunyScript
 {
 	public readonly struct PrefabBuilder
 	{

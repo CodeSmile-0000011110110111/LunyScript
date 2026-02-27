@@ -1,7 +1,7 @@
 ﻿using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 
-namespace LunyScript.Api.Transform
+namespace LunyScript
 {
 	public readonly struct TransformBuilder
 	{

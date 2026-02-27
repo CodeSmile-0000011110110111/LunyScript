@@ -3,13 +3,16 @@ using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Used to detect and report any 'unfinished' builders after a script's Build() method returns.
 	/// </summary>
-	internal sealed class BuilderToken
+	internal sealed class BuilderToken : IEquatable<BuilderToken>
 	{
+		private static Int32 s_NextId;
+
+		private readonly Int32 _id;
 		private readonly String _name;
 		private readonly String _type;
 		private readonly String _file;
@@ -17,15 +20,29 @@ namespace LunyScript.Api
 		private Boolean _isFinished;
 		private Action _autoFinalizeAction;
 
+		public static Boolean operator ==(BuilderToken left, BuilderToken right) => Equals(left, right);
+		public static Boolean operator !=(BuilderToken left, BuilderToken right) => !Equals(left, right);
+
 		public static void LogUnfinishedBuilder(BuilderToken token) => LunyLogger.LogWarning(
 			$"{Path.GetFileName(token._file)}({token._line}) Unfinished {token._type} builder: '{token._name}' was never finalized.");
 
 		public BuilderToken(String name, String type, [CallerFilePath] String file = "", [CallerLineNumber] Int32 lineNumber = -1)
 		{
+			_id = s_NextId++;
 			_name = name;
 			_type = type;
 			_file = file;
 			_line = lineNumber;
+		}
+
+		public Boolean Equals(BuilderToken other)
+		{
+			if (other is null)
+				return false;
+			if (ReferenceEquals(this, other))
+				return true;
+
+			return _id == other._id;
 		}
 
 		/// <summary>
@@ -59,5 +76,9 @@ namespace LunyScript.Api
 			if (!_isFinished)
 				LogUnfinishedBuilder(this);
 		}
+
+		public override Boolean Equals(System.Object obj) => ReferenceEquals(this, obj) || obj is BuilderToken other && Equals(other);
+
+		public override Int32 GetHashCode() => _id;
 	}
 }

@@ -1,4 +1,4 @@
-namespace LunyScript.SmokeTests.Input
+namespace LunyScript.SmokeTests.InputMove
 {
 	/// <summary>
 	/// LunyScript implementing a 3-way world-axis-aligned motion

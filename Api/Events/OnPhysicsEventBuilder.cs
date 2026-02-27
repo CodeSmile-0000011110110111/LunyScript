@@ -6,7 +6,7 @@ using LunyScript.Blocks.PhysicsEvent;
 using LunyScript.Blocks.Predicates;
 using System;
 
-namespace LunyScript.Api.Event
+namespace LunyScript
 {
 	// ── State tokens & interfaces ─────────────────────────────────────────────
 

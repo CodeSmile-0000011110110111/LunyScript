@@ -1,5 +1,3 @@
-using LunyScript.Api.Coroutine;
-
 namespace LunyScript.SmokeTests.Coroutines
 {
 	public sealed class PhysicsCubeSpawner : Script

@@ -1,7 +1,7 @@
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api.Blocks
+namespace LunyScript
 {
 	/// <summary>
 	/// Provides diagnostics blocks which are omitted from release builds,
@@ -12,9 +12,25 @@ namespace LunyScript.Api.Blocks
 		private readonly Script _script;
 		internal DebugApi(Script script) => _script = script;
 
+		/// <summary>
+		/// Logs a variable. Alias for LogInfo().
+		/// </summary>
+		/// <param name="variableBlock"></param>
+		/// <returns></returns>
 		public ScriptActionBlock Log(VariableBlock variableBlock) => LogInfo(variableBlock);
+
+		/// <summary>
+		/// Logs a message. Alias for LogInfo().
+		/// </summary>
+		/// <param name="message"></param>
+		/// <returns></returns>
 		public ScriptActionBlock Log(String message) => LogInfo(message);
 
+		/// <summary>
+		/// Logs a variable.
+		/// </summary>
+		/// <param name="variableBlock"></param>
+		/// <returns></returns>
 		public ScriptActionBlock LogInfo(VariableBlock variableBlock) => DebugLogInfoBlock.Create(variableBlock);
 
 		/// <summary>

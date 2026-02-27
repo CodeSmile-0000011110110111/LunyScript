@@ -2,7 +2,7 @@
 using LunyScript.Exceptions;
 using System;
 
-namespace LunyScript.Api.Coroutine.For
+namespace LunyScript
 {
 	/// <summary>
 	/// Fluent builder for finite-duration coroutines.
@@ -42,27 +42,27 @@ namespace LunyScript.Api.Coroutine.For
 		/// <summary>Duration in seconds (frame-update coroutine).</summary>
 		public static ForBuilder<ForFrameUnit> Seconds<T>(this ForBuilder<T> b)
 			where T : struct, IForAmountSet
-			=> CreateFrameUnit(b, CoroutineOptions.ForTimer(b.Name, b.Duration, Coroutines.Coroutine.Continuation.Finite, Coroutines.Coroutine.Process.FrameUpdate));
+			=> CreateFrameUnit(b, CoroutineOptions.ForTimer(b.Name, b.Duration, LunyScript.Coroutines.Coroutine.Continuation.Finite, LunyScript.Coroutines.Coroutine.Process.FrameUpdate));
 
 		/// <summary>Duration in milliseconds (frame-update coroutine).</summary>
 		public static ForBuilder<ForFrameUnit> Milliseconds<T>(this ForBuilder<T> b)
 			where T : struct, IForAmountSet
-			=> CreateFrameUnit(b, CoroutineOptions.ForTimer(b.Name, b.Duration / 1000.0, Coroutines.Coroutine.Continuation.Finite, Coroutines.Coroutine.Process.FrameUpdate));
+			=> CreateFrameUnit(b, CoroutineOptions.ForTimer(b.Name, b.Duration / 1000.0, LunyScript.Coroutines.Coroutine.Continuation.Finite, LunyScript.Coroutines.Coroutine.Process.FrameUpdate));
 
 		/// <summary>Duration in minutes (frame-update coroutine).</summary>
 		public static ForBuilder<ForFrameUnit> Minutes<T>(this ForBuilder<T> b)
 			where T : struct, IForAmountSet
-			=> CreateFrameUnit(b, CoroutineOptions.ForTimer(b.Name, b.Duration * 60.0, Coroutines.Coroutine.Continuation.Finite, Coroutines.Coroutine.Process.FrameUpdate));
+			=> CreateFrameUnit(b, CoroutineOptions.ForTimer(b.Name, b.Duration * 60.0, LunyScript.Coroutines.Coroutine.Continuation.Finite, LunyScript.Coroutines.Coroutine.Process.FrameUpdate));
 
 		/// <summary>Duration in frame counts (frame-update coroutine).</summary>
 		public static ForBuilder<ForFrameUnit> Frames<T>(this ForBuilder<T> b)
 			where T : struct, IForAmountSet
-			=> CreateFrameUnit(b, CoroutineOptions.ForCounter(b.Name, (Int32)b.Duration, Coroutines.Coroutine.Continuation.Finite, Coroutines.Coroutine.Process.FrameUpdate));
+			=> CreateFrameUnit(b, CoroutineOptions.ForCounter(b.Name, (Int32)b.Duration, LunyScript.Coroutines.Coroutine.Continuation.Finite, LunyScript.Coroutines.Coroutine.Process.FrameUpdate));
 
 		/// <summary>Duration in heartbeat counts (heartbeat coroutine).</summary>
 		public static ForBuilder<ForHeartbeatUnit> Heartbeats<T>(this ForBuilder<T> b)
 			where T : struct, IForAmountSet
-			=> CreateHeartbeatUnit(b, CoroutineOptions.ForCounter(b.Name, (Int32)b.Duration, Coroutines.Coroutine.Continuation.Finite, Coroutines.Coroutine.Process.Heartbeat));
+			=> CreateHeartbeatUnit(b, CoroutineOptions.ForCounter(b.Name, (Int32)b.Duration, LunyScript.Coroutines.Coroutine.Continuation.Finite, LunyScript.Coroutines.Coroutine.Process.Heartbeat));
 
 		// Lifecycle — shared across both frame and heartbeat unit states
 
@@ -109,7 +109,7 @@ namespace LunyScript.Api.Coroutine.For
 		public static ICoroutineBlock Do<T>(this ForBuilder<T> b, params ScriptActionBlock[] blocks)
 			where T : struct, IForReadyUnit
 		{
-			if (b.Options.ProcessMode == Coroutines.Coroutine.Process.Heartbeat)
+			if (b.Options.ProcessMode == LunyScript.Coroutines.Coroutine.Process.Heartbeat)
 			{
 				if (b.Options.OnHeartbeat != null)
 					throw new LunyScriptException($"{b.Token}: {nameof(Do)}() cannot be combined with {nameof(OnHeartbeat)}()");

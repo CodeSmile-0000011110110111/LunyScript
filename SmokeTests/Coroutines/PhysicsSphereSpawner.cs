@@ -1,5 +1,3 @@
-using LunyScript.Api.Coroutine;
-
 namespace LunyScript.SmokeTests.Coroutines
 {
 	public sealed class PhysicsSphereSpawner : Script
@@ -13,7 +11,7 @@ namespace LunyScript.SmokeTests.Coroutines
 			var createCounter = Counter("Sphere: Create").Every(50).Heartbeats().Do(log, instantiate);
 			Counter("SphereSpawner: Destroy").In(50).Heartbeats().Do(createCounter.Stop());
 
-			Timer("RELOAD").In(8).Seconds().Do(Scene.Reload());
+			TimerBuilderStartEx.Do(TimerBuilderStartEx.Seconds(Timer("RELOAD").In(8)), Scene.Reload());
 		}
 	}
 }

@@ -1,6 +1,6 @@
 using LunyScript.Blocks;
 
-namespace LunyScript.Api.Coroutine
+namespace LunyScript
 {
 	/// <summary>
 	/// Generic step-builder for open-ended coroutines (frame-update or heartbeat).
@@ -60,7 +60,7 @@ namespace LunyScript.Api.Coroutine
 		public static ICoroutineBlock Do<T>(this CoroutineUpdateBuilder<T> b, params ScriptActionBlock[] blocks)
 			where T : struct, ICoroutineReadyUnit
 		{
-			if (b.Options.ProcessMode == Coroutines.Coroutine.Process.Heartbeat)
+			if (b.Options.ProcessMode == LunyScript.Coroutines.Coroutine.Process.Heartbeat)
 				return CoroutineBuilder.Finalize(b.Script, b.Options with { OnHeartbeat = BuilderUtility.Append(b.Options.OnHeartbeat, blocks) }, b.Token);
 			return CoroutineBuilder.Finalize(b.Script, b.Options with { OnFrameUpdate = BuilderUtility.Append(b.Options.OnFrameUpdate, blocks) }, b.Token);
 		}

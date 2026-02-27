@@ -2,7 +2,7 @@ using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api.Object
+namespace LunyScript
 {
 	public static class ObjectBuilderExtensions
 	{

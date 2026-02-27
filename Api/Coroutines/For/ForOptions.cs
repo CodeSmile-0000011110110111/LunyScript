@@ -1,4 +1,4 @@
-namespace LunyScript.Api.Coroutine.For
+namespace LunyScript
 {
 	public interface IForBuilderState {}
 	/// <summary>Initial state — next: call <c>Seconds()</c>, <c>Milliseconds()</c>, <c>Minutes()</c>, <c>Frames()</c>, or <c>Heartbeats()</c>.</summary>

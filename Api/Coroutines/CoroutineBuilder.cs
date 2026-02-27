@@ -1,9 +1,9 @@
 ﻿using Luny;
-using LunyScript.Api.Coroutine.For;
 using LunyScript.Blocks;
+using LunyScript.Coroutines;
 using System;
 
-namespace LunyScript.Api.Coroutine
+namespace LunyScript
 {
 	/// <summary>
 	/// Entry point for the Coroutine fluent builder chain.
@@ -28,19 +28,19 @@ namespace LunyScript.Api.Coroutine
 		public ForBuilder<ForAmountSet> For(Double duration) => new(_script, _token, _name, duration);
 
 		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every frame.</summary>
-		public CoroutineUpdateBuilder<CoroutineFrameUnit> OnFrameUpdate(params ScriptActionBlock[] blocks) =>
-			new(_script, _token, CoroutineOptions.ForOpenEnded(_name, Coroutines.Coroutine.Process.FrameUpdate) with { OnFrameUpdate = blocks });
+		public CoroutineUpdateBuilder<CoroutineFrameUnit> OnFrameUpdate(params ScriptActionBlock[] blocks) => new(_script, _token,
+			CoroutineOptions.ForOpenEnded(_name, Coroutine.Process.FrameUpdate) with { OnFrameUpdate = blocks });
 
 		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every heartbeat (fixed step).</summary>
-		public CoroutineUpdateBuilder<CoroutineHeartbeatUnit> OnHeartbeat(params ScriptActionBlock[] blocks) =>
-			new(_script, _token, CoroutineOptions.ForOpenEnded(_name, Coroutines.Coroutine.Process.Heartbeat) with { OnHeartbeat = blocks });
+		public CoroutineUpdateBuilder<CoroutineHeartbeatUnit> OnHeartbeat(params ScriptActionBlock[] blocks) => new(_script, _token,
+			CoroutineOptions.ForOpenEnded(_name, Coroutine.Process.Heartbeat) with { OnHeartbeat = blocks });
 
 		internal static ICoroutineBlock Finalize(Script script, in CoroutineOptions options, BuilderToken token)
 		{
 			if (options.OnFrameUpdate == null && options.OnHeartbeat == null && options.OnElapsed == null &&
 			    options.OnStarted == null && options.OnStopped == null && options.OnPaused == null && options.OnResumed == null)
 			{
-				LunyLogger.LogWarning($"{nameof(Coroutines.Coroutine)} '{options.Name}' was finalized without any action blocks. " +
+				LunyLogger.LogWarning($"{nameof(Coroutine)} '{options.Name}' was finalized without any action blocks. " +
 				                      "It will run but perform no actions.", script);
 			}
 			var scriptInternal = script;

@@ -2,7 +2,7 @@ using Luny;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Shared utilities for LunyScript builder pattern.

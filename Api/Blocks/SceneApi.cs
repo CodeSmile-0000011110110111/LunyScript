@@ -1,6 +1,6 @@
 using LunyScript.Blocks;
 
-namespace LunyScript.Api.Blocks
+namespace LunyScript
 {
 	/// <summary>
 	/// Provides operations for managing Scenes and accessing the scene hierarchy.

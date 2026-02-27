@@ -2,7 +2,7 @@ using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using LunyScript.Events;
 
-namespace LunyScript.Api.Event
+namespace LunyScript
 {
 	/// <summary>
 	/// Handles object centered/targeted events, eg state, update, collision events.

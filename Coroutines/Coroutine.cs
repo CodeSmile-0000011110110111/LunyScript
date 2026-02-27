@@ -1,4 +1,3 @@
-using LunyScript.Api.Coroutine;
 using System;
 
 namespace LunyScript.Coroutines

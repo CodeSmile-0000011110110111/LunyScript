@@ -2,7 +2,7 @@ using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api.Object
+namespace LunyScript
 {
 	public interface IObjectBuilderState {}
 	public interface IObjectBuilderStart : IObjectBuilderState {}

@@ -1,56 +1,25 @@
-﻿using LunyScript.Blocks;
+using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api.Coroutine.Timer
+namespace LunyScript
 {
-	/// <summary>
-	/// Fluent builder for timer coroutines.
-	/// Usage: Timer("name").In(3).Seconds().Do(blocks);
-	///        Timer("name").Every(1.5).Minutes().Do(blocks);
-	/// </summary>
-	public readonly struct TimerBuilder<T> where T : struct, ITimerBuilderState
-	{
-		internal readonly Script Script;
-		internal readonly BuilderToken Token;
-		internal readonly TimerOptions Options;
-
-		internal TimerBuilder(Script script, BuilderToken token, in TimerOptions options)
-		{
-			Script = script;
-			Token = token;
-			Options = options;
-		}
-
-		/// <summary>Entry-point factory. Creates the builder token.</summary>
-		internal static TimerBuilder<TimerBuilderStart> Create(Script script, String name)
-		{
-			if (script == null) throw new ArgumentNullException(nameof(script));
-			if (String.IsNullOrWhiteSpace(name)) throw new ArgumentException("Timer name is null or empty", nameof(name));
-			var options = new TimerOptions { Name = name };
-			var token = script.CreateBuilderToken(name, "Timer");
-			return new TimerBuilder<TimerBuilderStart>(script, token, in options);
-		}
-	}
-
-	public static class TimerBuilderExtensions
+	public static class TimerBuilderStartEx
 	{
 		/// <summary>Sets the timer to fire once after the specified duration.</summary>
-		public static TimerBuilder<TimerAmountSet> In<T>(this TimerBuilder<T> b, Double duration)
-			where T : struct, ITimerBuilderStart
+		public static TimerBuilder<TimerAmountSet> In(this TimerBuilder<TimerBuilderStart> b, Double duration)
 		{
 			var options = b.Options;
 			options.Amount = duration;
-			options.Continuation = Coroutines.Coroutine.Continuation.Finite;
+			options.Continuation = LunyScript.Coroutines.Coroutine.Continuation.Finite;
 			return new TimerBuilder<TimerAmountSet>(b.Script, b.Token, in options);
 		}
 
 		/// <summary>Sets the timer to fire repeatedly at the specified interval.</summary>
-		public static TimerBuilder<TimerAmountSet> Every<T>(this TimerBuilder<T> b, Double interval)
-			where T : struct, ITimerBuilderStart
+		public static TimerBuilder<TimerAmountSet> Every(this TimerBuilder<TimerBuilderStart> b, Double interval)
 		{
 			var options = b.Options;
 			options.Amount = interval;
-			options.Continuation = Coroutines.Coroutine.Continuation.Repeating;
+			options.Continuation = LunyScript.Coroutines.Coroutine.Continuation.Repeating;
 			return new TimerBuilder<TimerAmountSet>(b.Script, b.Token, in options);
 		}
 
@@ -85,7 +54,7 @@ namespace LunyScript.Api.Coroutine.Timer
 		public static ITimerCoroutineBlock Do<T>(this TimerBuilder<T> b, params ScriptActionBlock[] blocks)
 			where T : struct, ITimerUnitSet
 		{
-			var co = CoroutineOptions.ForTimer(b.Options.Name, b.Options.DurationInSeconds, b.Options.Continuation, Coroutines.Coroutine.Process.FrameUpdate) with { OnElapsed = blocks };
+			var co = CoroutineOptions.ForTimer(b.Options.Name, b.Options.DurationInSeconds, b.Options.Continuation, LunyScript.Coroutines.Coroutine.Process.FrameUpdate) with { OnElapsed = blocks };
 			return (ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, in co, b.Token);
 		}
 
@@ -99,7 +68,7 @@ namespace LunyScript.Api.Coroutine.Timer
 			var capturedToken = b.Token;
 			b.Token?.SetAutoFinalizer(() =>
 			{
-				var co = CoroutineOptions.ForTimer(capturedOptions.Name, capturedOptions.DurationInSeconds, capturedOptions.Continuation, Coroutines.Coroutine.Process.FrameUpdate);
+				var co = CoroutineOptions.ForTimer(capturedOptions.Name, capturedOptions.DurationInSeconds, capturedOptions.Continuation, LunyScript.Coroutines.Coroutine.Process.FrameUpdate);
 				CoroutineBuilder.Finalize(capturedScript, in co, capturedToken);
 			});
 			return new TimerBuilder<TimerUnitSet>(b.Script, b.Token, in options);

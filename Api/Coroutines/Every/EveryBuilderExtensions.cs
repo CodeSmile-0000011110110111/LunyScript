@@ -1,36 +1,9 @@
-﻿using LunyScript.Blocks;
+using LunyScript.Blocks;
+using LunyScript.Coroutines;
 using System;
 
-namespace LunyScript.Api.Coroutine.Every
+namespace LunyScript
 {
-	/// <summary>
-	/// Fluent builder for time-sliced coroutines.
-	/// Usage: Every(3).Frames().Do(blocks);
-	///        Every(Even).Heartbeats().DelayBy(1).Do(blocks);
-	/// </summary>
-	public readonly struct EveryBuilder<T> where T : struct, IEveryBuilderState
-	{
-		internal readonly Script Script;
-		internal readonly BuilderToken Token;
-		internal readonly EveryOptions Options;
-
-		internal EveryBuilder(Script script, BuilderToken token, in EveryOptions options)
-		{
-			Script = script;
-			Token = token;
-			Options = options;
-		}
-
-		/// <summary>Entry-point factory. Creates the builder token.</summary>
-		internal static EveryBuilder<EveryBuilderStart> Create(Script script, Int32 interval)
-		{
-			if (script == null) throw new ArgumentNullException(nameof(script));
-			var options = new EveryOptions { Interval = interval };
-			var token = script.CreateBuilderToken($"Every({interval})", "EveryBuilder");
-			return new EveryBuilder<EveryBuilderStart>(script, token, in options);
-		}
-	}
-
 	public static class EveryBuilderExtensions
 	{
 		/// <summary>Selects frame-based execution.</summary>
@@ -38,7 +11,7 @@ namespace LunyScript.Api.Coroutine.Every
 			where T : struct, IEveryBuilderStart
 		{
 			var options = b.Options;
-			options.Process = Coroutines.Coroutine.Process.FrameUpdate;
+			options.Process = Coroutine.Process.FrameUpdate;
 			return RegisterAutoFinalizer(b, options);
 		}
 
@@ -47,7 +20,7 @@ namespace LunyScript.Api.Coroutine.Every
 			where T : struct, IEveryBuilderStart
 		{
 			var options = b.Options;
-			options.Process = Coroutines.Coroutine.Process.Heartbeat;
+			options.Process = Coroutine.Process.Heartbeat;
 			return RegisterAutoFinalizer(b, options);
 		}
 
@@ -57,6 +30,7 @@ namespace LunyScript.Api.Coroutine.Every
 		{
 			if (b.Options.Delay != 0)
 				throw new ArgumentException($"{nameof(DelayBy)}() can't be used twice");
+
 			var options = b.Options;
 			options.Delay = delay;
 			return RegisterAutoFinalizer(b, options);
@@ -75,12 +49,14 @@ namespace LunyScript.Api.Coroutine.Every
 		{
 			if (options.Interval < 0)
 				throw new ArgumentException($"Every duration must be 0 or greater, got: {options.Interval}");
+
 			var capturedScript = b.Script;
 			var capturedOptions = options;
 			var capturedToken = b.Token;
 			b.Token?.SetAutoFinalizer(() =>
 			{
-				var co = CoroutineOptions.ForEveryInterval(null, capturedOptions.Interval, capturedOptions.Delay, capturedOptions.Process, null);
+				var co = CoroutineOptions.ForEveryInterval(null, capturedOptions.Interval, capturedOptions.Delay, capturedOptions.Process,
+					null);
 				CoroutineBuilder.Finalize(capturedScript, in co, capturedToken);
 			});
 			return new EveryBuilder<EveryUnitSet>(b.Script, b.Token, in options);

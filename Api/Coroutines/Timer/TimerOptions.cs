@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LunyScript.Api.Coroutine.Timer
+namespace LunyScript
 {
 	public interface ITimerBuilderState {}
 	/// <summary>Initial state — next: call <c>In()</c> or <c>Every()</c>.</summary>
@@ -18,7 +18,7 @@ namespace LunyScript.Api.Coroutine.Timer
 	{
 		internal String Name;
 		internal Double Amount;
-		internal Coroutines.Coroutine.Continuation Continuation;
+		internal LunyScript.Coroutines.Coroutine.Continuation Continuation;
 		internal Double DurationInSeconds; // set after unit chosen
 	}
 }

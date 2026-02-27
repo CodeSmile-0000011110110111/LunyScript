@@ -2,7 +2,7 @@ using Luny.Engine.Bridge.Physics;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api.Event
+namespace LunyScript
 {
 
 	/// <summary>

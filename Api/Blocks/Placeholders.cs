@@ -1,4 +1,4 @@
-﻿namespace LunyScript.Api.Blocks
+﻿namespace LunyScript
 {
 	public sealed class ApiPlaceholders
 	{

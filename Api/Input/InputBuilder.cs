@@ -1,7 +1,7 @@
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api.Input
+namespace LunyScript
 {
 	/// <summary>
 	/// Provides access to input action values. Blocks poll the input service for last known state.

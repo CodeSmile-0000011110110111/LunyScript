@@ -1,4 +1,4 @@
-namespace LunyScript.Api.Event
+namespace LunyScript
 {
 	/// <summary>
 	/// Handles external events: Scene, Input, Collision, Messages.

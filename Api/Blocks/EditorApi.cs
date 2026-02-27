@@ -1,7 +1,7 @@
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api.Blocks
+namespace LunyScript
 {
 	/// <summary>
 	/// Provides Editor-only functionality.

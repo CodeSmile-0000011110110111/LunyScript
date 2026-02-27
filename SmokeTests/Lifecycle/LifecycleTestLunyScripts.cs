@@ -4,7 +4,7 @@ namespace LunyScript.SmokeTests.Lifecycle
 	{
 		public override void Build(ScriptContext context)
 		{
-			On.Created(Method.Run(AssertDidRun));
+			On.Created(Run(AssertDidRun));
 
 			On.AfterFrameUpdate(
 				//Debug.LogWarning("Reloading scene now ..."),
@@ -19,13 +19,13 @@ namespace LunyScript.SmokeTests.Lifecycle
 		public override void Build(ScriptContext context)
 		{
 			On.Created(Object.Destroy());
-			On.Destroyed(Method.Run(AssertDidRun));
+			On.Destroyed(Run(AssertDidRun));
 		}
 	}
 
 	public sealed class Assert_Runs_OnEnabled : LunyScriptSmokeTestBase
 	{
-		public override void Build(ScriptContext context) => On.Enabled(Method.Run(AssertDidRun));
+		public override void Build(ScriptContext context) => On.Enabled(Run(AssertDidRun));
 	}
 
 	public sealed class Assert_Runs_OnDisabled : LunyScriptSmokeTestBase
@@ -33,32 +33,32 @@ namespace LunyScript.SmokeTests.Lifecycle
 		public override void Build(ScriptContext context)
 		{
 			On.Created(Object.Disable());
-			On.Disabled(Method.Run(AssertDidRun));
+			On.Disabled(Run(AssertDidRun));
 		}
 	}
 
 	public sealed class Assert_Runs_OnReady : LunyScriptSmokeTestBase
 	{
-		public override void Build(ScriptContext context) => On.Ready(Method.Run(AssertDidRun));
+		public override void Build(ScriptContext context) => On.Ready(Run(AssertDidRun));
 	}
 
 	public sealed class Assert_Runs_OnHeartbeat : LunyScriptSmokeTestBase
 	{
-		public override void Build(ScriptContext context) => On.Heartbeat(Method.Run(AssertDidRun),
+		public override void Build(ScriptContext context) => On.Heartbeat(Run(AssertDidRun),
 			Object.Destroy() // prevent log spam
 		);
 	}
 
 	public sealed class Assert_Runs_OnFrameUpdate : LunyScriptSmokeTestBase
 	{
-		public override void Build(ScriptContext context) => On.FrameUpdate(Method.Run(AssertDidRun),
+		public override void Build(ScriptContext context) => On.FrameUpdate(Run(AssertDidRun),
 			Object.Destroy() // prevent log spam
 		);
 	}
 
 	public sealed class Assert_Runs_OnFrameLateUpdate : LunyScriptSmokeTestBase
 	{
-		public override void Build(ScriptContext context) => On.AfterFrameUpdate(Method.Run(AssertDidRun),
+		public override void Build(ScriptContext context) => On.AfterFrameUpdate(Run(AssertDidRun),
 			Object.Destroy() // prevent log spam
 		);
 	}

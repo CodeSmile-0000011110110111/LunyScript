@@ -2,7 +2,7 @@ using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api.Object
+namespace LunyScript
 {
 	public readonly struct ObjectCreateBuilder<T> where T : struct, IObjectBuilderState
 	{

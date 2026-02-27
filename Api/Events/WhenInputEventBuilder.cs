@@ -1,6 +1,6 @@
 using LunyScript.Events;
 
-namespace LunyScript.Api.Event
+namespace LunyScript
 {
 	public readonly struct WhenInputEventBuilder
 	{

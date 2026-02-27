@@ -1,7 +1,7 @@
 ﻿using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api.Transform
+namespace LunyScript
 {
 	/// <summary>
 	/// Fluent builder for Move-Towards blocks.

@@ -1,4 +1,4 @@
-﻿namespace LunyScript.Api.Coroutine.Every
+﻿namespace LunyScript
 {
 	public interface IEveryBuilderState {}
 	/// <summary>Initial state — next: call <c>Frames()</c> or <c>Heartbeats()</c>.</summary>
@@ -13,6 +13,6 @@
 	{
 		internal System.Int32 Interval;
 		internal System.Int32 Delay;
-		internal Coroutines.Coroutine.Process Process;
+		internal LunyScript.Coroutines.Coroutine.Process Process;
 	}
 }
