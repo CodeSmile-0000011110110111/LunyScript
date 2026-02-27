@@ -1,15 +1,15 @@
 using Luny;
 using Luny.Engine.Bridge;
-using LunyScript.ApiBuilders;
-using LunyScript.ApiBuilders.Blocks;
-using LunyScript.ApiBuilders.Coroutine;
-using LunyScript.ApiBuilders.Coroutine.Counter;
-using LunyScript.ApiBuilders.Coroutine.Every;
-using LunyScript.ApiBuilders.Coroutine.Timer;
-using LunyScript.ApiBuilders.Event;
-using LunyScript.ApiBuilders.Input;
-using LunyScript.ApiBuilders.Object;
-using LunyScript.ApiBuilders.Transform;
+using LunyScript.Api;
+using LunyScript.Api.Blocks;
+using LunyScript.Api.Coroutine;
+using LunyScript.Api.Coroutine.Counter;
+using LunyScript.Api.Coroutine.Every;
+using LunyScript.Api.Coroutine.Timer;
+using LunyScript.Api.Event;
+using LunyScript.Api.Input;
+using LunyScript.Api.Object;
+using LunyScript.Api.Transform;
 using LunyScript.Blocks;
 using LunyScript.Events;
 using LunyScript.Exceptions;
@@ -210,13 +210,13 @@ namespace LunyScript
 		/// Creates a named timer.
 		/// Usage: Timer("name").In(3).Seconds().Do(blocks);
 		/// </summary>
-		protected TimerBuilder Timer(String name) => new(this, name);
+		protected TimerBuilder<TimerBuilderStart> Timer(String name) => TimerBuilder<TimerBuilderStart>.Create(this, name);
 
 		/// <summary>
 		/// Creates a named counter.
 		/// Usage: Counter("name").In(5).Frames().Do(blocks);
 		/// </summary>
-		protected CounterBuilder Counter(String name) => new(this, name);
+		protected CounterBuilder<CounterBuilderStart> Counter(String name) => CounterBuilder<CounterBuilderStart>.Create(this, name);
 
 		/// <summary>
 		/// Creates a named coroutine.
@@ -229,7 +229,7 @@ namespace LunyScript
 		/// Supports optional phase offset: Every(n).Frames().DelayBy(offset).Do(blocks).
 		/// Use Even or Odd constants for alternating execution.
 		/// </summary>
-		protected EveryBuilder Every(Int32 interval = 0) => new(this, interval);
+		protected EveryBuilder<EveryBuilderStart> Every(Int32 interval = 0) => EveryBuilder<EveryBuilderStart>.Create(this, interval);
 
 		~Script() => LunyTraceLogger.LogInfoFinalized(this);
 

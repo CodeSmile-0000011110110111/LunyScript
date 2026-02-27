@@ -1,6 +1,6 @@
 ﻿using Luny;
 using Luny.Engine.Services;
-using LunyScript.ApiBuilders.Coroutine;
+using LunyScript.Api.Coroutine;
 using LunyScript.Blocks;
 using LunyScript.Coroutines;
 using System;

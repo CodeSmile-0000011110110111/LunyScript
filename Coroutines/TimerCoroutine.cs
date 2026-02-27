@@ -1,5 +1,5 @@
 using Luny;
-using LunyScript.ApiBuilders.Coroutine;
+using LunyScript.Api.Coroutine;
 using System;
 
 namespace LunyScript.Coroutines

@@ -1,5 +1,5 @@
 using Luny.Engine.Services;
-using LunyScript.ApiBuilders.Event;
+using LunyScript.Api.Event;
 using System;
 
 namespace LunyScript.Blocks.Guards

@@ -1,4 +1,6 @@
-﻿namespace LunyScript.SmokeTests.Coroutines
+﻿using LunyScript.Api.Coroutine;
+
+namespace LunyScript.SmokeTests.Coroutines
 {
 	public sealed class PhysicsCube : Script
 	{
