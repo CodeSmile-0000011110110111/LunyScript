@@ -85,7 +85,7 @@ namespace LunyScript.ApiBuilders.Transform
 		{
 			var o = b.Options;
 			var block = TransformMoveTowardsBlock.Create(o.Target, o.Speed, o.DeadZone, o.LockX, o.LockY, o.LockZ, o.Responsiveness);
-			b.Script.FinalizeToken(b.Token);
+			b.Script.FinalizeBuilderToken(b.Token);
 			return block;
 		}
 
@@ -95,7 +95,7 @@ namespace LunyScript.ApiBuilders.Transform
 		{
 			var o = b.Options;
 			var block = TransformMoveTowardsLerpBlock.Create(o.Target, o.Speed, o.DeadZone, o.LockX, o.LockY, o.LockZ, o.Responsiveness);
-			b.Script.FinalizeToken(b.Token);
+			b.Script.FinalizeBuilderToken(b.Token);
 			return block;
 		}
 
@@ -105,7 +105,7 @@ namespace LunyScript.ApiBuilders.Transform
 		{
 			var o = b.Options;
 			var block = TransformMoveTowardsLerpBlock.Create(o.Target, o.Speed, o.DeadZone, o.LockX, o.LockY, o.LockZ, o.Responsiveness, true);
-			b.Script.FinalizeToken(b.Token);
+			b.Script.FinalizeBuilderToken(b.Token);
 			return block;
 		}
 	}

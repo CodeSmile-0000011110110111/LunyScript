@@ -19,7 +19,7 @@ namespace LunyScript.ApiBuilders.Coroutine
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_name = !String.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Coroutine name is null or empty", nameof(name));
-			_token = script.CreateToken(_name, "Coroutine");
+			_token = script.CreateBuilderToken(_name, "Coroutine");
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace LunyScript.ApiBuilders.Coroutine
 
 			var scriptInternal = script;
 			var block = scriptInternal.RuntimeContext.Coroutines.Register(in options);
-			scriptInternal.FinalizeToken(token);
+			scriptInternal.FinalizeBuilderToken(token);
 			return block;
 		}
 	}

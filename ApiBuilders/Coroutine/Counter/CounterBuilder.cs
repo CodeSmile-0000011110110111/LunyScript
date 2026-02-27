@@ -16,7 +16,7 @@ namespace LunyScript.ApiBuilders.Coroutine.Counter
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_name = !String.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Counter name is null or empty", nameof(name));
-			_token = script.CreateToken(_name, "Counter");
+			_token = script.CreateBuilderToken(_name, "Counter");
 		}
 
 		/// <summary>

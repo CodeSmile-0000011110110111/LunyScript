@@ -188,7 +188,7 @@ namespace LunyScript.ApiBuilders.Event
 				}
 			}
 
-			script.FinalizeToken(token);
+			script.FinalizeBuilderToken(token);
 		}
 
 		private static Predicate<LunyCollider>[] BuildCollisionPredicates(in PhysicsEventFilterOptions filter)

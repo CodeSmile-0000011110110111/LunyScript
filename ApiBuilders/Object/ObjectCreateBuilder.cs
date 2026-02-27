@@ -79,7 +79,7 @@ namespace LunyScript.ApiBuilders.Object
 					$"{nameof(ObjectCreateBuilder<ObjectBuilderNameSet>)}: Mode {options.Mode} is not implemented."),
 			};
 
-			script.FinalizeToken(token);
+			script.FinalizeBuilderToken(token);
 			return block;
 		}
 	}

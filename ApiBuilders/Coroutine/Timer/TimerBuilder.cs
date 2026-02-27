@@ -16,7 +16,7 @@ namespace LunyScript.ApiBuilders.Coroutine.Timer
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_name = !String.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Timer name is null or empty", nameof(name));
-			_token = script.CreateToken(_name, "Timer");
+			_token = script.CreateBuilderToken(_name, "Timer");
 		}
 
 		/// <summary>

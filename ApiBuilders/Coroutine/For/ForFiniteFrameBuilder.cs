@@ -1,4 +1,5 @@
 using LunyScript.Blocks;
+using LunyScript.Exceptions;
 
 namespace LunyScript.ApiBuilders.Coroutine.For
 {
@@ -39,7 +40,13 @@ namespace LunyScript.ApiBuilders.Coroutine.For
 		public ICoroutineBlock WhenElapsed(params ScriptActionBlock[] blocks) => CoroutineBuilder.Finalize(_script,
 			_options with { OnElapsed = BuilderUtility.Append(_options.OnElapsed, blocks) }, _token);
 
-		public ICoroutineBlock Do(params ScriptActionBlock[] blocks) => CoroutineBuilder.Finalize(_script,
-			_options with { OnFrameUpdate = BuilderUtility.Append(_options.OnFrameUpdate, blocks) }, _token);
+		public ICoroutineBlock Do(params ScriptActionBlock[] blocks)
+		{
+			if (_options.OnFrameUpdate != null)
+				throw new LunyScriptException($"{_token}: {nameof(Do)}() cannot be combined with {nameof(OnFrameUpdate)}()");
+
+			return CoroutineBuilder.Finalize(_script,
+				_options with { OnFrameUpdate = BuilderUtility.Append(_options.OnFrameUpdate, blocks) }, _token);
+		}
 	}
 }

@@ -29,7 +29,7 @@ namespace LunyScript.ApiBuilders.Object
 		public ObjectCreateBuilder<ObjectBuilderNameSet> Create(String name)
 		{
 			var options = new ObjectCreateOptions { Name = name, Mode = ObjectCreationMode.Empty, LocalScale = LunyVector3.One };
-			var token = _script.CreateToken(name, "ObjectCreateBuilder");
+			var token = _script.CreateBuilderToken(name, "ObjectCreateBuilder");
 			return new ObjectCreateBuilder<ObjectBuilderNameSet>(_script, options, token);
 		}
 

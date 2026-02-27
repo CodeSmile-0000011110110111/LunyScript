@@ -138,7 +138,7 @@ namespace LunyScript
 			_var = new VarAccessor(_runtimeContext.LocalVariables);
 		}
 
-		internal BuilderToken CreateToken(String name, String type)
+		internal BuilderToken CreateBuilderToken(String name, String type)
 		{
 			var frame = new StackFrame(3, true);
 			var token = new BuilderToken(name, type, frame.GetFileName(), frame.GetFileLineNumber());
@@ -148,7 +148,7 @@ namespace LunyScript
 			return token;
 		}
 
-		internal void FinalizeToken(BuilderToken token)
+		internal void FinalizeBuilderToken(BuilderToken token)
 		{
 			token?.MarkFinished();
 

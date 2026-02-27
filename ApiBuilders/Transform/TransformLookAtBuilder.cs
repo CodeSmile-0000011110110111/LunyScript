@@ -64,7 +64,7 @@ namespace LunyScript.ApiBuilders.Transform
 			where T : struct, ITransformBuilderReady
 		{
 			var block = TransformLookAtBlock.Create(b.Options.Target, b.Options.WorldUp, b.Options.AxisLock);
-			b.Script.FinalizeToken(b.Token);
+			b.Script.FinalizeBuilderToken(b.Token);
 			return block;
 		}
 	}

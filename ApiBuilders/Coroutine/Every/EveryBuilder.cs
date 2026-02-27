@@ -16,7 +16,7 @@ namespace LunyScript.ApiBuilders.Coroutine.Every
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_interval = interval;
-			_token = script.CreateToken($"Every({interval})", "EveryBuilder");
+			_token = script.CreateBuilderToken($"Every({interval})", "EveryBuilder");
 		}
 
 		/// <summary>

@@ -84,15 +84,16 @@ namespace LunyScript.Blocks
 					if (++iterations > maxLimit)
 						throw new LunyScriptMaxIterationException(nameof(ForBlock), maxLimit);
 #endif
-					//loopStack.Push(i);
-					try
-					{
-						ExecuteAll(runtimeContext);
-					}
-					finally
-					{
-						//loopStack.Pop();
-					}
+					ExecuteAll(runtimeContext);
+					// loopStack.Push(i);
+					// try
+					// {
+					// 	ExecuteAll(runtimeContext);
+					// }
+					// finally
+					// {
+					// 	loopStack.Pop();
+					// }
 				}
 			}
 		}
