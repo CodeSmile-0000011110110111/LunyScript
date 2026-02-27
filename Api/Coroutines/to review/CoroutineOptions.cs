@@ -4,20 +4,6 @@ using System;
 
 namespace LunyScript
 {
-	public interface ICoroutineBuilderState {}
-
-	/// <summary>Frame-update unit — <c>WhenStarted/Stopped/Paused/Resumed</c> and <c>Do()</c> available.</summary>
-	public interface ICoroutineFrameUnit : ICoroutineBuilderState {}
-
-	/// <summary>Heartbeat unit — <c>WhenStarted/Stopped/Paused/Resumed</c> and <c>Do()</c> available.</summary>
-	public interface ICoroutineHeartbeatUnit : ICoroutineBuilderState {}
-
-	/// <summary>Shared base for both coroutine unit states — enables shared lifecycle extension methods.</summary>
-	public interface ICoroutineReadyUnit : ICoroutineBuilderState {}
-
-	public struct CoroutineFrameUnit : ICoroutineFrameUnit, ICoroutineReadyUnit {}
-	public struct CoroutineHeartbeatUnit : ICoroutineHeartbeatUnit, ICoroutineReadyUnit {}
-
 	/// <summary>
 	/// Configuration options for creating a coroutine.
 	/// </summary>
@@ -45,10 +31,10 @@ namespace LunyScript
 		public ScriptActionBlock[] OnPaused { get; init; }
 		public ScriptActionBlock[] OnResumed { get; init; }
 
-		public static CoroutineOptions ForOpenEnded(String name, Coroutine.Process processMode) =>
+		public static CoroutineOptions ForOpenEndedCoroutine(String name, Coroutine.Process processMode) =>
 			new() { Name = name, ProcessMode = processMode };
 
-		public static CoroutineOptions ForTimer(String name, Double duration, Coroutine.Continuation continuationMode,
+		public static CoroutineOptions ForTimerCoroutine(String name, Double duration, Coroutine.Continuation continuationMode,
 			Coroutine.Process processMode) => new()
 		{
 			Name = name,
@@ -57,7 +43,7 @@ namespace LunyScript
 			ProcessMode = processMode,
 		};
 
-		public static CoroutineOptions ForCounter(String name, Int32 countTarget, Coroutine.Continuation continuationMode,
+		public static CoroutineOptions ForCounterCoroutine(String name, Int32 countTarget, Coroutine.Continuation continuationMode,
 			Coroutine.Process processMode) => new()
 		{
 			Name = name,
@@ -66,7 +52,7 @@ namespace LunyScript
 			ProcessMode = processMode,
 		};
 
-		public static CoroutineOptions ForEveryInterval(String name, Int32 interval, Int32 offset, Coroutine.Process processMode,
+		public static CoroutineOptions ForIntervalCoroutine(String name, Int32 interval, Int32 offset, Coroutine.Process processMode,
 			ScriptActionBlock[] doBlocks) => new()
 		{
 			Name = name ?? GenerateUniqueName(interval, offset, processMode),
@@ -74,6 +60,7 @@ namespace LunyScript
 			TimeSliceInterval = Math.Max(1, interval),
 			TimeSliceOffset = Math.Max(0, offset),
 			ProcessMode = processMode,
+			ContinuationMode = Coroutine.Continuation.Repeating,
 			OnFrameUpdate = processMode == Coroutine.Process.FrameUpdate ? doBlocks : null,
 			OnHeartbeat = processMode == Coroutine.Process.Heartbeat ? doBlocks : null,
 		};

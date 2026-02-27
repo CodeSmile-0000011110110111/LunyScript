@@ -49,14 +49,14 @@ namespace LunyScript
 		/// Creates a named counter.
 		/// Usage: Counter("name").In(5).Frames().Do(blocks);
 		/// </summary>
-		protected CounterBuilderState<CounterBuilderStart> Counter(String name) => CounterBuilderState<CounterBuilderStart>.Create(this, name);
+		protected CounterBuilder<CounterBuilderStart> Counter(String name) => CounterBuilder<CounterBuilderStart>.Create(this, name);
 
 		/// <summary>
 		/// Time-sliced execution: Every(n).Frames().Do(blocks) or Every(n).Heartbeats().Do(blocks).
 		/// Supports optional phase offset: Every(n).Frames().DelayBy(offset).Do(blocks).
 		/// Use Even or Odd constants for alternating execution.
 		/// </summary>
-		protected EveryBuilder<EveryBuilderStart> Every(Int32 interval = 0) => EveryBuilder<EveryBuilderStart>.Create(this, interval);
+		protected EveryBuilder<EveryBuilderStart> Every(Int32 interval) => EveryBuilder<EveryBuilderStart>.Create(this, interval);
 
 		/// <summary>
 		/// Creates a named timer.

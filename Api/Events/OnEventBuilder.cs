@@ -75,7 +75,7 @@ namespace LunyScript
 			get
 			{
 				var options = new PhysicsEventOptions { IsTrigger = false };
-				var token = _script.CreateBuilderToken(nameof(Collision), "CollisionBuilder (3D)");
+				var token = _script.CreateBuilderToken(nameof(Collision), "On.Collision");
 				return new OnPhysicsEventBuilder<CollisionBuilderStart>(_script, options, token);
 			}
 		}
@@ -90,7 +90,7 @@ namespace LunyScript
 			get
 			{
 				var options = new PhysicsEventOptions { IsTrigger = true };
-				var token = _script.CreateBuilderToken(nameof(Trigger), "CollisionBuilder (Trigger, 3D)");
+				var token = _script.CreateBuilderToken(nameof(Trigger), "On.Trigger");
 				return new OnPhysicsEventBuilder<CollisionBuilderStart>(_script, options, token);
 			}
 		}

@@ -35,7 +35,7 @@ namespace LunyScript
 		public TransformLookAtBuilder<TransformBuilderReady> LookAt(ILunyObject target)
 		{
 			var options = new TransformLookAtOptions { Target = target, WorldUp = LunyVector3.Up, AxisLock = LunyVector3.One };
-			var token = _script.CreateBuilderToken(nameof(LookAt), "TransformLookAtBuilder");
+			var token = _script.CreateBuilderToken(nameof(LookAt), "Transform.LookAt()");
 			return new TransformLookAtBuilder<TransformBuilderReady>(_script, options, token);
 		}
 
@@ -49,7 +49,7 @@ namespace LunyScript
 		public TransformMoveBuilder<TransformBuilderReady> MoveTowards(ILunyObject target)
 		{
 			var options = new TransformTowardsObjectOptions { Target = target, Speed = 3.0, DeadZone = 0.1, Responsiveness = 1.0 };
-			var token = _script.CreateBuilderToken(nameof(MoveTowards), "TransformMoveBuilder");
+			var token = _script.CreateBuilderToken(nameof(MoveTowards), "Transform.Move()");
 			return new TransformMoveBuilder<TransformBuilderReady>(_script, options, token);
 		}
 
@@ -63,7 +63,7 @@ namespace LunyScript
 		public TransformRotateBuilder<TransformBuilderReady> RotateTowards(ILunyObject target)
 		{
 			var options = new TransformTowardsObjectOptions { Target = target, Speed = 90.0, DeadZone = 0.1, Responsiveness = 1.0 };
-			var token = _script.CreateBuilderToken(nameof(RotateTowards), "TransformRotateBuilder");
+			var token = _script.CreateBuilderToken(nameof(RotateTowards), "Transform.Rotate()");
 			return new TransformRotateBuilder<TransformBuilderReady>(_script, options, token);
 		}
 
@@ -77,7 +77,7 @@ namespace LunyScript
 		public TransformScaleBuilder<TransformBuilderReady> ScaleTowards(VariableBlock targetScale)
 		{
 			var options = new TransformTowardsVariableOptions { TargetScale = targetScale, Speed = 1.0, DeadZone = 0.1, Responsiveness = 1.0 };
-			var token = _script.CreateBuilderToken(nameof(ScaleTowards), "TransformScaleBuilder");
+			var token = _script.CreateBuilderToken(nameof(ScaleTowards), "Transform.Scale()");
 			return new TransformScaleBuilder<TransformBuilderReady>(_script, options, token);
 		}
 

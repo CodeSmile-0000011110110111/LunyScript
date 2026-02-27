@@ -1,7 +1,9 @@
 using Luny;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using Object = System.Object;
 
 namespace LunyScript
 {
@@ -19,12 +21,16 @@ namespace LunyScript
 		private readonly Int32 _line;
 		private Boolean _isFinished;
 		private Action _autoFinalizeAction;
+		public String Name => _name;
+		public String Type => _type;
 
 		public static Boolean operator ==(BuilderToken left, BuilderToken right) => Equals(left, right);
 		public static Boolean operator !=(BuilderToken left, BuilderToken right) => !Equals(left, right);
 
+		[DebuggerHidden]
 		public static void LogUnfinishedBuilder(BuilderToken token) => LunyLogger.LogWarning(
-			$"{Path.GetFileName(token._file)}({token._line}) Unfinished {token._type} builder: '{token._name}' was never finalized.");
+			$"{Path.GetFileName(token._file)}, line {token._line}: {token._type} '{token._name}' is incomplete. " +
+			"Did you forget to append a final blocks method like '.Do(blocks)' ?");
 
 		public BuilderToken(String name, String type, [CallerFilePath] String file = "", [CallerLineNumber] Int32 lineNumber = -1)
 		{
@@ -77,7 +83,7 @@ namespace LunyScript
 				LogUnfinishedBuilder(this);
 		}
 
-		public override Boolean Equals(System.Object obj) => ReferenceEquals(this, obj) || obj is BuilderToken other && Equals(other);
+		public override Boolean Equals(Object obj) => ReferenceEquals(this, obj) || obj is BuilderToken other && Equals(other);
 
 		public override Int32 GetHashCode() => _id;
 	}
