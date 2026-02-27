@@ -1,4 +1,4 @@
-using LunyScript.Blocks;
+﻿using LunyScript.Blocks;
 
 namespace LunyScript.ApiBuilders.Coroutine.Counter
 {
@@ -16,6 +16,10 @@ namespace LunyScript.ApiBuilders.Coroutine.Counter
 			_script = script;
 			_token = token;
 			_options = options;
+
+			var capturedScript = script;
+			var capturedOptions = options;
+			token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(capturedScript, in capturedOptions, token));
 		}
 
 		/// <summary>

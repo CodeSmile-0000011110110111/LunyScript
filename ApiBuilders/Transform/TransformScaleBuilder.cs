@@ -5,7 +5,7 @@ namespace LunyScript.ApiBuilders.Transform
 {
 	/// <summary>
 	/// Fluent builder for Scale-Towards blocks.
-	/// Usage: Transform.ScaleTowards(targetScale).Speed(1).Responsiveness(2).LockY().Do()
+	/// Usage: Transform.ScaleTowards(targetScale).Speed(1).Responsiveness(2).LockY()
 	///        Transform.ScaleTowards(targetScale).Speed(1).Lerp()
 	///        Transform.ScaleTowards(targetScale).Speed(1).Slerp()
 	/// </summary>
@@ -20,12 +20,33 @@ namespace LunyScript.ApiBuilders.Transform
 			Script = script;
 			Options = options;
 			Token = token;
+
+			var capturedScript = script;
+			var capturedOptions = options;
+			token?.SetAutoFinalizer(() => FinalizeBuilder(capturedScript, in capturedOptions, token));
+		}
+
+		public static implicit operator ScriptActionBlock(TransformScaleBuilder<T> b) =>
+			FinalizeBuilder(b.Script, in b.Options, b.Token);
+
+		internal static ScriptActionBlock FinalizeBuilder(Script script, in TransformTowardsVariableOptions options, BuilderToken token)
+		{
+			var block = TransformScaleTowardsBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.LockX, options.LockY, options.LockZ, options.Responsiveness);
+			script.FinalizeBuilderToken(token);
+			return block;
+		}
+
+		internal static TransformScaleTowardsLerpBlock FinalizeLerpBuilder(Script script, in TransformTowardsVariableOptions options, BuilderToken token, Boolean slerp)
+		{
+			var block = TransformScaleTowardsLerpBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.LockX, options.LockY, options.LockZ, options.Responsiveness, slerp);
+			script.FinalizeBuilderToken(token);
+			return block;
 		}
 	}
 
 	public static class TransformScaleBuilderExtensions
 	{
-		/// <summary> Scale speed in units per second (for <c>Do()</c>) or lerp factor (for <c>Lerp()</c>/<c>Slerp()</c>). </summary>
+		/// <summary> Scale speed in units per second (for linear) or lerp factor (for <c>Lerp()</c>/<c>Slerp()</c>). </summary>
 		public static TransformScaleBuilder<TransformBuilderReady> Speed<T>(this TransformScaleBuilder<T> b, Double speed)
 			where T : struct, ITransformBuilderReady
 		{
@@ -79,36 +100,14 @@ namespace LunyScript.ApiBuilders.Transform
 			return new TransformScaleBuilder<TransformBuilderReady>(b.Script, options, b.Token);
 		}
 
-		/// <summary> Linear step (MoveTowards per-component) — speed is units per second. </summary>
-		public static TransformScaleTowardsBlock Do<T>(this TransformScaleBuilder<T> b)
-			where T : struct, ITransformBuilderReady
-		{
-			var o = b.Options;
-			var block = TransformScaleTowardsBlock.Create(o.TargetScale, o.Speed, o.DeadZone, o.LockX, o.LockY, o.LockZ, o.Responsiveness);
-			b.Script.FinalizeBuilderToken(b.Token);
-			return block;
-		}
-
 		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
 		public static TransformScaleTowardsLerpBlock Lerp<T>(this TransformScaleBuilder<T> b)
-			where T : struct, ITransformBuilderReady
-		{
-			var o = b.Options;
-			var block = TransformScaleTowardsLerpBlock.Create(o.TargetScale, o.Speed, o.DeadZone, o.LockX, o.LockY, o.LockZ, o.Responsiveness,
-				false);
-			b.Script.FinalizeBuilderToken(b.Token);
-			return block;
-		}
+			where T : struct, ITransformBuilderReady =>
+			TransformScaleBuilder<T>.FinalizeLerpBuilder(b.Script, in b.Options, b.Token, slerp: false);
 
 		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
 		public static TransformScaleTowardsLerpBlock Slerp<T>(this TransformScaleBuilder<T> b)
-			where T : struct, ITransformBuilderReady
-		{
-			var o = b.Options;
-			var block = TransformScaleTowardsLerpBlock.Create(o.TargetScale, o.Speed, o.DeadZone, o.LockX, o.LockY, o.LockZ, o.Responsiveness,
-				true);
-			b.Script.FinalizeBuilderToken(b.Token);
-			return block;
-		}
+			where T : struct, ITransformBuilderReady =>
+			TransformScaleBuilder<T>.FinalizeLerpBuilder(b.Script, in b.Options, b.Token, slerp: true);
 	}
 }

@@ -24,6 +24,16 @@ namespace LunyScript.ApiBuilders.Coroutine.Every
 
 			if (interval < 0)
 				throw new ArgumentException($"Every duration must be 0 or greater, got: {interval}");
+
+			var capturedScript = script;
+			var capturedInterval = Math.Max(0, interval);
+			var capturedDelay = delay;
+			var capturedProcess = process;
+			token?.SetAutoFinalizer(() =>
+			{
+				var options = CoroutineOptions.ForEveryInterval(null, capturedInterval, capturedDelay, capturedProcess, null);
+				CoroutineBuilder.Finalize(capturedScript, in options, token);
+			});
 		}
 
 		/// <summary>

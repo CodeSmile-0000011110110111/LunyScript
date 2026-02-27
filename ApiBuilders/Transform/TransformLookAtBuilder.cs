@@ -5,7 +5,7 @@ namespace LunyScript.ApiBuilders.Transform
 {
 	/// <summary>
 	/// Fluent builder for <see cref="TransformLookAtBlock"/>.
-	/// Usage: Transform.LookAt(target).WorldUp(v).LockX().Do()
+	/// Usage: Transform.LookAt(target).WorldUp(v).LockX()
 	/// </summary>
 	public readonly struct TransformLookAtBuilder<T> where T : struct, ITransformBuilderState
 	{
@@ -18,6 +18,20 @@ namespace LunyScript.ApiBuilders.Transform
 			Script = script;
 			Options = options;
 			Token = token;
+
+			var capturedScript = script;
+			var capturedOptions = options;
+			token?.SetAutoFinalizer(() => FinalizeBuilder(capturedScript, in capturedOptions, token));
+		}
+
+		public static implicit operator ScriptActionBlock(TransformLookAtBuilder<T> b) =>
+			FinalizeBuilder(b.Script, in b.Options, b.Token);
+
+		internal static ScriptActionBlock FinalizeBuilder(Script script, in TransformLookAtOptions options, BuilderToken token)
+		{
+			var block = TransformLookAtBlock.Create(options.Target, options.WorldUp, options.AxisLock);
+			script.FinalizeBuilderToken(token);
+			return block;
 		}
 	}
 
@@ -57,15 +71,6 @@ namespace LunyScript.ApiBuilders.Transform
 			var options = b.Options;
 			options.AxisLock = new LunyVector3(options.AxisLock.X, options.AxisLock.Y, 0d);
 			return new TransformLookAtBuilder<TransformBuilderReady>(b.Script, options, b.Token);
-		}
-
-		/// <summary> Finalizes the builder and returns the executable block. </summary>
-		public static TransformLookAtBlock Do<T>(this TransformLookAtBuilder<T> b)
-			where T : struct, ITransformBuilderReady
-		{
-			var block = TransformLookAtBlock.Create(b.Options.Target, b.Options.WorldUp, b.Options.AxisLock);
-			b.Script.FinalizeBuilderToken(b.Token);
-			return block;
 		}
 	}
 }

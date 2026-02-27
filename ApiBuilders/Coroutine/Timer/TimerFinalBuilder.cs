@@ -1,4 +1,4 @@
-using LunyScript.Blocks;
+﻿using LunyScript.Blocks;
 
 namespace LunyScript.ApiBuilders.Coroutine.Timer
 {
@@ -16,6 +16,10 @@ namespace LunyScript.ApiBuilders.Coroutine.Timer
 			_script = script;
 			_token = token;
 			_options = options;
+
+			var capturedScript = script;
+			var capturedOptions = options;
+			token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(capturedScript, in capturedOptions, token));
 		}
 
 		internal static TimerFinalBuilder FromOptions(Script script, BuilderToken token, in CoroutineOptions options) =>

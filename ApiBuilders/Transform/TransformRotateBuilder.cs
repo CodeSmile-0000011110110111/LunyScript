@@ -5,7 +5,7 @@ namespace LunyScript.ApiBuilders.Transform
 {
 	/// <summary>
 	/// Fluent builder for Rotate-Towards blocks.
-	/// Usage: Transform.RotateTowards(target).Speed(45).Responsiveness(2).LockY().Do()
+	/// Usage: Transform.RotateTowards(target).Speed(45).Responsiveness(2).LockY()
 	///        Transform.RotateTowards(target).Speed(45).Lerp()
 	///        Transform.RotateTowards(target).Speed(45).Slerp()
 	/// </summary>
@@ -20,12 +20,33 @@ namespace LunyScript.ApiBuilders.Transform
 			Script = script;
 			Options = options;
 			Token = token;
+
+			var capturedScript = script;
+			var capturedOptions = options;
+			token?.SetAutoFinalizer(() => FinalizeBuilder(capturedScript, in capturedOptions, token));
+		}
+
+		public static implicit operator ScriptActionBlock(TransformRotateBuilder<T> b) =>
+			FinalizeBuilder(b.Script, in b.Options, b.Token);
+
+		internal static ScriptActionBlock FinalizeBuilder(Script script, in TransformTowardsObjectOptions options, BuilderToken token)
+		{
+			var block = TransformRotateTowardsBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockX, options.LockY, options.LockZ, options.Responsiveness);
+			script.FinalizeBuilderToken(token);
+			return block;
+		}
+
+		internal static TransformRotateTowardsLerpBlock FinalizeLerpBuilder(Script script, in TransformTowardsObjectOptions options, BuilderToken token, Boolean slerp)
+		{
+			var block = TransformRotateTowardsLerpBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockX, options.LockY, options.LockZ, options.Responsiveness, slerp);
+			script.FinalizeBuilderToken(token);
+			return block;
 		}
 	}
 
 	public static class TransformRotateBuilderExtensions
 	{
-		/// <summary> Rotation speed in degrees per second (for <c>Do()</c>) or lerp factor (for <c>Lerp()</c>/<c>Slerp()</c>). </summary>
+		/// <summary> Rotation speed in degrees per second (for linear) or lerp factor (for <c>Lerp()</c>/<c>Slerp()</c>). </summary>
 		public static TransformRotateBuilder<TransformBuilderReady> Speed<T>(this TransformRotateBuilder<T> b, Double speed)
 			where T : struct, ITransformBuilderReady
 		{
@@ -79,36 +100,14 @@ namespace LunyScript.ApiBuilders.Transform
 			return new TransformRotateBuilder<TransformBuilderReady>(b.Script, options, b.Token);
 		}
 
-		/// <summary> Angular step (RotateTowards) — speed is degrees per second. </summary>
-		public static TransformRotateTowardsBlock Do<T>(this TransformRotateBuilder<T> b)
-			where T : struct, ITransformBuilderReady
-		{
-			var o = b.Options;
-			var block = TransformRotateTowardsBlock.Create(o.Target, o.Speed, o.DeadZone, o.LockX, o.LockY, o.LockZ, o.Responsiveness);
-			b.Script.FinalizeBuilderToken(b.Token);
-			return block;
-		}
-
 		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
 		public static TransformRotateTowardsLerpBlock Lerp<T>(this TransformRotateBuilder<T> b)
-			where T : struct, ITransformBuilderReady
-		{
-			var o = b.Options;
-			var block = TransformRotateTowardsLerpBlock.Create(o.Target, o.Speed, o.DeadZone, o.LockX, o.LockY, o.LockZ, o.Responsiveness,
-				false);
-			b.Script.FinalizeBuilderToken(b.Token);
-			return block;
-		}
+			where T : struct, ITransformBuilderReady =>
+			TransformRotateBuilder<T>.FinalizeLerpBuilder(b.Script, in b.Options, b.Token, slerp: false);
 
 		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
 		public static TransformRotateTowardsLerpBlock Slerp<T>(this TransformRotateBuilder<T> b)
-			where T : struct, ITransformBuilderReady
-		{
-			var o = b.Options;
-			var block = TransformRotateTowardsLerpBlock.Create(o.Target, o.Speed, o.DeadZone, o.LockX, o.LockY, o.LockZ, o.Responsiveness,
-				true);
-			b.Script.FinalizeBuilderToken(b.Token);
-			return block;
-		}
+			where T : struct, ITransformBuilderReady =>
+			TransformRotateBuilder<T>.FinalizeLerpBuilder(b.Script, in b.Options, b.Token, slerp: true);
 	}
 }
