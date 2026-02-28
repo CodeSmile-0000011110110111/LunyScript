@@ -66,21 +66,21 @@ namespace LunyScript
 		}
 	}
 
-	public interface IEveryDelaySet : IEveryUnitSet {}
-	public struct EveryDelaySet : IEveryDelaySet {}
+	public interface IEveryOffsetSet : IEveryUnitSet {}
+	public struct EveryOffsetSet : IEveryOffsetSet {}
 
-	public static class EveryBuilderDelayExtensions
+	public static class EveryBuilderOffsetExtensions
 	{
 		/// <summary>Sets the phase offset (delay) for time-sliced execution.</summary>
-		public static EveryBuilder<EveryDelaySet> DelayBy<T>(this EveryBuilder<T> b, Int32 delay)
+		public static EveryBuilder<EveryOffsetSet> Offset<T>(this EveryBuilder<T> b, Int32 offset)
 			where T : struct, IEveryUnitSet
 		{
-			if (b.Options.Delay != 0)
+			if (b.Options.Offset != 0)
 				throw new ArgumentException("DelayBy() can't be used twice");
 
 			var options = b.Options;
-			options.Delay = delay;
-			return new EveryBuilder<EveryDelaySet>(b.Script, b.Token, in options);
+			options.Offset = offset;
+			return new EveryBuilder<EveryOffsetSet>(b.Script, b.Token, in options);
 		}
 	}
 
@@ -91,7 +91,7 @@ namespace LunyScript
 			where T : struct, IEveryUnitSet
 		{
 			var opt = b.Options;
-			var co = CoroutineOptions.ForIntervalCoroutine(null, opt.Interval, opt.Delay, opt.Process, blocks);
+			var co = CoroutineOptions.ForIntervalCoroutine(null, opt.Interval, opt.Offset, opt.Process, blocks);
 			return CoroutineBuilder.Finalize(b.Script, in co, b.Token);
 		}
 	}
@@ -99,7 +99,7 @@ namespace LunyScript
 	internal struct EveryOptions
 	{
 		internal Int32 Interval;
-		internal Int32 Delay;
+		internal Int32 Offset;
 		internal Coroutine.Process Process;
 	}
 }

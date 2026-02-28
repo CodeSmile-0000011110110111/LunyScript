@@ -5,7 +5,7 @@ namespace LunyScript.Coroutines
 	/// <summary>
 	/// Base class for coroutines and timers with runtime state and control methods.
 	/// </summary>
-	internal partial class Coroutine
+	internal class Coroutine
 	{
 		private static readonly String[] s_StateNames = Enum.GetNames(typeof(CoroutineState));
 
@@ -16,10 +16,11 @@ namespace LunyScript.Coroutines
 		internal String Name => _name;
 		internal String State => s_StateNames[(Int32)_state];
 		private Continuation ContinuationMode { get; } = Continuation.Finite;
-		private Boolean IsStopped => _state == CoroutineState.Stopped;
+		private Boolean IsNew => _state == CoroutineState.New;
 		private Boolean IsRunning => _state == CoroutineState.Running;
 		private Boolean IsPaused => _state == CoroutineState.Paused;
-		private Boolean IsNew => _state == CoroutineState.New;
+		private Boolean IsStopped => _state == CoroutineState.Stopped;
+		private Boolean IsElapsed => _state == CoroutineState.Elapsed;
 
 		/// <summary>
 		/// Factory method to create specialized coroutine instances.
@@ -53,10 +54,16 @@ namespace LunyScript.Coroutines
 			_state = CoroutineState.Running;
 			if (fireStartStopEvents)
 				_pendingEvents |= Events.Started;
+
 			OnStarted();
 		}
 
 		private void StartWithoutEvents() => Start(false);
+		private void StartIfNew()
+		{
+			if (IsNew)
+				Start();
+		}
 
 		/// <summary>
 		/// Stops the coroutine and resets state.
@@ -65,13 +72,14 @@ namespace LunyScript.Coroutines
 		internal void Stop(Boolean fireStopEvent = true)
 		{
 			StartIfNew();
-			if (IsStopped)
+			if (IsStopped || IsElapsed)
 				return;
 
 			//LunyLogger.LogInfo($"{nameof(Stop)}({_name})", this);
 			_state = CoroutineState.Stopped;
 			if (fireStopEvent)
 				_pendingEvents |= Events.Stopped;
+
 			OnStopped();
 		}
 
@@ -84,12 +92,13 @@ namespace LunyScript.Coroutines
 		internal void Pause()
 		{
 			StartIfNew();
-			if (IsPaused)
+			if (IsPaused || IsStopped || IsElapsed)
 				return;
 
 			//LunyLogger.LogInfo($"{nameof(Pause)}({_name})", this);
 			_state = CoroutineState.Paused;
 			_pendingEvents |= Events.Paused;
+
 			OnPaused();
 		}
 
@@ -99,12 +108,13 @@ namespace LunyScript.Coroutines
 		/// </summary>
 		internal void Resume()
 		{
-			if (IsRunning || IsNew)
+			if (IsRunning || IsStopped || IsElapsed || IsNew)
 				return;
 
 			//LunyLogger.LogInfo($"{nameof(Resume)}({_name})", this);
 			_state = CoroutineState.Running;
 			_pendingEvents |= Events.Resumed;
+
 			OnResumed();
 		}
 
@@ -126,14 +136,11 @@ namespace LunyScript.Coroutines
 		internal Events ProcessHeartbeat()
 		{
 			StartIfNew();
-			if (IsRunning)
+			if (IsRunning && !IsElapsed)
 			{
 				_pendingEvents |= Events.Heartbeat;
 				if (ConsumeHeartbeat())
-				{
-					_pendingEvents |= Events.Elapsed;
-					ApplyContinuation();
-				}
+					SetElapsedOrRestart();
 			}
 
 			return GetAndClearPendingEvents();
@@ -145,37 +152,37 @@ namespace LunyScript.Coroutines
 		internal Events ProcessFrameUpdate()
 		{
 			StartIfNew();
-			if (IsRunning)
+			if (IsRunning && !IsElapsed)
 			{
 				_pendingEvents |= Events.FrameUpdate;
 				if (ConsumeFrameUpdate())
-				{
-					_pendingEvents |= Events.Elapsed;
-					ApplyContinuation();
-				}
+					SetElapsedOrRestart();
 			}
 
 			return GetAndClearPendingEvents();
 		}
 
-		private void StartIfNew()
+		private void SetElapsedOrRestart()
 		{
-			if (IsNew)
-				Start();
-		}
+			_pendingEvents |= Events.Elapsed;
 
-		private void ApplyContinuation()
-		{
 			if (ContinuationMode == Continuation.Repeating)
 				StartWithoutEvents();
 			else
-				StopWithoutEvent();
+			{
+				_state = CoroutineState.Elapsed;
+				OnElapsed();
+			}
 		}
+
 
 		protected virtual void OnStarted() {}
 		protected virtual void OnStopped() {}
+		// reserved for future use if a subclass needs these callbacks
 		protected virtual void OnPaused() {}
 		protected virtual void OnResumed() {}
+		protected virtual void OnElapsed() {}
+
 		protected virtual Boolean ConsumeFrameUpdate() => false;
 		protected virtual Boolean ConsumeHeartbeat() => false;
 		public override String ToString() => $"{GetType().Name}({Name}, {State})";
@@ -217,6 +224,11 @@ namespace LunyScript.Coroutines
 			/// Coroutine is frozen at current time, will resume when unpaused.
 			/// </summary>
 			Paused,
+
+			/// <summary>
+			/// Coroutine has run to end. It can be Started again, but not stopped, paused or resumed.
+			/// </summary>
+			Elapsed,
 		}
 
 		/// <summary>

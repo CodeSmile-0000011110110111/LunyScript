@@ -4,6 +4,16 @@ using System;
 
 namespace LunyScript
 {
+	public interface IForBuilderState {}
+	public interface IForAmountSet : IForBuilderState {}
+	public struct ForAmountSet : IForAmountSet {}
+	public interface IForFrameUnit : IForReadyUnit {}
+	public struct ForFrameUnit : IForFrameUnit {}
+	public interface IForHeartbeatUnit : IForReadyUnit {}
+	public struct ForHeartbeatUnit : IForHeartbeatUnit {}
+
+	public interface IForReadyUnit : IForBuilderState {}
+
 	/// <summary>
 	/// Fluent builder for finite-duration coroutines.
 	/// Usage: Coroutine("name").For(3).Seconds().OnFrameUpdate(blocks).WhenElapsed(blocks);

@@ -42,7 +42,7 @@ namespace LunyScript
 		private readonly ILunyObject _lunyObject;
 
  	private ScriptEventScheduler _scheduler;
-		private ScriptObjectCoroutineRunner _coroutines;
+		private ScriptCoroutineRunner _coroutines;
 		private ScriptDebugHooks _debugHooks;
 		private ScriptBlockProfiler _blockProfiler;
 		private ITable _localVariables;
@@ -100,7 +100,7 @@ namespace LunyScript
 		/// <summary>
 		/// Coroutine runner for managing timers and coroutines.
 		/// </summary>
-		internal ScriptObjectCoroutineRunner Coroutines => _coroutines ??= new ScriptObjectCoroutineRunner(this);
+		internal ScriptCoroutineRunner Coroutines => _coroutines ??= new ScriptCoroutineRunner(this);
 
 		internal static void ClearGlobalVariables() => s_GlobalVariables?.RemoveAll();
 		internal static ITable GetGlobalVariables() => s_GlobalVariables;
