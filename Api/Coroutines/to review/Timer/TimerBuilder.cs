@@ -112,7 +112,7 @@ namespace LunyScript
 				{
 					OnElapsed = blocks,
 				};
-			return (ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, in co, b.Token);
+			return (ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, b.Token, in co);
 		}
 
 		private static TimerBuilder<TimerUnitSet> CreateFinalStep<T>(TimerBuilder<T> b, Double durationInSeconds)
@@ -127,7 +127,7 @@ namespace LunyScript
 			{
 				var co = CoroutineOptions.ForTimerCoroutine(capturedOptions.Name, capturedOptions.DurationInSeconds,
 					capturedOptions.Continuation, Coroutine.Process.FrameUpdate);
-				CoroutineBuilder.Finalize(capturedScript, in co, capturedToken);
+				CoroutineBuilder.Finalize(capturedScript, capturedToken, in co);
 			});
 			return new TimerBuilder<TimerUnitSet>(b.Script, b.Token, in options);
 		}
@@ -192,7 +192,7 @@ namespace LunyScript
 				{
 					OnElapsed = blocks,
 				};
-			return (ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, in co, b.Token);
+			return (ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, b.Token, in co);
 		}
 
 		private static TimerBuilder<TimerUnitSet> CreateFinalStep<T>(TimerBuilder<T> b, Double durationInSeconds)
@@ -207,7 +207,7 @@ namespace LunyScript
 			{
 				var co = CoroutineOptions.ForTimerCoroutine(capturedOptions.Name, capturedOptions.DurationInSeconds,
 					capturedOptions.Continuation, Coroutine.Process.FrameUpdate);
-				CoroutineBuilder.Finalize(capturedScript, in co, capturedToken);
+				CoroutineBuilder.Finalize(capturedScript, capturedToken, in co);
 			});
 			return new TimerBuilder<TimerUnitSet>(b.Script, b.Token, in options);
 		}

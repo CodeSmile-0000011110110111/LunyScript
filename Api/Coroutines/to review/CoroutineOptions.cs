@@ -47,7 +47,7 @@ namespace LunyScript
 			Coroutine.Process processMode) => new()
 		{
 			Name = name,
-			CounterTarget = countTarget + 1, // since we increment before evaluate, actual target is +1 than user provides
+			CounterTarget = countTarget,
 			ContinuationMode = continuationMode,
 			ProcessMode = processMode,
 		};

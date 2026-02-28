@@ -95,7 +95,7 @@ namespace LunyScript
 			{
 				OnElapsed = blocks,
 			};
-			return CoroutineBuilder.Finalize(b.Script, in co, b.Token);
+			return CoroutineBuilder.Finalize(b.Script, b.Token, in co);
 		}
 	}
 

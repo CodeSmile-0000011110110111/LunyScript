@@ -32,7 +32,7 @@ namespace LunyScript
 		}
 
 		/// <summary>Sets the coroutine duration. Returns a builder to specify the time unit.</summary>
-		public ForBuilder<ForAmountSet> For(Double duration) => new(_script, _token, _name, duration);
+		public ForBuilder<ForBuilderStart> For(Double duration) => new(_script, _token, _name, duration);
 
 		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every frame.</summary>
 		public CoroutineUpdateBuilder<CoroutineFrameUnit> OnFrameUpdate(params ScriptActionBlock[] blocks) => new(_script, _token,
@@ -42,15 +42,15 @@ namespace LunyScript
 		public CoroutineUpdateBuilder<CoroutineHeartbeatUnit> OnHeartbeat(params ScriptActionBlock[] blocks) => new(_script, _token,
 			CoroutineOptions.ForOpenEndedCoroutine(_name, Coroutine.Process.Heartbeat) with { OnHeartbeat = blocks });
 
-		internal static ICoroutineBlock Finalize(Script script, in CoroutineOptions options, BuilderToken token)
+		internal static ICoroutineBlock Finalize(Script script, BuilderToken token, in CoroutineOptions options)
 		{
-			WarnIfAllSequencesEmpty(script, options, token);
+			WarnIfAllSequencesEmpty(script, token, options);
 			var block = script.RuntimeContext.Coroutines.Register(in options);
 			script.FinalizeBuilderToken(token);
 			return block;
 		}
 
-		private static void WarnIfAllSequencesEmpty(Script script, CoroutineOptions options, BuilderToken token)
+		private static void WarnIfAllSequencesEmpty(Script script, BuilderToken token, in CoroutineOptions options)
 		{
 			if (options.OnFrameUpdate == null && options.OnHeartbeat == null && options.OnElapsed == null &&
 			    options.OnStarted == null && options.OnStopped == null && options.OnPaused == null && options.OnResumed == null)
@@ -76,7 +76,7 @@ namespace LunyScript
 
 			var capturedScript = script;
 			var capturedOptions = options;
-			token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(capturedScript, capturedOptions, token));
+			token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(capturedScript, token, capturedOptions));
 		}
 	}
 
@@ -119,11 +119,11 @@ namespace LunyScript
 			where T : struct, ICoroutineReadyUnit
 		{
 			if (b.Options.ProcessMode == Coroutine.Process.Heartbeat)
-				return CoroutineBuilder.Finalize(b.Script,
-					b.Options with { OnHeartbeat = BuilderUtility.Append(b.Options.OnHeartbeat, blocks) }, b.Token);
+				return CoroutineBuilder.Finalize(b.Script, b.Token,
+					b.Options with { OnHeartbeat = BuilderUtility.Append(b.Options.OnHeartbeat, blocks) });
 
-			return CoroutineBuilder.Finalize(b.Script,
-				b.Options with { OnFrameUpdate = BuilderUtility.Append(b.Options.OnFrameUpdate, blocks) }, b.Token);
+			return CoroutineBuilder.Finalize(b.Script, b.Token,
+				b.Options with { OnFrameUpdate = BuilderUtility.Append(b.Options.OnFrameUpdate, blocks) });
 		}
 	}
 }

@@ -1,8 +1,6 @@
-﻿using LunyScript;
-
-namespace LunyScript.SmokeTests.Coroutines
+﻿namespace LunyScript.SmokeTests.Coroutines
 {
-	public partial class CoroutineFor : Script
+	public class CoroutineFor : Script
 	{
 		public override void Build(ScriptContext context)
 		{
@@ -20,6 +18,12 @@ namespace LunyScript.SmokeTests.Coroutines
 			Counter("for resume").Every(8).Frames().Do(forRoutine.Resume());
 			Counter("for stop").In(10).Frames().Do(forRoutine.Stop());
 			Counter("for start").In(20).Frames().Do(forRoutine.Start());
+
+			var updateRoutine = Coroutine("coroutine on frame update").OnFrameUpdate(Debug.Log("frame update coroutine")).Do();
+			var beatRoutine = Coroutine("coroutine on hearbeat").OnHeartbeat(Debug.Log("heartbeat coroutine")).Do();
+			On.Created(updateRoutine.Stop(), beatRoutine.Stop());
+			Counter("start unbounded routines").In(70).Frames().Do(updateRoutine.Start(), beatRoutine.Start());
+			Counter("stop unbounded routines").In(85).Frames().Do(updateRoutine.Stop(), beatRoutine.Stop());
 		}
 	}
 }

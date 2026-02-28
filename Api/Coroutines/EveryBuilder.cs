@@ -92,7 +92,7 @@ namespace LunyScript
 		{
 			var opt = b.Options;
 			var co = CoroutineOptions.ForIntervalCoroutine(null, opt.Interval, opt.Offset, opt.Process, blocks);
-			return CoroutineBuilder.Finalize(b.Script, in co, b.Token);
+			return CoroutineBuilder.Finalize(b.Script, b.Token, in co);
 		}
 	}
 

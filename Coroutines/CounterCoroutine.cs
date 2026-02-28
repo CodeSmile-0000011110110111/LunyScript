@@ -16,7 +16,11 @@ namespace LunyScript.Coroutines
 		{
 			_counter = new Counter(Math.Max(0, options.CounterTarget));
 			_counter.AutoRepeat = options.ContinuationMode == Continuation.Repeating;
-			_counter.OnElapsed += () => _elapsedThisTick = true;
+			_counter.OnElapsed += () =>
+			{
+				_elapsedThisTick = true;
+				_counter.Start(); // Reset counter
+			};
 		}
 
 		protected override void OnStarted() => _counter.Start();
@@ -29,7 +33,7 @@ namespace LunyScript.Coroutines
 		private Boolean IncrementCounter()
 		{
 			_elapsedThisTick = false;
-			_counter.Increment();
+			_counter.Increment(); // might fire OnElapsed event
 			return _elapsedThisTick;
 		}
 

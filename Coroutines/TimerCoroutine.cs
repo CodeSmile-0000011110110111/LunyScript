@@ -23,7 +23,11 @@ namespace LunyScript.Coroutines
 			var duration = Math.Max(0.0, options.TimerDurationInSeconds);
 			_timer = Timer.FromSeconds(duration);
 			_timer.AutoRepeat = options.ContinuationMode == Continuation.Repeating;
-			_timer.OnElapsed += () => _elapsedThisTick = true;
+			_timer.OnElapsed += () =>
+			{
+				_elapsedThisTick = true;
+				_timer.Start(); // reset timer
+			};
 		}
 
 		protected override void OnStarted() => _timer.Start();
