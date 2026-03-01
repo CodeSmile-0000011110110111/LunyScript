@@ -8,7 +8,7 @@ namespace LunyScript.Blocks
 		private readonly Double _timeScale;
 
 		public TimerCoroutineSetTimeScaleBlock(TimerCoroutine coroutine, Double timeScale)
-			: base(coroutine) => _timeScale = timeScale;
+			: base(coroutine) => _timeScale = coroutine.TimeScale = timeScale;
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => ((TimerCoroutine)_coroutine).TimeScale = _timeScale;
 	}

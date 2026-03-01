@@ -40,7 +40,7 @@ namespace LunyScript
 
 			var options = new EveryOptions { Interval = interval };
 			var token = script.CreateBuilderToken("<N/A>", "Every()");
-			return new EveryBuilder<EveryBuilderStart>(script, token, in options);
+			return new EveryBuilder<EveryBuilderStart>(script, token, options);
 		}
 	}
 
@@ -54,7 +54,7 @@ namespace LunyScript
 		{
 			var options = b.Options;
 			options.Process = Coroutine.Process.FrameUpdate;
-			return new EveryBuilder<EveryUnitSet>(b.Script, b.Token, in options);
+			return new EveryBuilder<EveryUnitSet>(b.Script, b.Token, options);
 		}
 
 		/// <summary>Selects heartbeat-based execution.</summary>
@@ -62,7 +62,7 @@ namespace LunyScript
 		{
 			var options = b.Options;
 			options.Process = Coroutine.Process.Heartbeat;
-			return new EveryBuilder<EveryUnitSet>(b.Script, b.Token, in options);
+			return new EveryBuilder<EveryUnitSet>(b.Script, b.Token, options);
 		}
 	}
 
@@ -76,11 +76,11 @@ namespace LunyScript
 			where T : struct, IEveryUnitSet
 		{
 			if (b.Options.Offset != 0)
-				throw new ArgumentException("DelayBy() can't be used twice");
+				throw new ArgumentException($"{nameof(Offset)}() can't be used twice");
 
 			var options = b.Options;
 			options.Offset = offset;
-			return new EveryBuilder<EveryOffsetSet>(b.Script, b.Token, in options);
+			return new EveryBuilder<EveryOffsetSet>(b.Script, b.Token, options);
 		}
 	}
 
@@ -90,9 +90,9 @@ namespace LunyScript
 		public static ICoroutineBlock Do<T>(this EveryBuilder<T> b, params ScriptActionBlock[] blocks)
 			where T : struct, IEveryUnitSet
 		{
-			var opt = b.Options;
-			var co = CoroutineOptions.ForIntervalCoroutine(null, opt.Interval, opt.Offset, opt.Process, blocks);
-			return CoroutineBuilder.Finalize(b.Script, b.Token, in co);
+			var options = b.Options;
+			return CoroutineBuilder.Finalize(b.Script, b.Token,
+				CoroutineOptions.ForIntervalCoroutine(null, options.Interval, options.Offset, options.Process, blocks));
 		}
 	}
 

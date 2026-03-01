@@ -36,7 +36,7 @@ namespace LunyScript.Blocks
 	public interface ITimerCoroutineBlock : ICoroutineBlock
 	{
 		/// <summary>
-		/// Sets the time scale. Values >= 0; negative values are clamped to 0.
+		/// Sets the time scale. Negative values are clamped to 0.
 		/// </summary>
 		ScriptActionBlock TimeScale(Double scale);
 	}

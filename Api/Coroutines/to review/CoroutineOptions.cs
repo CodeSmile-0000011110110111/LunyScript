@@ -34,13 +34,12 @@ namespace LunyScript
 		public static CoroutineOptions ForOpenEndedCoroutine(String name, Coroutine.Process processMode) =>
 			new() { Name = name, ProcessMode = processMode };
 
-		public static CoroutineOptions ForTimerCoroutine(String name, Double duration, Coroutine.Continuation continuationMode,
-			Coroutine.Process processMode) => new()
+		public static CoroutineOptions ForTimerCoroutine(String name, Double duration, Coroutine.Continuation continuationMode) => new()
 		{
 			Name = name,
 			TimerDurationInSeconds = duration,
 			ContinuationMode = continuationMode,
-			ProcessMode = processMode,
+			ProcessMode = Coroutine.Process.FrameUpdate,
 		};
 
 		public static CoroutineOptions ForCounterCoroutine(String name, Int32 countTarget, Coroutine.Continuation continuationMode,

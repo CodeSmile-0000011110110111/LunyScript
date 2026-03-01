@@ -29,7 +29,7 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => DoLog(runtimeContext);
 
-		[Conditional("DEBUG")] [Conditional("LUNYSCRIPT_DEBUG")]
+		[Conditional("DEBUG")] [Conditional("LUNYSCRIPT_DEBUG")] [DebuggerHidden]
 		private void DoLog(IScriptRuntimeContext runtimeContext)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG

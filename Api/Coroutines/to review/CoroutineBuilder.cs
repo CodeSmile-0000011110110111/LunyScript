@@ -32,7 +32,7 @@ namespace LunyScript
 		}
 
 		/// <summary>Sets the coroutine duration. Returns a builder to specify the time unit.</summary>
-		public ForBuilder<ForBuilderStart> For(Double duration) => new(_script, _token, _name, duration);
+		public CoroutineForBuilder<CoroutineForBuilderStart> For(Double duration) => new(_script, _token, _name, duration);
 
 		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every frame.</summary>
 		public CoroutineUpdateBuilder<CoroutineFrameUnit> OnFrameUpdate(params ScriptActionBlock[] blocks) => new(_script, _token,
@@ -84,46 +84,43 @@ namespace LunyScript
 	{
 		/// <summary>Blocks to run when the coroutine starts.</summary>
 		public static CoroutineUpdateBuilder<T> WhenStarted<T>(this CoroutineUpdateBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token,
-			b.Options with { OnStarted = BuilderUtility.Append(b.Options.OnStarted, blocks) });
+			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token, b.Options with { OnStarted = blocks });
 
 		/// <summary>Blocks to run when the coroutine stops.</summary>
 		public static CoroutineUpdateBuilder<T> WhenStopped<T>(this CoroutineUpdateBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token,
-			b.Options with { OnStopped = BuilderUtility.Append(b.Options.OnStopped, blocks) });
+			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token, b.Options with { OnStopped = blocks });
 
 		/// <summary>Blocks to run when the coroutine is paused.</summary>
 		public static CoroutineUpdateBuilder<T> WhenPaused<T>(this CoroutineUpdateBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token,
-			b.Options with { OnPaused = BuilderUtility.Append(b.Options.OnPaused, blocks) });
+			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token, b.Options with { OnPaused = blocks });
 
 		/// <summary>Blocks to run when the coroutine is resumed.</summary>
 		public static CoroutineUpdateBuilder<T> WhenResumed<T>(this CoroutineUpdateBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token,
-			b.Options with { OnResumed = BuilderUtility.Append(b.Options.OnResumed, blocks) });
+			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token, b.Options with { OnResumed = blocks });
 
+		/*
 		/// <summary>Additional frame-update blocks to run each frame.</summary>
 		public static CoroutineUpdateBuilder<CoroutineFrameUnit> OnFrameUpdate<T>(this CoroutineUpdateBuilder<T> b,
 			params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineFrameUnit => new(b.Script, b.Token,
-			b.Options with { OnFrameUpdate = BuilderUtility.Append(b.Options.OnFrameUpdate, blocks) });
+			where T : struct, ICoroutineFrameUnit => new(b.Script, b.Token, b.Options with { OnFrameUpdate = blocks });
 
 		/// <summary>Additional heartbeat blocks to run each fixed step.</summary>
 		public static CoroutineUpdateBuilder<CoroutineHeartbeatUnit> OnHeartbeat<T>(this CoroutineUpdateBuilder<T> b,
 			params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineHeartbeatUnit => new(b.Script, b.Token,
-			b.Options with { OnHeartbeat = BuilderUtility.Append(b.Options.OnHeartbeat, blocks) });
+			where T : struct, ICoroutineHeartbeatUnit => new(b.Script, b.Token, b.Options with { OnHeartbeat = blocks });
+			*/
 
 		/// <summary>Additional update blocks. Finalizes the builder.</summary>
 		public static ICoroutineBlock Do<T>(this CoroutineUpdateBuilder<T> b, params ScriptActionBlock[] blocks)
 			where T : struct, ICoroutineReadyUnit
 		{
 			if (b.Options.ProcessMode == Coroutine.Process.Heartbeat)
-				return CoroutineBuilder.Finalize(b.Script, b.Token,
-					b.Options with { OnHeartbeat = BuilderUtility.Append(b.Options.OnHeartbeat, blocks) });
+				return CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnHeartbeat = blocks });
 
-			return CoroutineBuilder.Finalize(b.Script, b.Token,
-				b.Options with { OnFrameUpdate = BuilderUtility.Append(b.Options.OnFrameUpdate, blocks) });
+			if (b.Options.ProcessMode == Coroutine.Process.FrameUpdate)
+				return CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnFrameUpdate = blocks });
+
+			throw new ArgumentOutOfRangeException(nameof(b.Options.ProcessMode), b.Options.ProcessMode.ToString());
 		}
 	}
 }

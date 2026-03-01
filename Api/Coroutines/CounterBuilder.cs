@@ -33,7 +33,7 @@ namespace LunyScript
 
 			var options = new CounterOptions { Name = name };
 			var token = script.CreateBuilderToken(name, "Counter()");
-			return new CounterBuilder<CounterBuilderStart>(script, token, in options);
+			return new CounterBuilder<CounterBuilderStart>(script, token, options);
 		}
 	}
 
@@ -48,7 +48,7 @@ namespace LunyScript
 			var options = b.Options;
 			options.Amount = targetCount;
 			options.Continuation = Coroutine.Continuation.Finite;
-			return new CounterBuilder<CounterBuilderContinuationSet>(b.Script, b.Token, in options);
+			return new CounterBuilder<CounterBuilderContinuationSet>(b.Script, b.Token, options);
 		}
 
 		/// <summary>Sets the counter to fire repeatedly at the specified interval.</summary>
@@ -57,7 +57,7 @@ namespace LunyScript
 			var options = b.Options;
 			options.Amount = interval;
 			options.Continuation = Coroutine.Continuation.Repeating;
-			return new CounterBuilder<CounterBuilderContinuationSet>(b.Script, b.Token, in options);
+			return new CounterBuilder<CounterBuilderContinuationSet>(b.Script, b.Token, options);
 		}
 	}
 
@@ -72,7 +72,7 @@ namespace LunyScript
 		{
 			var options = b.Options;
 			options.Process = Coroutine.Process.FrameUpdate;
-			return new CounterBuilder<CounterBuilderUnitSet>(b.Script, b.Token, in options);
+			return new CounterBuilder<CounterBuilderUnitSet>(b.Script, b.Token, options);
 		}
 
 		/// <summary>Counts heartbeat (fixed step) updates.</summary>
@@ -81,7 +81,7 @@ namespace LunyScript
 		{
 			var options = b.Options;
 			options.Process = Coroutine.Process.Heartbeat;
-			return new CounterBuilder<CounterBuilderUnitSet>(b.Script, b.Token, in options);
+			return new CounterBuilder<CounterBuilderUnitSet>(b.Script, b.Token, options);
 		}
 	}
 
@@ -91,11 +91,12 @@ namespace LunyScript
 		public static ICoroutineBlock Do<T>(this CounterBuilder<T> b, params ScriptActionBlock[] blocks)
 			where T : struct, ICounterBuilderUnitSet
 		{
-			var co = CoroutineOptions.ForCounterCoroutine(b.Options.Name, b.Options.Amount, b.Options.Continuation, b.Options.Process) with
-			{
-				OnElapsed = blocks,
-			};
-			return CoroutineBuilder.Finalize(b.Script, b.Token, in co);
+			var options = b.Options;
+			return CoroutineBuilder.Finalize(b.Script, b.Token,
+				CoroutineOptions.ForCounterCoroutine(options.Name, options.Amount, options.Continuation, options.Process) with
+				{
+					OnElapsed = blocks,
+				});
 		}
 	}
 

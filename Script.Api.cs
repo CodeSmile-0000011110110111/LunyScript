@@ -62,7 +62,7 @@ namespace LunyScript
 		/// Creates a named timer.
 		/// Usage: Timer("name").In(3).Seconds().Do(blocks);
 		/// </summary>
-		protected TimerBuilder<TimerBuilderStart> Timer(String name) => TimerBuilder<TimerBuilderStart>.Create(this, name);
+		protected CoroutineTimerBuilder<CoroutineTimerBuilderStart> Timer(String name) => CoroutineTimerBuilder<CoroutineTimerBuilderStart>.Create(this, name);
 
 		/// <summary>
 		/// Defines a named, read-only variable.
