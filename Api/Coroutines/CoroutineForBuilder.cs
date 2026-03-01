@@ -19,14 +19,12 @@ namespace LunyScript
 		internal readonly Script Script;
 		internal readonly BuilderToken Token;
 		internal readonly CoroutineOptions Options;
-		internal readonly Double Duration;
 
 		internal CoroutineForBuilder(Script script, BuilderToken token, String name, Double duration)
 		{
 			Script = script;
 			Token = token;
-			Options = new CoroutineOptions { Name = name };
-			Duration = duration;
+			Options = new CoroutineOptions { Name = name, TimerDurationInSeconds = duration, CounterTarget = (Int32)Math.Round(duration) };
 		}
 
 		internal CoroutineForBuilder(Script script, BuilderToken token, in CoroutineOptions options)
@@ -34,7 +32,6 @@ namespace LunyScript
 			Script = script;
 			Token = token;
 			Options = options;
-			Duration = 0;
 		}
 	}
 
@@ -46,27 +43,25 @@ namespace LunyScript
 	{
 		/// <summary>Duration in seconds (frame-update coroutine).</summary>
 		public static CoroutineForBuilder<CoroutineForFrameUnit> Seconds<T>(this CoroutineForBuilder<T> b)
-			where T : struct, ICoroutineForBuilderStart => CreateFrameUnit(b, (Int32)b.Duration);
+			where T : struct, ICoroutineForBuilderStart => CreateFrameUnit(b, b.Options.TimerDurationInSeconds);
 
 		/// <summary>Duration in milliseconds (frame-update coroutine).</summary>
 		public static CoroutineForBuilder<CoroutineForFrameUnit> Milliseconds<T>(this CoroutineForBuilder<T> b)
-			where T : struct, ICoroutineForBuilderStart => CreateFrameUnit(b, (Int32)(b.Duration / 1000));
+			where T : struct, ICoroutineForBuilderStart => CreateFrameUnit(b, b.Options.TimerDurationInSeconds / 1000.0);
 
 		/// <summary>Duration in minutes (frame-update coroutine).</summary>
 		public static CoroutineForBuilder<CoroutineForFrameUnit> Minutes<T>(this CoroutineForBuilder<T> b)
-			where T : struct, ICoroutineForBuilderStart => CreateFrameUnit(b, (Int32)(b.Duration * 60));
+			where T : struct, ICoroutineForBuilderStart => CreateFrameUnit(b, b.Options.TimerDurationInSeconds * 60.0);
 
 		/// <summary>Duration in frame counts (frame-update coroutine).</summary>
 		public static CoroutineForBuilder<CoroutineForFrameUnit> Frames<T>(this CoroutineForBuilder<T> b)
-			where T : struct, ICoroutineForBuilderStart => CreateFrameUnit(b, (Int32)b.Duration);
+			where T : struct, ICoroutineForBuilderStart => new(b.Script, b.Token,
+			CoroutineOptions.ForCounterCoroutine(b.Options.Name, b.Options.CounterTarget, Coroutine.Continuation.Finite,
+				Coroutine.Process.FrameUpdate));
 
-		private static CoroutineForBuilder<CoroutineForFrameUnit> CreateFrameUnit<T>(CoroutineForBuilder<T> b, Int32 duration)
-			where T : struct, ICoroutineForBuilderState
-		{
-			var options = CoroutineOptions.ForCounterCoroutine(b.Options.Name, duration, Coroutine.Continuation.Finite,
-				Coroutine.Process.FrameUpdate);
-			return new CoroutineForBuilder<CoroutineForFrameUnit>(b.Script, b.Token, options);
-		}
+		private static CoroutineForBuilder<CoroutineForFrameUnit> CreateFrameUnit<T>(CoroutineForBuilder<T> b, Double duration)
+			where T : struct, ICoroutineForBuilderState => new(b.Script, b.Token,
+			CoroutineOptions.ForTimerCoroutine(b.Options.Name, duration, Coroutine.Continuation.Finite));
 	}
 
 	public interface ICoroutineForHeartbeatUnit : ICoroutineForWhen {}
@@ -76,12 +71,8 @@ namespace LunyScript
 	{
 		/// <summary>Duration in heartbeat counts (heartbeat coroutine).</summary>
 		public static CoroutineForBuilder<CoroutineForHeartbeatUnit> Heartbeats<T>(this CoroutineForBuilder<T> b)
-			where T : struct, ICoroutineForBuilderStart
-		{
-			var options = CoroutineOptions.ForCounterCoroutine(b.Options.Name, (Int32)b.Duration, Coroutine.Continuation.Finite,
-				Coroutine.Process.Heartbeat);
-			return new CoroutineForBuilder<CoroutineForHeartbeatUnit>(b.Script, b.Token, options);
-		}
+			where T : struct, ICoroutineForBuilderStart => new(b.Script, b.Token, CoroutineOptions.ForCounterCoroutine(b.Options.Name,
+			b.Options.CounterTarget, Coroutine.Continuation.Finite, Coroutine.Process.Heartbeat));
 	}
 
 	public static class ForBuilderWhenExtensions

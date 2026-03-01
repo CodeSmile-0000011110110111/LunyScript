@@ -34,34 +34,39 @@ namespace LunyScript
 		public static CoroutineOptions ForOpenEndedCoroutine(String name, Coroutine.Process processMode) =>
 			new() { Name = name, ProcessMode = processMode };
 
-		public static CoroutineOptions ForTimerCoroutine(String name, Double duration, Coroutine.Continuation continuationMode) => new()
+		public static CoroutineOptions ForTimerCoroutine(String name, Double duration, Coroutine.Continuation continuationMode,
+			ScriptActionBlock[] processBlocks = null) => new()
 		{
 			Name = name,
 			TimerDurationInSeconds = duration,
 			ContinuationMode = continuationMode,
 			ProcessMode = Coroutine.Process.FrameUpdate,
+			OnFrameUpdate = processBlocks,
 		};
 
 		public static CoroutineOptions ForCounterCoroutine(String name, Int32 countTarget, Coroutine.Continuation continuationMode,
-			Coroutine.Process processMode) => new()
+			Coroutine.Process processMode, ScriptActionBlock[] processBlocks = null, ScriptActionBlock[] elapsedBlocks = null) => new()
 		{
 			Name = name,
 			CounterTarget = countTarget,
 			ContinuationMode = continuationMode,
 			ProcessMode = processMode,
+			OnFrameUpdate = processMode == Coroutine.Process.FrameUpdate ? processBlocks : null,
+			OnHeartbeat = processMode == Coroutine.Process.Heartbeat ? processBlocks : null,
+			OnElapsed = elapsedBlocks,
 		};
 
 		public static CoroutineOptions ForIntervalCoroutine(String name, Int32 interval, Int32 offset, Coroutine.Process processMode,
-			ScriptActionBlock[] doBlocks) => new()
+			ScriptActionBlock[] processBlocks) => new()
 		{
 			Name = name ?? GenerateUniqueName(interval, offset, processMode),
 			CounterTarget = interval, // time-sliced intervals are always counters
 			TimeSliceInterval = Math.Max(1, interval),
 			TimeSliceOffset = Math.Max(0, offset),
-			ProcessMode = processMode,
 			ContinuationMode = Coroutine.Continuation.Repeating,
-			OnFrameUpdate = processMode == Coroutine.Process.FrameUpdate ? doBlocks : null,
-			OnHeartbeat = processMode == Coroutine.Process.Heartbeat ? doBlocks : null,
+			ProcessMode = processMode,
+			OnFrameUpdate = processMode == Coroutine.Process.FrameUpdate ? processBlocks : null,
+			OnHeartbeat = processMode == Coroutine.Process.Heartbeat ? processBlocks : null,
 		};
 
 		private static String GenerateUniqueName(Int32 interval, Int32 delay, Coroutine.Process process) =>

@@ -28,9 +28,6 @@ namespace LunyScript.Coroutines
 		public static Coroutine Create(in CoroutineOptions options) => options.IsTimer ? new TimerCoroutine(options) :
 			options.IsCounter ? new CounterCoroutine(options) : new Coroutine(options);
 
-		// return options.IsTimer ? new TimerCoroutine(options) :
-		// 	options.IsCounter ? new CounterCoroutine(options) :
-		// 	new Coroutine(options);
 		private Coroutine() {} // hide default ctor
 
 		protected Coroutine(in CoroutineOptions options)
@@ -59,6 +56,7 @@ namespace LunyScript.Coroutines
 		}
 
 		private void StartWithoutEvents() => Start(false);
+
 		private void StartIfNew()
 		{
 			if (IsNew)
@@ -175,9 +173,10 @@ namespace LunyScript.Coroutines
 			}
 		}
 
-
 		protected virtual void OnStarted() {}
+
 		protected virtual void OnStopped() {}
+
 		// reserved for future use if a subclass needs these callbacks
 		protected virtual void OnPaused() {}
 		protected virtual void OnResumed() {}

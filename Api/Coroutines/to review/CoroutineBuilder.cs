@@ -45,7 +45,7 @@ namespace LunyScript
 		internal static ICoroutineBlock Finalize(Script script, BuilderToken token, in CoroutineOptions options)
 		{
 			WarnIfAllSequencesEmpty(script, token, options);
-			var block = script.RuntimeContext.Coroutines.Register(in options);
+			var block = script.RuntimeContext.Coroutines.Register(options);
 			script.FinalizeBuilderToken(token);
 			return block;
 		}

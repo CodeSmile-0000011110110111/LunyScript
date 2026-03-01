@@ -11,12 +11,12 @@ namespace LunyScript.SmokeTests.Coroutines
 			// Counts frames or heartbeats:
 			// In() => once-only
 			// Every() => repeating
-			var in0 = Counter("counter in beats").In(n).Heartbeats().Do(Debug.Log($"IN {n} beats"));
-			var in1 = Counter("counter in frames").In(n).Frames().Do(Debug.Log($"IN {n} frames"));
-			var every0 = Counter("counter every beats").Every(n).Heartbeats().Do(Debug.Log($"EVERY {n} beats"));
-			var every1 = Counter("counter every frames").Every(n).Frames().Do(Debug.Log($"EVERY {n} frames"));
+			var in0 = Counter("counter in beats").In(n).Heartbeats().Do(Debug.Log($"Counter IN {n} beats"));
+			var in1 = Counter("counter in frames").In(n).Frames().Do(Debug.Log($"Counter IN {n} frames"));
+			var every0 = Counter("counter every beats").Every(n).Heartbeats().Do(Debug.Log($"Counter EVERY {n} beats"));
+			var every1 = Counter("counter every frames").Every(n).Frames().Do(Debug.Log($"Counter EVERY {n} frames"));
 
-			Counter("stop").In(50).Frames().Do(in0.Stop(), in1.Pause(), every0.Stop(), every1.Pause());
+			Counter("stop").In(60).Frames().Do(in0.Stop(), in1.Pause(), every0.Stop(), every1.Pause(), Debug.Log("All counters stopped."));
 
 			// Example output
 			// Note: Heartbeats run multiple times per frame and decoupled from frame update, and its frequency

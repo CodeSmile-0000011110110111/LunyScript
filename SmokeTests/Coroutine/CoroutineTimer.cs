@@ -1,13 +1,21 @@
-﻿using LunyScript;
-
-namespace LunyScript.SmokeTests.Coroutines
+﻿namespace LunyScript.SmokeTests.Coroutines
 {
-	public partial class CoroutineTimer : Script
+	public class CoroutineTimer : Script
 	{
 		public override void Build(ScriptContext context)
 		{
-			var timeScaled = Timer("tic toc").Every(100).Milliseconds().Do(Debug.Log("Timer every second (100 ms at 10% time scale)")).TimeScale(0.1);
-			var slow = Timer("three seconds").In(3).Seconds().Do(Debug.Log("Timer in three seconds"));
+			var timeScaled = Timer("tic toc")
+				.Every(100)
+				.Milliseconds()
+				.WhenStarted(Debug.Log("tic toc STARTED"))
+				.WhenStopped(Debug.Log("tic toc STOPPED"))
+				.WhenPaused(Debug.Log("tic toc PAUSED"))
+				.WhenResumed(Debug.Log("tic toc RESUMED"))
+				.WhenElapsed(Debug.Log("tic toc ELAPSED"))
+				.Do(Debug.Log("Timer Every UPDATE"));
+			timeScaled.TimeScale(0.1);
+
+			Counter("stop").In(20).Frames().Do(timeScaled.Stop(), Debug.Log("Stopped Every(100/0.1) timer"));
 		}
 	}
 }
