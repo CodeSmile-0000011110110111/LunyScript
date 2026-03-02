@@ -4,29 +4,19 @@ using LunyScript.Blocks;
 using LunyScript.Blocks.Guards;
 using LunyScript.Blocks.PhysicsEvent;
 using LunyScript.Blocks.Predicates;
+using LunyScript.Exceptions;
 using System;
 
 namespace LunyScript
 {
-	// ── State tokens & interfaces ─────────────────────────────────────────────
-
 	public interface ICollisionBuilderState {}
-
-	/// <summary>Initial state: no filters or event handlers set yet.</summary>
 	public interface ICollisionBuilderStart : ICollisionBuilderState {}
-
-	/// <summary>At least one filter or handler has been set.</summary>
-	public interface ICollisionBuilderReady : ICollisionBuilderState {}
-
-	/// <summary>Layered() has been called — Masked() is now blocked.</summary>
-	public interface ICollisionBuilderLayered : ICollisionBuilderReady {}
-
-	/// <summary>Masked() has been called — Layered() is now blocked.</summary>
-	public interface ICollisionBuilderMasked : ICollisionBuilderReady {}
-
 	public struct CollisionBuilderStart : ICollisionBuilderStart {}
+	public interface ICollisionBuilderReady : ICollisionBuilderState {}
 	public struct CollisionBuilderReady : ICollisionBuilderReady {}
+	public interface ICollisionBuilderLayered : ICollisionBuilderReady {}
 	public struct CollisionBuilderLayered : ICollisionBuilderLayered {}
+	public interface ICollisionBuilderMasked : ICollisionBuilderReady {}
 	public struct CollisionBuilderMasked : ICollisionBuilderMasked {}
 
 	/// <summary>
@@ -36,20 +26,24 @@ namespace LunyScript
 	/// Parameters within a filter kind are OR-combined; different kinds are AND-combined.
 	/// Call <see cref="Do"/> to finalize and schedule the event sequences.
 	/// </summary>
-	public readonly struct OnPhysicsEventBuilder<T> where T : struct, ICollisionBuilderState
+	public readonly struct PhysicsEventBuilder<T> where T : struct, ICollisionBuilderState
 	{
 		internal readonly Script Script;
 		internal readonly PhysicsEventOptions Options;
 		internal readonly BuilderToken Token;
 
-		internal OnPhysicsEventBuilder(Script script, PhysicsEventOptions options, BuilderToken token)
+		internal PhysicsEventBuilder(Script script, Boolean isTrigger)
+		{
+			Script = script;
+			Options = new PhysicsEventOptions { IsTrigger = isTrigger };
+			Token = script.CreateBuilderToken("Physics Event", isTrigger ? "Trigger" : "Collision");
+		}
+
+		internal PhysicsEventBuilder(Script script, PhysicsEventOptions options, BuilderToken token)
 		{
 			Script = script;
 			Options = options;
 			Token = token;
-			var capturedScript = script;
-			var capturedOptions = options;
-			token?.SetAutoFinalizer(() => Finalize(capturedScript, capturedOptions, token));
 		}
 
 		// ── Filters ───────────────────────────────────────────────────────────
@@ -58,95 +52,98 @@ namespace LunyScript
 		/// Only react when the other object has one of the given tags (OR logic).
 		/// Combine with other filter kinds for AND logic across kinds.
 		/// </summary>
-		public OnPhysicsEventBuilder<CollisionBuilderReady> Tagged(params String[] tags)
+		public PhysicsEventBuilder<CollisionBuilderReady> Tagged(params String[] tags)
 		{
 			var options = Options;
 			options.Filter.Tags = tags;
-			options.Filter.TagPredicate = BlockExecutePredicates.ForTags(tags);
-			return new OnPhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
 		/// <summary>
 		/// Only react when the other object's name matches one of the given names (OR logic).
 		/// </summary>
-		public OnPhysicsEventBuilder<CollisionBuilderReady> With(params String[] names)
+		public PhysicsEventBuilder<CollisionBuilderReady> With(params String[] names)
 		{
 			var options = Options;
 			options.Filter.Names = names;
-			options.Filter.NamePredicate = BlockExecutePredicates.ForNames(names);
-			return new OnPhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
 		/// <summary>
 		/// Only react when the other object is on one of the given layers (OR logic).
 		/// Mutually exclusive with Masked() — Masked() becomes unavailable after calling this.
 		/// </summary>
-		public OnPhysicsEventBuilder<CollisionBuilderLayered> Layered(params String[] layerNames)
+		public PhysicsEventBuilder<CollisionBuilderLayered> Layered(params String[] layerNames)
 		{
 			var options = Options;
 			options.Filter.Layers = layerNames;
-			options.Filter.LayerPredicate = BlockExecutePredicates.ForLayers(layerNames);
-			return new OnPhysicsEventBuilder<CollisionBuilderLayered>(Script, options, Token);
+			return new PhysicsEventBuilder<CollisionBuilderLayered>(Script, options, Token);
 		}
 
 		/// <summary>
 		/// Only react when the other object's component list contains at least one of the given types (OR logic).
 		/// </summary>
-		public OnPhysicsEventBuilder<CollisionBuilderReady> Typed(params Type[] componentTypes)
+		public PhysicsEventBuilder<CollisionBuilderReady> Typed(params Type[] componentTypes)
 		{
 			var options = Options;
 			options.Filter.ComponentTypes = componentTypes;
-			options.Filter.TypePredicate = BlockExecutePredicates.ForComponentTypes(componentTypes);
-			return new OnPhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
 		// ── Event handlers ────────────────────────────────────────────────────
 
 		/// <summary>Blocks to run when the collision/trigger begins.</summary>
-		public OnPhysicsEventBuilder<CollisionBuilderReady> Begins(params ScriptActionBlock[] blocks)
+		public PhysicsEventBuilder<CollisionBuilderReady> Begins(params ScriptActionBlock[] blocks)
 		{
 			var options = Options;
 			options.BeginsBlocks = blocks;
-			return new OnPhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			SetAutoFinalizer(Script, Token, options);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
 		/// <summary>Blocks to run each physics step while the collision/trigger persists.</summary>
-		public OnPhysicsEventBuilder<CollisionBuilderReady> Continues(params ScriptActionBlock[] blocks)
+		public PhysicsEventBuilder<CollisionBuilderReady> Continues(params ScriptActionBlock[] blocks)
 		{
 			var options = Options;
 			options.UpdatesBlocks = blocks;
-			return new OnPhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			SetAutoFinalizer(Script, Token, options);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
 		/// <summary>Blocks to run when the collision/trigger ends.</summary>
-		public OnPhysicsEventBuilder<CollisionBuilderReady> Ends(params ScriptActionBlock[] blocks)
+		public PhysicsEventBuilder<CollisionBuilderReady> Ends(params ScriptActionBlock[] blocks)
 		{
 			var options = Options;
 			options.EndsBlocks = blocks;
-			return new OnPhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			SetAutoFinalizer(Script, Token, options);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
 		/// <summary>
 		/// Minimum seconds between successive reactions. Zero (default) means no cooldown.
 		/// The cooldown is checked before collision predicates; evaluated per event sequence.
 		/// </summary>
-		public OnPhysicsEventBuilder<CollisionBuilderReady> Cooldown(Double seconds)
+		public PhysicsEventBuilder<CollisionBuilderReady> Cooldown(Double seconds)
 		{
 			var options = Options;
-			options.Cooldown = seconds;
-			return new OnPhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			options.Cooldown = Math.Max(0.0, seconds);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
 		// ── Finalize ──────────────────────────────────────────────────────────
+		private void SetAutoFinalizer(Script script, BuilderToken token, PhysicsEventOptions options) =>
+			token?.SetAutoFinalizer(() => Finalize(script, token, options));
 
-		private static void Finalize(Script script, in PhysicsEventOptions options, BuilderToken token)
+		internal static void Finalize(Script script, BuilderToken token, in PhysicsEventOptions options)
 		{
+			if (options.BeginsBlocks == null && options.UpdatesBlocks == null && options.EndsBlocks == null)
+				throw new LunyScriptException($"{script}: Physics Event without any blocks");
+
 			var guards = BuildGuards(options.Cooldown);
+			var predicates = BuildPredicates(options.Filter);
 
 			if (options.IsTrigger)
 			{
-				var predicates = BuildTriggerPredicates(options.Filter);
-
 				if (options.BeginsBlocks != null)
 				{
 					var block = new TriggerSequenceBlock(options.BeginsBlocks, guards, predicates);
@@ -167,8 +164,6 @@ namespace LunyScript
 			}
 			else
 			{
-				var predicates = BuildCollisionPredicates(options.Filter);
-
 				if (options.BeginsBlocks != null)
 				{
 					var block = new CollisionSequenceBlock(options.BeginsBlocks, guards, predicates);
@@ -191,35 +186,15 @@ namespace LunyScript
 			script.FinalizeBuilderToken(token);
 		}
 
-		private static Predicate<LunyCollider>[] BuildCollisionPredicates(in PhysicsEventFilterOptions filter)
+		private static EventGuard[] BuildGuards(Double cooldownInSeconds)
 		{
-			var count = 0;
-			if (filter.NamePredicate != null)
-				count++;
-			if (filter.TagPredicate != null)
-				count++;
-			if (filter.LayerPredicate != null)
-				count++;
-			if (filter.TypePredicate != null)
-				count++;
-
-			if (count == 0)
+			if (cooldownInSeconds <= 0.0)
 				return null;
 
-			var predicates = new Predicate<LunyCollider>[count];
-			var i = 0;
-			if (filter.NamePredicate != null)
-				predicates[i++] = filter.NamePredicate;
-			if (filter.TagPredicate != null)
-				predicates[i++] = filter.TagPredicate;
-			if (filter.LayerPredicate != null)
-				predicates[i++] = filter.LayerPredicate;
-			if (filter.TypePredicate != null)
-				predicates[i++] = filter.TypePredicate;
-			return predicates;
+			return new EventGuard[] { new CooldownGuard<T>(cooldownInSeconds, LunyEngine.Instance.Time) };
 		}
 
-		private static Predicate<LunyCollider>[] BuildTriggerPredicates(in PhysicsEventFilterOptions filter)
+		private static Predicate<LunyCollider>[] BuildPredicates(in PhysicsEventFilterOptions filter)
 		{
 			var count = 0;
 			if (filter.Names != null)
@@ -237,57 +212,77 @@ namespace LunyScript
 			var predicates = new Predicate<LunyCollider>[count];
 			var i = 0;
 			if (filter.Names != null)
-				predicates[i++] = BlockExecutePredicates.ForNames(filter.Names);
+				predicates[i++] = PhysicsEventPredicates.ForNames(filter.Names);
 			if (filter.Tags != null)
-				predicates[i++] = BlockExecutePredicates.ForTags(filter.Tags);
+				predicates[i++] = PhysicsEventPredicates.ForTags(filter.Tags);
 			if (filter.Layers != null)
-				predicates[i++] = BlockExecutePredicates.ForLayers(filter.Layers);
+				predicates[i++] = PhysicsEventPredicates.ForLayers(filter.Layers);
 			else if (filter.LayerMask.HasValue)
-				predicates[i++] = BlockExecutePredicates.ForLayerMask(filter.LayerMask.Value);
+				predicates[i++] = PhysicsEventPredicates.ForLayerMask(filter.LayerMask.Value);
 			if (filter.ComponentTypes != null)
-				predicates[i++] = BlockExecutePredicates.ForComponentTypes(filter.ComponentTypes);
+				predicates[i++] = PhysicsEventPredicates.ForComponentTypes(filter.ComponentTypes);
 			return predicates;
-		}
-
-		private static EventGuard[] BuildGuards(Double cooldownInSeconds)
-		{
-			if (cooldownInSeconds <= 0.0)
-				return null;
-
-			return new EventGuard[] { new CooldownGuard<T>(cooldownInSeconds, LunyEngine.Instance.Time) };
 		}
 	}
 
-	// ── Extension methods (mutual exclusivity for Masked) ─────────────────────
-
-	public static class OnCollisionEventBuilderMaskedExtensions
+	// ── Layer/LayerMask Extensions (mutual exclusivity) ─────────────────────
+	public static class PhysicsEventLayerExtensions
 	{
-		/// <summary>
-		/// Only react when the other object's layer is included in the given bitmask.
-		/// Mutually exclusive with Layered() — unavailable after Layered() is called.
-		/// </summary>
-		public static OnPhysicsEventBuilder<CollisionBuilderMasked> Masked<T>(
-			this OnPhysicsEventBuilder<T> b, Int32 layerMask)
-			where T : struct, ICollisionBuilderStart
-		{
-			var options = b.Options;
-			options.Filter.LayerMask = layerMask;
-			options.Filter.LayerPredicate = BlockExecutePredicates.ForLayerMask(layerMask);
-			return new OnPhysicsEventBuilder<CollisionBuilderMasked>(b.Script, options, b.Token);
-		}
-
 		/// <summary>
 		/// Only react when the other object's layer name matches one of the given names (OR logic).
 		/// Mutually exclusive with Layered() — unavailable after Layered() is called.
 		/// </summary>
-		public static OnPhysicsEventBuilder<CollisionBuilderMasked> Masked<T>(
-			this OnPhysicsEventBuilder<T> b, params String[] layerNames)
+		public static PhysicsEventBuilder<CollisionBuilderMasked> Masked<T>(
+			this PhysicsEventBuilder<T> b, params String[] layerNames)
 			where T : struct, ICollisionBuilderStart
 		{
 			var options = b.Options;
 			options.Filter.Layers = layerNames;
-			options.Filter.LayerPredicate = BlockExecutePredicates.ForLayers(layerNames);
-			return new OnPhysicsEventBuilder<CollisionBuilderMasked>(b.Script, options, b.Token);
+			return new PhysicsEventBuilder<CollisionBuilderMasked>(b.Script, options, b.Token);
 		}
+
+		/// <summary>
+		/// Only react when the other object's layer is included in the given bitmask.
+		/// Mutually exclusive with Layered() — unavailable after Layered() is called.
+		/// </summary>
+		public static PhysicsEventBuilder<CollisionBuilderMasked> Masked<T>(
+			this PhysicsEventBuilder<T> b, Int32 layerMask)
+			where T : struct, ICollisionBuilderStart
+		{
+			var options = b.Options;
+			options.Filter.LayerMask = layerMask;
+			return new PhysicsEventBuilder<CollisionBuilderMasked>(b.Script, options, b.Token);
+		}
+	}
+
+	/// <summary>
+	/// Options DTO for collision/trigger event builders.
+	/// Holds filter options, event handler blocks, and optional cooldown.
+	/// </summary>
+	internal struct PhysicsEventOptions
+	{
+		public PhysicsEventFilterOptions Filter;
+		public ScriptActionBlock[] BeginsBlocks;
+		public ScriptActionBlock[] UpdatesBlocks;
+		public ScriptActionBlock[] EndsBlocks;
+		public Boolean IsTrigger;
+		/// <summary>Minimum seconds between successive reactions. Zero means no cooldown.</summary>
+		public Double Cooldown;
+	}
+
+	/// <summary>
+	/// Immutable filter options for collision/trigger event builders.
+	/// Each predicate is compiled once when the corresponding filter method is called.
+	/// Null predicate means that filter kind is inactive (no check performed).
+	/// Parameters within a kind are OR-combined; different kinds are AND-combined.
+	/// </summary>
+	internal struct PhysicsEventFilterOptions
+	{
+		// Raw filter data (kept for diagnostics and for re-compiling trigger predicates from collision filter)
+		public String[] Tags;
+		public String[] Names;
+		public String[] Layers;
+		public Int32? LayerMask;
+		public Type[] ComponentTypes;
 	}
 }

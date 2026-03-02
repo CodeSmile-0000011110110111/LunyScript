@@ -7,10 +7,11 @@ namespace LunyScript
 	/// <summary>
 	/// Handles object centered/targeted events, eg state, update, collision events.
 	/// </summary>
-	public readonly struct OnObjectEventBuilder
+	public readonly struct ObjectEventBuilder
 	{
 		private readonly Script _script;
-		internal OnObjectEventBuilder(Script script) => _script = script;
+		internal ObjectEventBuilder(Script script) => _script = script;
+
 		private ScriptEventScheduler Scheduler => _script.Scheduler;
 
 		/// <summary>
@@ -70,29 +71,13 @@ namespace LunyScript
 		/// Chain filter methods (Tagged, Named, Layered, Masked, Typed, Cooldown) then event handlers
 		/// (Begins, Updates, Ends) and finalize with Do().
 		/// </summary>
-		public OnPhysicsEventBuilder<CollisionBuilderStart> Collision
-		{
-			get
-			{
-				var options = new PhysicsEventOptions { IsTrigger = false };
-				var token = _script.CreateBuilderToken(nameof(Collision), "On.Collision");
-				return new OnPhysicsEventBuilder<CollisionBuilderStart>(_script, options, token);
-			}
-		}
+		public PhysicsEventBuilder<CollisionBuilderStart> Collision() => new(_script, false);
 
 		/// <summary>
 		/// Starts a filtered 3D trigger event builder.
 		/// Chain filter methods (Tagged, Named, Layered, Masked, Typed, Cooldown) then event handlers
 		/// (Begins, Updates, Ends) and finalize with Do().
 		/// </summary>
-		public OnPhysicsEventBuilder<CollisionBuilderStart> Trigger
-		{
-			get
-			{
-				var options = new PhysicsEventOptions { IsTrigger = true };
-				var token = _script.CreateBuilderToken(nameof(Trigger), "On.Trigger");
-				return new OnPhysicsEventBuilder<CollisionBuilderStart>(_script, options, token);
-			}
-		}
+		public PhysicsEventBuilder<CollisionBuilderStart> Trigger() => new(_script, true);
 	}
 }

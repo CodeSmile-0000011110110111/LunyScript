@@ -13,6 +13,7 @@ namespace LunyScript.Blocks.PhysicsEvent
 	internal abstract class PhysicsEventSequenceBlock : ScriptActionBlock, ISequenceBlock
 	{
 		private readonly EventGuard[] _guards;
+
 		public ScriptBlockId Id { get; }
 		public IReadOnlyList<ScriptActionBlock> Blocks { get; }
 		public Boolean IsEmpty => Blocks.Count == 0;
