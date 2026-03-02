@@ -18,8 +18,7 @@
 				.For(10)
 				.Heartbeats()
 				.WhenStarted(Debug.Log("For n Beats STARTED"))
-				.WhenElapsed(Debug.Log("For n Beats ELAPSED"))
-				.Do(Debug.Log("For n Beats Do(every beat)"));
+				.WhenElapsed(Debug.Log("For n Beats ELAPSED"));
 
 			Counter("for pause").In(3).Frames().Do(forFrames.Pause(), Debug.Log("Paused frame routine"));
 			Counter("for resume").In(8).Frames().Do(forFrames.Resume(), Debug.Log("Resumed frame routine"));

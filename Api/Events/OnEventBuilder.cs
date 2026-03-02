@@ -7,10 +7,10 @@ namespace LunyScript
 	/// <summary>
 	/// Handles object centered/targeted events, eg state, update, collision events.
 	/// </summary>
-	public readonly struct OnEventBuilder
+	public readonly struct OnObjectEventBuilder
 	{
 		private readonly Script _script;
-		internal OnEventBuilder(Script script) => _script = script;
+		internal OnObjectEventBuilder(Script script) => _script = script;
 		private ScriptEventScheduler Scheduler => _script.Scheduler;
 
 		/// <summary>

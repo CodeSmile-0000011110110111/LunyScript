@@ -11,8 +11,8 @@ namespace LunyScript.SmokeTests.Coroutines
 			var frame0 = Every(2).Frames().Do(Debug.Log("even frame"));
 			var frame1 = Every(2).Frames().Offset(1).Do(Debug.Log("odd frame"));
 
-			Counter("stop beats").In(10).Frames().Do(beat0.Stop(), beat1.Pause());
-			Counter("stop frames").In(10).Frames().Do(frame0.Stop(), frame1.Pause());
+			Counter("stop beats").In(10).Frames().Do(beat0.Stop(), beat1.Pause(), Debug.Log("Stopped beat counters"));
+			Counter("stop frames").In(10).Frames().Do(frame0.Stop(), frame1.Pause(), Debug.Log("Stopped frame counters"));
 		}
 	}
 }

@@ -5,13 +5,6 @@ using System;
 
 namespace LunyScript
 {
-	public interface ICoroutineBuilderState {}
-	public interface ICoroutineFrameUnit : ICoroutineBuilderState {}
-	public interface ICoroutineHeartbeatUnit : ICoroutineBuilderState {}
-	public interface ICoroutineReadyUnit : ICoroutineBuilderState {}
-	public struct CoroutineFrameUnit : ICoroutineFrameUnit, ICoroutineReadyUnit {}
-	public struct CoroutineHeartbeatUnit : ICoroutineHeartbeatUnit, ICoroutineReadyUnit {}
-
 	/// <summary>
 	/// Entry point for the Coroutine fluent builder chain.
 	/// Usage: Coroutine("name").For(3).Seconds().OnFrameUpdate(blocks).WhenElapsed(blocks);
@@ -34,13 +27,15 @@ namespace LunyScript
 		/// <summary>Sets the coroutine duration. Returns a builder to specify the time unit.</summary>
 		public CoroutineForBuilder<CoroutineForBuilderStart> For(Double duration) => new(_script, _token, _name, duration);
 
+		/*
 		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every frame.</summary>
-		public CoroutineUpdateBuilder<CoroutineFrameUnit> OnFrameUpdate(params ScriptActionBlock[] blocks) => new(_script, _token,
+		public CoroutineBuilder<CoroutineFrameUpdate> OnFrameUpdate(params ScriptActionBlock[] blocks) => new(_script, _token,
 			CoroutineOptions.ForOpenEndedCoroutine(_name, Coroutine.Process.FrameUpdate) with { OnFrameUpdate = blocks });
 
 		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every heartbeat (fixed step).</summary>
-		public CoroutineUpdateBuilder<CoroutineHeartbeatUnit> OnHeartbeat(params ScriptActionBlock[] blocks) => new(_script, _token,
+		public CoroutineBuilder<CoroutineHeartbeat> OnHeartbeat(params ScriptActionBlock[] blocks) => new(_script, _token,
 			CoroutineOptions.ForOpenEndedCoroutine(_name, Coroutine.Process.Heartbeat) with { OnHeartbeat = blocks });
+			*/
 
 		internal static ICoroutineBlock Finalize(Script script, BuilderToken token, in CoroutineOptions options)
 		{
@@ -58,61 +53,60 @@ namespace LunyScript
 		}
 	}
 
+	/*
+	public interface ICoroutineBuilderState {}
+	public interface ICoroutineFrameUpdate : ICoroutineBuilderState {}
+	public struct CoroutineFrameUpdate : ICoroutineFrameUpdate, ICoroutineFinal {}
+	public interface ICoroutineHeartbeat : ICoroutineBuilderState {}
+	public struct CoroutineHeartbeat : ICoroutineHeartbeat, ICoroutineFinal {}
+
 	/// <summary>
 	/// Generic step-builder for open-ended coroutines (frame-update or heartbeat).
-	/// Returned by <c>CoroutineBuilder.OnFrameUpdate()</c> and <c>CoroutineBuilder.OnHeartbeat()</c>.
 	/// </summary>
-	public readonly struct CoroutineUpdateBuilder<T> where T : struct, ICoroutineBuilderState
+	public readonly struct CoroutineBuilder<T> where T : struct, ICoroutineBuilderState
 	{
 		internal readonly Script Script;
 		internal readonly BuilderToken Token;
 		internal readonly CoroutineOptions Options;
 
-		internal CoroutineUpdateBuilder(Script script, BuilderToken token, in CoroutineOptions options)
+		internal CoroutineBuilder(Script script, BuilderToken token, CoroutineOptions options)
 		{
 			Script = script;
 			Token = token;
 			Options = options;
-
-			var capturedScript = script;
-			var capturedOptions = options;
-			token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(capturedScript, token, capturedOptions));
+			token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(script, token, options));
 		}
 	}
 
-	public static class CoroutineUpdateBuilderExtensions
+	public interface ICoroutineFinal : ICoroutineBuilderState {}
+
+	public static class CoroutineBuilderExtensions
 	{
 		/// <summary>Blocks to run when the coroutine starts.</summary>
-		public static CoroutineUpdateBuilder<T> WhenStarted<T>(this CoroutineUpdateBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token, b.Options with { OnStarted = blocks });
+		public static CoroutineBuilder<T> WhenStarted<T>(this CoroutineBuilder<T> b, params ScriptActionBlock[] blocks)
+			where T : struct, ICoroutineFinal => new(b.Script, b.Token, b.Options);
 
+		// var options = b.Options with { OnStarted = blocks };
+		// b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
+		// return new CoroutineBuilder<T>(b.Script, b.Token, options);
 		/// <summary>Blocks to run when the coroutine stops.</summary>
-		public static CoroutineUpdateBuilder<T> WhenStopped<T>(this CoroutineUpdateBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token, b.Options with { OnStopped = blocks });
+		public static CoroutineBuilder<T> WhenStopped<T>(this CoroutineBuilder<T> b, params ScriptActionBlock[] blocks)
+			where T : struct, ICoroutineFinal => new(b.Script, b.Token, b.Options with { OnStopped = blocks });
 
 		/// <summary>Blocks to run when the coroutine is paused.</summary>
-		public static CoroutineUpdateBuilder<T> WhenPaused<T>(this CoroutineUpdateBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token, b.Options with { OnPaused = blocks });
+		public static CoroutineBuilder<T> WhenPaused<T>(this CoroutineBuilder<T> b, params ScriptActionBlock[] blocks)
+			where T : struct, ICoroutineFinal => new(b.Script, b.Token, b.Options with { OnPaused = blocks });
 
 		/// <summary>Blocks to run when the coroutine is resumed.</summary>
-		public static CoroutineUpdateBuilder<T> WhenResumed<T>(this CoroutineUpdateBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineReadyUnit => new(b.Script, b.Token, b.Options with { OnResumed = blocks });
+		public static CoroutineBuilder<T> WhenResumed<T>(this CoroutineBuilder<T> b, params ScriptActionBlock[] blocks)
+			where T : struct, ICoroutineFinal => new(b.Script, b.Token, b.Options with { OnResumed = blocks });
+	}
 
-		/*
-		/// <summary>Additional frame-update blocks to run each frame.</summary>
-		public static CoroutineUpdateBuilder<CoroutineFrameUnit> OnFrameUpdate<T>(this CoroutineUpdateBuilder<T> b,
-			params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineFrameUnit => new(b.Script, b.Token, b.Options with { OnFrameUpdate = blocks });
-
-		/// <summary>Additional heartbeat blocks to run each fixed step.</summary>
-		public static CoroutineUpdateBuilder<CoroutineHeartbeatUnit> OnHeartbeat<T>(this CoroutineUpdateBuilder<T> b,
-			params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineHeartbeatUnit => new(b.Script, b.Token, b.Options with { OnHeartbeat = blocks });
-			*/
-
+	public static class CoroutineBuilderFinalExtensions
+	{
 		/// <summary>Additional update blocks. Finalizes the builder.</summary>
-		public static ICoroutineBlock Do<T>(this CoroutineUpdateBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineReadyUnit
+		public static ICoroutineBlock Do<T>(this CoroutineBuilder<T> b, params ScriptActionBlock[] blocks)
+			where T : struct, ICoroutineFinal
 		{
 			if (b.Options.ProcessMode == Coroutine.Process.Heartbeat)
 				return CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnHeartbeat = blocks });
@@ -123,4 +117,5 @@ namespace LunyScript
 			throw new ArgumentOutOfRangeException(nameof(b.Options.ProcessMode), b.Options.ProcessMode.ToString());
 		}
 	}
+*/
 }

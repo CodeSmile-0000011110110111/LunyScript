@@ -78,24 +78,49 @@ namespace LunyScript
 	public static class ForBuilderWhenExtensions
 	{
 		/// <summary>Blocks to run when the coroutine starts.</summary>
-		public static CoroutineForBuilder<T> WhenStarted<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineForWhen => new(b.Script, b.Token, b.Options with { OnStarted = blocks });
+		public static CoroutineForBuilder<T> WhenStarted<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] startedBlocks)
+			where T : struct, ICoroutineForWhen
+		{
+			var options = b.Options with { OnStarted = startedBlocks };
+			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
+			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
+		}
 
 		/// <summary>Blocks to run when the coroutine stops.</summary>
-		public static CoroutineForBuilder<T> WhenStopped<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineForWhen => new(b.Script, b.Token, b.Options with { OnStopped = blocks });
+		public static CoroutineForBuilder<T> WhenStopped<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] stoppedBlocks)
+			where T : struct, ICoroutineForWhen
+		{
+			var options = b.Options with { OnStopped = stoppedBlocks };
+			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
+			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
+		}
 
 		/// <summary>Blocks to run when the coroutine is paused.</summary>
-		public static CoroutineForBuilder<T> WhenPaused<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineForWhen => new(b.Script, b.Token, b.Options with { OnPaused = blocks });
+		public static CoroutineForBuilder<T> WhenPaused<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] pausedBlocks)
+			where T : struct, ICoroutineForWhen
+		{
+			var options = b.Options with { OnPaused = pausedBlocks };
+			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
+			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
+		}
 
 		/// <summary>Blocks to run when the coroutine is resumed.</summary>
-		public static CoroutineForBuilder<T> WhenResumed<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineForWhen => new(b.Script, b.Token, b.Options with { OnResumed = blocks });
+		public static CoroutineForBuilder<T> WhenResumed<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] resumedBlocks)
+			where T : struct, ICoroutineForWhen
+		{
+			var options = b.Options with { OnResumed = resumedBlocks };
+			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
+			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
+		}
 
 		/// <summary>Blocks to run when the coroutine elapsed.</summary>
-		public static CoroutineForBuilder<T> WhenElapsed<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineForWhen => new(b.Script, b.Token, b.Options with { OnElapsed = blocks });
+		public static CoroutineForBuilder<T> WhenElapsed<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] elapsedBlocks)
+			where T : struct, ICoroutineForWhen
+		{
+			var options = b.Options with { OnElapsed = elapsedBlocks };
+			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
+			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
+		}
 	}
 
 	public static class ForBuilderFinalExtensions

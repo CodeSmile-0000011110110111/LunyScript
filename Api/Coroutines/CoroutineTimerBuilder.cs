@@ -86,31 +86,54 @@ namespace LunyScript
 	public static class TimerBuilderWhenExtensions
 	{
 		/// <summary>Blocks to run when the coroutine starts.</summary>
-		public static CoroutineTimerBuilder<T> WhenStarted<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineTimerWhen => new(b.Script, b.Token, b.Options with { OnStarted = blocks });
+		public static CoroutineTimerBuilder<T> WhenStarted<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] startedBlocks)
+			where T : struct, ICoroutineTimerWhen
+		{
+			var options = b.Options with { OnStarted = startedBlocks };
+			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
+			return new CoroutineTimerBuilder<T>(b.Script, b.Token, options);
+		}
 
 		/// <summary>Blocks to run when the coroutine stops.</summary>
-		public static CoroutineTimerBuilder<T> WhenStopped<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineTimerWhen => new(b.Script, b.Token, b.Options with { OnStopped = blocks });
+		public static CoroutineTimerBuilder<T> WhenStopped<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] stoppedBlocks)
+			where T : struct, ICoroutineTimerWhen
+		{
+			var options = b.Options with { OnStopped = stoppedBlocks };
+			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
+			return new CoroutineTimerBuilder<T>(b.Script, b.Token, options);
+		}
 
 		/// <summary>Blocks to run when the coroutine is paused.</summary>
-		public static CoroutineTimerBuilder<T> WhenPaused<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineTimerWhen => new(b.Script, b.Token, b.Options with { OnPaused = blocks });
+		public static CoroutineTimerBuilder<T> WhenPaused<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] pausedBlocks)
+			where T : struct, ICoroutineTimerWhen
+		{
+			var options = b.Options with { OnPaused = pausedBlocks };
+			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
+			return new CoroutineTimerBuilder<T>(b.Script, b.Token, options);
+		}
 
 		/// <summary>Blocks to run when the coroutine is resumed.</summary>
-		public static CoroutineTimerBuilder<T> WhenResumed<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineTimerWhen => new(b.Script, b.Token, b.Options with { OnResumed = blocks });
-
-		/// <summary>Blocks to run when the coroutine elapsed.</summary>
-		public static CoroutineTimerBuilder<T> WhenElapsed<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] blocks)
-			where T : struct, ICoroutineTimerWhen => new(b.Script, b.Token, b.Options with { OnElapsed = blocks });
+		public static CoroutineTimerBuilder<T> WhenResumed<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] resumedBlocks)
+			where T : struct, ICoroutineTimerWhen
+		{
+			var options = b.Options with { OnResumed = resumedBlocks };
+			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
+			return new CoroutineTimerBuilder<T>(b.Script, b.Token, options);
+		}
 	}
 
 	public static class TimerBuilderFinalExtensions
 	{
+		/*
+		/// <summary>Blocks to run when the coroutine elapsed.</summary>
+		public static ITimerCoroutineBlock WhenElapsed<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] elapsedBlocks)
+			where T : struct, ICoroutineTimerWhen =>
+			(ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnElapsed = elapsedBlocks });
+			*/
+
 		/// <summary>Completes the timer and (optional) specifies blocks to run every frame.</summary>
-		public static ITimerCoroutineBlock Do<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] processBlocks)
+		public static ITimerCoroutineBlock Do<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] elapsedBlocks)
 			where T : struct, ICoroutineTimerUnitSet =>
-			(ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnFrameUpdate = processBlocks });
+			(ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnElapsed = elapsedBlocks });
 	}
 }

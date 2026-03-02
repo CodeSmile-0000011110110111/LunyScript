@@ -4,18 +4,23 @@
 	{
 		public override void Build(ScriptContext context)
 		{
-			var timer = Timer("tic toc")
+			var timer = Timer("Every Timer")
 				.Every(3)
 				.Milliseconds()
-				.WhenStarted(Debug.Log("tic toc STARTED"))
-				.WhenStopped(Debug.Log("tic toc STOPPED"))
-				.WhenPaused(Debug.Log("tic toc PAUSED"))
-				.WhenResumed(Debug.Log("tic toc RESUMED"))
-				.WhenElapsed(Debug.Log("tic toc ELAPSED"))
-				.Do(Debug.Log("Timer Every UPDATE"));
+				.WhenStarted(Debug.Log("Every Timer STARTED"))
+				.WhenStopped(Debug.Log("Every Timer STOPPED"))
+				.WhenPaused(Debug.Log("Every Timer PAUSED"))
+				.WhenResumed(Debug.Log("Every Timer RESUMED"))
+				.Do(Debug.Log("Every Timer ELAPSED"));
 			timer.TimeScale(0.1);
 
-			Counter("stop").In(30).Frames().Do(timer.Stop(), Debug.Log("Stopped Every(30 ms = 3/0.1) timer"));
+			Timer("In Timer")
+				.In(0.98765)
+				.Seconds()
+				.WhenStarted(Debug.Log("In Timer STARTED"))
+				.Do(Debug.Log("In Timer ELAPSED"));
+
+			Counter("stop").In(30).Frames().Do(timer.Stop(), Debug.Log("Stopped all timers"));
 		}
 	}
 }
