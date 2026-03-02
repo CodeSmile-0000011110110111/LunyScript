@@ -12,8 +12,8 @@ namespace LunyScript.Diagnostics
 	/// </summary>
 	public sealed class ScriptBlockProfiler
 	{
-		private readonly Dictionary<ScriptBlockID, ScriptBlockMetrics> _metrics = new();
-		private readonly Dictionary<ScriptBlockID, Stopwatch> _activeBlocks = new();
+		private readonly Dictionary<ScriptBlockId, ScriptBlockMetrics> _metrics = new();
+		private readonly Dictionary<ScriptBlockId, Stopwatch> _activeBlocks = new();
 		private Int32 _rollingAverageWindow = 60;
 
 		public Int32 RollingAverageWindow
@@ -23,7 +23,7 @@ namespace LunyScript.Diagnostics
 		}
 
 		[Conditional("DEBUG")] [Conditional("LUNYSCRIPT_DEBUG")]
-		public void BeginBlock(ScriptBlockID scriptBlockId)
+		public void BeginBlock(ScriptBlockId scriptBlockId)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG || LUNYSCRIPT_PROFILE
 			if (!_activeBlocks.TryGetValue(scriptBlockId, out var sw))
@@ -36,7 +36,7 @@ namespace LunyScript.Diagnostics
 		}
 
 		[Conditional("DEBUG")] [Conditional("LUNYSCRIPT_DEBUG")] [Conditional("LUNYSCRIPT_PROFILE")]
-		public void EndBlock(ScriptBlockID scriptBlockId, Type blockType)
+		public void EndBlock(ScriptBlockId scriptBlockId, Type blockType)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG || LUNYSCRIPT_PROFILE
 			if (!_activeBlocks.TryGetValue(scriptBlockId, out var sw))
@@ -60,7 +60,7 @@ namespace LunyScript.Diagnostics
 		}
 
 		[Conditional("DEBUG")] [Conditional("LUNYSCRIPT_DEBUG")] [Conditional("LUNYSCRIPT_PROFILE")]
-		public void RecordError(ScriptBlockID scriptBlockId, Exception ex)
+		public void RecordError(ScriptBlockId scriptBlockId, Exception ex)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG || LUNYSCRIPT_PROFILE
 			if (_metrics.TryGetValue(scriptBlockId, out var metrics))

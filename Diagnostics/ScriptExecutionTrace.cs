@@ -10,7 +10,7 @@ namespace LunyScript.Diagnostics
 	{
 		public Int64 FrameCount;
 		public Double ElapsedSeconds;
-		public ScriptBlockID ScriptSequenceId;
+		public ScriptBlockId ScriptSequenceId;
 		public Type BlockType;
 		public String BlockDescription;
 		public Exception Error;

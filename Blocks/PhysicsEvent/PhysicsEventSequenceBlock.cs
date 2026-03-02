@@ -13,7 +13,7 @@ namespace LunyScript.Blocks.PhysicsEvent
 	internal abstract class PhysicsEventSequenceBlock : ScriptActionBlock, ISequenceBlock
 	{
 		private readonly EventGuard[] _guards;
-		public ScriptBlockID ID { get; }
+		public ScriptBlockId Id { get; }
 		public IReadOnlyList<ScriptActionBlock> Blocks { get; }
 		public Boolean IsEmpty => Blocks.Count == 0;
 
@@ -22,7 +22,7 @@ namespace LunyScript.Blocks.PhysicsEvent
 			if (blocks == null || blocks.Count == 0)
 				throw new ArgumentException("Sequence must contain at least one block", nameof(blocks));
 
-			ID = ScriptBlockID.Generate();
+			Id = ScriptBlockId.Generate();
 			Blocks = blocks;
 			_guards = guards;
 		}

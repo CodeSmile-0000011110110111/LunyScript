@@ -67,7 +67,7 @@ namespace LunyScript
 			{
 				FrameCount = timeService?.FrameCount ?? -1,
 				ElapsedSeconds = timeService?.ElapsedSeconds ?? -1.0,
-				ScriptSequenceId = sequence.ID,
+				ScriptSequenceId = sequence.Id,
 				BlockType = blockType,
 				BlockDescription = sequence.ToString(),
 			};
@@ -102,8 +102,8 @@ namespace LunyScript
 		{
 			LunyTraceLogger.LogInfoInitializing(this);
 
-			ScriptDefID.Reset();
-			ScriptBlockID.Reset();
+			ScriptId.Reset();
+			ScriptBlockId.Reset();
 			_scriptEngine = new ScriptEngine(this); // public API interface (split to ensure users don't call OnStartup etc)
 			_scripts = new ScriptDefinitionRegistry(); // performs LunyScript type discovery
 			_contexts = new ScriptRuntimeContextRegistry();
@@ -178,7 +178,7 @@ namespace LunyScript
 			var scriptedObjects = lunyEngine.Scene.GetObjects(scriptNames);
 
 			// Filter out objects that already have a context to avoid double activation
-			var newScriptedObjects = scriptedObjects.Where(obj => _contexts.GetByNativeObjectID(obj.NativeObjectID) == null).ToList();
+			var newScriptedObjects = scriptedObjects.Where(obj => _contexts.GetByNativeObjectID(obj.NativeObjectId) == null).ToList();
 
 			ScriptBuilder.BuildAndActivateLunyScripts(this, newScriptedObjects);
 		}
@@ -188,7 +188,7 @@ namespace LunyScript
 			//LunyLogger.LogInfo($"{nameof(OnObjectRegistered)}: {lunyObject}", this);
 
 			// Check if object is already scripted to avoid double activation
-			if (_contexts.GetByNativeObjectID(lunyObject.NativeObjectID) != null)
+			if (_contexts.GetByNativeObjectID(lunyObject.NativeObjectId) != null)
 			{
 				LunyLogger.LogWarning($"{lunyObject} already runs a script", this);
 				return;
@@ -201,7 +201,7 @@ namespace LunyScript
 		public void OnObjectUnregistered(ILunyObject lunyObject)
 		{
 			// Cleanup context for engine-side auto-destroyed objects (scene load)
-			var context = _contexts.GetByNativeObjectID(lunyObject.NativeObjectID);
+			var context = _contexts.GetByNativeObjectID(lunyObject.NativeObjectId);
 			if (context != null)
 			{
 				LunyLogger.LogInfo($"{nameof(OnObjectUnregistered)}: unregistering {context} ({context.GetHashCode()})");

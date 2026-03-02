@@ -10,7 +10,7 @@ namespace LunyScript
 	public interface IScriptEngine
 	{
 		ITable GlobalVariables { get; }
-		IScriptRuntimeContext GetScriptContext(LunyNativeObjectID lunyNativeObjectID);
+		IScriptRuntimeContext GetScriptContext(LunyNativeObjectId lunyNativeObjectID);
 	}
 
 	internal interface IScriptEngineInternal
@@ -55,7 +55,7 @@ namespace LunyScript
 			Instance = this;
 		}
 
-		public IScriptRuntimeContext GetScriptContext(LunyNativeObjectID lunyNativeObjectID) =>
+		public IScriptRuntimeContext GetScriptContext(LunyNativeObjectId lunyNativeObjectID) =>
 			_runner.Contexts.GetByNativeObjectID(lunyNativeObjectID);
 
 		event Action<ScriptRuntimeContext> IScriptEngineInternal.OnScriptBuilt

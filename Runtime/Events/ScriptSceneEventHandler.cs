@@ -13,7 +13,7 @@ namespace LunyScript.Events
 	{
 		[NotNull] private readonly ScriptRuntimeContextRegistry _contexts;
 
-		private readonly List<LunyObjectID> _subscriberObjectIDs = new();
+		private readonly List<LunyObjectId> _subscriberObjectIDs = new();
 
 		internal ScriptSceneEventHandler(ScriptRuntimeContextRegistry runtimeContextRegistry) =>
 			_contexts = runtimeContextRegistry ?? throw new ArgumentNullException(nameof(runtimeContextRegistry));
@@ -23,7 +23,7 @@ namespace LunyScript.Events
 		internal void Register(ScriptRuntimeContext runtimeContext)
 		{
 			if (runtimeContext.Scheduler.IsObservingAnyOf(typeof(LunySceneEvent)))
-				_subscriberObjectIDs.Add(runtimeContext.LunyObject.LunyObjectID);
+				_subscriberObjectIDs.Add(runtimeContext.LunyObject.LunyObjectId);
 		}
 
 		public void OnSceneUnloaded(ILunyScene scene)
@@ -38,7 +38,7 @@ namespace LunyScript.Events
 				TryRunForEvent(subscriberID, LunySceneEvent.OnSceneLoaded);
 		}
 
-		private void TryRunForEvent(LunyObjectID subscriberID, LunySceneEvent sceneEvent)
+		private void TryRunForEvent(LunyObjectId subscriberID, LunySceneEvent sceneEvent)
 		{
 			var context = _contexts.GetByLunyObjectID(subscriberID);
 			var sequences = context?.Scheduler?.GetSceneEventSequences(sceneEvent);

@@ -8,7 +8,7 @@ namespace LunyScript.Diagnostics
 	/// </summary>
 	public sealed class ScriptBlockMetrics
 	{
-		public ScriptBlockID ScriptBlockId;
+		public ScriptBlockId ScriptBlockId;
 		public Type BlockType;
 		public Int32 CallCount;
 		public Double TotalMs;

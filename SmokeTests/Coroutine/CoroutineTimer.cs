@@ -4,8 +4,8 @@
 	{
 		public override void Build(ScriptContext context)
 		{
-			var timeScaled = Timer("tic toc")
-				.Every(100)
+			var timer = Timer("tic toc")
+				.Every(3)
 				.Milliseconds()
 				.WhenStarted(Debug.Log("tic toc STARTED"))
 				.WhenStopped(Debug.Log("tic toc STOPPED"))
@@ -13,9 +13,9 @@
 				.WhenResumed(Debug.Log("tic toc RESUMED"))
 				.WhenElapsed(Debug.Log("tic toc ELAPSED"))
 				.Do(Debug.Log("Timer Every UPDATE"));
-			timeScaled.TimeScale(0.1);
+			timer.TimeScale(0.1);
 
-			Counter("stop").In(20).Frames().Do(timeScaled.Stop(), Debug.Log("Stopped Every(100/0.1) timer"));
+			Counter("stop").In(30).Frames().Do(timer.Stop(), Debug.Log("Stopped Every(30 ms = 3/0.1) timer"));
 		}
 	}
 }

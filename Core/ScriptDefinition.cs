@@ -8,7 +8,7 @@ namespace LunyScript
 	/// </summary>
 	public interface IScriptDefinition
 	{
-		ScriptDefID ScriptDefId { get; }
+		ScriptId ScriptId { get; }
 		Type Type { get; }
 		String Name { get; }
 	}
@@ -22,7 +22,7 @@ namespace LunyScript
 		/// <summary>
 		/// Unique identifier for this script definition.
 		/// </summary>
-		public ScriptDefID ScriptDefId { get; }
+		public ScriptId ScriptId { get; }
 
 		/// <summary>
 		/// The C# Type of the LunyScript subclass.
@@ -43,10 +43,10 @@ namespace LunyScript
 			if (!typeof(Script).IsAssignableFrom(type))
 				throw new ArgumentException($"Type {type.Name} does not inherit from {nameof(Script)}", nameof(type));
 
-			ScriptDefId = ScriptDefID.Generate();
+			ScriptId = ScriptId.Generate();
 			Type = type;
 		}
 
-		public override String ToString() => $"{ScriptDefId} -> {Type.FullName}";
+		public override String ToString() => $"{ScriptId} -> {Type.FullName}";
 	}
 }

@@ -110,10 +110,7 @@ namespace LunyScript
 	{
 		/// <summary>Completes the timer and (optional) specifies blocks to run every frame.</summary>
 		public static ITimerCoroutineBlock Do<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] processBlocks)
-			where T : struct, ICoroutineTimerUnitSet
-		{
-				return (ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnFrameUpdate = processBlocks });
-
-		}
+			where T : struct, ICoroutineTimerUnitSet =>
+			(ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnFrameUpdate = processBlocks });
 	}
 }

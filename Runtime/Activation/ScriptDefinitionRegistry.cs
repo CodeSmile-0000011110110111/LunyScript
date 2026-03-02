@@ -12,7 +12,7 @@ namespace LunyScript.Activation
 	/// </summary>
 	internal sealed class ScriptDefinitionRegistry
 	{
-		private readonly Dictionary<ScriptDefID, ScriptDefinition> _scriptsById = new();
+		private readonly Dictionary<ScriptId, ScriptDefinition> _scriptsById = new();
 		private readonly Dictionary<String, ScriptDefinition> _scriptsByName = new();
 
 		public ScriptDefinitionRegistry() => DiscoverScripts();
@@ -48,7 +48,7 @@ namespace LunyScript.Activation
 				throw new LunyScriptException($"{scriptType.Name}: duplicate type name");
 
 			var definition = new ScriptDefinition(scriptType);
-			_scriptsById[definition.ScriptDefId] = definition;
+			_scriptsById[definition.ScriptId] = definition;
 			_scriptsByName[definition.Name] = definition;
 
 			//LunyLogger.LogInfo($"{definition} registered", this);
@@ -57,9 +57,9 @@ namespace LunyScript.Activation
 		/// <summary>
 		/// Gets a script definition by ID.
 		/// </summary>
-		public ScriptDefinition GetByID(ScriptDefID defId)
+		public ScriptDefinition GetById(ScriptId id)
 		{
-			_scriptsById.TryGetValue(defId, out var definition);
+			_scriptsById.TryGetValue(id, out var definition);
 			return definition;
 		}
 

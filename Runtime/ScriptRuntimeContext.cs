@@ -13,7 +13,7 @@ namespace LunyScript
 	/// </summary>
 	public interface IScriptRuntimeContext
 	{
-		ScriptDefID ScriptDefId { get; }
+		ScriptId ScriptId { get; }
 		Type ScriptType { get; }
 		ILunyObject LunyObject { get; }
 		ITable GlobalVariables { get; }
@@ -52,7 +52,7 @@ namespace LunyScript
 		/// <summary>
 		/// The ID of the script definition this context executes.
 		/// </summary>
-		public ScriptDefID ScriptDefId => _scriptDef.ScriptDefId;
+		public ScriptId ScriptId => _scriptDef.ScriptId;
 		/// <summary>
 		/// The C# Type of the script (for hot reload matching).
 		/// </summary>
@@ -122,6 +122,6 @@ namespace LunyScript
 		}
 
 		~ScriptRuntimeContext() => LunyTraceLogger.LogInfoFinalized(this);
-		public override String ToString() => $"{ScriptDefId} -> {LunyObject}";
+		public override String ToString() => $"{ScriptId} -> {LunyObject}";
 	}
 }
