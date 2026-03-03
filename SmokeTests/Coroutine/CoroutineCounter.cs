@@ -4,7 +4,7 @@ namespace LunyScript.SmokeTests.Coroutines
 {
 	public class CoroutineCounter : Script
 	{
-		private const Int32 N = 5;
+		private const Int32 N = 10;
 
 		public override void Build(ScriptContext context)
 		{
@@ -14,28 +14,45 @@ namespace LunyScript.SmokeTests.Coroutines
 			// the current (monitor's) refresh rate. Thus heartbeat count "every 5 beats" does not equate
 			// to a framecount sequence like 1,6,11,16,.. as you might expect.
 
+			var beats = N * 2;
+
 			// Every() => repeating
-			var every0 = Counter("Counter EVERY beats").Every(N).Heartbeats().Do(Debug.Log($"Counter EVERY {N} beats"));
-			var every1 = Counter("Counter EVERY frames")
+			var every0 = Coroutine($"Counter EVERY {beats} beats")
+				.Every(beats)
+				.Heartbeats()
+				.WhenPaused(Debug.Log($"Counter EVERY {N} beats PAUSED"))
+				.WhenResumed(Debug.Log($"Counter EVERY {N} beats RESUMED"))
+				//.WhenProcessed(Debug.Log($"Counter EVERY {N} beats PROCESSED"))
+				.WhenElapsed(Debug.Log($"Counter EVERY {beats} beats ELAPSED"));
+
+			var every1 = Coroutine($"Counter EVERY {N} frames")
 				.Every(N)
 				.Frames()
-				.WhenStarted(Debug.Log("Counter EVERY frames STARTED"))
-				.WhenStopped(Debug.Log("Counter EVERY frames STOPPED"))
-				.WhenPaused(Debug.Log("Counter EVERY frames PAUSED"))
-				.WhenResumed(Debug.Log("Counter EVERY frames RESUMED"))
-				.Do(Debug.Log($"Counter EVERY {N} frames"));
+				.WhenStarted(Debug.Log($"Counter EVERY {N} frames STARTED"))
+				.WhenStopped(Debug.Log($"Counter EVERY {N} frames STOPPED"))
+				.WhenPaused(Debug.Log($"Counter EVERY {N} frames PAUSED"))
+				.WhenResumed(Debug.Log($"Counter EVERY {N} frames RESUMED"))
+				//.WhenProcessed(Debug.Log($"Counter EVERY {N} frames PROCESSED"))
+				.WhenElapsed(Debug.Log($"Counter EVERY {N} frames ELAPSED"));
 
-			// In() => once-only
-			var in0 = Counter("Counter IN beats").In(N).Heartbeats().Do(Debug.Log($"Counter IN {N} beats"));
-			var in1 = Counter("Counter IN frames").In(N).Frames().Do(Debug.Log($"Counter IN {N} frames"));
+			// In() => finite
+			var in0 = Coroutine($"Counter IN {beats} beats")
+				.In(beats)
+				.Heartbeats()
+				.WhenElapsed(Debug.Log($"Counter IN {beats} beats ELAPSED"));
 
-			Counter("pause").In(10).Frames().Do(every1.Pause());
-			Counter("resume").In(40).Frames().Do(every1.Resume());
-
-			Counter("stop")
-				.In(60)
+			var in1 = Coroutine($"Counter IN {N} frames")
+				.In(N)
 				.Frames()
-				.Do(in0.Stop(), in1.Pause(), every0.Stop(), every1.Stop(), Debug.Log("All counters stopped."));
+				.WhenElapsed(Debug.Log($"Counter IN {N} frames ELAPSED"));
+
+			Coroutine("pause").In(12).Frames().WhenElapsed(every0.Pause(), every1.Pause());
+			Coroutine("resume").In(120).Frames().WhenElapsed(every0.Resume(), every1.Resume());
+
+			Coroutine("stop")
+				.In(3)
+				.Seconds()
+				.WhenElapsed(in0.Stop(), in1.Pause(), every0.Stop(), every1.Stop(), Debug.Log("All Counter coroutines stopped."));
 		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using LunyScript.Blocks;
-using LunyScript.Coroutines;
 using LunyScript.Exceptions;
 using System;
 
@@ -22,19 +21,29 @@ namespace LunyScript
 			_name = !String.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Coroutine name is null or empty", nameof(name));
 		}
 
-		/// <summary>Sets the coroutine duration. Returns a builder to specify the time unit.</summary>
+		/*
+		/// <summary>
+		/// A coroutine that runs 'for' the specified duration. The Do(blocks) execute every frame.
+		/// </summary>
 		public CoroutineForBuilder<CoroutineForBuilderStart> For(Double duration) =>
 			new(_script, _script.CreateBuilderToken(_name, "Coroutine.For"), _name, duration);
+			*/
 
-		/// <summary>Sets the timer to fire once after the specified duration.</summary>
+		// TODO:
+		// add .OnUpdate(blocks) that run every time the coroutine updates (frames, or heartbeats)
+		// add .TimeSliceOffset() to delay the start of the coroutine (could do manually though)
+
+		/// <summary>
+		/// A finite timer coroutine which fires after the specified duration. The Do(blocks) execute when elapsed.
+		/// </summary>
 		public CoroutineTimerBuilder<CoroutineTimerAmountSet> In(Double duration) => new(_script,
-			_script.CreateBuilderToken(_name, "Coroutine.In"),
-			CoroutineOptions.ForTimerCoroutine(_name, duration, Coroutine.Continuation.Finite));
+			_script.CreateBuilderToken(_name, "Coroutine.In"), _name, duration, false);
 
-		/// <summary>Sets the timer to fire repeatedly at the specified interval.</summary>
+		/// <summary>
+		/// A repeating timer coroutine which fires at the specified interval. The Do(blocks) execute on every interval elapse.
+		/// </summary>
 		public CoroutineTimerBuilder<CoroutineTimerAmountSet> Every(Double interval) => new(_script,
-			_script.CreateBuilderToken(_name, "Coroutine.Every"),
-			CoroutineOptions.ForTimerCoroutine(_name, interval, Coroutine.Continuation.Repeating));
+			_script.CreateBuilderToken(_name, "Coroutine.Every"), _name, interval, true);
 
 		/*
 		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every frame.</summary>

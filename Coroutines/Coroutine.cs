@@ -235,7 +235,6 @@ namespace LunyScript.Coroutines
 		/// </summary>
 		internal enum Process
 		{
-			Always,
 			FrameUpdate,
 			Heartbeat,
 		}

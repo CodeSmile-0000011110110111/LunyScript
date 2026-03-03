@@ -12,15 +12,15 @@ namespace LunyScript
 		private static Int32 s_UniqueNameID;
 
 		public String Name { get; init; }
-		public Double TimerDurationInSeconds { get; init; } // Used only by TimerCoroutine
-		public Int32 CounterTarget { get; init; } // Used by CounterCoroutine
+		public Double Duration { get; init; } // Used only by TimerCoroutine
+		public Int32 CounterTarget => (Int32)Math.Round(Duration); // Used by CounterCoroutine
 		public Int32 TimeSliceInterval { get; init; }
 		public Int32 TimeSliceOffset { get; init; }
 		public Coroutine.Continuation ContinuationMode { get; init; } = Coroutine.Continuation.Finite;
-		public Coroutine.Process ProcessMode { get; init; } = Coroutine.Process.Always;
+		public Coroutine.Process ProcessMode { get; init; } = Coroutine.Process.FrameUpdate;
 
-		internal Boolean IsTimer => TimerDurationInSeconds > 0;
-		internal Boolean IsCounter => CounterTarget > 0;
+		internal Boolean IsTimer { get; set; }
+		internal Boolean IsCounter { get => !IsTimer; set => IsTimer = !value; }
 
 		// Handlers
 		public ScriptActionBlock[] OnFrameUpdate { get; init; }
@@ -31,14 +31,19 @@ namespace LunyScript
 		public ScriptActionBlock[] OnPaused { get; init; }
 		public ScriptActionBlock[] OnResumed { get; init; }
 
-		public static CoroutineOptions ForOpenEndedCoroutine(String name, Coroutine.Process processMode) =>
-			new() { Name = name, ProcessMode = processMode };
+		public static CoroutineOptions ForCoroutine(String name, Double duration, Boolean repeating) => new()
+		{
+			Name = name,
+			IsTimer = true,
+			Duration = duration,
+			ContinuationMode = repeating ? Coroutine.Continuation.Repeating : Coroutine.Continuation.Finite,
+		};
 
 		public static CoroutineOptions ForTimerCoroutine(String name, Double duration, Coroutine.Continuation continuationMode,
 			ScriptActionBlock[] processBlocks = null) => new()
 		{
 			Name = name,
-			TimerDurationInSeconds = duration,
+			Duration = duration,
 			ContinuationMode = continuationMode,
 			ProcessMode = Coroutine.Process.FrameUpdate,
 			OnFrameUpdate = processBlocks,
@@ -48,7 +53,7 @@ namespace LunyScript
 			Coroutine.Process processMode, ScriptActionBlock[] processBlocks = null, ScriptActionBlock[] elapsedBlocks = null) => new()
 		{
 			Name = name,
-			CounterTarget = countTarget,
+			Duration = countTarget,
 			ContinuationMode = continuationMode,
 			ProcessMode = processMode,
 			OnFrameUpdate = processMode == Coroutine.Process.FrameUpdate ? processBlocks : null,
@@ -60,8 +65,7 @@ namespace LunyScript
 			ScriptActionBlock[] processBlocks = null) => new()
 		{
 			Name = name ?? GenerateUniqueName(interval, offset, processMode),
-			CounterTarget = interval, // time-sliced intervals are always counters
-			TimeSliceInterval = Math.Max(1, interval),
+			Duration = Math.Max(1, interval), // time-sliced intervals are always counters
 			TimeSliceOffset = Math.Max(0, offset),
 			ContinuationMode = Coroutine.Continuation.Repeating,
 			ProcessMode = processMode,

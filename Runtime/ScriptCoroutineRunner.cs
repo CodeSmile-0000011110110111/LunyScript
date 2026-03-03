@@ -18,7 +18,6 @@ namespace LunyScript
 		private readonly Dictionary<String, CoroutineEntry> _registry = new();
 		private readonly List<CoroutineEntry> _heartbeatOnly = new();
 		private readonly List<CoroutineEntry> _frameOnly = new();
-		private readonly List<CoroutineEntry> _always = new();
 
 		private ILunyTimeService _time;
 
@@ -65,9 +64,6 @@ namespace LunyScript
 				case Coroutine.Process.FrameUpdate:
 					_frameOnly.Add(entry);
 					break;
-				case Coroutine.Process.Always:
-					_always.Add(entry);
-					break;
 			}
 
 			return CoroutineBlock.Create(coroutine);
@@ -97,12 +93,6 @@ namespace LunyScript
 				if (ShouldProcess(entry, heartbeatCount, Coroutine.Process.Heartbeat))
 					CoroutineEntry.RunSequences(entry, entry.Coroutine.ProcessHeartbeat(), runtimeContext);
 			}
-
-			for (var i = 0; i < _always.Count; i++)
-			{
-				var entry = _always[i];
-				CoroutineEntry.RunSequences(entry, entry.Coroutine.ProcessHeartbeat(), runtimeContext);
-			}
 		}
 
 		/// <summary>
@@ -118,12 +108,6 @@ namespace LunyScript
 				if (ShouldProcess(entry, frameCount, Coroutine.Process.FrameUpdate))
 					CoroutineEntry.RunSequences(entry, entry.Coroutine.ProcessFrameUpdate(), runtimeContext);
 			}
-
-			for (var i = 0; i < _always.Count; i++)
-			{
-				var entry = _always[i];
-				CoroutineEntry.RunSequences(entry, entry.Coroutine.ProcessFrameUpdate(), runtimeContext);
-			}
 		}
 
 		~ScriptCoroutineRunner() => LunyTraceLogger.LogInfoFinalized(this);
@@ -137,7 +121,6 @@ namespace LunyScript
 			_registry.Clear();
 			_heartbeatOnly.Clear();
 			_frameOnly.Clear();
-			_always.Clear();
 			_time = null;
 
 			GC.SuppressFinalize(this);

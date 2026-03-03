@@ -46,19 +46,6 @@ namespace LunyScript
 		protected CoroutineBuilder Coroutine(String name) => new(this, name);
 
 		/// <summary>
-		/// Creates a named counter.
-		/// Usage: Counter("name").In(5).Frames().Do(blocks);
-		/// </summary>
-		protected CoroutineCounterBuilder<CoroutineCounterBuilderStart> Counter(String name) => CoroutineCounterBuilder<CoroutineCounterBuilderStart>.Create(this, name);
-
-		/// <summary>
-		/// Time-sliced execution: Every(n).Frames().Do(blocks) or Every(n).Heartbeats().Do(blocks).
-		/// Supports optional phase offset: Every(n).Frames().DelayBy(offset).Do(blocks).
-		/// Use Even or Odd constants for alternating execution.
-		/// </summary>
-		protected CoroutineEveryBuilder<CoroutineEveryBuilderStart> Every(Int32 interval) => CoroutineEveryBuilder<CoroutineEveryBuilderStart>.Create(this, interval);
-
-		/// <summary>
 		/// Defines a named, read-only variable.
 		/// </summary>
 		/// <param name="name"></param>

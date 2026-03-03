@@ -5,8 +5,11 @@ using System;
 namespace LunyScript
 {
 	public interface ICoroutineTimerBuilderState {}
-	public interface ICoroutineTimerBuilderStart : ICoroutineTimerBuilderState {}
-	public struct CoroutineTimerBuilderStart : ICoroutineTimerBuilderStart {}
+	public interface ICoroutineTimerAmountSet : ICoroutineTimerBuilderState {}
+	public struct CoroutineTimerAmountSet : ICoroutineTimerAmountSet {}
+	public interface ICoroutineTimerWhen : ICoroutineTimerBuilderState {}
+	public interface ICoroutineTimerUnitSet : ICoroutineTimerWhen {}
+	public struct CoroutineTimerUnitSet : ICoroutineTimerUnitSet {}
 
 	/// <summary>
 	/// Fluent builder for timer coroutines.
@@ -26,61 +29,54 @@ namespace LunyScript
 			Options = options;
 		}
 
-		/// <summary>Entry-point factory. Creates the builder token.</summary>
-		internal static CoroutineTimerBuilder<CoroutineTimerBuilderStart> Create(Script script, String name)
+		internal CoroutineTimerBuilder(Script script, BuilderToken token, String name, Double duration, Boolean repeating)
 		{
-			if (String.IsNullOrWhiteSpace(name))
-				throw new ArgumentException("Timer name is null or empty", nameof(name));
+			if (duration < 0)
+				throw new ArgumentException($"Coroutine duration must be 0 or greater, got: {duration}");
 
-			var options = new CoroutineOptions { Name = name };
-			var token = script.CreateBuilderToken(name, "Timer()");
-			return new CoroutineTimerBuilder<CoroutineTimerBuilderStart>(script, token, options);
+			Script = script;
+			Token = token;
+			Options = CoroutineOptions.ForCoroutine(name, duration, repeating);
 		}
 	}
-
-	public interface ICoroutineTimerAmountSet : ICoroutineTimerBuilderState {}
-	public struct CoroutineTimerAmountSet : ICoroutineTimerAmountSet {}
-
-	public static class TimerBuilderAmountExtensions
-	{
-		/// <summary>Sets the timer to fire once after the specified duration.</summary>
-		public static CoroutineTimerBuilder<CoroutineTimerAmountSet> In<T>(this CoroutineTimerBuilder<T> b, Double duration)
-			where T : struct, ICoroutineTimerBuilderStart => new(b.Script, b.Token,
-			CoroutineOptions.ForTimerCoroutine(b.Options.Name, duration, Coroutine.Continuation.Finite));
-
-		/// <summary>Sets the timer to fire repeatedly at the specified interval.</summary>
-		public static CoroutineTimerBuilder<CoroutineTimerAmountSet> Every<T>(this CoroutineTimerBuilder<T> b, Double interval)
-			where T : struct, ICoroutineTimerBuilderStart => new(b.Script, b.Token,
-			CoroutineOptions.ForTimerCoroutine(b.Options.Name, interval, Coroutine.Continuation.Repeating));
-	}
-
-	public interface ICoroutineTimerWhen : ICoroutineTimerBuilderState {}
-	public interface ICoroutineTimerUnitSet : ICoroutineTimerWhen {}
-	public struct CoroutineTimerUnitSet : ICoroutineTimerUnitSet {}
 
 	public static class TimerBuilderUnitExtensions
 	{
 		/// <summary>Duration in seconds.</summary>
 		public static CoroutineTimerBuilder<CoroutineTimerUnitSet> Seconds<T>(this CoroutineTimerBuilder<T> b)
-			where T : struct, ICoroutineTimerAmountSet => CreateTimerUnit(b, b.Options.TimerDurationInSeconds);
+			where T : struct, ICoroutineTimerAmountSet => CreateTimerUnit(b, b.Options.Duration);
 
 		/// <summary>Duration in milliseconds.</summary>
 		public static CoroutineTimerBuilder<CoroutineTimerUnitSet> Milliseconds<T>(this CoroutineTimerBuilder<T> b)
-			where T : struct, ICoroutineTimerAmountSet => CreateTimerUnit(b, b.Options.TimerDurationInSeconds / 1000.0);
+			where T : struct, ICoroutineTimerAmountSet => CreateTimerUnit(b, b.Options.Duration / 1000.0);
 
 		/// <summary>Duration in minutes.</summary>
 		public static CoroutineTimerBuilder<CoroutineTimerUnitSet> Minutes<T>(this CoroutineTimerBuilder<T> b)
-			where T : struct, ICoroutineTimerAmountSet => CreateTimerUnit(b, b.Options.TimerDurationInSeconds * 60.0);
+			where T : struct, ICoroutineTimerAmountSet => CreateTimerUnit(b, b.Options.Duration * 60.0);
 
-		private static CoroutineTimerBuilder<CoroutineTimerUnitSet> CreateTimerUnit<T>(CoroutineTimerBuilder<T> b, Double durationInSeconds)
-			where T : struct, ICoroutineTimerBuilderState
-		{
-			if (durationInSeconds < 0)
-				throw new ArgumentException($"Timer duration must be 0 or greater, got: {durationInSeconds}");
+		private static CoroutineTimerBuilder<CoroutineTimerUnitSet> CreateTimerUnit<T>(CoroutineTimerBuilder<T> b, Double duration)
+			where T : struct, ICoroutineTimerAmountSet => new(b.Script, b.Token, b.Options with { Duration = duration });
+	}
 
-			return new CoroutineTimerBuilder<CoroutineTimerUnitSet>(b.Script, b.Token,
-				b.Options with { TimerDurationInSeconds = durationInSeconds });
-		}
+	public static class TimerBuilderCounterUnitExtensions
+	{
+		/// <summary>Counts frame updates.</summary>
+		public static CoroutineCounterBuilder<CoroutineCounterBuilderUnitSet> Frames<T>(this CoroutineTimerBuilder<T> b)
+			where T : struct, ICoroutineTimerAmountSet => new(b.Script, b.Token,
+			b.Options with
+			{
+				IsCounter = true,
+				ProcessMode = Coroutine.Process.FrameUpdate, /*, TimeSliceInterval = b.Options.CounterTarget, Duration = 0*/
+			});
+
+		/// <summary>Counts heartbeat (fixed step) updates.</summary>
+		public static CoroutineCounterBuilder<CoroutineCounterBuilderUnitSet> Heartbeats<T>(this CoroutineTimerBuilder<T> b)
+			where T : struct, ICoroutineTimerAmountSet => new(b.Script, b.Token,
+			b.Options with
+			{
+				IsCounter = true,
+				ProcessMode = Coroutine.Process.Heartbeat,
+			});
 	}
 
 	public static class TimerBuilderWhenExtensions
@@ -117,6 +113,14 @@ namespace LunyScript
 			return ScriptActionBlock.IsNullOrEmpty(resumedBlocks) ? b : NextBuilder(b, b.Options with { OnResumed = resumedBlocks });
 		}
 
+		/// <summary>Blocks to run when the coroutine is resumed.</summary>
+		public static CoroutineTimerBuilder<T> WhenProcessed<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] processBlocks)
+			where T : struct, ICoroutineTimerWhen
+		{
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnFrameUpdate);
+			return ScriptActionBlock.IsNullOrEmpty(processBlocks) ? b : NextBuilder(b, b.Options with { OnFrameUpdate = processBlocks });
+		}
+
 		private static CoroutineTimerBuilder<T> NextBuilder<T>(CoroutineTimerBuilder<T> b, in CoroutineOptions options)
 			where T : struct, ICoroutineTimerWhen
 		{
@@ -128,7 +132,7 @@ namespace LunyScript
 	public static class TimerBuilderFinalExtensions
 	{
 		/// <summary>Completes the timer and (optional) specifies blocks to run every frame.</summary>
-		public static ITimerCoroutineBlock Do<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] elapsedBlocks)
+		public static ITimerCoroutineBlock WhenElapsed<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] elapsedBlocks)
 			where T : struct, ICoroutineTimerUnitSet =>
 			(ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnElapsed = elapsedBlocks });
 	}

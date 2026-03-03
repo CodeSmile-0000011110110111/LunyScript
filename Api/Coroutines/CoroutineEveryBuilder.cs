@@ -35,7 +35,7 @@ namespace LunyScript
 				                            "Heartbeat/Update regardless of DelayBy. Use a Counter() if this is intentional.");
 			}
 
-			var options = new CoroutineOptions { TimeSliceInterval = interval };
+			var options = new CoroutineOptions { Duration = interval };
 			var token = script.CreateBuilderToken("Every", "Every()");
 			return new CoroutineEveryBuilder<CoroutineEveryBuilderStart>(script, token, options);
 		}
