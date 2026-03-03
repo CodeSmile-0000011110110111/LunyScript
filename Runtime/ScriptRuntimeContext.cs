@@ -122,6 +122,6 @@ namespace LunyScript
 		}
 
 		~ScriptRuntimeContext() => LunyTraceLogger.LogInfoFinalized(this);
-		public override String ToString() => $"{ScriptId} -> {LunyObject}";
+		public override String ToString() => $"{ScriptType.Name} ({ScriptId}) on Object: {LunyObject}";
 	}
 }

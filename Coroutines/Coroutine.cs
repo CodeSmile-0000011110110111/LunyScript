@@ -25,7 +25,7 @@ namespace LunyScript.Coroutines
 		/// <summary>
 		/// Factory method to create specialized coroutine instances.
 		/// </summary>
-		public static Coroutine Create(in CoroutineOptions options) => options.IsTimer ? new TimerCoroutine(options) :
+		internal static Coroutine Create(in CoroutineOptions options) => options.IsTimer ? new TimerCoroutine(options) :
 			options.IsCounter ? new CounterCoroutine(options) : new Coroutine(options);
 
 		private Coroutine() {} // hide default ctor
@@ -186,19 +186,6 @@ namespace LunyScript.Coroutines
 		protected virtual Boolean ConsumeHeartbeat() => false;
 		public override String ToString() => $"{GetType().Name}({Name}, {State})";
 
-		[Flags]
-		internal enum Events
-		{
-			None = 0,
-			Started = 1 << 0,
-			Resumed = 1 << 1,
-			Heartbeat = 1 << 2,
-			FrameUpdate = 1 << 3,
-			Paused = 1 << 4,
-			Stopped = 1 << 5,
-			Elapsed = 1 << 6,
-		}
-
 		/// <summary>
 		/// Represents the execution state of a coroutine or timer.
 		/// </summary>
@@ -228,6 +215,19 @@ namespace LunyScript.Coroutines
 			/// Coroutine has run to end. It can be Started again, but not stopped, paused or resumed.
 			/// </summary>
 			Elapsed,
+		}
+
+		[Flags]
+		internal enum Events
+		{
+			None = 0,
+			Started = 1 << 0,
+			Resumed = 1 << 1,
+			Heartbeat = 1 << 2,
+			FrameUpdate = 1 << 3,
+			Paused = 1 << 4,
+			Stopped = 1 << 5,
+			Elapsed = 1 << 6,
 		}
 
 		/// <summary>

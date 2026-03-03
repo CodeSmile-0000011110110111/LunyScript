@@ -81,44 +81,46 @@ namespace LunyScript
 		public static CoroutineForBuilder<T> WhenStarted<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] startedBlocks)
 			where T : struct, ICoroutineForWhen
 		{
-			var options = b.Options with { OnStarted = startedBlocks };
-			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
-			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnStarted);
+			return ScriptActionBlock.IsNullOrEmpty(startedBlocks) ? b : NextBuilder(b, b.Options with { OnStarted = startedBlocks });
 		}
 
 		/// <summary>Blocks to run when the coroutine stops.</summary>
 		public static CoroutineForBuilder<T> WhenStopped<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] stoppedBlocks)
 			where T : struct, ICoroutineForWhen
 		{
-			var options = b.Options with { OnStopped = stoppedBlocks };
-			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
-			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnStopped);
+			return ScriptActionBlock.IsNullOrEmpty(stoppedBlocks) ? b : NextBuilder(b, b.Options with { OnStopped = stoppedBlocks });
 		}
 
 		/// <summary>Blocks to run when the coroutine is paused.</summary>
 		public static CoroutineForBuilder<T> WhenPaused<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] pausedBlocks)
 			where T : struct, ICoroutineForWhen
 		{
-			var options = b.Options with { OnPaused = pausedBlocks };
-			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
-			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnPaused);
+			return ScriptActionBlock.IsNullOrEmpty(pausedBlocks) ? b : NextBuilder(b, b.Options with { OnPaused = pausedBlocks });
 		}
 
 		/// <summary>Blocks to run when the coroutine is resumed.</summary>
 		public static CoroutineForBuilder<T> WhenResumed<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] resumedBlocks)
 			where T : struct, ICoroutineForWhen
 		{
-			var options = b.Options with { OnResumed = resumedBlocks };
-			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
-			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnResumed);
+			return ScriptActionBlock.IsNullOrEmpty(resumedBlocks) ? b : NextBuilder(b, b.Options with { OnResumed = resumedBlocks });
 		}
 
-		/// <summary>Blocks to run when the coroutine elapsed.</summary>
+		/// <summary>Blocks to run when the coroutine elapsed. Also runs when the coroutine automatically restarts.</summary>
 		public static CoroutineForBuilder<T> WhenElapsed<T>(this CoroutineForBuilder<T> b, params ScriptActionBlock[] elapsedBlocks)
 			where T : struct, ICoroutineForWhen
 		{
-			var options = b.Options with { OnElapsed = elapsedBlocks };
-			b.Token?.SetAutoFinalizer(() => CoroutineBuilder.Finalize(b.Script, b.Token, options));
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnElapsed);
+			return ScriptActionBlock.IsNullOrEmpty(elapsedBlocks) ? b : NextBuilder(b, b.Options with { OnElapsed = elapsedBlocks });
+		}
+
+		private static CoroutineForBuilder<T> NextBuilder<T>(CoroutineForBuilder<T> b, in CoroutineOptions options)
+			where T : struct, ICoroutineForWhen
+		{
+			CoroutineBuilder.SetAutoFinalizer(b.Script, b.Token, options);
 			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
 		}
 	}

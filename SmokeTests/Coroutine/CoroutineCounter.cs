@@ -4,38 +4,38 @@ namespace LunyScript.SmokeTests.Coroutines
 {
 	public class CoroutineCounter : Script
 	{
+		private const Int32 N = 5;
+
 		public override void Build(ScriptContext context)
 		{
-			const Int32 n = 5;
-
-			// Counts frames or heartbeats:
-			// In() => once-only
-			// Every() => repeating
-			var every0 = Counter("counter every beats").Every(n).Heartbeats().Do(Debug.Log($"Counter EVERY {n} beats"));
-			var every1 = Counter("counter every frames").Every(n).Frames().Do(Debug.Log($"Counter EVERY {n} frames"));
-			var in0 = Counter("counter in beats").In(n).Heartbeats().Do(Debug.Log($"Counter IN {n} beats"));
-			var in1 = Counter("counter in frames").In(n).Frames().Do(Debug.Log($"Counter IN {n} frames"));
-
-			Counter("stop").In(60).Frames().Do(in0.Stop(), in1.Pause(), every0.Stop(), every1.Pause(), Debug.Log("All counters stopped."));
-
-			// Example output
 			// Note: Heartbeats run multiple times per frame and decoupled from frame update, and its frequency
 			// is configurable. In Unity: Project Settings / Time / Fixed Timestep (default: 0.02 => 50 Hz)
 			// Frame update rate depends on both rendering performance AND the state of VSync/GSync/FreeSync AND
 			// the current (monitor's) refresh rate. Thus heartbeat count "every 5 beats" does not equate
 			// to a framecount sequence like 1,6,11,16,.. as you might expect.
-			/*
-			[3] [DebugLogInfoBlock] IN 5 beats (LunyScriptID:15 -> ☑ CoroutineCounter (LunyObjectID:3, LunyNativeObjectID:-30282))
-			[3] [DebugLogInfoBlock] EVERY 5 beats (LunyScriptID:15 -> ☑ CoroutineCounter (LunyObjectID:3, LunyNativeObjectID:-30282))
-			[6] [DebugLogInfoBlock] IN 5 frames (LunyScriptID:15 -> ☑ CoroutineCounter (LunyObjectID:3, LunyNativeObjectID:-30282))
-			[6] [DebugLogInfoBlock] EVERY 5 frames (LunyScriptID:15 -> ☑ CoroutineCounter (LunyObjectID:3, LunyNativeObjectID:-30282))
-			[12] [DebugLogInfoBlock] EVERY 5 frames (LunyScriptID:15 -> ☑ CoroutineCounter (LunyObjectID:3, LunyNativeObjectID:-30282))
-			[18] [DebugLogInfoBlock] EVERY 5 frames (LunyScriptID:15 -> ☑ CoroutineCounter (LunyObjectID:3, LunyNativeObjectID:-30282))
-			[20] [DebugLogInfoBlock] EVERY 5 beats (LunyScriptID:15 -> ☑ CoroutineCounter (LunyObjectID:3, LunyNativeObjectID:-30282))
-			[24] [DebugLogInfoBlock] EVERY 5 frames (LunyScriptID:15 -> ☑ CoroutineCounter (LunyObjectID:3, LunyNativeObjectID:-30282))
-			[30] [DebugLogInfoBlock] EVERY 5 frames (LunyScriptID:15 -> ☑ CoroutineCounter (LunyObjectID:3, LunyNativeObjectID:-30282))
-			 */
 
+			// Every() => repeating
+			var every0 = Counter("Counter EVERY beats").Every(N).Heartbeats().Do(Debug.Log($"Counter EVERY {N} beats"));
+			var every1 = Counter("Counter EVERY frames")
+				.Every(N)
+				.Frames()
+				.WhenStarted(Debug.Log("Counter EVERY frames STARTED"))
+				.WhenStopped(Debug.Log("Counter EVERY frames STOPPED"))
+				.WhenPaused(Debug.Log("Counter EVERY frames PAUSED"))
+				.WhenResumed(Debug.Log("Counter EVERY frames RESUMED"))
+				.Do(Debug.Log($"Counter EVERY {N} frames"));
+
+			// In() => once-only
+			var in0 = Counter("Counter IN beats").In(N).Heartbeats().Do(Debug.Log($"Counter IN {N} beats"));
+			var in1 = Counter("Counter IN frames").In(N).Frames().Do(Debug.Log($"Counter IN {N} frames"));
+
+			Counter("pause").In(10).Frames().Do(every1.Pause());
+			Counter("resume").In(40).Frames().Do(every1.Resume());
+
+			Counter("stop")
+				.In(60)
+				.Frames()
+				.Do(in0.Stop(), in1.Pause(), every0.Stop(), every1.Stop(), Debug.Log("All counters stopped."));
 		}
 	}
 }

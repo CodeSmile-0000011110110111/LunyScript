@@ -1,8 +1,6 @@
-﻿using Luny;
-using LunyScript.Blocks;
-using LunyScript.Coroutines;
+﻿using LunyScript.Blocks;
+using LunyScript.Exceptions;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace LunyScript
 {
@@ -40,17 +38,20 @@ namespace LunyScript
 
 		internal static ICoroutineBlock Finalize(Script script, BuilderToken token, in CoroutineOptions options)
 		{
-			WarnIfAllSequencesEmpty(script, token, options);
+			ThrowIfAllSequencesEmpty(script, token, options);
 			var block = script.RuntimeContext.Coroutines.Register(options);
 			script.FinalizeBuilderToken(token);
 			return block;
 		}
 
-		private static void WarnIfAllSequencesEmpty(Script script, BuilderToken token, in CoroutineOptions options)
+		internal static void SetAutoFinalizer(Script script, BuilderToken token, CoroutineOptions options) =>
+			token?.SetAutoFinalizer(() => Finalize(script, token, options));
+
+		private static void ThrowIfAllSequencesEmpty(Script script, BuilderToken token, in CoroutineOptions options)
 		{
 			if (options.OnFrameUpdate == null && options.OnHeartbeat == null && options.OnElapsed == null &&
 			    options.OnStarted == null && options.OnStopped == null && options.OnPaused == null && options.OnResumed == null)
-				LunyLogger.LogWarning($"{token.Type} '{options.Name}' has no blocks. Add blocks or remove it.", script);
+				throw new LunyScriptException($"{token.Type} '{options.Name}' has no blocks. Add blocks or remove coroutine. Script: {script}");
 		}
 	}
 
