@@ -2,6 +2,7 @@
 using LunyScript.Blocks;
 using LunyScript.Coroutines;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace LunyScript
 {

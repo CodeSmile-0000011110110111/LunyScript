@@ -20,6 +20,8 @@
 				.WhenStarted(Debug.Log("In Timer STARTED"))
 				.Do(Debug.Log("In Timer ELAPSED"));
 
+			//Timer("se").In(4).Seconds().WhenPaused(Debug.Log("In Timer PAUSED")).Do(Debug.Log("In Timer DO"));
+
 			Counter("stop").In(30).Frames().Do(timer.Stop(), Debug.Log("Stopped all timers"));
 		}
 	}

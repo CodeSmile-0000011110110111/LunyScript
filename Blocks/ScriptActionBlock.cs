@@ -1,3 +1,5 @@
+using System;
+
 namespace LunyScript.Blocks
 {
 	/// <summary>
@@ -5,6 +7,7 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class ScriptActionBlock : ScriptBlock
 	{
+		public static Boolean IsNullOrEmpty(ScriptActionBlock[] blocks) => blocks == null || blocks.Length == 0;
 		protected internal abstract void Execute(IScriptRuntimeContext runtimeContext);
 	}
 }
