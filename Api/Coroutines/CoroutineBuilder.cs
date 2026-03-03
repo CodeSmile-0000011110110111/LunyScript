@@ -1,4 +1,5 @@
 ﻿using LunyScript.Blocks;
+using LunyScript.Coroutines;
 using LunyScript.Exceptions;
 using System;
 
@@ -14,17 +15,26 @@ namespace LunyScript
 	{
 		private readonly Script _script;
 		private readonly String _name;
-		private readonly BuilderToken _token;
 
 		internal CoroutineBuilder(Script script, String name)
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_name = !String.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Coroutine name is null or empty", nameof(name));
-			_token = script.CreateBuilderToken(_name, "Coroutine()");
 		}
 
 		/// <summary>Sets the coroutine duration. Returns a builder to specify the time unit.</summary>
-		public CoroutineForBuilder<CoroutineForBuilderStart> For(Double duration) => new(_script, _token, _name, duration);
+		public CoroutineForBuilder<CoroutineForBuilderStart> For(Double duration) =>
+			new(_script, _script.CreateBuilderToken(_name, "Coroutine.For"), _name, duration);
+
+		/// <summary>Sets the timer to fire once after the specified duration.</summary>
+		public CoroutineTimerBuilder<CoroutineTimerAmountSet> In(Double duration) => new(_script,
+			_script.CreateBuilderToken(_name, "Coroutine.In"),
+			CoroutineOptions.ForTimerCoroutine(_name, duration, Coroutine.Continuation.Finite));
+
+		/// <summary>Sets the timer to fire repeatedly at the specified interval.</summary>
+		public CoroutineTimerBuilder<CoroutineTimerAmountSet> Every(Double interval) => new(_script,
+			_script.CreateBuilderToken(_name, "Coroutine.Every"),
+			CoroutineOptions.ForTimerCoroutine(_name, interval, Coroutine.Continuation.Repeating));
 
 		/*
 		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every frame.</summary>

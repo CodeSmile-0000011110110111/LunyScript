@@ -59,12 +59,6 @@ namespace LunyScript
 		protected CoroutineEveryBuilder<CoroutineEveryBuilderStart> Every(Int32 interval) => CoroutineEveryBuilder<CoroutineEveryBuilderStart>.Create(this, interval);
 
 		/// <summary>
-		/// Creates a named timer.
-		/// Usage: Timer("name").In(3).Seconds().Do(blocks);
-		/// </summary>
-		protected CoroutineTimerBuilder<CoroutineTimerBuilderStart> Timer(String name) => CoroutineTimerBuilder<CoroutineTimerBuilderStart>.Create(this, name);
-
-		/// <summary>
 		/// Defines a named, read-only variable.
 		/// </summary>
 		/// <param name="name"></param>

@@ -57,7 +57,7 @@ namespace LunyScript
 		};
 
 		public static CoroutineOptions ForIntervalCoroutine(String name, Int32 interval, Int32 offset, Coroutine.Process processMode,
-			ScriptActionBlock[] processBlocks) => new()
+			ScriptActionBlock[] processBlocks = null) => new()
 		{
 			Name = name ?? GenerateUniqueName(interval, offset, processMode),
 			CounterTarget = interval, // time-sliced intervals are always counters

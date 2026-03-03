@@ -48,11 +48,11 @@ namespace LunyScript
 	{
 		/// <summary>Selects frame-based execution.</summary>
 		public static CoroutineEveryBuilder<CoroutineEveryUnitSet> Frames(this CoroutineEveryBuilder<CoroutineEveryBuilderStart> b) =>
-			new(b.Script, b.Token, b.Options with { ProcessMode = Coroutine.Process.FrameUpdate });
+			new(b.Script, b.Token, CoroutineOptions.ForIntervalCoroutine(b.Options.Name, 1, 0, Coroutine.Process.FrameUpdate));
 
 		/// <summary>Selects heartbeat-based execution.</summary>
 		public static CoroutineEveryBuilder<CoroutineEveryUnitSet> Heartbeats(this CoroutineEveryBuilder<CoroutineEveryBuilderStart> b) =>
-			new(b.Script, b.Token, b.Options with { ProcessMode = Coroutine.Process.Heartbeat });
+			new(b.Script, b.Token, CoroutineOptions.ForIntervalCoroutine(b.Options.Name, 1, 0, Coroutine.Process.Heartbeat));
 	}
 
 	public interface ICoroutineEveryOffsetSet : ICoroutineEveryUnitSet {}

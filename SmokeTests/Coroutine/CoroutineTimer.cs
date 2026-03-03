@@ -4,7 +4,7 @@
 	{
 		public override void Build(ScriptContext context)
 		{
-			var timer = Timer("Every Timer")
+			var timer = Coroutine("Coroutine.Every.{Unit}")
 				.Every(3)
 				.Milliseconds()
 				.WhenStarted(Debug.Log("Every Timer STARTED"))
@@ -14,7 +14,7 @@
 				.Do(Debug.Log("Every Timer ELAPSED"));
 			timer.TimeScale(0.1);
 
-			Timer("In Timer")
+			Coroutine("Coroutine.In.{Unit}")
 				.In(0.98765)
 				.Seconds()
 				.WhenStarted(Debug.Log("In Timer STARTED"))
@@ -22,7 +22,7 @@
 
 			//Timer("se").In(4).Seconds().WhenPaused(Debug.Log("In Timer PAUSED")).Do(Debug.Log("In Timer DO"));
 
-			Counter("stop").In(30).Frames().Do(timer.Stop(), Debug.Log("Stopped all timers"));
+			Counter("stop").In(30).Frames().Do(timer.Stop(), Debug.Log("Stopped timer coroutine"));
 		}
 	}
 }

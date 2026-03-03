@@ -46,12 +46,12 @@ namespace LunyScript
 		/// <summary>Sets the timer to fire once after the specified duration.</summary>
 		public static CoroutineTimerBuilder<CoroutineTimerAmountSet> In<T>(this CoroutineTimerBuilder<T> b, Double duration)
 			where T : struct, ICoroutineTimerBuilderStart => new(b.Script, b.Token,
-			b.Options with { Name = b.Options.Name, TimerDurationInSeconds = duration, ContinuationMode = Coroutine.Continuation.Finite });
+			CoroutineOptions.ForTimerCoroutine(b.Options.Name, duration, Coroutine.Continuation.Finite));
 
 		/// <summary>Sets the timer to fire repeatedly at the specified interval.</summary>
 		public static CoroutineTimerBuilder<CoroutineTimerAmountSet> Every<T>(this CoroutineTimerBuilder<T> b, Double interval)
 			where T : struct, ICoroutineTimerBuilderStart => new(b.Script, b.Token,
-			b.Options with { Name = b.Options.Name, TimerDurationInSeconds = interval, ContinuationMode = Coroutine.Continuation.Repeating });
+			CoroutineOptions.ForTimerCoroutine(b.Options.Name, interval, Coroutine.Continuation.Repeating));
 	}
 
 	public interface ICoroutineTimerWhen : ICoroutineTimerBuilderState {}
@@ -79,7 +79,7 @@ namespace LunyScript
 				throw new ArgumentException($"Timer duration must be 0 or greater, got: {durationInSeconds}");
 
 			return new CoroutineTimerBuilder<CoroutineTimerUnitSet>(b.Script, b.Token,
-				CoroutineOptions.ForTimerCoroutine(b.Options.Name, durationInSeconds, b.Options.ContinuationMode));
+				b.Options with { TimerDurationInSeconds = durationInSeconds });
 		}
 	}
 
