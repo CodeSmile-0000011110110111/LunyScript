@@ -120,7 +120,7 @@ namespace LunyScript
 		private static CoroutineForBuilder<T> NextBuilder<T>(CoroutineForBuilder<T> b, in CoroutineOptions options)
 			where T : struct, ICoroutineForWhen
 		{
-			CoroutineBuilder.SetAutoFinalizer(b.Script, b.Token, options);
+			CoroutineBuilder.SetAutoFinish(b.Script, b.Token, options);
 			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
 		}
 	}
@@ -134,10 +134,10 @@ namespace LunyScript
 			where T : struct, ICoroutineForWhen
 		{
 			if (b.Options.ProcessMode == Coroutine.Process.Heartbeat)
-				return CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnHeartbeat = blocks });
+				return CoroutineBuilder.Finish(b.Script, b.Token, b.Options with { OnHeartbeat = blocks });
 
 			if (b.Options.ProcessMode == Coroutine.Process.FrameUpdate)
-				return CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnFrameUpdate = blocks });
+				return CoroutineBuilder.Finish(b.Script, b.Token, b.Options with { OnFrameUpdate = blocks });
 
 			throw new ArgumentOutOfRangeException(nameof(b.Options.ProcessMode), b.Options.ProcessMode.ToString());
 		}

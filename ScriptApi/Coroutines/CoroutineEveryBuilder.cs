@@ -72,7 +72,7 @@ namespace LunyScript
 			where T : struct, ICoroutineEveryUnitSet
 		{
 			var o = b.Options;
-			return CoroutineBuilder.Finalize(b.Script, b.Token,
+			return CoroutineBuilder.Finish(b.Script, b.Token,
 				CoroutineOptions.ForIntervalCoroutine(null, o.TimeSliceInterval, o.TimeSliceOffset, o.ProcessMode, blocks));
 		}
 	}

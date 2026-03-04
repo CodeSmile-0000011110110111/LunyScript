@@ -3,6 +3,7 @@ using Luny.Engine.Bridge;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace LunyScript.Events
 {
@@ -46,15 +47,14 @@ namespace LunyScript.Events
 				TryRunForEvent(subscriberID, inputActionEvent);
 		}
 
-		private void TryRunForEvent(LunyObjectId subscriberID, LunyInputActionEvent inputActionEvent)
+		private void TryRunForEvent(LunyObjectId subscriberID, LunyInputActionEvent inputEvent)
 		{
 			var context = _contexts.GetByLunyObjectID(subscriberID);
-			var sequences = context?.Scheduler?.GetInputActionEventSequences(inputActionEvent.ActionName);
+			var sequences = context?.Scheduler?.GetInputActionEventSequences(inputEvent.ActionName, inputEvent.Phase);
+			//LunyLogger.LogInfo($"Run {sequences?.Count()} blocks on Input Action '{inputEvent.ActionName}' for {context}", this);
 			if (sequences != null)
 			{
-				//LunyLogger.LogInfo($"Running Input Action '{inputActionEvent.ActionName}' for {context}", this);
-
-				context.SetEventArgs(inputActionEvent);
+				context.SetEventArgs(inputEvent);
 				LunyScriptRunner.Run(sequences, context);
 				context.SetEventArgs(null);
 			}

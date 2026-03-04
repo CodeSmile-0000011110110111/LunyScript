@@ -1,5 +1,5 @@
+using Luny.Engine.Bridge;
 using LunyScript.Blocks;
-using LunyScript.Events;
 using LunyScript.Exceptions;
 using System;
 using System.Runtime.CompilerServices;
@@ -8,44 +8,78 @@ namespace LunyScript
 {
 	public readonly struct WhenInputActionBuilder
 	{
-		private readonly Script _script;
-		private readonly BuilderToken _token;
-		private readonly InputActionOptions _options;
+		internal readonly InputActionOptions Options;
 
-		private ScriptEventScheduler Scheduler => _script.Scheduler;
-
-		internal WhenInputActionBuilder(Script script, String actionName, [CallerMemberName] String callerName = "")
+		internal WhenInputActionBuilder(Script script, BuilderToken token, String actionName, [CallerMemberName] String callerName = "")
 		{
 			if (String.IsNullOrWhiteSpace(actionName))
 				throw new LunyScriptException($"{script.GetType().Name}: When.{callerName}({nameof(actionName)}) cannot be null or empty");
 
-			_script = script;
-			_token = _script.CreateBuilderToken(actionName, "When.InputAction");
-			_options = new InputActionOptions { ActionName = actionName };
+			Options = new InputActionOptions { Script = script, Token = token, ActionName = actionName };
 		}
 
-		public void Started(params ScriptActionBlock[] startedBlocks)
-		{
-			throw new NotImplementedException(nameof(Started));
-		}
-		public void Performed(params ScriptActionBlock[] startedBlocks)
-		{
-			throw new NotImplementedException(nameof(Started));
-		}
-		public void Canceled(params ScriptActionBlock[] startedBlocks)
-		{
-			throw new NotImplementedException(nameof(Started));
-		}
+		internal WhenInputActionBuilder(in InputActionOptions options) => Options = options;
 
-		public void Performing(params ScriptActionBlock[] blocks)
+		internal void Finish(in InputActionOptions options)
 		{
-			Scheduler.ScheduleInputActionEventSequence(_options.ActionName, blocks);
-			_script.FinalizeBuilderToken(_token);
+			var actionName = options.ActionName;
+			var scheduler = options.Script.Scheduler;
+			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Started, options.StartedBlocks);
+			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Performed, options.PerformedBlocks);
+			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Performing, options.PerformingBlocks);
+			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Canceled, options.CanceledBlocks);
+			options.Script.MarkBuilderTokenFinished(options.Token);
 		}
 	}
 
-	internal struct InputActionOptions
+	public static class WhenInputActionBuilderExtensions
 	{
+		public static WhenInputActionBuilder Started(this WhenInputActionBuilder b, params ScriptActionBlock[] startedBlocks)
+		{
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.StartedBlocks);
+
+			var options = b.Options with { StartedBlocks = startedBlocks };
+			b.Options.Token.SetAutoFinish(() => b.Finish(options));
+			return new WhenInputActionBuilder(options);
+		}
+
+		public static WhenInputActionBuilder Performed(this WhenInputActionBuilder b, params ScriptActionBlock[] performedBlocks)
+		{
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.PerformedBlocks);
+
+			var options = b.Options with { PerformedBlocks = performedBlocks };
+			b.Options.Token.SetAutoFinish(() => b.Finish(options));
+			return new WhenInputActionBuilder(options);
+		}
+
+		public static WhenInputActionBuilder Performing(this WhenInputActionBuilder b, params ScriptActionBlock[] performingBlocks)
+		{
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.PerformingBlocks);
+
+			var options = b.Options with { PerformingBlocks = performingBlocks };
+			b.Options.Token.SetAutoFinish(() => b.Finish(options));
+			return new WhenInputActionBuilder(options);
+		}
+
+		public static WhenInputActionBuilder Canceled(this WhenInputActionBuilder b, params ScriptActionBlock[] canceledBlocks)
+		{
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.CanceledBlocks);
+
+			var options = b.Options with { CanceledBlocks = canceledBlocks };
+			b.Options.Token.SetAutoFinish(() => b.Finish(options));
+			return new WhenInputActionBuilder(options);
+		}
+	}
+
+	internal record InputActionOptions
+	{
+		public Script Script;
+		public BuilderToken Token;
 		public String ActionName;
+
+		public ScriptActionBlock[] StartedBlocks;
+		public ScriptActionBlock[] PerformedBlocks;
+		public ScriptActionBlock[] PerformingBlocks;
+		public ScriptActionBlock[] CanceledBlocks;
 	}
 }

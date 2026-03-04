@@ -124,7 +124,7 @@ namespace LunyScript
 		private static CoroutineTimerBuilder<T> NextBuilder<T>(CoroutineTimerBuilder<T> b, in CoroutineOptions options)
 			where T : struct, ICoroutineTimerWhen
 		{
-			CoroutineBuilder.SetAutoFinalizer(b.Script, b.Token, options);
+			CoroutineBuilder.SetAutoFinish(b.Script, b.Token, options);
 			return new CoroutineTimerBuilder<T>(b.Script, b.Token, options);
 		}
 	}
@@ -134,6 +134,6 @@ namespace LunyScript
 		/// <summary>Completes the timer and (optional) specifies blocks to run every frame.</summary>
 		public static ITimerCoroutineBlock WhenElapsed<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] elapsedBlocks)
 			where T : struct, ICoroutineTimerUnitSet =>
-			(ITimerCoroutineBlock)CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnElapsed = elapsedBlocks });
+			(ITimerCoroutineBlock)CoroutineBuilder.Finish(b.Script, b.Token, b.Options with { OnElapsed = elapsedBlocks });
 	}
 }

@@ -55,16 +55,16 @@ namespace LunyScript
 			CoroutineOptions.ForOpenEndedCoroutine(_name, Coroutine.Process.Heartbeat) with { OnHeartbeat = blocks });
 			*/
 
-		internal static ICoroutineBlock Finalize(Script script, BuilderToken token, in CoroutineOptions options)
+		internal static ICoroutineBlock Finish(Script script, BuilderToken token, in CoroutineOptions options)
 		{
 			ThrowIfAllSequencesEmpty(script, token, options);
 			var block = script.RuntimeContext.Coroutines.Register(options);
-			script.FinalizeBuilderToken(token);
+			script.MarkBuilderTokenFinished(token);
 			return block;
 		}
 
-		internal static void SetAutoFinalizer(Script script, BuilderToken token, CoroutineOptions options) =>
-			token?.SetAutoFinalizer(() => Finalize(script, token, options));
+		internal static void SetAutoFinish(Script script, BuilderToken token, CoroutineOptions options) =>
+			token?.SetAutoFinish(() => Finish(script, token, options));
 
 		private static void ThrowIfAllSequencesEmpty(Script script, BuilderToken token, in CoroutineOptions options)
 		{

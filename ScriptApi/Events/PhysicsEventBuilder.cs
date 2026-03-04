@@ -96,7 +96,7 @@ namespace LunyScript
 		{
 			var options = Options;
 			options.BeginsBlocks = blocks;
-			SetAutoFinalizer(Script, Token, options);
+			SetAutoFinish(Script, Token, options);
 			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
@@ -105,7 +105,7 @@ namespace LunyScript
 		{
 			var options = Options;
 			options.UpdatesBlocks = blocks;
-			SetAutoFinalizer(Script, Token, options);
+			SetAutoFinish(Script, Token, options);
 			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
@@ -114,7 +114,7 @@ namespace LunyScript
 		{
 			var options = Options;
 			options.EndsBlocks = blocks;
-			SetAutoFinalizer(Script, Token, options);
+			SetAutoFinish(Script, Token, options);
 			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
 		}
 
@@ -130,10 +130,10 @@ namespace LunyScript
 		}
 
 		// ── Finalize ──────────────────────────────────────────────────────────
-		private void SetAutoFinalizer(Script script, BuilderToken token, PhysicsEventOptions options) =>
-			token?.SetAutoFinalizer(() => Finalize(script, token, options));
+		private void SetAutoFinish(Script script, BuilderToken token, PhysicsEventOptions options) =>
+			token?.SetAutoFinish(() => Finish(script, token, options));
 
-		internal static void Finalize(Script script, BuilderToken token, in PhysicsEventOptions options)
+		internal static void Finish(Script script, BuilderToken token, in PhysicsEventOptions options)
 		{
 			if (options.BeginsBlocks == null && options.UpdatesBlocks == null && options.EndsBlocks == null)
 				throw new LunyScriptException($"{script}: Physics Event without any blocks");
@@ -182,7 +182,7 @@ namespace LunyScript
 				}
 			}
 
-			script.FinalizeBuilderToken(token);
+			script.MarkBuilderTokenFinished(token);
 		}
 
 		private static EventGuard[] BuildGuards(Double cooldownInSeconds)

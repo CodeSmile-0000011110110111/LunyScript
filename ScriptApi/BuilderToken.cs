@@ -20,7 +20,7 @@ namespace LunyScript
 		private readonly String _file;
 		private readonly Int32 _line;
 		private Boolean _isFinished;
-		private Action _autoFinalizeAction;
+		private Action _autoFinish;
 		public String Name => _name;
 		public String Type => _type;
 
@@ -53,20 +53,19 @@ namespace LunyScript
 
 		/// <summary>
 		/// Registers an action to be called automatically when the builder is in a finalizable state.
-		/// Replaces any previously registered finalizer.
 		/// </summary>
-		internal void SetAutoFinalizer(Action finalizeAction) => _autoFinalizeAction = finalizeAction;
+		internal void SetAutoFinish(Action finishAction) => _autoFinish = finishAction;
 
 		/// <summary>
 		/// Invokes the auto-finalizer action and marks the token finished.
 		/// Returns true if the builder was auto-finalized, false if no finalizer was registered.
 		/// </summary>
-		internal Boolean FinalizeBuilder()
+		internal Boolean FinishBuilder()
 		{
-			if (_autoFinalizeAction == null)
+			if (_autoFinish == null)
 				return false;
 
-			_autoFinalizeAction.Invoke();
+			_autoFinish.Invoke();
 			MarkFinished();
 			return true;
 		}

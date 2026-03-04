@@ -23,23 +23,23 @@ namespace LunyScript
 
 			var capturedScript = script;
 			var capturedOptions = options;
-			token?.SetAutoFinalizer(() => FinalizeBuilder(capturedScript, in capturedOptions, token));
+			token?.SetAutoFinish(() => Finish(capturedScript, in capturedOptions, token));
 		}
 
 		public static implicit operator ScriptActionBlock(TransformRotateBuilder<T> b) =>
-			FinalizeBuilder(b.Script, in b.Options, b.Token);
+			Finish(b.Script, in b.Options, b.Token);
 
-		internal static ScriptActionBlock FinalizeBuilder(Script script, in TransformTowardsObjectOptions options, BuilderToken token)
+		internal static ScriptActionBlock Finish(Script script, in TransformTowardsObjectOptions options, BuilderToken token)
 		{
 			var block = TransformRotateTowardsBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockX, options.LockY, options.LockZ, options.Responsiveness);
-			script.FinalizeBuilderToken(token);
+			script.MarkBuilderTokenFinished(token);
 			return block;
 		}
 
-		internal static TransformRotateTowardsLerpBlock FinalizeLerpBuilder(Script script, in TransformTowardsObjectOptions options, BuilderToken token, Boolean slerp)
+		internal static TransformRotateTowardsLerpBlock FinishLerpBuilder(Script script, in TransformTowardsObjectOptions options, BuilderToken token, Boolean slerp)
 		{
 			var block = TransformRotateTowardsLerpBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockX, options.LockY, options.LockZ, options.Responsiveness, slerp);
-			script.FinalizeBuilderToken(token);
+			script.MarkBuilderTokenFinished(token);
 			return block;
 		}
 	}
@@ -103,11 +103,11 @@ namespace LunyScript
 		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
 		public static TransformRotateTowardsLerpBlock Lerp<T>(this TransformRotateBuilder<T> b)
 			where T : struct, ITransformBuilderReady =>
-			TransformRotateBuilder<T>.FinalizeLerpBuilder(b.Script, in b.Options, b.Token, slerp: false);
+			TransformRotateBuilder<T>.FinishLerpBuilder(b.Script, in b.Options, b.Token, slerp: false);
 
 		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
 		public static TransformRotateTowardsLerpBlock Slerp<T>(this TransformRotateBuilder<T> b)
 			where T : struct, ITransformBuilderReady =>
-			TransformRotateBuilder<T>.FinalizeLerpBuilder(b.Script, in b.Options, b.Token, slerp: true);
+			TransformRotateBuilder<T>.FinishLerpBuilder(b.Script, in b.Options, b.Token, slerp: true);
 	}
 }

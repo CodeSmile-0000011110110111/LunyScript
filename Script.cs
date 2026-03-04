@@ -29,7 +29,7 @@ namespace LunyScript
 	{
 		private IScriptRuntimeContext _runtimeContext;
 		private List<BuilderToken> _pendingBuilders;
-		private HashSet<BuilderToken> _finalizedBuilders;
+		private HashSet<BuilderToken> _finishedBuilders;
 		private VarAccessor _globalVariables;
 		private VarAccessor _instanceVariables;
 
@@ -47,7 +47,7 @@ namespace LunyScript
 
 		internal void Shutdown()
 		{
-			FinalizePendingBuilderTokens();
+			ProcessPendingBuilderTokens();
 			GC.SuppressFinalize(this);
 		}
 
@@ -69,15 +69,15 @@ namespace LunyScript
 			return token;
 		}
 
-		internal void FinalizeBuilderToken(BuilderToken token)
+		internal void MarkBuilderTokenFinished(BuilderToken token)
 		{
 			token?.MarkFinished();
 
-			_finalizedBuilders ??= new HashSet<BuilderToken>();
-			_finalizedBuilders.Add(token);
+			_finishedBuilders ??= new HashSet<BuilderToken>();
+			_finishedBuilders.Add(token);
 		}
 
-		private void FinalizePendingBuilderTokens()
+		private void ProcessPendingBuilderTokens()
 		{
 			if (_pendingBuilders == null || _pendingBuilders.Count == 0)
 				return;
@@ -86,15 +86,15 @@ namespace LunyScript
 			for (var i = 0; i < _pendingBuilders.Count; i++)
 			{
 				var token = _pendingBuilders[i];
-				if (_finalizedBuilders != null && _finalizedBuilders.Contains(token))
+				if (_finishedBuilders != null && _finishedBuilders.Contains(token))
 					continue;
 
-				if (!token.FinalizeBuilder())
+				if (!token.FinishBuilder())
 					unfinishedBuilders.Add(token);
 			}
 
 			_pendingBuilders.Clear();
-			_finalizedBuilders.Clear();
+			_finishedBuilders.Clear();
 
 			foreach (var token in unfinishedBuilders)
 			{

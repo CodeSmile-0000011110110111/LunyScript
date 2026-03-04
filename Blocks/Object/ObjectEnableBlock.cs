@@ -1,3 +1,4 @@
+using Luny;
 using System;
 
 namespace LunyScript.Blocks
@@ -19,7 +20,13 @@ namespace LunyScript.Blocks
 
 		private ObjectEnableTargetBlock(String name) => _name = name;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			throw new NotImplementedException($"{nameof(ObjectEnableTargetBlock)} with name '{_name}' not implemented");
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		{
+			var target = LunyEngine.Instance.TryGetObject(_name);
+			if (target == null)
+				return;
+
+			target.IsEnabled = false;
+		}
 	}
 }

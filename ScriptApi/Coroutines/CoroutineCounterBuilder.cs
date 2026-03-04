@@ -83,7 +83,7 @@ namespace LunyScript
 		private static CoroutineCounterBuilder<T> NextBuilder<T>(CoroutineCounterBuilder<T> b, in CoroutineOptions options)
 			where T : struct, ICoroutineCounterWhen
 		{
-			CoroutineBuilder.SetAutoFinalizer(b.Script, b.Token, options);
+			CoroutineBuilder.SetAutoFinish(b.Script, b.Token, options);
 			return new CoroutineCounterBuilder<T>(b.Script, b.Token, options);
 		}
 	}
@@ -93,6 +93,6 @@ namespace LunyScript
 		/// <summary>Completes the counter and specifies blocks to run when elapsed.</summary>
 		public static ICoroutineBlock WhenElapsed<T>(this CoroutineCounterBuilder<T> b, params ScriptActionBlock[] elapsedBlocks)
 			where T : struct, ICoroutineCounterBuilderUnitSet =>
-			CoroutineBuilder.Finalize(b.Script, b.Token, b.Options with { OnElapsed = elapsedBlocks });
+			CoroutineBuilder.Finish(b.Script, b.Token, b.Options with { OnElapsed = elapsedBlocks });
 	}
 }

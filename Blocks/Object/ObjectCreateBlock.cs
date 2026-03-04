@@ -150,7 +150,10 @@ namespace LunyScript.Blocks
 		private ObjectCreateCloneBlock(ObjectCreateOptions options)
 			: base(options) => _templateName = options.TemplateName;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		{
+			var original = LunyEngine.Instance.TryGetObject(_templateName);
 			throw new NotImplementedException($"{nameof(ObjectCreateCloneBlock)}.{nameof(Execute)} is not yet implemented.");
+		}
 	}
 }

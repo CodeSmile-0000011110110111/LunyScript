@@ -17,11 +17,11 @@ namespace LunyScript
 			Token = token;
 			var capturedScript = script;
 			var capturedOptions = options;
-			token?.SetAutoFinalizer(() => FinalizeBuilder(capturedScript, capturedOptions, token));
+			token?.SetAutoFinish(() => Finish(capturedScript, capturedOptions, token));
 		}
 
 		public static implicit operator ScriptActionBlock(ObjectCreateBuilder<T> builder) =>
-			FinalizeBuilder(builder.Script, builder.Options, builder.Token);
+			Finish(builder.Script, builder.Options, builder.Token);
 
 		public ObjectCreateBuilder<T> Parent(ILunyObject parent)
 		{
@@ -58,7 +58,7 @@ namespace LunyScript
 			return new ObjectCreateBuilder<T>(Script, options, Token);
 		}
 
-		internal static ScriptActionBlock FinalizeBuilder(Script script, in ObjectCreateOptions options, BuilderToken token)
+		internal static ScriptActionBlock Finish(Script script, in ObjectCreateOptions options, BuilderToken token)
 		{
 			var block = options.Mode switch
 			{
@@ -79,7 +79,7 @@ namespace LunyScript
 					$"{nameof(ObjectCreateBuilder<ObjectBuilderNameSet>)}: Mode {options.Mode} is not implemented."),
 			};
 
-			script.FinalizeBuilderToken(token);
+			script.MarkBuilderTokenFinished(token);
 			return block;
 		}
 	}

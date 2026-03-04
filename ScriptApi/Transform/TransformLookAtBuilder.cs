@@ -21,16 +21,16 @@ namespace LunyScript
 
 			var capturedScript = script;
 			var capturedOptions = options;
-			token?.SetAutoFinalizer(() => FinalizeBuilder(capturedScript, in capturedOptions, token));
+			token?.SetAutoFinish(() => Finish(capturedScript, in capturedOptions, token));
 		}
 
 		public static implicit operator ScriptActionBlock(TransformLookAtBuilder<T> b) =>
-			FinalizeBuilder(b.Script, in b.Options, b.Token);
+			Finish(b.Script, in b.Options, b.Token);
 
-		internal static ScriptActionBlock FinalizeBuilder(Script script, in TransformLookAtOptions options, BuilderToken token)
+		internal static ScriptActionBlock Finish(Script script, in TransformLookAtOptions options, BuilderToken token)
 		{
 			var block = TransformLookAtBlock.Create(options.Target, options.WorldUp, options.AxisLock);
-			script.FinalizeBuilderToken(token);
+			script.MarkBuilderTokenFinished(token);
 			return block;
 		}
 	}

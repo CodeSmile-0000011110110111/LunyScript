@@ -6,8 +6,8 @@ namespace LunyScript
 {
 	public interface IObjectBuilderState {}
 	public interface IObjectBuilderStart : IObjectBuilderState {}
-	public interface IObjectBuilderNameSet : IObjectBuilderState, IObjectBuilderCanFinalize {}
-	public interface IObjectBuilderCanFinalize {}
+	public interface IObjectBuilderNameSet : IObjectBuilderState, IObjectBuilderCanFinish {}
+	public interface IObjectBuilderCanFinish {}
 
 	public struct ObjectBuilderStart : IObjectBuilderStart {}
 	public struct ObjectBuilderNameSet : IObjectBuilderNameSet {}

@@ -14,7 +14,9 @@ namespace LunyScript
 		internal WhenGlobalEventBuilder(Script script) => _script = script;
 
 		// public WhenInputEventBuilder Input => new(_script);
-		public WhenInputActionBuilder InputAction(String actionName) => new(_script, actionName);
+		public WhenInputActionBuilder InputAction(String actionName) =>
+			new(_script, _script.CreateBuilderToken(actionName, "When.InputAction"), actionName);
+
 		public WhenSceneEventBuilder Scene => new(_script);
 	}
 
