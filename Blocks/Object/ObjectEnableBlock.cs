@@ -26,7 +26,7 @@ namespace LunyScript.Blocks
 			if (target == null)
 				return;
 
-			target.IsEnabled = false;
+			target.IsEnabled = true;
 		}
 	}
 }

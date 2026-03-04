@@ -58,7 +58,7 @@ namespace LunyScript
 		/// Conditional execution: If(conditions).Then(blocks).ElseIf(conditions).Then(blocks).Else(blocks);
 		/// Multiple conditions are implicitly AND combined.
 		/// </summary>
-		protected IfBlockBuilder If(params ScriptConditionBlock[] conditions) => new(conditions);
+		protected IfBlock If(params ScriptConditionBlock[] conditions) => new(this, conditions);
 
 		/// <summary>
 		/// Loop execution: While(conditions).Do(blocks);

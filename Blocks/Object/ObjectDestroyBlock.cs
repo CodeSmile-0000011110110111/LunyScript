@@ -20,6 +20,13 @@ namespace LunyScript.Blocks
 
 		private ObjectDestroyTargetBlock(String name) => _name = name;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => LunyEngine.Instance.TryGetObject(_name)?.Destroy();
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		{
+			var target = LunyEngine.Instance.TryGetObject(_name);
+			if (target == null)
+				return;
+
+			target.Destroy();
+		}
 	}
 }
