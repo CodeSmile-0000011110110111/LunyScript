@@ -18,7 +18,7 @@ namespace LunyScript.Blocks
 		{
 			_distance = distance;
 			_axis = axis;
-			_speed = speed;
+			_speed = speed ?? ConstantVariableBlock.Create(1);
 			_space = space;
 		}
 

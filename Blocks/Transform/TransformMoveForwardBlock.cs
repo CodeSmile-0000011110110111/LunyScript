@@ -16,7 +16,7 @@ namespace LunyScript.Blocks
 		private TransformMoveForwardBlock(VariableBlock direction, VariableBlock speed, LunySpace space)
 		{
 			_direction = direction;
-			_speed = speed;
+			_speed = speed ?? ConstantVariableBlock.Create(1);
 			_space = space;
 		}
 

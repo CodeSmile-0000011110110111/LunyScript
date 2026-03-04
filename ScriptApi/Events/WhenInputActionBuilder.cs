@@ -34,7 +34,7 @@ namespace LunyScript
 
 	public static class WhenInputActionBuilderExtensions
 	{
-		public static WhenInputActionBuilder Started(this WhenInputActionBuilder b, params ScriptActionBlock[] startedBlocks)
+		public static WhenInputActionBuilder Begins(this WhenInputActionBuilder b, params ScriptActionBlock[] startedBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.StartedBlocks);
 
@@ -43,7 +43,7 @@ namespace LunyScript
 			return new WhenInputActionBuilder(options);
 		}
 
-		public static WhenInputActionBuilder Performed(this WhenInputActionBuilder b, params ScriptActionBlock[] performedBlocks)
+		public static WhenInputActionBuilder Changes(this WhenInputActionBuilder b, params ScriptActionBlock[] performedBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.PerformedBlocks);
 
@@ -52,7 +52,7 @@ namespace LunyScript
 			return new WhenInputActionBuilder(options);
 		}
 
-		public static WhenInputActionBuilder Performing(this WhenInputActionBuilder b, params ScriptActionBlock[] performingBlocks)
+		public static WhenInputActionBuilder Continues(this WhenInputActionBuilder b, params ScriptActionBlock[] performingBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.PerformingBlocks);
 
@@ -61,7 +61,7 @@ namespace LunyScript
 			return new WhenInputActionBuilder(options);
 		}
 
-		public static WhenInputActionBuilder Canceled(this WhenInputActionBuilder b, params ScriptActionBlock[] canceledBlocks)
+		public static WhenInputActionBuilder Ends(this WhenInputActionBuilder b, params ScriptActionBlock[] canceledBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.CanceledBlocks);
 

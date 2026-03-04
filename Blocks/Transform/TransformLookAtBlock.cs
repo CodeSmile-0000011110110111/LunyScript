@@ -9,10 +9,7 @@ namespace LunyScript.Blocks
 		private readonly LunyVector3 _worldUp;
 		private readonly LunyVector3 _axisLock;
 
-		public static TransformLookAtBlock Create(
-			ILunyObject target,
-			LunyVector3 worldUp,
-			LunyVector3 axisLock) =>
+		public static TransformLookAtBlock Create(ILunyObject target, LunyVector3 worldUp, LunyVector3 axisLock) =>
 			new(target, worldUp, axisLock);
 
 		private TransformLookAtBlock(ILunyObject target, LunyVector3 worldUp, LunyVector3 axisLock)

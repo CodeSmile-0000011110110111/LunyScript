@@ -50,8 +50,10 @@ namespace LunyScript.Events
 		private void TryRunForEvent(LunyObjectId subscriberID, LunyInputActionEvent inputEvent)
 		{
 			var context = _contexts.GetByLunyObjectID(subscriberID);
-			var sequences = context?.Scheduler?.GetInputActionEventSequences(inputEvent.ActionName, inputEvent.Phase);
-			//LunyLogger.LogInfo($"Run {sequences?.Count()} blocks on Input Action '{inputEvent.ActionName}' for {context}", this);
+			if (context == null || !context.LunyObject.IsEnabled)
+				return;
+
+			var sequences = context.Scheduler?.GetInputActionEventSequences(inputEvent.ActionName, inputEvent.Phase);
 			if (sequences != null)
 			{
 				context.SetEventArgs(inputEvent);
