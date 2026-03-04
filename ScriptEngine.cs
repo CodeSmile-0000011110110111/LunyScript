@@ -32,7 +32,7 @@ namespace LunyScript
 		/// Maximum allowed iterations for While/For loops to prevent engine hangs.
 		/// Only active in DEBUG or UNITY_EDITOR builds.
 		/// </summary>
-		public static Int32 MaxLoopIterations => 1000000;
+		public static Int32 MaxLoopIterations => UInt16.MaxValue;
 
 		internal static void ForceReset_UnitTestsOnly()
 		{

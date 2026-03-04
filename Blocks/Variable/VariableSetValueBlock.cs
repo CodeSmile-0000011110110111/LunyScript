@@ -15,6 +15,7 @@ namespace LunyScript.Blocks
 		{
 			_handle = handle ?? throw new ArgumentNullException(nameof(handle));
 			_value = value ?? throw new ArgumentNullException(nameof(value));
+			Execute(null); // instant set
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

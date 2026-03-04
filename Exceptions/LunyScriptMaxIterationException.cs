@@ -7,7 +7,7 @@ namespace LunyScript.Exceptions
 	/// </summary>
 	public sealed class LunyScriptMaxIterationException : Exception
 	{
-		public LunyScriptMaxIterationException(String blockName, Int32 limit)
-			: base($"Max loop iterations ({limit}) exceeded in {blockName}!") {}
+		public LunyScriptMaxIterationException(IScriptRuntimeContext runtimeContext, String blockName, Int32 limit)
+			: base($"Max loop iterations ({limit}) exceeded in {blockName}! ({runtimeContext})") {}
 	}
 }

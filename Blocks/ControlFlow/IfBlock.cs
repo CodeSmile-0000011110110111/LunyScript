@@ -32,7 +32,7 @@ namespace LunyScript.Blocks
 				throw new LunyScriptException("Then() blocks cannot be null or empty");
 
 			var last = _branchesBuilder.Count - 1;
-			_branchesBuilder[last] = (_branchesBuilder[last].conditions, actions:actions);
+			_branchesBuilder[last] = (_branchesBuilder[last].conditions, actions);
 			return this;
 		}
 
@@ -61,37 +61,19 @@ namespace LunyScript.Blocks
 			script.MarkBuilderTokenFinished(token);
 		}
 
-
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
 			foreach (var (conditions, actions) in _branches)
 			{
-				if (EvaluateAll(runtimeContext, conditions))
+				if (ControlFlow.EvaluateAll(runtimeContext, conditions))
 				{
-					ExecuteAll(runtimeContext, actions);
+					ControlFlow.ExecuteAll(runtimeContext, actions);
 					return;
 				}
 			}
 
 			if (_elseBlocks != null)
-				ExecuteAll(runtimeContext, _elseBlocks);
-		}
-
-		private Boolean EvaluateAll(IScriptRuntimeContext runtimeContext, ScriptConditionBlock[] conditions)
-		{
-			foreach (var condition in conditions)
-			{
-				if (condition == null || !condition.Evaluate(runtimeContext))
-					return false;
-			}
-
-			return true;
-		}
-
-		private void ExecuteAll(IScriptRuntimeContext runtimeContext, ScriptActionBlock[] actions)
-		{
-			foreach (var block in actions)
-				block.Execute(runtimeContext);
+				ControlFlow.ExecuteAll(runtimeContext, _elseBlocks);
 		}
 	}
 }

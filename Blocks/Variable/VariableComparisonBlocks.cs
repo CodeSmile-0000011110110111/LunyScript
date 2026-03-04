@@ -15,7 +15,14 @@ namespace LunyScript.Blocks
 		{
 			_left = left ?? throw new ArgumentNullException(nameof(left));
 			_right = right;
+
+			if (left.GetValue().IsNull)
+				throw new ArgumentException($"Variable {left} is uninitialized");
+			if (right is not null && right.GetValue().IsNull)
+				throw new ArgumentException($"Variable {right} is uninitialized");
 		}
+
+		public override String ToString() => $"{GetType().Name}({_left}, {_right})";
 	}
 
 	internal sealed class VariableIsEqualToBlock : VariableComparisonBlock
@@ -26,13 +33,10 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() => Evaluate(null);
+		internal override Variable GetValue() => _left.GetValue() == _right.GetValue();
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue() == _right.GetValue();
-
-		public override String ToString() => $"{_left} == {_right}";
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue();
 	}
 
 	internal sealed class VariableIsNotEqualToBlock : VariableComparisonBlock
@@ -43,11 +47,10 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() => Evaluate(null);
+		internal override Variable GetValue() => _left.GetValue() != _right.GetValue();
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue() != _right.GetValue();
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue();
 	}
 
 	internal sealed class VariableIsGreaterThanBlock : VariableComparisonBlock
@@ -58,11 +61,10 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() => Evaluate(null);
+		internal override Variable GetValue() => _left.GetValue() > (Double)_right.GetValue();
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue() > (Double)_right.GetValue();
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue();
 	}
 
 	internal sealed class VariableIsAtLeastBlock : VariableComparisonBlock
@@ -73,11 +75,10 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() => Evaluate(null);
+		internal override Variable GetValue() => _left.GetValue() >= (Double)_right.GetValue();
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue() >= (Double)_right.GetValue();
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue();
 	}
 
 	internal sealed class VariableIsLessThanBlock : VariableComparisonBlock
@@ -88,11 +89,10 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() => Evaluate(null);
+		internal override Variable GetValue() => _left.GetValue() < (Double)_right.GetValue();
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue() < (Double)_right.GetValue();
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue();
 	}
 
 	internal sealed class VariableIsAtMostBlock : VariableComparisonBlock
@@ -103,10 +103,9 @@ namespace LunyScript.Blocks
 			: base(left, right) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() => Evaluate(null);
+		internal override Variable GetValue() => _left.GetValue() <= (Double)_right.GetValue();
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
-			_left.GetValue() <= (Double)_right.GetValue();
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue();
 	}
 }

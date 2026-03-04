@@ -1,5 +1,4 @@
 using LunyScript.Exceptions;
-using System;
 
 namespace LunyScript.Blocks
 {
@@ -9,55 +8,31 @@ namespace LunyScript.Blocks
 	internal sealed class WhileBlock : ScriptActionBlock
 	{
 		private readonly ScriptConditionBlock[] _conditions;
-		private readonly ScriptActionBlock[] _blocks;
+		private readonly ScriptActionBlock[] _actions;
 
-		public static WhileBlock Create(ScriptConditionBlock[] conditions, ScriptActionBlock[] blocks) => new(conditions, blocks);
+		public static WhileBlock Create(ScriptConditionBlock[] conditions, ScriptActionBlock[] actions) => new(conditions, actions);
 
-		private WhileBlock(ScriptConditionBlock[] conditions, ScriptActionBlock[] blocks)
+		private WhileBlock(ScriptConditionBlock[] conditions, ScriptActionBlock[] actions)
 		{
 			_conditions = conditions;
-			_blocks = blocks;
+			_actions = actions;
 		}
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
 #if DEBUG || UNITY_EDITOR
 			var iterations = 0;
+			var limit = ScriptEngine.MaxLoopIterations;
 #endif
 
-			var limit = ScriptEngine.MaxLoopIterations;
-
-			while (EvaluateAll(runtimeContext))
+			while (ControlFlow.EvaluateAll(runtimeContext, _conditions))
 			{
 #if DEBUG || UNITY_EDITOR
 				if (++iterations > limit)
-					throw new LunyScriptMaxIterationException(nameof(WhileBlock), limit);
+					throw new LunyScriptMaxIterationException(runtimeContext, nameof(WhileBlock), limit);
 #endif
-				ExecuteAll(runtimeContext);
+				ControlFlow.ExecuteAll(runtimeContext, _actions);
 			}
-		}
-
-		private Boolean EvaluateAll(IScriptRuntimeContext runtimeContext)
-		{
-			if (_conditions == null || _conditions.Length == 0)
-				return false; // Infinite loop prevention if no conditions
-
-			foreach (var condition in _conditions)
-			{
-				if (!condition.Evaluate(runtimeContext))
-					return false;
-			}
-
-			return true;
-		}
-
-		private void ExecuteAll(IScriptRuntimeContext runtimeContext)
-		{
-			if (_blocks == null)
-				return;
-
-			foreach (var block in _blocks)
-				block.Execute(runtimeContext);
 		}
 	}
 }
