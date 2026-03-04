@@ -3,7 +3,6 @@ using Luny.Engine.Bridge.Physics;
 using LunyScript.Blocks;
 using LunyScript.Blocks.Guards;
 using LunyScript.Blocks.PhysicsEvent;
-using LunyScript.Blocks.Predicates;
 using LunyScript.Exceptions;
 using System;
 

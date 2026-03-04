@@ -32,12 +32,12 @@ namespace LunyScript
 		protected EditorApi Editor => new(this);
 		protected InputBuilder Input => new(this);
 		protected ObjectBuilder Object => new(this);
-		protected ObjectEventBuilder On => new(this);
+		protected OnObjectEventBuilder On => new(this);
 		protected PrefabBuilder Prefab => new(this);
 		protected SceneApi Scene => new(this);
 		protected TimeApi Time => new(this);
 		protected TransformBuilder Transform => new(this);
-		protected WhenExternalEventBuilder When => new(this);
+		protected WhenGlobalEventBuilder When => new(this);
 
 		/// <summary>
 		/// Creates a named coroutine.

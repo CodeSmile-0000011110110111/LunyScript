@@ -1,6 +1,7 @@
+using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Blocks
+namespace LunyScript
 {
 	/// <summary>
 	/// Builder for 'For' loops.

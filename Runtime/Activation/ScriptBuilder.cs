@@ -1,6 +1,5 @@
 using Luny;
 using Luny.Engine.Bridge;
-using LunyScript.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,29 +47,23 @@ namespace LunyScript.Activation
 			}
 		}
 
-		private static void BuildAndRegisterLunyScript(ScriptContext scriptContext, ScriptRuntimeContext runtimeContext, LunyScriptRunner runner)
+		private static void BuildAndRegisterLunyScript(ScriptContext scriptContext, ScriptRuntimeContext runtimeContext,
+			LunyScriptRunner runner)
 		{
-			// try
-			// {
-				//LunyLogger.LogInfo($"Building {runtimeContext} ...", nameof(ScriptBuilder));
+			//LunyLogger.LogInfo($"Building {runtimeContext} ...", nameof(ScriptBuilder));
 
-				// Create script instance, initialize with context, and call Build()
-				var scriptInstance = (Script)Activator.CreateInstance(runtimeContext.ScriptType);
-				scriptInstance.Initialize(runtimeContext);
-				scriptInstance.Build(scriptContext);
-				scriptInstance.Shutdown();
+			// Create script instance, initialize with context, and call Build()
+			var scriptInstance = (Script)Activator.CreateInstance(runtimeContext.ScriptType);
+			scriptInstance.Initialize(runtimeContext);
+			scriptInstance.Build(scriptContext);
+			scriptInstance.Shutdown();
 
-				runner.InvokeOnScriptBuilt(runtimeContext);
+			runner.InvokeOnScriptBuilt(runtimeContext);
 
-				// hook up events
-				runner.ObjectEventHandler.Register(runtimeContext);
-				runner.SceneEventHandler.Register(runtimeContext);
-			// }
-			// catch (Exception ex)
-			// {
-			// 	LunyLogger.LogException(ex, nameof(ScriptBuilder));
-			// 	throw;
-			// }
+			// hook up events
+			runner.ObjectEventHandler.Register(runtimeContext);
+			runner.SceneEventHandler.Register(runtimeContext);
+			runner.InputEventHandler.Register(runtimeContext);
 		}
 
 		private static void ActivateScripts(IEnumerable<ScriptRuntimeContext> contexts)

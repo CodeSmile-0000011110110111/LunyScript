@@ -1,7 +1,8 @@
+using LunyScript.Blocks;
 using System;
 using System.Collections.Generic;
 
-namespace LunyScript.Blocks
+namespace LunyScript
 {
 	/// <summary>
 	/// Builder for constructing 'If' blocks with 'ElseIf' and 'Else' branches.

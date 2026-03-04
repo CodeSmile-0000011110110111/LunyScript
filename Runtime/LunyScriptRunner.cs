@@ -26,6 +26,7 @@ namespace LunyScript
 		[NotNull] private ScriptRuntimeContextRegistry _contexts;
 		[NotNull] private ScriptObjectEventHandler _objectEventHandler;
 		[NotNull] private ScriptSceneEventHandler _sceneEventHandler;
+		[NotNull] private ScriptInputEventHandler _inputEventHandler;
 
 		private ILunyTimeService _engineTime;
 		private Table.ScalarVarHandle gvar_Time_HeartbeatCount;
@@ -36,6 +37,7 @@ namespace LunyScript
 		internal ScriptRuntimeContextRegistry Contexts => _contexts;
 		internal ScriptObjectEventHandler ObjectEventHandler => _objectEventHandler;
 		internal ScriptSceneEventHandler SceneEventHandler => _sceneEventHandler;
+		internal ScriptInputEventHandler InputEventHandler => _inputEventHandler;
 
  	internal static void Run(IEnumerable<SequenceBlock> sequences, ScriptRuntimeContext runtimeContext)
 		{
@@ -109,6 +111,7 @@ namespace LunyScript
 			_contexts = new ScriptRuntimeContextRegistry();
 			_objectEventHandler = new ScriptObjectEventHandler(_contexts);
 			_sceneEventHandler = new ScriptSceneEventHandler(_contexts);
+			_inputEventHandler = new ScriptInputEventHandler(_contexts);
 			_engineTime = LunyEngine.Instance.Time;
 
 			LunyTraceLogger.LogInfoInitialized(this);
@@ -147,8 +150,9 @@ namespace LunyScript
 					context.LunyObject.Destroy();
 
 				// final cleanup of pending object destroy
-				_objectEventHandler.Shutdown();
+				_inputEventHandler.Shutdown();
 				_sceneEventHandler.Shutdown();
+				_objectEventHandler.Shutdown();
 				_contexts.Shutdown();
 				_scripts.Shutdown();
 				_scriptEngine.Shutdown();

@@ -1,4 +1,6 @@
-namespace LunyScript.Blocks
+using LunyScript.Blocks;
+
+namespace LunyScript
 {
 	/// <summary>
 	/// Builder for 'While' loops.

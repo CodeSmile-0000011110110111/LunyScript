@@ -1,6 +1,4 @@
-﻿using LunyScript;
-
-namespace LunyScript.SmokeTests.Coroutines
+﻿namespace LunyScript.SmokeTests.Coroutine
 {
 	public partial class CoroutineEvery : Script
 	{

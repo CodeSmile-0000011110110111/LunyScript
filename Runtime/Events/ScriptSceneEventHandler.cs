@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace LunyScript.Events
 {
 	/// <summary>
-	/// Manages scene events by attaching hooks to LunyObjects and handling event dispatch.
+	/// Handles scene events.
 	/// </summary>
 	internal sealed class ScriptSceneEventHandler
 	{
@@ -43,9 +43,11 @@ namespace LunyScript.Events
 			var context = _contexts.GetByLunyObjectID(subscriberID);
 			var sequences = context?.Scheduler?.GetSceneEventSequences(sceneEvent);
 			if (sequences != null)
+			{
 				LunyLogger.LogInfo($"Running {nameof(sceneEvent)} for {context}", this);
 
-			LunyScriptRunner.Run(sequences, context);
+				LunyScriptRunner.Run(sequences, context);
+			}
 		}
 
 		public void Shutdown()

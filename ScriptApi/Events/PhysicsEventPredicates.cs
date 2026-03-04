@@ -1,7 +1,7 @@
 using Luny.Engine.Bridge.Physics;
 using System;
 
-namespace LunyScript.Blocks.Predicates
+namespace LunyScript
 {
 	/// <summary>
 	/// Factory methods for per-kind trigger predicates. Each predicate encodes OR logic within its kind.

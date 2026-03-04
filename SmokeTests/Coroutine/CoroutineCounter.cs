@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LunyScript.SmokeTests.Coroutines
+namespace LunyScript.SmokeTests.Coroutine
 {
 	public class CoroutineCounter : Script
 	{

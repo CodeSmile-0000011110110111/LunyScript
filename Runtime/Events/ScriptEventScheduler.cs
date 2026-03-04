@@ -27,8 +27,9 @@ namespace LunyScript.Events
 		private List<ISequenceBlock>[] _triggerSequences;
 		private List<ISequenceBlock>[] _collision2DSequences;
 		private List<ISequenceBlock>[] _trigger2DSequences;
+		private Dictionary<String, List<ISequenceBlock>> _inputActionSequences;
 
-		internal static ISequenceBlock SchedulePhysicsSequence(ref List<ISequenceBlock>[] sequencesRef, ISequenceBlock sequence,
+		private static ISequenceBlock SchedulePhysicsSequence(ref List<ISequenceBlock>[] sequencesRef, ISequenceBlock sequence,
 			Int32 eventIndex, Int32 eventCount)
 		{
 			if (sequence != null && !sequence.IsEmpty)
@@ -54,9 +55,7 @@ namespace LunyScript.Events
 			return sequence;
 		}
 
-		~ScriptEventScheduler() => LunyTraceLogger.LogInfoFinalized(this);
-
-		/// Schedule Events
+		// Scheduling
 		internal ISequenceBlock ScheduleObjectEventSequence(ScriptActionBlock[] blocks, LunyObjectEvent objectEvent) =>
 			ScheduleSequence(ref _objectSequences, SequenceBlock.TryCreate(blocks), (Int32)objectEvent, s_ObjectEventCount);
 
@@ -69,19 +68,37 @@ namespace LunyScript.Events
 		internal ISequenceBlock ScheduleTriggerEventSequence(TriggerSequenceBlock blocks, LunyTriggerEvent triggerEvent) =>
 			SchedulePhysicsSequence(ref _triggerSequences, blocks, (Int32)triggerEvent, s_TriggerEventCount);
 
-		// internal ISequenceBlock ScheduleCollision2DEventSequence(CollisionSequence2DBlock[] blocks, LunyCollision2DEvent collision2DEvent) =>
-		// 	SchedulePhysicsSequence(ref _collision2DSequences, SequenceBlock.TryCreate(blocks), (Int32)collision2DEvent, s_Collision2DEventCount);
-		//
-		// internal ISequenceBlock ScheduleTrigger2DEventSequence(TriggerSequence2DBlock[] blocks, LunyTrigger2DEvent trigger2DEvent) =>
-		// 	SchedulePhysicsSequence(ref _trigger2DSequences, SequenceBlock.TryCreate(blocks), (Int32)trigger2DEvent, s_Trigger2DEventCount);
+		internal ISequenceBlock ScheduleInputActionEventSequence(String actionName, ScriptActionBlock[] blocks)
+		{
+			var sequence = SequenceBlock.TryCreate(blocks);
+			if (sequence != null && !sequence.IsEmpty)
+			{
+				_inputActionSequences ??= new Dictionary<String, List<ISequenceBlock>>();
+				if (!_inputActionSequences.TryGetValue(actionName, out var sequences))
+					_inputActionSequences[actionName] = sequences = new List<ISequenceBlock>();
 
-		/// Gets all sequences scheduled for a specific lifecycle event.
+				sequences.Add(sequence);
+			}
+
+			return sequence;
+		}
+
+		internal void Unschedule(LunyObjectEvent objectEvent)
+		{
+			if (_objectSequences == null)
+				return;
+
+			_objectSequences[(Int32)objectEvent] = null;
+		}
+
+		// Get scheduled sequences
 		internal IEnumerable<ISequenceBlock> GetObjectEventSequences(LunyObjectEvent objectEvent) =>
 			IsObserving((Int32)objectEvent, ref _objectSequences) ? _objectSequences[(Int32)objectEvent] : null;
 
-		internal IEnumerable<ISequenceBlock> GetSceneEventSequences(LunySceneEvent sceneEvent) => IsObserving((Int32)sceneEvent, ref _sceneSequences)
-			? _sceneSequences[(Int32)sceneEvent]
-			: null;
+		internal IEnumerable<ISequenceBlock> GetSceneEventSequences(LunySceneEvent sceneEvent) =>
+			IsObserving((Int32)sceneEvent, ref _sceneSequences)
+				? _sceneSequences[(Int32)sceneEvent]
+				: null;
 
 		internal IEnumerable<ISequenceBlock> GetCollisionEventSequences(LunyCollisionEvent collisionEvent) =>
 			IsObserving((Int32)collisionEvent, ref _collisionSequences)
@@ -103,8 +120,15 @@ namespace LunyScript.Events
 				? _triggerSequences[(Int32)triggerEvent]
 				: null;
 
-		internal Boolean IsObserving(Int32 eventIndex, ref List<ISequenceBlock>[] sequencesRef) =>
+		internal IEnumerable<ISequenceBlock> GetInputActionEventSequences(String inputActionName) =>
+			IsObservingInputAction(inputActionName, out var sequences) ? sequences : null;
+
+		// Observing queries
+		private Boolean IsObserving(Int32 eventIndex, ref List<ISequenceBlock>[] sequencesRef) =>
 			sequencesRef != null && sequencesRef[eventIndex] != null && sequencesRef[eventIndex].Count > 0;
+
+		private Boolean IsObservingInputAction(String actionName, out List<ISequenceBlock> sequencesRef) =>
+			_inputActionSequences.TryGetValue(actionName, out sequencesRef);
 
 		internal Boolean IsObservingAnyOf(Type enumType)
 		{
@@ -122,19 +146,14 @@ namespace LunyScript.Events
 					return _collision2DSequences != null;
 				case not null when enumType == typeof(LunyTrigger2DEvent):
 					return _trigger2DSequences != null;
+				case not null when enumType == typeof(LunyInputActionEvent):
+					return _inputActionSequences != null;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(enumType), enumType?.ToString());
 			}
 		}
 
-		internal void Unschedule(LunyObjectEvent objectEvent)
-		{
-			if (_objectSequences == null)
-				return;
-
-			_objectSequences[(Int32)objectEvent] = null;
-		}
-
-		public void Shutdown() => GC.SuppressFinalize(this);
+		internal void Shutdown() => GC.SuppressFinalize(this);
+		~ScriptEventScheduler() => LunyTraceLogger.LogInfoFinalized(this);
 	}
 }

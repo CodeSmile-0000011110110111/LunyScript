@@ -28,11 +28,11 @@ namespace LunyScript
 		public static Boolean operator !=(BuilderToken left, BuilderToken right) => !Equals(left, right);
 
 		[DebuggerHidden]
-		public static void LogUnfinishedBuilder(BuilderToken token) => LunyLogger.LogWarning(
+		internal static void LogUnfinishedBuilder(BuilderToken token) => LunyLogger.LogWarning(
 			$"{Path.GetFileName(token._file)}, line {token._line}: {token._type} '{token._name}' is incomplete. " +
 			"Did you forget to append a final blocks method like '.Do(blocks)' ?");
 
-		public BuilderToken(String name, String type, [CallerFilePath] String file = "", [CallerLineNumber] Int32 lineNumber = -1)
+		internal BuilderToken(String name, String type, [CallerFilePath] String file = "", [CallerLineNumber] Int32 lineNumber = -1)
 		{
 			_id = s_NextId++;
 			_name = name;
@@ -61,7 +61,7 @@ namespace LunyScript
 		/// Invokes the auto-finalizer action and marks the token finished.
 		/// Returns true if the builder was auto-finalized, false if no finalizer was registered.
 		/// </summary>
-		public Boolean FinalizeBuilder()
+		internal Boolean FinalizeBuilder()
 		{
 			if (_autoFinalizeAction == null)
 				return false;
@@ -71,7 +71,7 @@ namespace LunyScript
 			return true;
 		}
 
-		public void MarkFinished()
+		internal void MarkFinished()
 		{
 			_isFinished = true;
 			GC.SuppressFinalize(this);
