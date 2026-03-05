@@ -3,13 +3,13 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformSetLocalScaleBlock : ScriptActionBlock
+	public sealed class TransformScaleSetLocalBlock : ScriptActionBlock
 	{
 		private readonly VariableBlock _scale;
 
-		public static TransformSetLocalScaleBlock Create(VariableBlock scale) => new(scale);
+		public static TransformScaleSetLocalBlock Create(VariableBlock scale) => new(scale);
 
-		private TransformSetLocalScaleBlock(VariableBlock scale) => _scale = scale;
+		private TransformScaleSetLocalBlock(VariableBlock scale) => _scale = scale;
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
 			runtimeContext.LunyObject.Transform.LocalScale = _scale.GetValue<LunyVector3>();

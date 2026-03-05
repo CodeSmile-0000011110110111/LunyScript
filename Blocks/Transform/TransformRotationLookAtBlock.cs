@@ -3,16 +3,16 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformLookAtBlock : ScriptActionBlock
+	public sealed class TransformRotationLookAtBlock : ScriptActionBlock
 	{
 		private readonly ILunyObject _target;
 		private readonly LunyVector3 _worldUp;
 		private readonly LunyVector3 _axisLock;
 
-		public static TransformLookAtBlock Create(ILunyObject target, LunyVector3 worldUp, LunyVector3 axisLock) =>
+		public static TransformRotationLookAtBlock Create(ILunyObject target, LunyVector3 worldUp, LunyVector3 axisLock) =>
 			new(target, worldUp, axisLock);
 
-		private TransformLookAtBlock(ILunyObject target, LunyVector3 worldUp, LunyVector3 axisLock)
+		private TransformRotationLookAtBlock(ILunyObject target, LunyVector3 worldUp, LunyVector3 axisLock)
 		{
 			_target = target;
 			_worldUp = worldUp;
@@ -22,9 +22,7 @@ namespace LunyScript.Blocks
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
 			var transform = runtimeContext.LunyObject.Transform;
-			var direction = _target.Transform.Position - transform.Position;
-			var maskedDirection = direction * _axisLock;
-			if (maskedDirection.SqrMagnitude < Single.Epsilon)
+			if (!VectorUtil.TryGetMaskedDirection(transform.Position, _target.Transform.Position, _axisLock, out var maskedDirection))
 				return;
 
 			var lookTarget = transform.Position + maskedDirection;

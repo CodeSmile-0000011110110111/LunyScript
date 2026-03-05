@@ -1,8 +1,14 @@
 ﻿using Luny.Engine.Bridge;
 using LunyScript.Blocks;
+using System;
 
 namespace LunyScript
 {
+	public interface ITransformBuilderState {}
+	public interface ITransformBuilderReady : ITransformBuilderState {}
+
+	public struct TransformBuilderReady : ITransformBuilderReady {}
+
 	public readonly struct TransformBuilder
 	{
 		private readonly Script _script;
@@ -12,19 +18,19 @@ namespace LunyScript
 		// --- Set (Absolute Snap) ---
 
 		/// <summary> Instantly set the World position. </summary>
-		public TransformSetPositionBlock SetPosition(VariableBlock position) => TransformSetPositionBlock.Create(position);
+		public TransformPositionSetWorldBlock SetPosition(VariableBlock position) => TransformPositionSetWorldBlock.Create(position);
 
 		/// <summary> Instantly set the Local position. </summary>
-		public TransformSetLocalPositionBlock SetLocalPosition(VariableBlock position) => TransformSetLocalPositionBlock.Create(position);
+		public TransformPositionSetLocalBlock SetLocalPosition(VariableBlock position) => TransformPositionSetLocalBlock.Create(position);
 
 		/// <summary> Instantly set the World rotation. </summary>
-		public TransformSetRotationBlock SetRotation(VariableBlock rotation) => TransformSetRotationBlock.Create(rotation);
+		public TransformRotationSetWorldBlock SetRotation(VariableBlock rotation) => TransformRotationSetWorldBlock.Create(rotation);
 
 		/// <summary> Instantly set the Local rotation. </summary>
-		public TransformSetLocalRotationBlock SetLocalRotation(VariableBlock rotation) => TransformSetLocalRotationBlock.Create(rotation);
+		public TransformRotationSetLocalBlock SetLocalRotation(VariableBlock rotation) => TransformRotationSetLocalBlock.Create(rotation);
 
 		/// <summary> Instantly set the Local scale. </summary>
-		public TransformSetLocalScaleBlock SetLocalScale(VariableBlock scale) => TransformSetLocalScaleBlock.Create(scale);
+		public TransformScaleSetLocalBlock SetLocalScale(VariableBlock scale) => TransformScaleSetLocalBlock.Create(scale);
 
 		// --- Look At ---
 
@@ -46,11 +52,11 @@ namespace LunyScript
 		/// Chain <c>.Speed(n)</c>, <c>.Responsiveness(n)</c>, <c>.DeadZone(n)</c>, <c>.LockX/Y/Z()</c>
 		/// then call <c>.Do()</c> (linear), <c>.Lerp()</c> or <c>.Slerp()</c>.
 		/// </summary>
-		public TransformMoveBuilder<TransformBuilderReady> MoveTowards(ILunyObject target)
+		public TransformPositionBuilder<TransformBuilderReady> MoveTowards(ILunyObject target)
 		{
-			var options = new TransformTowardsObjectOptions { Target = target, Speed = 3.0, DeadZone = 0.1, Responsiveness = 1.0 };
+ 		var options = new TransformTowardsObjectOptions { Target = target, Speed = 3.0, DeadZone = 0.1, Responsiveness = 1.0, AxisLock = LunyVector3.One };
 			var token = _script.CreateBuilderToken(nameof(MoveTowards), "Transform.Move()");
-			return new TransformMoveBuilder<TransformBuilderReady>(_script, options, token);
+			return new TransformPositionBuilder<TransformBuilderReady>(_script, options, token);
 		}
 
 		// --- Rotate Towards ---
@@ -60,11 +66,11 @@ namespace LunyScript
 		/// Chain <c>.Speed(n)</c>, <c>.Responsiveness(n)</c>, <c>.DeadZone(n)</c>, <c>.LockX/Y/Z()</c>
 		/// then call <c>.Do()</c> (degrees/sec), <c>.Lerp()</c> or <c>.Slerp()</c>.
 		/// </summary>
-		public TransformRotateBuilder<TransformBuilderReady> RotateTowards(ILunyObject target)
+		public TransformRotationBuilder<TransformBuilderReady> RotateTowards(ILunyObject target)
 		{
-			var options = new TransformTowardsObjectOptions { Target = target, Speed = 90.0, DeadZone = 0.1, Responsiveness = 1.0 };
+ 		var options = new TransformTowardsObjectOptions { Target = target, Speed = 90.0, DeadZone = 0.1, Responsiveness = 1.0, AxisLock = LunyVector3.One };
 			var token = _script.CreateBuilderToken(nameof(RotateTowards), "Transform.Rotate()");
-			return new TransformRotateBuilder<TransformBuilderReady>(_script, options, token);
+			return new TransformRotationBuilder<TransformBuilderReady>(_script, options, token);
 		}
 
 		// --- Scale Towards ---
@@ -76,7 +82,7 @@ namespace LunyScript
 		/// </summary>
 		public TransformScaleBuilder<TransformBuilderReady> ScaleTowards(VariableBlock targetScale)
 		{
-			var options = new TransformTowardsVariableOptions { TargetScale = targetScale, Speed = 1.0, DeadZone = 0.1, Responsiveness = 1.0 };
+ 		var options = new TransformTowardsVariableOptions { TargetScale = targetScale, Speed = 1.0, DeadZone = 0.1, Responsiveness = 1.0, AxisLock = LunyVector3.One };
 			var token = _script.CreateBuilderToken(nameof(ScaleTowards), "Transform.Scale()");
 			return new TransformScaleBuilder<TransformBuilderReady>(_script, options, token);
 		}
@@ -92,62 +98,62 @@ namespace LunyScript
 		// --- Local Scalar Movement (Relative to "Nose") ---
 
 		/// <summary> Forward/Backward based on orientation. </summary>
-		public TransformMoveForwardBlock MoveBy(VariableBlock direction, VariableBlock speed = null) =>
-			TransformMoveForwardBlock.Create(direction, speed, LunySpace.Self);
+		public TransformPositionMoveByBlock MoveBy(VariableBlock direction, VariableBlock speed = null) =>
+			TransformPositionMoveByBlock.Create(direction, speed, LunySpace.Self);
 
 		/// <summary> Forward/Backward based on orientation. </summary>
-		public TransformMoveAbsoluteBlock MoveForward(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Forward, speed, LunySpace.Self);
+		public TransformPositionMoveRelativeBlock MoveForward(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Forward, speed, LunySpace.Self);
 
 		/// <summary> Sideways relative to orientation. </summary>
-		public TransformMoveAbsoluteBlock MoveRight(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Right, speed, LunySpace.Self);
+		public TransformPositionMoveRelativeBlock MoveRight(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Right, speed, LunySpace.Self);
 
 		/// <summary> Sideways relative to orientation. </summary>
-		public TransformMoveAbsoluteBlock MoveUp(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Up, speed, LunySpace.Self);
+		public TransformPositionMoveRelativeBlock MoveUp(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Up, speed, LunySpace.Self);
 
 		/// <summary> Forward/Backward based on orientation. </summary>
-		public TransformMoveAbsoluteBlock MoveBack(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Back, speed, LunySpace.Self);
+		public TransformPositionMoveRelativeBlock MoveBack(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Back, speed, LunySpace.Self);
 
 		/// <summary> Sideways relative to orientation. </summary>
-		public TransformMoveAbsoluteBlock MoveLeft(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Left, speed, LunySpace.Self);
+		public TransformPositionMoveRelativeBlock MoveLeft(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Left, speed, LunySpace.Self);
 
 		/// <summary> Sideways relative to orientation. </summary>
-		public TransformMoveAbsoluteBlock MoveDown(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Down, speed, LunySpace.Self);
+		public TransformPositionMoveRelativeBlock MoveDown(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Down, speed, LunySpace.Self);
 
 		// --- World Scalar Movement (Relative to "Map") ---
 
 		/// <summary> Forward/Backward based on orientation. </summary>
-		public TransformMoveForwardBlock ShiftBy(VariableBlock direction, VariableBlock speed = null) =>
-			TransformMoveForwardBlock.Create(direction, speed, LunySpace.World);
+		public TransformPositionMoveByBlock ShiftBy(VariableBlock direction, VariableBlock speed = null) =>
+			TransformPositionMoveByBlock.Create(direction, speed, LunySpace.World);
 
 		/// <summary> Forward/backward on the World forward axis. </summary>
-		public TransformMoveAbsoluteBlock ShiftForward(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Forward, speed, LunySpace.World);
+		public TransformPositionMoveRelativeBlock ShiftForward(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Forward, speed, LunySpace.World);
 
 		/// <summary> Left/Right on the World right axis. </summary>
-		public TransformMoveAbsoluteBlock ShiftRight(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Right, speed, LunySpace.World);
+		public TransformPositionMoveRelativeBlock ShiftRight(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Right, speed, LunySpace.World);
 
 		/// <summary> Up/Down on the World up axis. </summary>
-		public TransformMoveAbsoluteBlock ShiftUp(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Up, speed, LunySpace.World);
+		public TransformPositionMoveRelativeBlock ShiftUp(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Up, speed, LunySpace.World);
 
 		/// <summary> Forward/backward on the World forward axis. </summary>
-		public TransformMoveAbsoluteBlock ShiftBack(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Back, speed, LunySpace.World);
+		public TransformPositionMoveRelativeBlock ShiftBack(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Back, speed, LunySpace.World);
 
 		/// <summary> Left/Right on the World right axis. </summary>
-		public TransformMoveAbsoluteBlock ShiftLeft(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Left, speed, LunySpace.World);
+		public TransformPositionMoveRelativeBlock ShiftLeft(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Left, speed, LunySpace.World);
 
 		/// <summary> Up/Down on the World up axis. </summary>
-		public TransformMoveAbsoluteBlock ShiftDown(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveAbsoluteBlock.Create(amount, LunyVector3.Down, speed, LunySpace.World);
+		public TransformPositionMoveRelativeBlock ShiftDown(VariableBlock amount, VariableBlock speed = null) =>
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Down, speed, LunySpace.World);
 
 		// --- Absolute Positioning (Targeting) ---
 
@@ -162,5 +168,42 @@ namespace LunyScript
 		/// <summary> Set absolute World Y coordinate. </summary>
 		public static TransformTeleportBlock ShiftUpTo(VariableBlock targetY) =>
 			TransformTeleportBlock.CreateY(targetY);*/
+	}
+
+	internal struct TransformLookAtOptions
+	{
+		public ILunyObject Target;
+		public LunyVector3 WorldUp;
+		public LunyVector3 AxisLock;
+
+		public void LockAxisX() => AxisLock = VectorUtil.LockAxisX(AxisLock);
+		public void LockAxisY() => AxisLock = VectorUtil.LockAxisY(AxisLock);
+		public void LockAxisZ() => AxisLock = VectorUtil.LockAxisZ(AxisLock);
+	}
+
+	internal struct TransformTowardsObjectOptions
+	{
+		public ILunyObject Target;
+		public Double Speed;
+		public Double DeadZone;
+		public LunyVector3 AxisLock;
+		public Double Responsiveness;
+
+		public void LockAxisX() => AxisLock = VectorUtil.LockAxisX(AxisLock);
+		public void LockAxisY() => AxisLock = VectorUtil.LockAxisY(AxisLock);
+		public void LockAxisZ() => AxisLock = VectorUtil.LockAxisZ(AxisLock);
+	}
+
+	internal struct TransformTowardsVariableOptions
+	{
+		public VariableBlock TargetScale;
+		public Double Speed;
+		public Double DeadZone;
+		public LunyVector3 AxisLock;
+		public Double Responsiveness;
+
+		public void LockAxisX() => AxisLock = VectorUtil.LockAxisX(AxisLock);
+		public void LockAxisY() => AxisLock = VectorUtil.LockAxisY(AxisLock);
+		public void LockAxisZ() => AxisLock = VectorUtil.LockAxisZ(AxisLock);
 	}
 }

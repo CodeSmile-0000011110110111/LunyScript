@@ -1,4 +1,4 @@
-using Luny.Engine.Bridge.Physics;
+using Luny.Engine.Bridge;
 using System;
 
 namespace LunyScript

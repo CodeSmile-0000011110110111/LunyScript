@@ -3,13 +3,13 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformSetLocalRotationBlock : ScriptActionBlock
+	public sealed class TransformRotationSetLocalBlock : ScriptActionBlock
 	{
 		private readonly VariableBlock _rotation;
 
-		public static TransformSetLocalRotationBlock Create(VariableBlock rotation) => new(rotation);
+		public static TransformRotationSetLocalBlock Create(VariableBlock rotation) => new(rotation);
 
-		private TransformSetLocalRotationBlock(VariableBlock rotation) => _rotation = rotation;
+		private TransformRotationSetLocalBlock(VariableBlock rotation) => _rotation = rotation;
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
 			runtimeContext.LunyObject.Transform.LocalRotation = _rotation.GetValue<LunyQuaternion>();

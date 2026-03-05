@@ -1,19 +1,18 @@
-﻿using Luny;
-using Luny.Engine.Bridge;
+﻿using Luny.Engine.Bridge;
 using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformMoveForwardBlock : ScriptActionBlock
+	public sealed class TransformPositionMoveByBlock : ScriptActionBlock
 	{
 		private VariableBlock _direction;
 		private VariableBlock _speed;
 		private LunySpace _space;
 
-		public static TransformMoveForwardBlock Create(VariableBlock direction, VariableBlock speed, LunySpace space) =>
+		public static TransformPositionMoveByBlock Create(VariableBlock direction, VariableBlock speed, LunySpace space) =>
 			new(direction, speed, space);
 
-		private TransformMoveForwardBlock(VariableBlock direction, VariableBlock speed, LunySpace space)
+		private TransformPositionMoveByBlock(VariableBlock direction, VariableBlock speed, LunySpace space)
 		{
 			_direction = direction;
 			_speed = speed ?? ConstantVariableBlock.Create(1);
@@ -24,9 +23,8 @@ namespace LunyScript.Blocks
 		{
 			var transform = runtimeContext.LunyObject.Transform;
 			var direction = _direction?.GetValue<LunyVector2>() ?? LunyVector2.Zero;
-			var deltaTime = LunyEngine.Instance.Time.DeltaTime;
 			var speed = _speed?.GetValue<Double>() ?? 1d;
-			var translation = direction * (speed * deltaTime);
+			var translation = direction * (speed * LunyTime.DeltaTime);
 			transform.Translate(translation, _space);
 		}
 

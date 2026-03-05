@@ -4,7 +4,7 @@ using LunyScript.Blocks;
 namespace LunyScript
 {
 	/// <summary>
-	/// Fluent builder for <see cref="TransformLookAtBlock"/>.
+	/// Fluent builder for <see cref="TransformRotationLookAtBlock"/>.
 	/// Usage: Transform.LookAt(target).WorldUp(v).LockX()
 	/// </summary>
 	public readonly struct TransformLookAtBuilder<T> where T : struct, ITransformBuilderState
@@ -29,7 +29,7 @@ namespace LunyScript
 
 		internal static ScriptActionBlock Finish(Script script, in TransformLookAtOptions options, BuilderToken token)
 		{
-			var block = TransformLookAtBlock.Create(options.Target, options.WorldUp, options.AxisLock);
+			var block = TransformRotationLookAtBlock.Create(options.Target, options.WorldUp, options.AxisLock);
 			script.MarkBuilderTokenFinished(token);
 			return block;
 		}
@@ -51,7 +51,7 @@ namespace LunyScript
 			where T : struct, ITransformBuilderReady
 		{
 			var options = b.Options;
-			options.AxisLock = new LunyVector3(0d, options.AxisLock.Y, options.AxisLock.Z);
+			options.LockAxisX();
 			return new TransformLookAtBuilder<TransformBuilderReady>(b.Script, options, b.Token);
 		}
 
@@ -60,7 +60,7 @@ namespace LunyScript
 			where T : struct, ITransformBuilderReady
 		{
 			var options = b.Options;
-			options.AxisLock = new LunyVector3(options.AxisLock.X, 0d, options.AxisLock.Z);
+			options.LockAxisY();
 			return new TransformLookAtBuilder<TransformBuilderReady>(b.Script, options, b.Token);
 		}
 
@@ -69,7 +69,7 @@ namespace LunyScript
 			where T : struct, ITransformBuilderReady
 		{
 			var options = b.Options;
-			options.AxisLock = new LunyVector3(options.AxisLock.X, options.AxisLock.Y, 0d);
+			options.LockAxisZ();
 			return new TransformLookAtBuilder<TransformBuilderReady>(b.Script, options, b.Token);
 		}
 	}

@@ -31,14 +31,14 @@ namespace LunyScript
 
 		internal static ScriptActionBlock Finish(Script script, in TransformTowardsVariableOptions options, BuilderToken token)
 		{
-			var block = TransformScaleTowardsBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.LockX, options.LockY, options.LockZ, options.Responsiveness);
+			var block = TransformScaleTowardsBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.AxisLock, options.Responsiveness);
 			script.MarkBuilderTokenFinished(token);
 			return block;
 		}
 
 		internal static TransformScaleTowardsLerpBlock FinishLerpBuilder(Script script, in TransformTowardsVariableOptions options, BuilderToken token, Boolean slerp)
 		{
-			var block = TransformScaleTowardsLerpBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.LockX, options.LockY, options.LockZ, options.Responsiveness, slerp);
+			var block = TransformScaleTowardsLerpBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.AxisLock, options.Responsiveness, slerp);
 			script.MarkBuilderTokenFinished(token);
 			return block;
 		}
@@ -78,7 +78,7 @@ namespace LunyScript
 			where T : struct, ITransformBuilderReady
 		{
 			var options = b.Options;
-			options.LockX = true;
+			options.LockAxisX();
 			return new TransformScaleBuilder<TransformBuilderReady>(b.Script, options, b.Token);
 		}
 
@@ -87,7 +87,7 @@ namespace LunyScript
 			where T : struct, ITransformBuilderReady
 		{
 			var options = b.Options;
-			options.LockY = true;
+			options.LockAxisY();
 			return new TransformScaleBuilder<TransformBuilderReady>(b.Script, options, b.Token);
 		}
 
@@ -96,7 +96,7 @@ namespace LunyScript
 			where T : struct, ITransformBuilderReady
 		{
 			var options = b.Options;
-			options.LockZ = true;
+			options.LockAxisZ();
 			return new TransformScaleBuilder<TransformBuilderReady>(b.Script, options, b.Token);
 		}
 
