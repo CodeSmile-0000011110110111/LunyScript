@@ -6,7 +6,7 @@ namespace LunyScript
 {
 	public interface ICoroutineForBuilderState {}
 	public interface ICoroutineForBuilderStart : ICoroutineForBuilderState {}
-	public struct CoroutineForBuilderStart : ICoroutineForBuilderStart {}
+	//public struct CoroutineForBuilderStart : ICoroutineForBuilderStart {}
 
 	/// <summary>
 	/// Fluent builder for finite-duration coroutines.
@@ -117,10 +117,10 @@ namespace LunyScript
 			return ScriptActionBlock.IsNullOrEmpty(elapsedBlocks) ? b : NextBuilder(b, b.Options with { OnElapsed = elapsedBlocks });
 		}
 
-		private static CoroutineForBuilder<T> NextBuilder<T>(CoroutineForBuilder<T> b, in CoroutineOptions options)
+		private static CoroutineForBuilder<T> NextBuilder<T>(CoroutineForBuilder<T> b, CoroutineOptions options)
 			where T : struct, ICoroutineForWhen
 		{
-			CoroutineBuilder.SetAutoFinish(b.Script, b.Token, options);
+			b.Token.AutoFinish = () => CoroutineBuilder.Finish(b.Script, b.Token, options);
 			return new CoroutineForBuilder<T>(b.Script, b.Token, options);
 		}
 	}

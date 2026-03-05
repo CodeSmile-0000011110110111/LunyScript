@@ -27,6 +27,14 @@ namespace LunyScript
 		/// </summary>
 		public CoroutineForBuilder<CoroutineForBuilderStart> For(Double duration) =>
 			new(_script, _script.CreateBuilderToken(_name, "Coroutine.For"), _name, duration);
+
+		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every frame.</summary>
+		public CoroutineBuilder<CoroutineFrameUpdate> OnFrameUpdate(params ScriptActionBlock[] blocks) => new(_script, _token,
+			CoroutineOptions.ForOpenEndedCoroutine(_name, Coroutine.Process.FrameUpdate) with { OnFrameUpdate = blocks });
+
+		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every heartbeat (fixed step).</summary>
+		public CoroutineBuilder<CoroutineHeartbeat> OnHeartbeat(params ScriptActionBlock[] blocks) => new(_script, _token,
+			CoroutineOptions.ForOpenEndedCoroutine(_name, Coroutine.Process.Heartbeat) with { OnHeartbeat = blocks });
 			*/
 
 		// TODO:
@@ -45,26 +53,14 @@ namespace LunyScript
 		public CoroutineTimerBuilder<CoroutineTimerAmountSet> Every(Double interval) => new(_script,
 			_script.CreateBuilderToken(_name, "Coroutine.Every"), _name, interval, true);
 
-		/*
-		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every frame.</summary>
-		public CoroutineBuilder<CoroutineFrameUpdate> OnFrameUpdate(params ScriptActionBlock[] blocks) => new(_script, _token,
-			CoroutineOptions.ForOpenEndedCoroutine(_name, Coroutine.Process.FrameUpdate) with { OnFrameUpdate = blocks });
-
-		/// <summary>Creates an open-ended coroutine (runs until stopped) which runs the blocks every heartbeat (fixed step).</summary>
-		public CoroutineBuilder<CoroutineHeartbeat> OnHeartbeat(params ScriptActionBlock[] blocks) => new(_script, _token,
-			CoroutineOptions.ForOpenEndedCoroutine(_name, Coroutine.Process.Heartbeat) with { OnHeartbeat = blocks });
-			*/
-
 		internal static ICoroutineBlock Finish(Script script, BuilderToken token, in CoroutineOptions options)
 		{
 			ThrowIfAllSequencesEmpty(script, token, options);
+
 			var block = script.RuntimeContext.Coroutines.Register(options);
 			script.MarkBuilderTokenFinished(token);
 			return block;
 		}
-
-		internal static void SetAutoFinish(Script script, BuilderToken token, CoroutineOptions options) =>
-			token?.SetAutoFinish(() => Finish(script, token, options));
 
 		private static void ThrowIfAllSequencesEmpty(Script script, BuilderToken token, in CoroutineOptions options)
 		{

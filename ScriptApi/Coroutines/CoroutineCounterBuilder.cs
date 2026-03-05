@@ -80,10 +80,10 @@ namespace LunyScript
 			throw new ArgumentOutOfRangeException(nameof(b.Options.ProcessMode), b.Options.ProcessMode.ToString());
 		}
 
-		private static CoroutineCounterBuilder<T> NextBuilder<T>(CoroutineCounterBuilder<T> b, in CoroutineOptions options)
+		private static CoroutineCounterBuilder<T> NextBuilder<T>(CoroutineCounterBuilder<T> b, CoroutineOptions options)
 			where T : struct, ICoroutineCounterWhen
 		{
-			CoroutineBuilder.SetAutoFinish(b.Script, b.Token, options);
+			b.Token.AutoFinish = () => CoroutineBuilder.Finish(b.Script, b.Token, options);
 			return new CoroutineCounterBuilder<T>(b.Script, b.Token, options);
 		}
 	}

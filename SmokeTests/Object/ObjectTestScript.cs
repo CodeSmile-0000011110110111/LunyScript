@@ -11,8 +11,11 @@ namespace LunyScript.SmokeTests.Object
 
 		public override void Build(ScriptContext context)
 		{
+			var isDestroyed = Var["isDestroyed"];
+
 			On.Created(Object.Create(DestroyedObjectName));
-			On.AfterFrameUpdate(Object.Destroy(DestroyedObjectName));
+			On.AfterFrameUpdate(If(isDestroyed == false)
+				.Then(isDestroyed.Set(true), Object.Destroy(DestroyedObjectName)));
 
 			On.Ready(Object.Create(EmptyObjectName));
 			On.Ready(Object.Create(CubeObjectName).AsCube());

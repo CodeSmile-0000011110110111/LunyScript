@@ -22,7 +22,7 @@ namespace LunyScript.Blocks
 				throw new LunyScriptException("If() conditions cannot be null or empty");
 
 			var token = script.CreateBuilderToken("If", "If");
-			token.SetAutoFinish(() => Build(script, token));
+			token.AutoFinish = () => Build(script, token);
 			_branchesBuilder.Add((conditions, Array.Empty<ScriptActionBlock>()));
 		}
 
@@ -56,8 +56,8 @@ namespace LunyScript.Blocks
 
 		private void Build(Script script, BuilderToken token)
 		{
-			_branches = _branchesBuilder.ToArray(); // freeze to array
-			_branchesBuilder = null; // release List (GC-eligible)
+			_branches = _branchesBuilder.ToArray();
+			_branchesBuilder = null;
 			script.MarkBuilderTokenFinished(token);
 		}
 

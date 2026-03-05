@@ -39,7 +39,7 @@ namespace LunyScript
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.StartedBlocks);
 
 			var options = b.Options with { StartedBlocks = startedBlocks };
-			b.Options.Token.SetAutoFinish(() => b.Finish(options));
+			b.Options.Token.AutoFinish = () => b.Finish(options);
 			return new WhenInputActionBuilder(options);
 		}
 
@@ -48,7 +48,7 @@ namespace LunyScript
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.PerformedBlocks);
 
 			var options = b.Options with { PerformedBlocks = performedBlocks };
-			b.Options.Token.SetAutoFinish(() => b.Finish(options));
+			b.Options.Token.AutoFinish = () => b.Finish(options);
 			return new WhenInputActionBuilder(options);
 		}
 
@@ -57,7 +57,7 @@ namespace LunyScript
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.PerformingBlocks);
 
 			var options = b.Options with { PerformingBlocks = performingBlocks };
-			b.Options.Token.SetAutoFinish(() => b.Finish(options));
+			b.Options.Token.AutoFinish = () => b.Finish(options);
 			return new WhenInputActionBuilder(options);
 		}
 
@@ -66,7 +66,7 @@ namespace LunyScript
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.CanceledBlocks);
 
 			var options = b.Options with { CanceledBlocks = canceledBlocks };
-			b.Options.Token.SetAutoFinish(() => b.Finish(options));
+			b.Options.Token.AutoFinish = () => b.Finish(options);
 			return new WhenInputActionBuilder(options);
 		}
 	}

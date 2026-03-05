@@ -54,7 +54,7 @@ namespace LunyScript
 		/// <summary>
 		/// Registers an action to be called automatically when the builder is in a finalizable state.
 		/// </summary>
-		internal void SetAutoFinish(Action finishAction) => _autoFinish = finishAction;
+		internal Action AutoFinish { set => _autoFinish = value; }
 
 		/// <summary>
 		/// Invokes the auto-finalizer action and marks the token finished.

@@ -63,20 +63,12 @@ namespace LunyScript
 		/// <summary>Counts frame updates.</summary>
 		public static CoroutineCounterBuilder<CoroutineCounterBuilderUnitSet> Frames<T>(this CoroutineTimerBuilder<T> b)
 			where T : struct, ICoroutineTimerAmountSet => new(b.Script, b.Token,
-			b.Options with
-			{
-				IsCounter = true,
-				ProcessMode = Coroutine.Process.FrameUpdate, /*, TimeSliceInterval = b.Options.CounterTarget, Duration = 0*/
-			});
+			b.Options with { IsCounter = true, ProcessMode = Coroutine.Process.FrameUpdate });
 
 		/// <summary>Counts heartbeat (fixed step) updates.</summary>
 		public static CoroutineCounterBuilder<CoroutineCounterBuilderUnitSet> Heartbeats<T>(this CoroutineTimerBuilder<T> b)
 			where T : struct, ICoroutineTimerAmountSet => new(b.Script, b.Token,
-			b.Options with
-			{
-				IsCounter = true,
-				ProcessMode = Coroutine.Process.Heartbeat,
-			});
+			b.Options with { IsCounter = true, ProcessMode = Coroutine.Process.Heartbeat });
 	}
 
 	public static class TimerBuilderWhenExtensions
@@ -121,10 +113,10 @@ namespace LunyScript
 			return ScriptActionBlock.IsNullOrEmpty(processBlocks) ? b : NextBuilder(b, b.Options with { OnFrameUpdate = processBlocks });
 		}
 
-		private static CoroutineTimerBuilder<T> NextBuilder<T>(CoroutineTimerBuilder<T> b, in CoroutineOptions options)
+		private static CoroutineTimerBuilder<T> NextBuilder<T>(CoroutineTimerBuilder<T> b, CoroutineOptions options)
 			where T : struct, ICoroutineTimerWhen
 		{
-			CoroutineBuilder.SetAutoFinish(b.Script, b.Token, options);
+			b.Token.AutoFinish = () => CoroutineBuilder.Finish(b.Script, b.Token, options);
 			return new CoroutineTimerBuilder<T>(b.Script, b.Token, options);
 		}
 	}

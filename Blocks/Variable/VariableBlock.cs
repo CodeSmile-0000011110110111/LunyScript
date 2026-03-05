@@ -22,6 +22,9 @@ namespace LunyScript.Blocks
 		public static implicit operator VariableBlock(Double value) => ConstantVariableBlock.Create(value);
 		public static implicit operator VariableBlock(Boolean value) => ConstantVariableBlock.Create(value);
 		public static implicit operator VariableBlock(String value) => ConstantVariableBlock.Create(value);
+		public static implicit operator VariableBlock(LunyVector2 value) => ConstantVariableBlock.Create(value);
+		public static implicit operator VariableBlock(LunyVector3 value) => ConstantVariableBlock.Create(value);
+		public static implicit operator VariableBlock(LunyQuaternion value) => ConstantVariableBlock.Create(value);
 
 		// Arithmetic Operators
 		public static VariableBlock operator +(VariableBlock left, Variable right) =>

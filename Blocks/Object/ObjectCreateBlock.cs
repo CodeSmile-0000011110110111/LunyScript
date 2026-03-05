@@ -13,18 +13,6 @@ namespace LunyScript.Blocks
 		Clone,
 	}
 
-	internal struct ObjectCreateOptions
-	{
-		public String Name;
-		public ObjectCreationMode Mode;
-		public LunyPrimitiveType PrimitiveType;
-		public String AssetName;
-		public ILunyObject Parent;
-		public String TemplateName;
-		public LunyVector3 LocalPosition;
-		public LunyQuaternion LocalRotation;
-		public LunyVector3 LocalScale;
-	}
 
 	internal abstract class ObjectCreateBlock : ScriptActionBlock
 	{

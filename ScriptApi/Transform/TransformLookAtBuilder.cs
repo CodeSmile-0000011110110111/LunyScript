@@ -10,24 +10,22 @@ namespace LunyScript
 	public readonly struct TransformLookAtBuilder<T> where T : struct, ITransformBuilderState
 	{
 		internal readonly Script Script;
-		internal readonly TransformLookAtOptions Options;
 		internal readonly BuilderToken Token;
+		internal readonly TransformBuilderOptions Options;
 
-		internal TransformLookAtBuilder(Script script, TransformLookAtOptions options, BuilderToken token)
+		internal TransformLookAtBuilder(Script script, BuilderToken token, in TransformBuilderOptions options)
 		{
 			Script = script;
 			Options = options;
 			Token = token;
 
-			var capturedScript = script;
 			var capturedOptions = options;
-			token?.SetAutoFinish(() => Finish(capturedScript, in capturedOptions, token));
+			token.AutoFinish = () => Finish(script, token, capturedOptions);
 		}
 
-		public static implicit operator ScriptActionBlock(TransformLookAtBuilder<T> b) =>
-			Finish(b.Script, in b.Options, b.Token);
+		public static implicit operator ScriptActionBlock(TransformLookAtBuilder<T> b) => Finish(b.Script, b.Token, in b.Options);
 
-		internal static ScriptActionBlock Finish(Script script, in TransformLookAtOptions options, BuilderToken token)
+		internal static ScriptActionBlock Finish(Script script, BuilderToken token, in TransformBuilderOptions options)
 		{
 			var block = TransformRotationLookAtBlock.Create(options.Target, options.WorldUp, options.AxisLock);
 			script.MarkBuilderTokenFinished(token);
@@ -39,12 +37,7 @@ namespace LunyScript
 	{
 		/// <summary> Overrides the world-up vector used when computing the look rotation. </summary>
 		public static TransformLookAtBuilder<TransformBuilderReady> WorldUp<T>(this TransformLookAtBuilder<T> b, LunyVector3 worldUp)
-			where T : struct, ITransformBuilderReady
-		{
-			var options = b.Options;
-			options.WorldUp = worldUp;
-			return new TransformLookAtBuilder<TransformBuilderReady>(b.Script, options, b.Token);
-		}
+			where T : struct, ITransformBuilderReady => new(b.Script, b.Token, b.Options with { WorldUp = worldUp });
 
 		/// <summary> Locks the X axis: prevents the look direction from changing on the X axis. </summary>
 		public static TransformLookAtBuilder<TransformBuilderReady> LockX<T>(this TransformLookAtBuilder<T> b)
@@ -52,7 +45,7 @@ namespace LunyScript
 		{
 			var options = b.Options;
 			options.LockAxisX();
-			return new TransformLookAtBuilder<TransformBuilderReady>(b.Script, options, b.Token);
+			return new TransformLookAtBuilder<TransformBuilderReady>(b.Script, b.Token, options);
 		}
 
 		/// <summary> Locks the Y axis: prevents the look direction from changing on the Y axis. </summary>
@@ -61,7 +54,7 @@ namespace LunyScript
 		{
 			var options = b.Options;
 			options.LockAxisY();
-			return new TransformLookAtBuilder<TransformBuilderReady>(b.Script, options, b.Token);
+			return new TransformLookAtBuilder<TransformBuilderReady>(b.Script, b.Token, options);
 		}
 
 		/// <summary> Locks the Z axis: prevents the look direction from changing on the Z axis. </summary>
@@ -70,7 +63,7 @@ namespace LunyScript
 		{
 			var options = b.Options;
 			options.LockAxisZ();
-			return new TransformLookAtBuilder<TransformBuilderReady>(b.Script, options, b.Token);
+			return new TransformLookAtBuilder<TransformBuilderReady>(b.Script, b.Token, options);
 		}
 	}
 }

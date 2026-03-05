@@ -131,7 +131,7 @@ namespace LunyScript
 
 		// ── Finalize ──────────────────────────────────────────────────────────
 		private void SetAutoFinish(Script script, BuilderToken token, PhysicsEventOptions options) =>
-			token?.SetAutoFinish(() => Finish(script, token, options));
+			token.AutoFinish = () => Finish(script, token, options);
 
 		internal static void Finish(Script script, BuilderToken token, in PhysicsEventOptions options)
 		{

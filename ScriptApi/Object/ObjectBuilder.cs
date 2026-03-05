@@ -5,12 +5,10 @@ using System;
 namespace LunyScript
 {
 	public interface IObjectBuilderState {}
-	public interface IObjectBuilderStart : IObjectBuilderState {}
-	public interface IObjectBuilderNameSet : IObjectBuilderState, IObjectBuilderCanFinish {}
-	public interface IObjectBuilderCanFinish {}
 
-	public struct ObjectBuilderStart : IObjectBuilderStart {}
+	public interface IObjectBuilderNameSet : IObjectBuilderState, IObjectBuilderCanFinish {}
 	public struct ObjectBuilderNameSet : IObjectBuilderNameSet {}
+	public interface IObjectBuilderCanFinish {}
 
 	/// <summary>
 	/// Provides operations for objects.
@@ -28,9 +26,9 @@ namespace LunyScript
 
 		public ObjectCreateBuilder<ObjectBuilderNameSet> Create(String name)
 		{
-			var options = new ObjectCreateOptions { Name = name, Mode = ObjectCreationMode.Empty, LocalScale = LunyVector3.One };
+			var options = new ObjectCreateOptions { Name = name, CreateMode = ObjectCreationMode.Empty, LocalScale = LunyVector3.One };
 			var token = _script.CreateBuilderToken(name, "Object.Create");
-			return new ObjectCreateBuilder<ObjectBuilderNameSet>(_script, options, token);
+			return new ObjectCreateBuilder<ObjectBuilderNameSet>(_script, token, options);
 		}
 
 		public ScriptActionBlock Destroy(String name = null) =>
@@ -67,90 +65,52 @@ namespace LunyScript
 			where T : struct, IObjectBuilderNameSet => b.WithPrimitive(LunyPrimitiveType.Quad);
 
 		public static ObjectCreateBuilder<ObjectBuilderNameSet> From<T>(this ObjectCreateBuilder<T> b, String prefabName)
-			where T : struct, IObjectBuilderNameSet
-		{
-			var options = b.Options;
-			options.Mode = ObjectCreationMode.Prefab;
-			options.AssetName = prefabName;
-			return new ObjectCreateBuilder<ObjectBuilderNameSet>(b.Script, options, b.Token);
-		}
+			where T : struct, IObjectBuilderNameSet => new(b.Script, b.Token,
+			b.Options with { CreateMode = ObjectCreationMode.Prefab, AssetName = prefabName });
 
 		public static ObjectCreateBuilder<ObjectBuilderNameSet> Clone<T>(this ObjectCreateBuilder<T> b, String existingName)
-			where T : struct, IObjectBuilderNameSet
-		{
-			var options = b.Options;
-			options.Mode = ObjectCreationMode.Clone;
-			options.TemplateName = existingName;
-			return new ObjectCreateBuilder<ObjectBuilderNameSet>(b.Script, options, b.Token);
-		}
+			where T : struct, IObjectBuilderNameSet => new(b.Script, b.Token,
+			b.Options with { CreateMode = ObjectCreationMode.Clone, TemplateName = existingName });
 
 		private static ObjectCreateBuilder<ObjectBuilderNameSet> WithPrimitive<T>(this ObjectCreateBuilder<T> b, LunyPrimitiveType type)
-			where T : struct, IObjectBuilderNameSet
-		{
-			var options = b.Options;
-			options.Mode = ObjectCreationMode.Primitive;
-			options.PrimitiveType = type;
-			return new ObjectCreateBuilder<ObjectBuilderNameSet>(b.Script, options, b.Token);
-		}
+			where T : struct, IObjectBuilderNameSet => new(b.Script, b.Token,
+			b.Options with { CreateMode = ObjectCreationMode.Primitive, PrimitiveType = type });
 	}
 
 	public readonly struct ObjectCreateBuilder<T> where T : struct, IObjectBuilderState
 	{
 		internal readonly Script Script;
-		internal readonly ObjectCreateOptions Options;
 		internal readonly BuilderToken Token;
+		internal readonly ObjectCreateOptions Options;
 
-		internal ObjectCreateBuilder(Script script, ObjectCreateOptions options, BuilderToken token)
+		internal ObjectCreateBuilder(Script script, BuilderToken token, in ObjectCreateOptions options)
 		{
 			Script = script;
 			Options = options;
 			Token = token;
-			var capturedScript = script;
+
 			var capturedOptions = options;
-			token?.SetAutoFinish(() => Finish(capturedScript, capturedOptions, token));
+			token.AutoFinish = () => Finish(script, token, capturedOptions);
 		}
 
 		public static implicit operator ScriptActionBlock(ObjectCreateBuilder<T> builder) =>
-			Finish(builder.Script, builder.Options, builder.Token);
+			Finish(builder.Script, builder.Token, builder.Options);
 
-		public ObjectCreateBuilder<T> Parent(ILunyObject parent)
-		{
-			var options = Options;
-			options.Parent = parent;
-			return new ObjectCreateBuilder<T>(Script, options, Token);
-		}
+		public ObjectCreateBuilder<T> Parent(ILunyObject parent) => new(Script, Token, Options with { Parent = parent });
 
-		public ObjectCreateBuilder<T> Position(LunyVector3 localPosition)
-		{
-			var options = Options;
-			options.LocalPosition = localPosition;
-			return new ObjectCreateBuilder<T>(Script, options, Token);
-		}
+		public ObjectCreateBuilder<T> Position(LunyVector3 localPosition) => new(Script, Token, Options with { LocalPosition = localPosition });
 
-		public ObjectCreateBuilder<T> Rotation(LunyQuaternion localRotation)
-		{
-			var options = Options;
-			options.LocalRotation = localRotation;
-			return new ObjectCreateBuilder<T>(Script, options, Token);
-		}
+		public ObjectCreateBuilder<T> Rotation(LunyQuaternion localRotation) =>
+			new(Script, Token, Options with { LocalRotation = localRotation });
 
-		public ObjectCreateBuilder<T> Scale(LunyVector3 localScale)
-		{
-			var options = Options;
-			options.LocalScale = localScale;
-			return new ObjectCreateBuilder<T>(Script, options, Token);
-		}
+		public ObjectCreateBuilder<T> Scale(LunyVector3 localScale) => new(Script, Token, Options with { LocalScale = localScale });
 
-		public ObjectCreateBuilder<T> Scale(Double uniformLocalScale)
-		{
-			var options = Options;
-			options.LocalScale = new LunyVector3(uniformLocalScale, uniformLocalScale, uniformLocalScale);
-			return new ObjectCreateBuilder<T>(Script, options, Token);
-		}
+		public ObjectCreateBuilder<T> Scale(Double uniformLocalScale) => new(Script, Token,
+			Options with { LocalScale = new LunyVector3(uniformLocalScale, uniformLocalScale, uniformLocalScale) });
 
-		internal static ScriptActionBlock Finish(Script script, in ObjectCreateOptions options, BuilderToken token)
+		internal static ScriptActionBlock Finish(Script script, BuilderToken token, in ObjectCreateOptions options)
 		{
-			var block = options.Mode switch
+			var block = options.CreateMode switch
 			{
 				ObjectCreationMode.Empty => ObjectCreateEmptyBlock.Create(options),
 				ObjectCreationMode.Primitive => options.PrimitiveType switch
@@ -166,11 +126,24 @@ namespace LunyScript
 				ObjectCreationMode.Prefab => ObjectCreatePrefabBlock.Create(options),
 				ObjectCreationMode.Clone => ObjectCreateCloneBlock.Create(options),
 				var _ => throw new NotImplementedException(
-					$"{nameof(ObjectCreateBuilder<ObjectBuilderNameSet>)}: Mode {options.Mode} is not implemented."),
+					$"{nameof(ObjectCreateBuilder<ObjectBuilderNameSet>)}: Mode {options.CreateMode} is not implemented."),
 			};
 
 			script.MarkBuilderTokenFinished(token);
 			return block;
 		}
+	}
+
+	internal record ObjectCreateOptions
+	{
+		public String Name;
+		public ObjectCreationMode CreateMode;
+		public LunyPrimitiveType PrimitiveType;
+		public String AssetName;
+		public ILunyObject Parent;
+		public String TemplateName;
+		public LunyVector3 LocalPosition;
+		public LunyQuaternion LocalRotation;
+		public LunyVector3 LocalScale;
 	}
 }

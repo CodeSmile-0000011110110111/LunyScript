@@ -1,3 +1,5 @@
+using Luny.Engine.Bridge;
+
 namespace LunyScript.SmokeTests.Input
 {
 	public sealed class InputTest : Script
@@ -6,8 +8,11 @@ namespace LunyScript.SmokeTests.Input
 		{
 			When.InputAction("Move").Continues(Transform.MoveBy(Input.Direction("Move")));
 			When.InputAction("Look").Continues(Transform.SetLocalRotation(Input.Direction("Look")));
-			When.InputAction("Jump").Begins(Debug.Log("Jump!"), Transform.ShiftUp(Input.Direction("Move")));
-			When.InputAction("Crouch").Begins(Debug.Log("Crouch!"), Transform.ShiftDown(Input.Direction("Move")));
+			When.InputAction("Jump").Begins(Transform.ShiftUp(10));
+			When.InputAction("Crouch").Begins(Transform.ShiftDown(10));
+			When.InputAction("Interact")
+				.Begins(Transform.SetLocalScale(1.2))
+				.Ends(Transform.SetLocalScale(1));
 			When.InputAction("Attack")
 				.Begins(Object.Enable("AttackButtonPressed"))
 				.Ends(Object.Disable("AttackButtonPressed"));
