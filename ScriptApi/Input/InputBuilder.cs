@@ -1,3 +1,4 @@
+using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
 
@@ -14,12 +15,12 @@ namespace LunyScript
 		/// <summary>
 		/// Returns a VariableBlock reading the last known axis value (Vector2) for the named action.
 		/// </summary>
-		public VariableBlock Direction(String actionName) => InputAxisDirectionBlock.Create(actionName);
+		public VariableBlock<LunyVector2> Direction(String actionName) => InputAxisDirectionBlock.Create(actionName);
 
 		/// <summary>
 		/// Returns a VariableBlock reading the last known axis value (Vector2) for the named action.
 		/// </summary>
-		public VariableBlock Rotation(String actionName) => InputAxisRotationBlock.Create(actionName);
+		public VariableBlock<LunyQuaternion> Rotation(String actionName) => InputAxisRotationBlock.Create(actionName);
 
 		/// <summary>
 		/// Returns a button handle with condition and value accessors for the named action.

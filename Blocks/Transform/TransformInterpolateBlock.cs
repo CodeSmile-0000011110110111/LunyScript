@@ -35,9 +35,9 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class TransformInterpolateTowardsVariableBlock : TransformInterpolateBlock
 	{
-		protected readonly VariableBlock TargetScale;
+		protected readonly VariableBlock<LunyVector3> TargetScale;
 
-		protected TransformInterpolateTowardsVariableBlock(VariableBlock targetScale, Double speed, Double deadZone, LunyVector3 axisLock,
+		protected TransformInterpolateTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone, LunyVector3 axisLock,
 			Double responsiveness)
 			: base(speed, deadZone, axisLock, responsiveness) => TargetScale = targetScale;
 
@@ -49,7 +49,7 @@ namespace LunyScript.Blocks
 		{
 			var transform = ctx.LunyObject.Transform;
 			current = transform.LocalScale;
-			var delta = (TargetScale.GetValue<LunyVector3>() - current) * AxisLock;
+			var delta = (TargetScale.Value - current) * AxisLock;
 			maskedTarget = current + delta;
 			return delta.Magnitude >= DeadZone;
 		}
@@ -59,11 +59,11 @@ namespace LunyScript.Blocks
 
 	public sealed class TransformScaleTowardsBlock : TransformInterpolateTowardsVariableBlock
 	{
-		public static TransformScaleTowardsBlock Create(VariableBlock targetScale, Double speed, Double deadZone = 0.1,
+		public static TransformScaleTowardsBlock Create(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone = 0.1,
 			LunyVector3 axisLock = default, Double responsiveness = 1.0) =>
 			new(targetScale, speed, deadZone, axisLock, responsiveness);
 
-		private TransformScaleTowardsBlock(VariableBlock targetScale, Double speed, Double deadZone, LunyVector3 axisLock,
+		private TransformScaleTowardsBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone, LunyVector3 axisLock,
 			Double responsiveness)
 			: base(targetScale, speed, deadZone, axisLock, responsiveness) {}
 
@@ -82,11 +82,11 @@ namespace LunyScript.Blocks
 	{
 		private readonly Boolean _spherical;
 
-		public static TransformScaleTowardsLerpBlock Create(VariableBlock targetScale, Double speed, Double deadZone = 0.1,
+		public static TransformScaleTowardsLerpBlock Create(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone = 0.1,
 			LunyVector3 axisLock = default, Double responsiveness = 1.0, Boolean spherical = false) =>
 			new(targetScale, speed, deadZone, axisLock, responsiveness, spherical);
 
-		private TransformScaleTowardsLerpBlock(VariableBlock targetScale, Double speed, Double deadZone, LunyVector3 axisLock,
+		private TransformScaleTowardsLerpBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone, LunyVector3 axisLock,
 			Double responsiveness, Boolean spherical)
 			: base(targetScale, speed, deadZone, axisLock, responsiveness) => _spherical = spherical;
 

@@ -18,28 +18,28 @@ namespace LunyScript
 		// --- Set (Absolute Snap) ---
 
 		/// <summary> Instantly set the World position. </summary>
-		public TransformPositionSetWorldBlock SetPosition(VariableBlock position) => TransformPositionSetWorldBlock.Create(position);
+		public TransformPositionSetWorldBlock SetPosition(VariableBlock<LunyVector3> position) => TransformPositionSetWorldBlock.Create(position);
 
 		/// <summary> Instantly set the Local position. </summary>
-		public TransformPositionSetLocalBlock SetLocalPosition(VariableBlock position) => TransformPositionSetLocalBlock.Create(position);
+		public TransformPositionSetLocalBlock SetLocalPosition(VariableBlock<LunyVector3> position) => TransformPositionSetLocalBlock.Create(position);
 
 		/// <summary> Instantly set the World rotation. </summary>
 		public TransformRotationSetWorldBlock SetRotation(LunyVector3 eulerAngles) => TransformRotationSetWorldBlock.Create(LunyQuaternion.Euler(eulerAngles));
 
 		/// <summary> Instantly set the World rotation. </summary>
-		public TransformRotationSetWorldBlock SetRotation(VariableBlock rotation) => TransformRotationSetWorldBlock.Create(rotation);
+		public TransformRotationSetWorldBlock SetRotation(VariableBlock<LunyQuaternion> rotation) => TransformRotationSetWorldBlock.Create(rotation);
 
 		/// <summary> Instantly set the Local rotation. </summary>
 		public TransformRotationSetLocalBlock SetLocalRotation(LunyVector3 eulerAngles) => TransformRotationSetLocalBlock.Create(LunyQuaternion.Euler(eulerAngles));
 
 		/// <summary> Instantly set the Local rotation. </summary>
-		public TransformRotationSetLocalBlock SetLocalRotation(VariableBlock rotation) => TransformRotationSetLocalBlock.Create(rotation);
+		public TransformRotationSetLocalBlock SetLocalRotation(VariableBlock<LunyQuaternion> rotation) => TransformRotationSetLocalBlock.Create(rotation);
 
 		/// <summary> Instantly set the Local scale. </summary>
 		public TransformScaleSetLocalBlock SetLocalScale(Double scale) => TransformScaleSetLocalBlock.Create(LunyVector3.Uniform(scale));
 
 		/// <summary> Instantly set the Local scale. </summary>
-		public TransformScaleSetLocalBlock SetLocalScale(VariableBlock scale) => TransformScaleSetLocalBlock.Create(scale);
+		public TransformScaleSetLocalBlock SetLocalScale(VariableBlock<LunyVector3> scale) => TransformScaleSetLocalBlock.Create(scale);
 
 		// --- Look At ---
 
@@ -91,7 +91,7 @@ namespace LunyScript
 		/// Chain <c>.Speed(n)</c>, <c>.Responsiveness(n)</c>, <c>.DeadZone(n)</c>, <c>.LockX/Y/Z()</c>
 		/// then call <c>.Do()</c> (linear), <c>.Lerp()</c> or <c>.Slerp()</c>.
 		/// </summary>
-		public TransformScaleBuilder<TransformBuilderReady> ScaleTowards(VariableBlock targetScale)
+		public TransformScaleBuilder<TransformBuilderReady> ScaleTowards(VariableBlock<LunyVector3> targetScale)
 		{
 			var options = new TransformBuilderOptions
 				{ TargetScale = targetScale, Speed = 1.0, DeadZone = 0.1, Responsiveness = 1.0, AxisLock = LunyVector3.One };
@@ -110,7 +110,7 @@ namespace LunyScript
 		// --- Local Scalar Movement (Relative to "Nose") ---
 
 		/// <summary> Forward/Backward based on orientation. </summary>
-		public TransformPositionMoveByBlock MoveBy(VariableBlock direction, VariableBlock speed = null) =>
+		public TransformPositionMoveByBlock MoveBy(VariableBlock<LunyVector2> direction, VariableBlock speed = null) =>
 			TransformPositionMoveByBlock.Create(direction, speed, LunyTransformSpace.Self);
 
 		/// <summary> Forward/Backward based on orientation. </summary>
@@ -140,7 +140,7 @@ namespace LunyScript
 		// --- World Scalar Movement (Relative to "Map") ---
 
 		/// <summary> Forward/Backward based on orientation. </summary>
-		public TransformPositionMoveByBlock ShiftBy(VariableBlock direction, VariableBlock speed = null) =>
+		public TransformPositionMoveByBlock ShiftBy(VariableBlock<LunyVector2> direction, VariableBlock speed = null) =>
 			TransformPositionMoveByBlock.Create(direction, speed, LunyTransformSpace.World);
 
 		/// <summary> Forward/backward on the World forward axis. </summary>
@@ -185,7 +185,7 @@ namespace LunyScript
 	internal record TransformBuilderOptions
 	{
 		public ILunyObject Target;
-		public VariableBlock TargetScale;
+		public VariableBlock<LunyVector3> TargetScale;
 		public Double Speed;
 		public Double DeadZone;
 		public Double Responsiveness;

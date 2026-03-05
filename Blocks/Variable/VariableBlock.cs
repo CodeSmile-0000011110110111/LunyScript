@@ -1,8 +1,6 @@
 ﻿using Luny;
-using Luny.Engine.Bridge;
 using LunyScript.Exceptions;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace LunyScript.Blocks
 {
@@ -22,9 +20,6 @@ namespace LunyScript.Blocks
 		public static implicit operator VariableBlock(Double value) => ConstantVariableBlock.Create(value);
 		public static implicit operator VariableBlock(Boolean value) => ConstantVariableBlock.Create(value);
 		public static implicit operator VariableBlock(String value) => ConstantVariableBlock.Create(value);
-		public static implicit operator VariableBlock(LunyVector2 value) => ConstantVariableBlock.Create(value);
-		public static implicit operator VariableBlock(LunyVector3 value) => ConstantVariableBlock.Create(value);
-		public static implicit operator VariableBlock(LunyQuaternion value) => ConstantVariableBlock.Create(value);
 
 		// Arithmetic Operators
 		public static VariableBlock operator +(VariableBlock left, Variable right) =>
@@ -65,25 +60,33 @@ namespace LunyScript.Blocks
 		// Comparison Operators
 		public static VariableBlock operator ==(VariableBlock left, Variable right)
 		{
-			if (left is null) return right.Object is null;
+			if (left is null)
+				return right.Object is null;
+
 			return VariableIsEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
 		}
 
 		public static VariableBlock operator ==(VariableBlock left, VariableBlock right)
 		{
-			if (left is null) return right is null;
+			if (left is null)
+				return right is null;
+
 			return VariableIsEqualToBlock.Create(left, right);
 		}
 
 		public static VariableBlock operator !=(VariableBlock left, Variable right)
 		{
-			if (left is null) return right.Object is not null;
+			if (left is null)
+				return right.Object is not null;
+
 			return VariableIsNotEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
 		}
 
 		public static VariableBlock operator !=(VariableBlock left, VariableBlock right)
 		{
-			if (left is null) return right is null;
+			if (left is null)
+				return right is null;
+
 			return VariableIsNotEqualToBlock.Create(left, right);
 		}
 
@@ -109,57 +112,11 @@ namespace LunyScript.Blocks
 
 		public static VariableBlock operator !(VariableBlock operand) => NotBlock.Create(operand);
 
+		internal Double Value => GetValue().AsDouble();
+
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue().AsBoolean();
 
 		internal abstract Variable GetValue();
-
-		/// <summary>
-		/// Returns the variable value as a specific struct type. Subclasses can override to avoid boxing.
-		/// Default implementation uses GetValue() and converts via Unsafe.As (JIT-eliminated typeof checks).
-		/// </summary>
-		internal virtual T GetValue<T>() where T : struct
-		{
-			var v = GetValue();
-			if (typeof(T) == typeof(Double))
-			{
-				var d = v.AsDouble();
-				return Unsafe.As<Double, T>(ref d);
-			}
-			if (typeof(T) == typeof(Single))
-			{
-				var f = v.AsSingle();
-				return Unsafe.As<Single, T>(ref f);
-			}
-			if (typeof(T) == typeof(Boolean))
-			{
-				var b = v.AsBoolean();
-				return Unsafe.As<Boolean, T>(ref b);
-			}
-			if (typeof(T) == typeof(Int32))
-			{
-				var i = v.AsInt32();
-				return Unsafe.As<Int32, T>(ref i);
-			}
-			/*
-			if (typeof(T) == typeof(LunyVector2))
-			{
-				var vec2 = v.AsVector2();
-				return Unsafe.As<LunyVector2, T>(ref vec2);
-			}
-			if (typeof(T) == typeof(LunyVector3))
-			{
-				var vec3 = v.AsVector3();
-				return Unsafe.As<LunyVector3, T>(ref vec3);
-			}
-			if (typeof(T) == typeof(LunyQuaternion))
-			{
-				var q = v.AsQuaternion();
-				return Unsafe.As<LunyQuaternion, T>(ref q);
-			}
-			*/
-
-			throw new LunyScriptVariableException($"Cannot convert {v.Type} to {typeof(T).Name}");
-		}
 
 		private Boolean Equals(VariableBlock other) => throw new NotImplementedException($"{nameof(VariableBlock)}.{nameof(Equals)}()");
 

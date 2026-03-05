@@ -7,7 +7,7 @@ namespace LunyScript.SmokeTests.Input
 		public override void Build(ScriptContext context)
 		{
 			When.InputAction("Move").Continues(Transform.MoveBy(Input.Direction("Move")));
-			When.InputAction("Look").Continues(Transform.SetLocalRotation(Input.Direction("Look")));
+ 		When.InputAction("Look").Continues(Transform.SetLocalRotation(Input.Rotation("Look")));
 			When.InputAction("Jump").Begins(Transform.ShiftUp(10));
 			When.InputAction("Crouch").Begins(Transform.ShiftDown(10));
 			When.InputAction("Interact")

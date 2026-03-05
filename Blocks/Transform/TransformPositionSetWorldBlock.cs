@@ -5,14 +5,14 @@ namespace LunyScript.Blocks
 {
 	public sealed class TransformPositionSetWorldBlock : ScriptActionBlock
 	{
-		private readonly VariableBlock _position;
+		private readonly VariableBlock<LunyVector3> _position;
 
-		public static TransformPositionSetWorldBlock Create(VariableBlock position) => new(position);
+		public static TransformPositionSetWorldBlock Create(VariableBlock<LunyVector3> position) => new(position);
 
-		private TransformPositionSetWorldBlock(VariableBlock position) => _position = position;
+		private TransformPositionSetWorldBlock(VariableBlock<LunyVector3> position) => _position = position;
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			runtimeContext.LunyObject.Transform.Position = _position.GetValue<LunyVector3>();
+			runtimeContext.LunyObject.Transform.Position = _position.Value;
 
 		public override String ToString() => $"{GetType().Name}({_position})";
 	}
