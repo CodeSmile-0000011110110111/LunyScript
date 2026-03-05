@@ -4,9 +4,6 @@ namespace LunyScript
 	{
 		private readonly Script _script;
 
-		internal TimeApi(Script script)
-		{
-			_script = script;
-		}
+		internal TimeApi(Script script) => _script = script;
 	}
 }

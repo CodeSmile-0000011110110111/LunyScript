@@ -13,12 +13,15 @@ namespace LunyScript.Blocks
 
 		internal override Table.ScalarVarHandle VarHandle => (_condition as VariableBlock)?.VarHandle;
 
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => Evaluate(null);
+		}
+
 		public static NotBlock Create(ScriptConditionBlock condition) => new(condition);
 
 		private NotBlock(ScriptConditionBlock condition) => _condition = condition;
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => Evaluate(null); }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>

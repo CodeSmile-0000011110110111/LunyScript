@@ -11,7 +11,8 @@ namespace LunyScript.Blocks
 		private LunyTransformSpace _space;
 
 		public static TransformPositionMoveRelativeBlock
-			Create(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunyTransformSpace space) => new(distance, axis, speed, space);
+			Create(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunyTransformSpace space) =>
+			new(distance, axis, speed, space);
 
 		private TransformPositionMoveRelativeBlock(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunyTransformSpace space)
 		{

@@ -20,45 +20,53 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableAddBlock : VariableArithmeticBlock
 	{
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable + (Double)_right.Variable;
+		}
 		public static VariableAddBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
 		private VariableAddBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable + (Double)_right.Variable; }
 	}
 
 	internal sealed class VariableSubtractBlock : VariableArithmeticBlock
 	{
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable - (Double)_right.Variable;
+		}
 		public static VariableSubtractBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
 		private VariableSubtractBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable - (Double)_right.Variable; }
 	}
 
 	internal sealed class VariableMultiplyBlock : VariableArithmeticBlock
 	{
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable * (Double)_right.Variable;
+		}
 		public static VariableMultiplyBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
 		private VariableMultiplyBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable * (Double)_right.Variable; }
 	}
 
 	internal sealed class VariableDivideBlock : VariableArithmeticBlock
 	{
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable / (Double)_right.Variable;
+		}
 		public static VariableDivideBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
 		private VariableDivideBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable / (Double)_right.Variable; }
 	}
 }

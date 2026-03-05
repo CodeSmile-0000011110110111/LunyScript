@@ -1,8 +1,4 @@
-﻿using LunyScript.Blocks;
-using LunyScript.Coroutines;
-using System;
-
-namespace LunyScript
+﻿namespace LunyScript
 {
 	/*
 	public interface ICoroutineForBuilderState {}

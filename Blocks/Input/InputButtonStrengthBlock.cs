@@ -11,14 +11,14 @@ namespace LunyScript.Blocks
 	{
 		private readonly String _actionName;
 
+		internal override Variable Variable => LunyEngine.Instance.Input.GetButtonStrength(_actionName);
+
 		internal static InputButtonStrengthBlock Create(String actionName) => new(actionName);
 		private InputButtonStrengthBlock(String actionName) => _actionName = actionName;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
 			LunyEngine.Instance.Input.GetButtonStrength(_actionName) > Single.Epsilon;
-
-		internal override Variable Variable => LunyEngine.Instance.Input.GetButtonStrength(_actionName);
 
 		public override String ToString() => $"Input.Button(\"{_actionName}\").Strength";
 	}

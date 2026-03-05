@@ -27,13 +27,15 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsEqualToBlock : VariableComparisonBlock
 	{
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable == _right.Variable;
+		}
 		public static VariableIsEqualToBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
 		private VariableIsEqualToBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable == _right.Variable; }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
@@ -41,13 +43,15 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsNotEqualToBlock : VariableComparisonBlock
 	{
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable != _right.Variable;
+		}
 		public static VariableIsNotEqualToBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
 		private VariableIsNotEqualToBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable != _right.Variable; }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
@@ -55,13 +59,15 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsGreaterThanBlock : VariableComparisonBlock
 	{
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable > (Double)_right.Variable;
+		}
 		public static VariableIsGreaterThanBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
 		private VariableIsGreaterThanBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable > (Double)_right.Variable; }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
@@ -69,13 +75,15 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsAtLeastBlock : VariableComparisonBlock
 	{
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable >= (Double)_right.Variable;
+		}
 		public static VariableIsAtLeastBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
 		private VariableIsAtLeastBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable >= (Double)_right.Variable; }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
@@ -83,13 +91,15 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsLessThanBlock : VariableComparisonBlock
 	{
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable < (Double)_right.Variable;
+		}
 		public static VariableIsLessThanBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
 		private VariableIsLessThanBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable < (Double)_right.Variable; }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
@@ -97,13 +107,15 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsAtMostBlock : VariableComparisonBlock
 	{
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable <= (Double)_right.Variable;
+		}
 		public static VariableIsAtMostBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
 		private VariableIsAtMostBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable <= (Double)_right.Variable; }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;

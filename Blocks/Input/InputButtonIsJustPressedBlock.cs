@@ -11,14 +11,14 @@ namespace LunyScript.Blocks
 	{
 		private readonly String _actionName;
 
+		internal override Variable Variable => Evaluate(null);
+
 		internal static InputButtonIsJustPressedBlock Create(String actionName) => new(actionName);
 		private InputButtonIsJustPressedBlock(String actionName) => _actionName = actionName;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
 			LunyEngine.Instance.Input.GetButtonJustPressed(_actionName);
-
-		internal override Variable Variable => Evaluate(null);
 
 		public override String ToString() => $"Input.Button(\"{_actionName}\").IsJustPressed";
 	}

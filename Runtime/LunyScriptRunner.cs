@@ -39,7 +39,7 @@ namespace LunyScript
 		internal ScriptSceneEventHandler SceneEventHandler => _sceneEventHandler;
 		internal ScriptInputEventHandler InputEventHandler => _inputEventHandler;
 
- 	internal static void Run(IEnumerable<SequenceBlock> sequences, ScriptRuntimeContext runtimeContext)
+		internal static void Run(IEnumerable<SequenceBlock> sequences, ScriptRuntimeContext runtimeContext)
 		{
 			if (sequences == null)
 				return;

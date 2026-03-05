@@ -10,10 +10,14 @@ namespace LunyScript.Blocks
 	internal sealed class LoopCounterVariableBlock : VariableBlock
 	{
 		public static readonly LoopCounterVariableBlock Instance = new();
-		private LoopCounterVariableBlock() {}
 
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => throw new NotImplementedException($"{nameof(LoopCounterVariableBlock)}.GetValue()"); }
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => throw new NotImplementedException($"{nameof(LoopCounterVariableBlock)}.GetValue()");
+		}
+
+		private LoopCounterVariableBlock() {}
 		//runtimeContext.LoopCount;
 	}
 }

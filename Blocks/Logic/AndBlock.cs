@@ -11,12 +11,15 @@ namespace LunyScript.Blocks
 	{
 		private readonly ScriptConditionBlock[] _conditions;
 
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => Evaluate(null);
+		}
+
 		public static AndBlock Create(params ScriptConditionBlock[] conditions) => new(conditions);
 
 		private AndBlock(ScriptConditionBlock[] conditions) => _conditions = conditions ?? throw new ArgumentNullException(nameof(conditions));
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => Evaluate(null); }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext)

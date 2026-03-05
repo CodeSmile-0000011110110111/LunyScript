@@ -1,5 +1,3 @@
-using LunyScript.Blocks;
-
 namespace LunyScript.SmokeTests.Input
 {
 	public sealed class InputTest : Script

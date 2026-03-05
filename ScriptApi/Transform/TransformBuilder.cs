@@ -92,7 +92,8 @@ namespace LunyScript
 			var token = _script.CreateBuilderToken(nameof(RotateTowards), "Transform.Rotate()");
 			var options = new TransformBuilderOptions
 			{
-				Script = _script, Token = token, Target = target, Speed = 90.0, DeadZone = 0.1, Responsiveness = 1.0, AxisLock = LunyVector3.One,
+				Script = _script, Token = token, Target = target, Speed = 90.0, DeadZone = 0.1, Responsiveness = 1.0,
+				AxisLock = LunyVector3.One,
 			};
 			return new TransformRotationBuilder<TransformBuilderReady>(options);
 		}

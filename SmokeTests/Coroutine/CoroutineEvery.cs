@@ -1,6 +1,6 @@
 ﻿namespace LunyScript.SmokeTests.Coroutine
 {
-	public partial class CoroutineEvery : Script
+	public class CoroutineEvery : Script
 	{
 		public override void Build(ScriptContext context)
 		{

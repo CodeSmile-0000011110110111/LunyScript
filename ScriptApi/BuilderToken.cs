@@ -27,6 +27,11 @@ namespace LunyScript
 		public static Boolean operator ==(BuilderToken left, BuilderToken right) => Equals(left, right);
 		public static Boolean operator !=(BuilderToken left, BuilderToken right) => !Equals(left, right);
 
+		/// <summary>
+		/// Registers an action to be called automatically when the builder is in a finalizable state.
+		/// </summary>
+		internal Action AutoFinish { set => _autoFinish = value; }
+
 		[DebuggerHidden]
 		internal static void LogUnfinishedBuilder(BuilderToken token) => LunyLogger.LogWarning(
 			$"{Path.GetFileName(token._file)}, line {token._line}: {token._type} '{token._name}' is incomplete. " +
@@ -50,11 +55,6 @@ namespace LunyScript
 
 			return _id == other._id;
 		}
-
-		/// <summary>
-		/// Registers an action to be called automatically when the builder is in a finalizable state.
-		/// </summary>
-		internal Action AutoFinish { set => _autoFinish = value; }
 
 		/// <summary>
 		/// Invokes the auto-finalizer action and marks the token finished.

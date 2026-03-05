@@ -11,11 +11,14 @@ namespace LunyScript.Blocks
 	{
 		private readonly String _actionName;
 
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => (Double)LunyEngine.Instance.Input.GetAxis(_actionName);
+		}
+
 		internal static InputAxisValueBlock Create(String actionName) => new(actionName);
 		private InputAxisValueBlock(String actionName) => _actionName = actionName;
-
-		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => (Double)LunyEngine.Instance.Input.GetAxis(_actionName); }
 
 		public override String ToString() => $"Input.Button(\"{_actionName}\").Value";
 	}

@@ -31,6 +31,7 @@ namespace LunyScript.Coroutines
 		}
 
 		protected override void OnStarted() => _timer.Start();
+
 		protected override void OnStopped() => _timer.Stop();
 		//protected override void OnPaused() {} // no need to pause timer: Consume* methods won't be called when paused
 		//protected override void OnResumed() {}

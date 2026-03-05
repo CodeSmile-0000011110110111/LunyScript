@@ -13,7 +13,6 @@ namespace LunyScript.Blocks
 		Clone,
 	}
 
-
 	internal abstract class ObjectCreateBlock : ScriptActionBlock
 	{
 		protected readonly String Name;

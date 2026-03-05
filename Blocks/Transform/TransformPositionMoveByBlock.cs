@@ -9,8 +9,8 @@ namespace LunyScript.Blocks
 		private VariableBlock _speed;
 		private LunyTransformSpace _space;
 
-		public static TransformPositionMoveByBlock Create(VariableBlock<LunyVector2> direction, VariableBlock speed, LunyTransformSpace space) =>
-			new(direction, speed, space);
+		public static TransformPositionMoveByBlock
+			Create(VariableBlock<LunyVector2> direction, VariableBlock speed, LunyTransformSpace space) => new(direction, speed, space);
 
 		private TransformPositionMoveByBlock(VariableBlock<LunyVector2> direction, VariableBlock speed, LunyTransformSpace space)
 		{

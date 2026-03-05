@@ -13,6 +13,12 @@ namespace LunyScript.Blocks
 		private readonly String _actionName;
 		private readonly LunyVector3 _worldUp;
 
+		internal override LunyQuaternion Value
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => LunyEngine.Instance.Input.GetRotation(_actionName, _worldUp);
+		}
+
 		internal static InputAxisRotationBlock Create(String actionName) => new(actionName, LunyVector3.Up);
 		internal static InputAxisRotationBlock Create(String actionName, LunyVector3 worldUp) => new(actionName, worldUp);
 
@@ -21,9 +27,6 @@ namespace LunyScript.Blocks
 			_actionName = actionName;
 			_worldUp = worldUp;
 		}
-
-		internal override LunyQuaternion Value { [MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => LunyEngine.Instance.Input.GetRotation(_actionName, _worldUp); }
 
 		public override String ToString() => $"Input.Axis(\"{_actionName}\")";
 	}

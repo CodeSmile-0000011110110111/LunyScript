@@ -6,13 +6,10 @@
 	/// </summary>
 	public sealed class InputTransformMove_LunyScript : Script
 	{
-		public override void Build(ScriptContext context)
-		{
-			On.FrameUpdate(
-				Transform.MoveBy(Input.Direction("Move"), 4),
-				Transform.MoveUp(Input.Button("Jump").Strength, 4),
-				Transform.MoveDown(Input.Button("Crouch").Strength, 4)
-			);
-		}
+		public override void Build(ScriptContext context) => On.FrameUpdate(
+			Transform.MoveBy(Input.Direction("Move"), 4),
+			Transform.MoveUp(Input.Button("Jump").Strength, 4),
+			Transform.MoveDown(Input.Button("Crouch").Strength, 4)
+		);
 	}
 }

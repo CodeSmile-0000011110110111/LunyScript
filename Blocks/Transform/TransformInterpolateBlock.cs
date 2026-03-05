@@ -1,5 +1,4 @@
-﻿using Luny;
-using Luny.Engine.Bridge;
+﻿using Luny.Engine.Bridge;
 using System;
 
 namespace LunyScript.Blocks
@@ -37,7 +36,8 @@ namespace LunyScript.Blocks
 	{
 		protected readonly VariableBlock<LunyVector3> TargetScale;
 
-		protected TransformInterpolateTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone, LunyVector3 axisLock,
+		protected TransformInterpolateTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone,
+			LunyVector3 axisLock,
 			Double responsiveness)
 			: base(speed, deadZone, axisLock, responsiveness) => TargetScale = targetScale;
 
@@ -60,8 +60,7 @@ namespace LunyScript.Blocks
 	public sealed class TransformScaleTowardsBlock : TransformInterpolateTowardsVariableBlock
 	{
 		public static TransformScaleTowardsBlock Create(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone = 0.1,
-			LunyVector3 axisLock = default, Double responsiveness = 1.0) =>
-			new(targetScale, speed, deadZone, axisLock, responsiveness);
+			LunyVector3 axisLock = default, Double responsiveness = 1.0) => new(targetScale, speed, deadZone, axisLock, responsiveness);
 
 		private TransformScaleTowardsBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone, LunyVector3 axisLock,
 			Double responsiveness)
@@ -151,8 +150,7 @@ namespace LunyScript.Blocks
 	public sealed class TransformPositionLinearTowardsObjectBlock : TransformInterpolateTowardsObjectBlock
 	{
 		public static TransformPositionLinearTowardsObjectBlock Create(ILunyObject target, Double speed, Double deadZone = 0.1,
-			LunyVector3 axisLock = default, Double responsiveness = 1.0) =>
-			new(target, speed, deadZone, axisLock, responsiveness);
+			LunyVector3 axisLock = default, Double responsiveness = 1.0) => new(target, speed, deadZone, axisLock, responsiveness);
 
 		private TransformPositionLinearTowardsObjectBlock(ILunyObject target, Double speed, Double deadZone, LunyVector3 axisLock,
 			Double responsiveness)
@@ -197,8 +195,7 @@ namespace LunyScript.Blocks
 	public sealed class TransformRotationLinearTowardsObjectBlock : TransformInterpolateTowardsObjectBlock
 	{
 		public static TransformRotationLinearTowardsObjectBlock Create(ILunyObject target, Double speed, Double deadZone = 0.1,
-			LunyVector3 axisLock = default, Double responsiveness = 1.0) =>
-			new(target, speed, deadZone, axisLock, responsiveness);
+			LunyVector3 axisLock = default, Double responsiveness = 1.0) => new(target, speed, deadZone, axisLock, responsiveness);
 
 		private TransformRotationLinearTowardsObjectBlock(ILunyObject target, Double speed, Double deadZone, LunyVector3 axisLock,
 			Double responsiveness)
