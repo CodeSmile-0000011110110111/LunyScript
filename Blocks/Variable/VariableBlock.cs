@@ -140,6 +140,7 @@ namespace LunyScript.Blocks
 				var i = v.AsInt32();
 				return Unsafe.As<Int32, T>(ref i);
 			}
+			/*
 			if (typeof(T) == typeof(LunyVector2))
 			{
 				var vec2 = v.AsVector2();
@@ -155,6 +156,7 @@ namespace LunyScript.Blocks
 				var q = v.AsQuaternion();
 				return Unsafe.As<LunyQuaternion, T>(ref q);
 			}
+			*/
 
 			throw new LunyScriptVariableException($"Cannot convert {v.Type} to {typeof(T).Name}");
 		}
