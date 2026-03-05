@@ -4,6 +4,7 @@ using System;
 
 namespace LunyScript
 {
+	/*
 	public interface ICoroutineForBuilderState {}
 	public interface ICoroutineForBuilderStart : ICoroutineForBuilderState {}
 	//public struct CoroutineForBuilderStart : ICoroutineForBuilderStart {}
@@ -142,4 +143,5 @@ namespace LunyScript
 			throw new ArgumentOutOfRangeException(nameof(b.Options.ProcessMode), b.Options.ProcessMode.ToString());
 		}
 	}
+*/
 }

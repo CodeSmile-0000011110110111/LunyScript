@@ -18,7 +18,7 @@ namespace LunyScript.Blocks
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
 			LunyEngine.Instance.Input.GetButtonJustPressed(_actionName);
 
-		internal override Variable GetValue() => Evaluate(null);
+		internal override Variable Variable => Evaluate(null);
 
 		public override String ToString() => $"Input.Button(\"{_actionName}\").IsJustPressed";
 	}

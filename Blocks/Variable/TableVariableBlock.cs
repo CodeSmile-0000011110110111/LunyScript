@@ -11,20 +11,21 @@ namespace LunyScript.Blocks
 	{
 		private readonly Table.ScalarVarHandle _handle;
 
-		internal override Table.ScalarVarHandle TargetHandle => _handle;
-		internal Table.ScalarVarHandle ScalarVarHandle => _handle;
+		internal override Table.ScalarVarHandle VarHandle => _handle;
 
 		public String Name => _handle.Name;
 		public Variable Value => _handle.Value;
+
+		internal override Variable Variable
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _handle.Value;
+		}
 
 		internal static TableVariableBlock Create(Table.ScalarVarHandle handle) => new(handle);
 
 		private TableVariableBlock(Table.ScalarVarHandle handle) => _handle = handle;
 
 		public override String ToString() => _handle.ToString();
-
-		// VariableBlock
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() => _handle.Value;
 	}
 }

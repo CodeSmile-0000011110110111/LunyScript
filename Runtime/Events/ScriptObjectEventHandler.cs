@@ -205,7 +205,6 @@ namespace LunyScript.Events
 			{
 				RunObjectEventSequences(LunyObjectEvent.OnDestroyed);
 				UnregisterAllCallbacks(); // no more events
-				_runtimeContext.Shutdown();
 				_objectEventHandler.Unregister(_runtimeContext);
 			}
 

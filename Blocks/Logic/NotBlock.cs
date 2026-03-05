@@ -11,14 +11,14 @@ namespace LunyScript.Blocks
 	{
 		private readonly ScriptConditionBlock _condition;
 
-		internal override Table.ScalarVarHandle TargetHandle => (_condition as VariableBlock)?.TargetHandle;
+		internal override Table.ScalarVarHandle VarHandle => (_condition as VariableBlock)?.VarHandle;
 
 		public static NotBlock Create(ScriptConditionBlock condition) => new(condition);
 
 		private NotBlock(ScriptConditionBlock condition) => _condition = condition;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() => Evaluate(null);
+		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => Evaluate(null); }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>

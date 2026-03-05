@@ -11,7 +11,7 @@ namespace LunyScript.SmokeTests.Object
 
 		public override void Build(ScriptContext context)
 		{
-			var isDestroyed = Var["isDestroyed"];
+			var isDestroyed = Var.Define("isDestroyed", false);
 
 			On.Created(Object.Create(DestroyedObjectName));
 			On.AfterFrameUpdate(If(isDestroyed == false)

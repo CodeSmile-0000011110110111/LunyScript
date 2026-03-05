@@ -4,7 +4,7 @@ using System;
 
 namespace LunyScript
 {
-	public interface ICoroutineEveryBuilder {}
+	/*public interface ICoroutineEveryBuilder {}
 	public interface ICoroutineEveryBuilderStart : ICoroutineEveryBuilder {}
 	public struct CoroutineEveryBuilderStart : ICoroutineEveryBuilderStart {}
 
@@ -75,5 +75,5 @@ namespace LunyScript
 			return CoroutineBuilder.Finish(b.Script, b.Token,
 				CoroutineOptions.ForIntervalCoroutine(null, o.TimeSliceInterval, o.TimeSliceOffset, o.ProcessMode, blocks));
 		}
-	}
+	}*/
 }

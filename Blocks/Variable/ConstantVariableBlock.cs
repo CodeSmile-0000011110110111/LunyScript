@@ -15,8 +15,8 @@ namespace LunyScript.Blocks
 
 		private ConstantVariableBlock(Variable value) => _value = value;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() => _value;
+		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _value; }
 
 		public override String ToString() => _value.ToString();
 	}

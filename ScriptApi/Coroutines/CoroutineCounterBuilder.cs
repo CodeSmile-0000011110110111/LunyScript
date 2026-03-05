@@ -16,16 +16,9 @@ namespace LunyScript
 	/// </summary>
 	public readonly struct CoroutineCounterBuilder<T> where T : struct, ICoroutineCounterBuilderState
 	{
-		internal readonly Script Script;
-		internal readonly BuilderToken Token;
 		internal readonly CoroutineOptions Options;
 
-		internal CoroutineCounterBuilder(Script script, BuilderToken token, in CoroutineOptions options)
-		{
-			Script = script;
-			Token = token;
-			Options = options;
-		}
+		internal CoroutineCounterBuilder(in CoroutineOptions options) => Options = options;
 	}
 
 	public static class CounterBuilderWhenExtensions
@@ -34,7 +27,7 @@ namespace LunyScript
 		public static CoroutineCounterBuilder<T> WhenStarted<T>(this CoroutineCounterBuilder<T> b, params ScriptActionBlock[] startedBlocks)
 			where T : struct, ICoroutineCounterWhen
 		{
-			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnStarted);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnStarted);
 			return ScriptActionBlock.IsNullOrEmpty(startedBlocks) ? b : NextBuilder(b, b.Options with { OnStarted = startedBlocks });
 		}
 
@@ -42,7 +35,7 @@ namespace LunyScript
 		public static CoroutineCounterBuilder<T> WhenStopped<T>(this CoroutineCounterBuilder<T> b, params ScriptActionBlock[] stoppedBlocks)
 			where T : struct, ICoroutineCounterWhen
 		{
-			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnStopped);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnStopped);
 			return ScriptActionBlock.IsNullOrEmpty(stoppedBlocks) ? b : NextBuilder(b, b.Options with { OnStopped = stoppedBlocks });
 		}
 
@@ -50,7 +43,7 @@ namespace LunyScript
 		public static CoroutineCounterBuilder<T> WhenPaused<T>(this CoroutineCounterBuilder<T> b, params ScriptActionBlock[] pausedBlocks)
 			where T : struct, ICoroutineCounterWhen
 		{
-			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnPaused);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnPaused);
 			return ScriptActionBlock.IsNullOrEmpty(pausedBlocks) ? b : NextBuilder(b, b.Options with { OnPaused = pausedBlocks });
 		}
 
@@ -58,7 +51,7 @@ namespace LunyScript
 		public static CoroutineCounterBuilder<T> WhenResumed<T>(this CoroutineCounterBuilder<T> b, params ScriptActionBlock[] resumedBlocks)
 			where T : struct, ICoroutineCounterWhen
 		{
-			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnResumed);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnResumed);
 			return ScriptActionBlock.IsNullOrEmpty(resumedBlocks) ? b : NextBuilder(b, b.Options with { OnResumed = resumedBlocks });
 		}
 
@@ -67,13 +60,13 @@ namespace LunyScript
 		{
 			if (b.Options.ProcessMode == Coroutine.Process.Heartbeat)
 			{
-				BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnHeartbeat);
+				BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnHeartbeat);
 				return ScriptActionBlock.IsNullOrEmpty(processBlocks) ? b : NextBuilder(b, b.Options with { OnHeartbeat = processBlocks });
 			}
 
 			if (b.Options.ProcessMode == Coroutine.Process.FrameUpdate)
 			{
-				BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Script, b.Options.OnFrameUpdate);
+				BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnFrameUpdate);
 				return ScriptActionBlock.IsNullOrEmpty(processBlocks) ? b : NextBuilder(b, b.Options with { OnFrameUpdate = processBlocks });
 			}
 
@@ -83,8 +76,8 @@ namespace LunyScript
 		private static CoroutineCounterBuilder<T> NextBuilder<T>(CoroutineCounterBuilder<T> b, CoroutineOptions options)
 			where T : struct, ICoroutineCounterWhen
 		{
-			b.Token.AutoFinish = () => CoroutineBuilder.Finish(b.Script, b.Token, options);
-			return new CoroutineCounterBuilder<T>(b.Script, b.Token, options);
+			b.Options.Token.AutoFinish = () => CoroutineBuilder.Finish(b.Options.Script, b.Options.Token, options);
+			return new CoroutineCounterBuilder<T>(options);
 		}
 	}
 
@@ -93,6 +86,6 @@ namespace LunyScript
 		/// <summary>Completes the counter and specifies blocks to run when elapsed.</summary>
 		public static ICoroutineBlock WhenElapsed<T>(this CoroutineCounterBuilder<T> b, params ScriptActionBlock[] elapsedBlocks)
 			where T : struct, ICoroutineCounterBuilderUnitSet =>
-			CoroutineBuilder.Finish(b.Script, b.Token, b.Options with { OnElapsed = elapsedBlocks });
+			CoroutineBuilder.Finish(b.Options.Script, b.Options.Token, b.Options with { OnElapsed = elapsedBlocks });
 	}
 }

@@ -9,7 +9,7 @@ namespace LunyScript.Blocks
 		protected readonly VariableBlock _left;
 		protected readonly VariableBlock _right;
 
-		internal override Table.ScalarVarHandle TargetHandle => _left?.TargetHandle ?? _right?.TargetHandle;
+		internal override Table.ScalarVarHandle VarHandle => _left?.VarHandle ?? _right?.VarHandle;
 
 		protected VariableArithmeticBlock(VariableBlock left, VariableBlock right)
 		{
@@ -25,9 +25,8 @@ namespace LunyScript.Blocks
 		private VariableAddBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() =>
-			_left.GetValue() + (Double)_right.GetValue();
+		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable + (Double)_right.Variable; }
 	}
 
 	internal sealed class VariableSubtractBlock : VariableArithmeticBlock
@@ -37,9 +36,8 @@ namespace LunyScript.Blocks
 		private VariableSubtractBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() =>
-			_left.GetValue() - (Double)_right.GetValue();
+		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable - (Double)_right.Variable; }
 	}
 
 	internal sealed class VariableMultiplyBlock : VariableArithmeticBlock
@@ -49,9 +47,8 @@ namespace LunyScript.Blocks
 		private VariableMultiplyBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() =>
-			_left.GetValue() * (Double)_right.GetValue();
+		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable * (Double)_right.Variable; }
 	}
 
 	internal sealed class VariableDivideBlock : VariableArithmeticBlock
@@ -61,8 +58,7 @@ namespace LunyScript.Blocks
 		private VariableDivideBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() =>
-			_left.GetValue() / (Double)_right.GetValue();
+		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => _left.Variable / (Double)_right.Variable; }
 	}
 }

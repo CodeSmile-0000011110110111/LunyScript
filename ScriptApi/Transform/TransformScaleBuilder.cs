@@ -11,35 +11,31 @@ namespace LunyScript
 	/// </summary>
 	public readonly struct TransformScaleBuilder<T> where T : struct, ITransformBuilderState
 	{
-		internal readonly Script Script;
-		internal readonly BuilderToken Token;
 		internal readonly TransformBuilderOptions Options;
 
-		internal TransformScaleBuilder(Script script, BuilderToken token, in TransformBuilderOptions options)
+		internal TransformScaleBuilder(in TransformBuilderOptions options)
 		{
-			Script = script;
 			Options = options;
-			Token = token;
 
 			var capturedOptions = options;
-			token.AutoFinish = () => Finish(script, token, in capturedOptions);
+			options.Token.AutoFinish = () => Finish(capturedOptions);
 		}
 
-		public static implicit operator ScriptActionBlock(TransformScaleBuilder<T> b) => Finish(b.Script, b.Token, b.Options);
+		public static implicit operator ScriptActionBlock(TransformScaleBuilder<T> b) => Finish(b.Options);
 
-		internal static ScriptActionBlock Finish(Script script, BuilderToken token, in TransformBuilderOptions options)
+		internal static ScriptActionBlock Finish(in TransformBuilderOptions options)
 		{
 			var block = TransformScaleTowardsBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.AxisLock,
 				options.Responsiveness);
-			script.MarkBuilderTokenFinished(token);
+			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}
 
-		internal static TransformScaleTowardsLerpBlock FinishLerpBuilder(Script script, BuilderToken token, in TransformBuilderOptions options)
+		internal static TransformScaleTowardsLerpBlock FinishLerpBuilder(in TransformBuilderOptions options)
 		{
 			var block = TransformScaleTowardsLerpBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.AxisLock,
 				options.Responsiveness, options.SphericalLerp);
-			script.MarkBuilderTokenFinished(token);
+			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}
 	}
@@ -48,15 +44,15 @@ namespace LunyScript
 	{
 		/// <summary> Scale speed in units per second (for linear) or lerp factor (for <c>Lerp()</c>/<c>Slerp()</c>). </summary>
 		public static TransformScaleBuilder<TransformBuilderReady> Speed<T>(this TransformScaleBuilder<T> b, Double speed)
-			where T : struct, ITransformBuilderReady => new(b.Script, b.Token, b.Options with { Speed = speed });
+			where T : struct, ITransformBuilderReady => new(b.Options with { Speed = speed });
 
 		/// <summary> Minimum scale-distance threshold before scaling begins (prevents micro-jitter). </summary>
 		public static TransformScaleBuilder<TransformBuilderReady> DeadZone<T>(this TransformScaleBuilder<T> b, Double deadZone)
-			where T : struct, ITransformBuilderReady => new(b.Script, b.Token, b.Options with { DeadZone = deadZone });
+			where T : struct, ITransformBuilderReady => new(b.Options with { DeadZone = deadZone });
 
 		/// <summary> Multiplies delta time; larger values produce faster approach. </summary>
 		public static TransformScaleBuilder<TransformBuilderReady> Responsiveness<T>(this TransformScaleBuilder<T> b, Double responsiveness)
-			where T : struct, ITransformBuilderReady => new(b.Script, b.Token, b.Options with { Responsiveness = responsiveness });
+			where T : struct, ITransformBuilderReady => new(b.Options with { Responsiveness = responsiveness });
 
 		/// <summary> Prevents scaling along the X axis. </summary>
 		public static TransformScaleBuilder<TransformBuilderReady> LockX<T>(this TransformScaleBuilder<T> b)
@@ -64,7 +60,7 @@ namespace LunyScript
 		{
 			var options = b.Options;
 			options.LockAxisX();
-			return new TransformScaleBuilder<TransformBuilderReady>(b.Script, b.Token, options);
+			return new TransformScaleBuilder<TransformBuilderReady>(options);
 		}
 
 		/// <summary> Prevents scaling along the Y axis. </summary>
@@ -73,7 +69,7 @@ namespace LunyScript
 		{
 			var options = b.Options;
 			options.LockAxisY();
-			return new TransformScaleBuilder<TransformBuilderReady>(b.Script, b.Token, options);
+			return new TransformScaleBuilder<TransformBuilderReady>(options);
 		}
 
 		/// <summary> Prevents scaling along the Z axis. </summary>
@@ -82,17 +78,16 @@ namespace LunyScript
 		{
 			var options = b.Options;
 			options.LockAxisZ();
-			return new TransformScaleBuilder<TransformBuilderReady>(b.Script, b.Token, options);
+			return new TransformScaleBuilder<TransformBuilderReady>(options);
 		}
 
 		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
 		public static TransformScaleTowardsLerpBlock Lerp<T>(this TransformScaleBuilder<T> b)
-			where T : struct, ITransformBuilderReady =>
-			TransformScaleBuilder<T>.FinishLerpBuilder(b.Script, b.Token, b.Options with { Lerp = true });
+			where T : struct, ITransformBuilderReady => TransformScaleBuilder<T>.FinishLerpBuilder(b.Options with { Lerp = true });
 
 		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
 		public static TransformScaleTowardsLerpBlock Slerp<T>(this TransformScaleBuilder<T> b)
 			where T : struct, ITransformBuilderReady =>
-			TransformScaleBuilder<T>.FinishLerpBuilder(b.Script, b.Token, b.Options with { Lerp = true, SphericalLerp = true });
+			TransformScaleBuilder<T>.FinishLerpBuilder(b.Options with { Lerp = true, SphericalLerp = true });
 	}
 }

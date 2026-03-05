@@ -2,8 +2,8 @@ using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Diagnostics;
 using LunyScript.Events;
+using LunyScript.Exceptions;
 using System;
-using System.Collections.Generic;
 
 namespace LunyScript
 {
@@ -41,12 +41,13 @@ namespace LunyScript
 		private readonly IScriptDefinition _scriptDef;
 		private readonly ILunyObject _lunyObject;
 
- 	private ScriptEventScheduler _scheduler;
+		private ScriptEventScheduler _scheduler;
 		private ScriptCoroutineRunner _coroutines;
 		private ScriptDebugHooks _debugHooks;
 		private ScriptBlockProfiler _blockProfiler;
 		private ITable _localVariables;
 		private Object _eventArgs;
+		private Boolean _isShuttingDown;
 		//private Stack<Int32> _loopStack;
 
 		/// <summary>
@@ -68,14 +69,13 @@ namespace LunyScript
 		/// <summary>
 		/// Per-object variables for this script instance.
 		/// </summary>
-		public ITable LocalVariables => _localVariables ??= new Table();
+		public ITable LocalVariables => _localVariables ??= _isShuttingDown ? null : new Table();
 		/// <summary>
 		/// Generic event arguments for the currently executing event.
 		/// Blocks cast this to the expected type (e.g. LunyCollision, LunyCollider).
 		/// Null outside of event execution.
 		/// </summary>
 		public Object EventArgs => _eventArgs;
-		internal void SetEventArgs(Object eventArgs) => _eventArgs = eventArgs;
 		/// <summary>
 		/// Stack for loop iteration counters.
 		/// </summary>
@@ -87,20 +87,20 @@ namespace LunyScript
 		/// <summary>
 		/// Debugging hooks for execution tracing and breakpoints.
 		/// </summary>
-		internal ScriptDebugHooks DebugHooks => _debugHooks ??= new ScriptDebugHooks();
+		internal ScriptDebugHooks DebugHooks => _debugHooks ??= _isShuttingDown ? null : new ScriptDebugHooks();
 		/// <summary>
 		/// Block-level profiler for tracking blocks performance.
 		/// </summary>
-		internal ScriptBlockProfiler BlockProfiler => _blockProfiler ??= new ScriptBlockProfiler();
+		internal ScriptBlockProfiler BlockProfiler => _blockProfiler ??= _isShuttingDown ? null : new ScriptBlockProfiler();
 		/// <summary>
 		/// Event scheduler for managing sequences across all event types.
 		/// </summary>
-		internal ScriptEventScheduler Scheduler => _scheduler ??= new ScriptEventScheduler();
+		internal ScriptEventScheduler Scheduler => _scheduler ??= _isShuttingDown ? null : new ScriptEventScheduler();
 
 		/// <summary>
 		/// Coroutine runner for managing timers and coroutines.
 		/// </summary>
-		internal ScriptCoroutineRunner Coroutines => _coroutines ??= new ScriptCoroutineRunner(this);
+		internal ScriptCoroutineRunner Coroutines => _coroutines ??= _isShuttingDown ? null : new ScriptCoroutineRunner(this);
 
 		internal static void ClearGlobalVariables() => s_GlobalVariables?.RemoveAll();
 		internal static ITable GetGlobalVariables() => s_GlobalVariables;
@@ -112,12 +112,21 @@ namespace LunyScript
 			//LunyLogger.LogInfo($"new {this} ({GetHashCode()})", this);
 		}
 
+		internal void SetEventArgs(Object eventArgs) => _eventArgs = eventArgs;
+
 		internal void Activate() => _lunyObject.Initialize();
 
 		internal void Shutdown()
 		{
+			if (_isShuttingDown)
+				throw new LunyScriptException($"Shutdown() called again on: {this}");
+
+			_isShuttingDown = true;
 			_coroutines?.Shutdown();
 			_scheduler?.Shutdown();
+			_coroutines = null;
+			_scheduler = null;
+			_eventArgs = null;
 			GC.SuppressFinalize(this);
 		}
 

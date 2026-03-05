@@ -46,15 +46,6 @@ namespace LunyScript
 		protected CoroutineBuilder Coroutine(String name) => new(this, name);
 
 		/// <summary>
-		/// Defines a named, read-only variable.
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="value"></param>
-		/// <returns></returns>
-		protected VariableBlock Define(String name, Variable value) =>
-			TableVariableBlock.Create(_runtimeContext.GlobalVariables.DefineConstant(name, value));
-
-		/// <summary>
 		/// Conditional execution: If(conditions).Then(blocks).ElseIf(conditions).Then(blocks).Else(blocks);
 		/// Multiple conditions are implicitly AND combined.
 		/// </summary>

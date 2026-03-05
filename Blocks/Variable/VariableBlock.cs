@@ -11,7 +11,7 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class VariableBlock : ScriptConditionBlock
 	{
-		internal virtual Table.ScalarVarHandle TargetHandle => null;
+		internal virtual Table.ScalarVarHandle VarHandle => null;
 
 		public static implicit operator VariableBlock(Variable value) => ConstantVariableBlock.Create(value);
 		public static implicit operator VariableBlock(Int32 value) => ConstantVariableBlock.Create(value);
@@ -58,37 +58,19 @@ namespace LunyScript.Blocks
 		public static VariableBlock operator --(VariableBlock a) => a - 1;
 
 		// Comparison Operators
-		public static VariableBlock operator ==(VariableBlock left, Variable right)
-		{
-			if (left is null)
-				return right.Object is null;
+		public static VariableBlock operator ==(VariableBlock left, Variable right) => left is null
+			? right.Object is null
+			: VariableIsEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
 
-			return VariableIsEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
-		}
+		public static VariableBlock operator ==(VariableBlock left, VariableBlock right) =>
+			left is null ? right is null : VariableIsEqualToBlock.Create(left, right);
 
-		public static VariableBlock operator ==(VariableBlock left, VariableBlock right)
-		{
-			if (left is null)
-				return right is null;
+		public static VariableBlock operator !=(VariableBlock left, Variable right) => left is null
+			? right.Object is not null
+			: VariableIsNotEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
 
-			return VariableIsEqualToBlock.Create(left, right);
-		}
-
-		public static VariableBlock operator !=(VariableBlock left, Variable right)
-		{
-			if (left is null)
-				return right.Object is not null;
-
-			return VariableIsNotEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
-		}
-
-		public static VariableBlock operator !=(VariableBlock left, VariableBlock right)
-		{
-			if (left is null)
-				return right is null;
-
-			return VariableIsNotEqualToBlock.Create(left, right);
-		}
+		public static VariableBlock operator !=(VariableBlock left, VariableBlock right) =>
+			left is null ? right is null : VariableIsNotEqualToBlock.Create(left, right);
 
 		public static VariableBlock operator >(VariableBlock left, Variable right) =>
 			VariableIsGreaterThanBlock.Create(left, ConstantVariableBlock.Create(right));
@@ -112,11 +94,11 @@ namespace LunyScript.Blocks
 
 		public static VariableBlock operator !(VariableBlock operand) => NotBlock.Create(operand);
 
-		internal Double Value => GetValue().AsDouble();
+		internal Double Value => Variable.AsDouble();
 
-		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => GetValue().AsBoolean();
+		internal abstract Variable Variable { get; }
 
-		internal abstract Variable GetValue();
+		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable.AsBoolean();
 
 		private Boolean Equals(VariableBlock other) => throw new NotImplementedException($"{nameof(VariableBlock)}.{nameof(Equals)}()");
 
@@ -137,7 +119,7 @@ namespace LunyScript.Blocks
 		// Actions
 		private Table.ScalarVarHandle GetHandleOrThrow()
 		{
-			var handle = TargetHandle;
+			var handle = VarHandle;
 			if (handle == null)
 				throw new LunyScriptVariableException($"Cannot modify read-only variable: {GetType().Name}");
 			if (handle.IsConstant)
@@ -147,24 +129,17 @@ namespace LunyScript.Blocks
 		}
 
 		public ScriptActionBlock Set(Variable value) => VariableSetValueBlock.Create(GetHandleOrThrow(), ConstantVariableBlock.Create(value));
-
 		public ScriptActionBlock Set(VariableBlock value) => VariableSetValueBlock.Create(GetHandleOrThrow(), value);
-
-		public ScriptActionBlock Inc() => Add(1);
-		public ScriptActionBlock Dec() => Sub(1);
-
 		public ScriptActionBlock Add(Variable value) => Set(this + value);
 		public ScriptActionBlock Add(VariableBlock value) => Set(this + value);
-
 		public ScriptActionBlock Sub(Variable value) => Set(this - value);
 		public ScriptActionBlock Sub(VariableBlock value) => Set(this - value);
-
 		public ScriptActionBlock Mul(Variable value) => Set(this * value);
 		public ScriptActionBlock Mul(VariableBlock value) => Set(this * value);
-
 		public ScriptActionBlock Div(Variable value) => Set(this / value);
 		public ScriptActionBlock Div(VariableBlock value) => Set(this / value);
-
+		public ScriptActionBlock Inc() => Set(this + 1);
+		public ScriptActionBlock Dec() => Set(this - 1);
 		public ScriptActionBlock Toggle() => Set(!this);
 	}
 }

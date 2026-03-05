@@ -11,6 +11,9 @@ namespace LunyScript
 	{
 		private static Int32 s_UniqueNameID;
 
+		internal Script Script;
+		internal BuilderToken Token;
+
 		public String Name { get; init; }
 		public Double Duration { get; init; } // Used only by TimerCoroutine
 		public Int32 CounterTarget => (Int32)Math.Round(Duration); // Used by CounterCoroutine

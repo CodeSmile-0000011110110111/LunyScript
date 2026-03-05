@@ -27,23 +27,15 @@ namespace LunyScript
 	/// </summary>
 	public readonly struct PhysicsEventBuilder<T> where T : struct, ICollisionBuilderState
 	{
-		internal readonly Script Script;
 		internal readonly PhysicsEventOptions Options;
-		internal readonly BuilderToken Token;
 
 		internal PhysicsEventBuilder(Script script, Boolean isTrigger)
 		{
-			Script = script;
-			Options = new PhysicsEventOptions { IsTrigger = isTrigger };
-			Token = script.CreateBuilderToken("Physics Event", isTrigger ? "Trigger" : "Collision");
+			var token = script.CreateBuilderToken("Physics Event", isTrigger ? "Trigger" : "Collision");
+			Options = new PhysicsEventOptions { Script = script, Token = token, IsTrigger = isTrigger };
 		}
 
-		internal PhysicsEventBuilder(Script script, PhysicsEventOptions options, BuilderToken token)
-		{
-			Script = script;
-			Options = options;
-			Token = token;
-		}
+		internal PhysicsEventBuilder(in PhysicsEventOptions options) => Options = options;
 
 		// ── Filters ───────────────────────────────────────────────────────────
 
@@ -53,9 +45,8 @@ namespace LunyScript
 		/// </summary>
 		public PhysicsEventBuilder<CollisionBuilderReady> Tagged(params String[] tags)
 		{
-			var options = Options;
-			options.Filter.Tags = tags;
-			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.TagsFilter);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(Options with { TagsFilter = tags });
 		}
 
 		/// <summary>
@@ -63,9 +54,8 @@ namespace LunyScript
 		/// </summary>
 		public PhysicsEventBuilder<CollisionBuilderReady> With(params String[] names)
 		{
-			var options = Options;
-			options.Filter.Names = names;
-			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.NameFilter);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(Options with { NameFilter = names });
 		}
 
 		/// <summary>
@@ -74,9 +64,8 @@ namespace LunyScript
 		/// </summary>
 		public PhysicsEventBuilder<CollisionBuilderLayered> Layered(params String[] layerNames)
 		{
-			var options = Options;
-			options.Filter.Layers = layerNames;
-			return new PhysicsEventBuilder<CollisionBuilderLayered>(Script, options, Token);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.LayerNameFilter);
+			return new PhysicsEventBuilder<CollisionBuilderLayered>(Options with { LayerNameFilter = layerNames });
 		}
 
 		/// <summary>
@@ -84,9 +73,8 @@ namespace LunyScript
 		/// </summary>
 		public PhysicsEventBuilder<CollisionBuilderReady> Typed(params Type[] componentTypes)
 		{
-			var options = Options;
-			options.Filter.ComponentTypes = componentTypes;
-			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.ComponentTypeFilter);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(Options with { ComponentTypeFilter = componentTypes });
 		}
 
 		// ── Event handlers ────────────────────────────────────────────────────
@@ -94,52 +82,47 @@ namespace LunyScript
 		/// <summary>Blocks to run when the collision/trigger begins.</summary>
 		public PhysicsEventBuilder<CollisionBuilderReady> Begins(params ScriptActionBlock[] blocks)
 		{
-			var options = Options;
-			options.BeginsBlocks = blocks;
-			SetAutoFinish(Script, Token, options);
-			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.BeginsBlocks);
+			var options = Options with { BeginsBlocks = blocks };
+			SetAutoFinish(options);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(options);
 		}
 
 		/// <summary>Blocks to run each physics step while the collision/trigger persists.</summary>
 		public PhysicsEventBuilder<CollisionBuilderReady> Continues(params ScriptActionBlock[] blocks)
 		{
-			var options = Options;
-			options.UpdatesBlocks = blocks;
-			SetAutoFinish(Script, Token, options);
-			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.ContinuesBlocks);
+			var options = Options with { ContinuesBlocks = blocks };
+			SetAutoFinish(options);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(options);
 		}
 
 		/// <summary>Blocks to run when the collision/trigger ends.</summary>
 		public PhysicsEventBuilder<CollisionBuilderReady> Ends(params ScriptActionBlock[] blocks)
 		{
-			var options = Options;
-			options.EndsBlocks = blocks;
-			SetAutoFinish(Script, Token, options);
-			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.EndsBlocks);
+			var options = Options with { EndsBlocks = blocks };
+			SetAutoFinish(options);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(options);
 		}
 
 		/// <summary>
 		/// Minimum seconds between successive reactions. Zero (default) means no cooldown.
 		/// The cooldown is checked before collision predicates; evaluated per event sequence.
 		/// </summary>
-		public PhysicsEventBuilder<CollisionBuilderReady> Cooldown(Double seconds)
-		{
-			var options = Options;
-			options.Cooldown = Math.Max(0.0, seconds);
-			return new PhysicsEventBuilder<CollisionBuilderReady>(Script, options, Token);
-		}
+		public PhysicsEventBuilder<CollisionBuilderReady> Cooldown(Double seconds) => new(Options with { Cooldown = Math.Max(0.0, seconds) });
 
 		// ── Finalize ──────────────────────────────────────────────────────────
-		private void SetAutoFinish(Script script, BuilderToken token, PhysicsEventOptions options) =>
-			token.AutoFinish = () => Finish(script, token, options);
+		private void SetAutoFinish(PhysicsEventOptions options) =>
+			options.Token.AutoFinish = () => Finish(options.Script, options.Token, options);
 
 		internal static void Finish(Script script, BuilderToken token, in PhysicsEventOptions options)
 		{
-			if (options.BeginsBlocks == null && options.UpdatesBlocks == null && options.EndsBlocks == null)
+			if (options.BeginsBlocks == null && options.ContinuesBlocks == null && options.EndsBlocks == null)
 				throw new LunyScriptException($"{script}: Physics Event without any blocks");
 
 			var guards = BuildGuards(options.Cooldown);
-			var predicates = BuildPredicates(options.Filter);
+			var predicates = BuildPredicates(options);
 
 			if (options.IsTrigger)
 			{
@@ -149,9 +132,9 @@ namespace LunyScript
 					script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerEntered);
 				}
 
-				if (options.UpdatesBlocks != null)
+				if (options.ContinuesBlocks != null)
 				{
-					var block = new TriggerSequenceBlock(options.UpdatesBlocks, guards, predicates);
+					var block = new TriggerSequenceBlock(options.ContinuesBlocks, guards, predicates);
 					script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerUpdate);
 				}
 
@@ -169,9 +152,9 @@ namespace LunyScript
 					script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionEntered);
 				}
 
-				if (options.UpdatesBlocks != null)
+				if (options.ContinuesBlocks != null)
 				{
-					var block = new CollisionSequenceBlock(options.UpdatesBlocks, guards, predicates);
+					var block = new CollisionSequenceBlock(options.ContinuesBlocks, guards, predicates);
 					script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionUpdate);
 				}
 
@@ -193,16 +176,16 @@ namespace LunyScript
 			return new EventGuard[] { new CooldownGuard<T>(cooldownInSeconds, LunyEngine.Instance.Time) };
 		}
 
-		private static Predicate<LunyCollider>[] BuildPredicates(in PhysicsEventFilterOptions filter)
+		private static Predicate<LunyCollider>[] BuildPredicates(in PhysicsEventOptions options)
 		{
 			var count = 0;
-			if (filter.Names != null)
+			if (options.NameFilter != null)
 				count++;
-			if (filter.Tags != null)
+			if (options.TagsFilter != null)
 				count++;
-			if (filter.Layers != null || filter.LayerMask.HasValue)
+			if (options.LayerNameFilter != null || options.LayerMaskFilter.HasValue)
 				count++;
-			if (filter.ComponentTypes != null)
+			if (options.ComponentTypeFilter != null)
 				count++;
 
 			if (count == 0)
@@ -210,16 +193,18 @@ namespace LunyScript
 
 			var predicates = new Predicate<LunyCollider>[count];
 			var i = 0;
-			if (filter.Names != null)
-				predicates[i++] = PhysicsEventPredicates.ForNames(filter.Names);
-			if (filter.Tags != null)
-				predicates[i++] = PhysicsEventPredicates.ForTags(filter.Tags);
-			if (filter.Layers != null)
-				predicates[i++] = PhysicsEventPredicates.ForLayers(filter.Layers);
-			else if (filter.LayerMask.HasValue)
-				predicates[i++] = PhysicsEventPredicates.ForLayerMask(filter.LayerMask.Value);
-			if (filter.ComponentTypes != null)
-				predicates[i++] = PhysicsEventPredicates.ForComponentTypes(filter.ComponentTypes);
+
+			if (options.NameFilter != null)
+				predicates[i++] = PhysicsEventPredicates.ForNames(options.NameFilter);
+			if (options.TagsFilter != null)
+				predicates[i++] = PhysicsEventPredicates.ForTags(options.TagsFilter);
+			if (options.LayerNameFilter != null)
+				predicates[i++] = PhysicsEventPredicates.ForLayers(options.LayerNameFilter);
+			else if (options.LayerMaskFilter.HasValue)
+				predicates[i++] = PhysicsEventPredicates.ForLayerMask(options.LayerMaskFilter.Value);
+			if (options.ComponentTypeFilter != null)
+				predicates[i++] = PhysicsEventPredicates.ForComponentTypes(options.ComponentTypeFilter);
+
 			return predicates;
 		}
 	}
@@ -231,26 +216,24 @@ namespace LunyScript
 		/// Only react when the other object's layer name matches one of the given names (OR logic).
 		/// Mutually exclusive with Layered() — unavailable after Layered() is called.
 		/// </summary>
-		public static PhysicsEventBuilder<CollisionBuilderMasked> Masked<T>(
-			this PhysicsEventBuilder<T> b, params String[] layerNames)
+		public static PhysicsEventBuilder<CollisionBuilderMasked> Masked<T>(this PhysicsEventBuilder<T> b, params String[] layerNames)
 			where T : struct, ICollisionBuilderStart
 		{
-			var options = b.Options;
-			options.Filter.Layers = layerNames;
-			return new PhysicsEventBuilder<CollisionBuilderMasked>(b.Script, options, b.Token);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.LayerNameFilter);
+			var options = b.Options with { LayerNameFilter = layerNames };
+			return new PhysicsEventBuilder<CollisionBuilderMasked>(options);
 		}
 
 		/// <summary>
 		/// Only react when the other object's layer is included in the given bitmask.
 		/// Mutually exclusive with Layered() — unavailable after Layered() is called.
 		/// </summary>
-		public static PhysicsEventBuilder<CollisionBuilderMasked> Masked<T>(
-			this PhysicsEventBuilder<T> b, Int32 layerMask)
+		public static PhysicsEventBuilder<CollisionBuilderMasked> Masked<T>(this PhysicsEventBuilder<T> b, Int32 layerMask)
 			where T : struct, ICollisionBuilderStart
 		{
-			var options = b.Options;
-			options.Filter.LayerMask = layerMask;
-			return new PhysicsEventBuilder<CollisionBuilderMasked>(b.Script, options, b.Token);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.LayerMaskFilter);
+			var options = b.Options with { LayerMaskFilter = layerMask };
+			return new PhysicsEventBuilder<CollisionBuilderMasked>(options);
 		}
 	}
 
@@ -258,30 +241,23 @@ namespace LunyScript
 	/// Options DTO for collision/trigger event builders.
 	/// Holds filter options, event handler blocks, and optional cooldown.
 	/// </summary>
-	internal struct PhysicsEventOptions
+	internal record PhysicsEventOptions
 	{
-		public PhysicsEventFilterOptions Filter;
+		internal Script Script;
+		internal BuilderToken Token;
+
 		public ScriptActionBlock[] BeginsBlocks;
-		public ScriptActionBlock[] UpdatesBlocks;
+		public ScriptActionBlock[] ContinuesBlocks;
 		public ScriptActionBlock[] EndsBlocks;
 		public Boolean IsTrigger;
 		/// <summary>Minimum seconds between successive reactions. Zero means no cooldown.</summary>
 		public Double Cooldown;
-	}
 
-	/// <summary>
-	/// Immutable filter options for collision/trigger event builders.
-	/// Each predicate is compiled once when the corresponding filter method is called.
-	/// Null predicate means that filter kind is inactive (no check performed).
-	/// Parameters within a kind are OR-combined; different kinds are AND-combined.
-	/// </summary>
-	internal struct PhysicsEventFilterOptions
-	{
 		// Raw filter data (kept for diagnostics and for re-compiling trigger predicates from collision filter)
-		public String[] Tags;
-		public String[] Names;
-		public String[] Layers;
-		public Int32? LayerMask;
-		public Type[] ComponentTypes;
+		public String[] TagsFilter;
+		public String[] NameFilter;
+		public String[] LayerNameFilter;
+		public Int32? LayerMaskFilter;
+		public Type[] ComponentTypeFilter;
 	}
 }

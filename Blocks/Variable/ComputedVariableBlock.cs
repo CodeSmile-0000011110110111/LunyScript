@@ -9,6 +9,6 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class ComputedVariableBlock : VariableBlock
 	{
-		internal sealed override Table.ScalarVarHandle TargetHandle => null;
+		internal sealed override Table.ScalarVarHandle VarHandle => null;
 	}
 }

@@ -12,8 +12,8 @@ namespace LunyScript.Blocks
 		public static readonly LoopCounterVariableBlock Instance = new();
 		private LoopCounterVariableBlock() {}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal override Variable GetValue() => throw new NotImplementedException($"{nameof(LoopCounterVariableBlock)}.GetValue()");
-			//runtimeContext.LoopCount;
+		internal override Variable Variable { [MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => throw new NotImplementedException($"{nameof(LoopCounterVariableBlock)}.GetValue()"); }
+		//runtimeContext.LoopCount;
 	}
 }
