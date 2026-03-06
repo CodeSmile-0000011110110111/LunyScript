@@ -14,6 +14,36 @@ namespace LunyScript.SmokeTests.Coroutine
 			// the current (monitor's) refresh rate. Thus heartbeat count "every 5 beats" does not equate
 			// to a framecount sequence like 1,6,11,16,.. as you might expect.
 
+			var cubletContainer = "Cublets";
+			var cubletPath = "Packages/de.codesmile.lunyscript/LunyScript.Unity/SmokeTests/Prefabs/Cublet";
+			var cubletSpawnRate = 3;
+
+			On.Ready(Object.Create(cubletContainer));
+
+			Coroutine("Counter: spawn")
+				.Every(cubletSpawnRate)
+				.Frames()
+				.WhenElapsed(Object.Create("Cublet").With(cubletPath).LocalPosition(1, 2, 1).Parent(cubletContainer));
+
+			var destroyCoroutine = Coroutine("Counter: destroy all cubelets")
+				.In(600)
+				.Heartbeats()
+				.WhenStarted(Object.Create("Mega-Cublet").With(cubletPath).LocalScale(0.6).LocalPosition(1, 2, 1))
+				.WhenElapsed(Object.Destroy(cubletContainer), Object.Create(cubletContainer));
+
+			Coroutine("Counter: restart")
+				.Every(665)
+				.Heartbeats()
+				.WhenElapsed(destroyCoroutine.Start());
+
+			Coroutine("Timer: destroy")
+				.Every(cubletSpawnRate * 2 + 1)
+				.Frames()
+				.WhenElapsed(Object.Destroy("Cublet"), Object.Destroy("Cublet"));
+
+
+			// Non-visual tests ...
+
 			var beats = N * 2;
 
 			// Every() => repeating

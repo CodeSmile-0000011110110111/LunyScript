@@ -29,7 +29,7 @@ namespace LunyScript
 		{
 			var token = _script.CreateBuilderToken(name, "Object.Create");
 			var options = new ObjectCreateOptions
-				{ Script = _script, Token = token, Name = name, CreateMode = ObjectCreationMode.Empty, LocalScale = LunyVector3.One };
+				{ Script = _script, Token = token, Name = name, CreateMode = ObjectCreationMode.Empty };
 			return new ObjectCreateBuilder<ObjectBuilderNameSet>(options);
 		}
 
@@ -155,6 +155,6 @@ namespace LunyScript
 		public String TemplateName;
 		public LunyVector3 LocalPosition;
 		public LunyQuaternion LocalRotation;
-		public LunyVector3 LocalScale;
+		public LunyVector3? LocalScale;
 	}
 }
