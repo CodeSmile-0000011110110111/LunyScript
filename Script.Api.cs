@@ -13,6 +13,8 @@ namespace LunyScript
 		/// </summary>
 		[MaybeNull] protected ILunyObject Owner => _runtimeContext.LunyObject;
 
+		public String Name => GetType().Name;
+
 		/// <summary>
 		/// True if the script currently runs within the engine's editor (play mode). False in builds.
 		/// </summary>

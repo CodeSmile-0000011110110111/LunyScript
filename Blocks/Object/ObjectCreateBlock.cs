@@ -16,7 +16,7 @@ namespace LunyScript.Blocks
 	internal abstract class ObjectCreateBlock : ScriptActionBlock
 	{
 		protected readonly String Name;
-		protected readonly ILunyObject Parent;
+		protected readonly LunyObjectRef Parent;
 		protected readonly LunyVector3 LocalPosition;
 		protected readonly LunyQuaternion LocalRotation;
 		protected readonly LunyVector3 LocalScale;
@@ -25,7 +25,7 @@ namespace LunyScript.Blocks
 
 		protected ObjectCreateBlock(ObjectCreateOptions options)
 		{
-			Name = options.Name;
+			Name = String.IsNullOrEmpty(options.Name) ? $"(unnamed) created by {options.Script.Name}" : options.Name;
 			Parent = options.Parent;
 			LocalPosition = options.LocalPosition;
 			LocalRotation = options.LocalRotation;
@@ -41,7 +41,7 @@ namespace LunyScript.Blocks
 			: base(options) {}
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			Object.CreateEmpty(Name, Parent, LocalPosition, LocalRotation, LocalScale);
+			Object.CreateEmpty(Name, Parent?.Value, LocalPosition, LocalRotation, LocalScale);
 	}
 
 	internal sealed class ObjectCreateCubeBlock : ObjectCreateBlock
@@ -52,7 +52,7 @@ namespace LunyScript.Blocks
 			: base(options) {}
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			Object.CreatePrimitive(Name, LunyPrimitiveType.Cube, Parent, LocalPosition, LocalRotation, LocalScale);
+			Object.CreatePrimitive(Name, LunyPrimitiveType.Cube, Parent?.Value, LocalPosition, LocalRotation, LocalScale);
 	}
 
 	internal sealed class ObjectCreateSphereBlock : ObjectCreateBlock
@@ -62,8 +62,8 @@ namespace LunyScript.Blocks
 		private ObjectCreateSphereBlock(ObjectCreateOptions options)
 			: base(options) {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			Object.CreatePrimitive(Name, LunyPrimitiveType.Sphere, Parent, LocalPosition, LocalRotation, LocalScale);
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => Object.CreatePrimitive(Name, LunyPrimitiveType.Sphere,
+			Parent?.Value, LocalPosition, LocalRotation, LocalScale);
 	}
 
 	internal sealed class ObjectCreateCapsuleBlock : ObjectCreateBlock
@@ -73,8 +73,8 @@ namespace LunyScript.Blocks
 		private ObjectCreateCapsuleBlock(ObjectCreateOptions options)
 			: base(options) {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			Object.CreatePrimitive(Name, LunyPrimitiveType.Capsule, Parent, LocalPosition, LocalRotation, LocalScale);
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => Object.CreatePrimitive(Name,
+			LunyPrimitiveType.Capsule, Parent?.Value, LocalPosition, LocalRotation, LocalScale);
 	}
 
 	internal sealed class ObjectCreateCylinderBlock : ObjectCreateBlock
@@ -84,8 +84,8 @@ namespace LunyScript.Blocks
 		private ObjectCreateCylinderBlock(ObjectCreateOptions options)
 			: base(options) {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			Object.CreatePrimitive(Name, LunyPrimitiveType.Cylinder, Parent, LocalPosition, LocalRotation, LocalScale);
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => Object.CreatePrimitive(Name,
+			LunyPrimitiveType.Cylinder, Parent?.Value, LocalPosition, LocalRotation, LocalScale);
 	}
 
 	internal sealed class ObjectCreatePlaneBlock : ObjectCreateBlock
@@ -95,8 +95,8 @@ namespace LunyScript.Blocks
 		private ObjectCreatePlaneBlock(ObjectCreateOptions options)
 			: base(options) {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			Object.CreatePrimitive(Name, LunyPrimitiveType.Plane, Parent, LocalPosition, LocalRotation, LocalScale);
+		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => Object.CreatePrimitive(Name, LunyPrimitiveType.Plane,
+			Parent?.Value, LocalPosition, LocalRotation, LocalScale);
 	}
 
 	internal sealed class ObjectCreateQuadBlock : ObjectCreateBlock
@@ -107,7 +107,7 @@ namespace LunyScript.Blocks
 			: base(options) {}
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			Object.CreatePrimitive(Name, LunyPrimitiveType.Quad, Parent, LocalPosition, LocalRotation, LocalScale);
+			Object.CreatePrimitive(Name, LunyPrimitiveType.Quad, Parent?.Value, LocalPosition, LocalRotation, LocalScale);
 	}
 
 	internal sealed class ObjectCreatePrefabBlock : ObjectCreateBlock
@@ -117,14 +117,18 @@ namespace LunyScript.Blocks
 		public static ScriptActionBlock Create(ObjectCreateOptions options) => new ObjectCreatePrefabBlock(options);
 
 		private ObjectCreatePrefabBlock(ObjectCreateOptions options)
-			: base(options) => _prefabAssetName = options.AssetName;
+			: base(options) => _prefabAssetName = String.IsNullOrEmpty(options.AssetName)
+			? $"(Missing Prefab Name) created by {options.Script.Name}"
+			: options.AssetName;
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
 			var prefab = LunyEngine.Instance.Asset.Load<ILunyPrefab>(_prefabAssetName);
-			var instance = Object.CreateFromPrefab(prefab, Parent, LocalPosition, LocalRotation, LocalScale);
-			if (instance != null)
-				instance.Name = Name;
+			var instance = Object.CreateFromPrefab(prefab, Parent?.Value, LocalPosition, LocalRotation, LocalScale);
+			if (instance == null)
+				return;
+
+			instance.Name = Name;
 		}
 	}
 
@@ -143,7 +147,11 @@ namespace LunyScript.Blocks
 			if (original == null)
 				return;
 
-			throw new NotImplementedException($"{nameof(ObjectCreateCloneBlock)}.{nameof(Execute)} is not yet implemented.");
+			var instance = Object.Clone(original, Parent?.Value, LocalPosition, LocalRotation, LocalScale);
+			if (instance == null)
+				return;
+
+			instance.Name = Name;
 		}
 	}
 }

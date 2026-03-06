@@ -1,3 +1,4 @@
+using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
@@ -42,7 +43,7 @@ namespace LunyScript
 		internal PrefabBuilder(Script script) => _script = script;
 
 		public ObjectCreateBuilder<ObjectBuilderNameSet> Instantiate(String prefabName) =>
-			new ObjectBuilder(_script).Create(prefabName).From(prefabName);
+			new ObjectBuilder(_script).Create(prefabName).With(prefabName);
 	}
 
 	public static class ObjectBuilderExtensions
@@ -65,7 +66,7 @@ namespace LunyScript
 		public static ObjectCreateBuilder<ObjectBuilderNameSet> AsQuad<T>(this ObjectCreateBuilder<T> b)
 			where T : struct, IObjectBuilderNameSet => b.WithPrimitive(LunyPrimitiveType.Quad);
 
-		public static ObjectCreateBuilder<ObjectBuilderNameSet> From<T>(this ObjectCreateBuilder<T> b, String prefabName)
+		public static ObjectCreateBuilder<ObjectBuilderNameSet> With<T>(this ObjectCreateBuilder<T> b, String prefabName)
 			where T : struct, IObjectBuilderNameSet => new(b.Options with { CreateMode = ObjectCreationMode.Prefab, AssetName = prefabName });
 
 		public static ObjectCreateBuilder<ObjectBuilderNameSet> Clone<T>(this ObjectCreateBuilder<T> b, String existingName)
@@ -91,15 +92,19 @@ namespace LunyScript
 		public static implicit operator ScriptActionBlock(ObjectCreateBuilder<T> builder) =>
 			Finish(builder.Options.Script, builder.Options.Token, builder.Options);
 
-		public ObjectCreateBuilder<T> Parent(ILunyObject parent) => new(Options with { Parent = parent });
+		public ObjectCreateBuilder<T> Parent(LunyObjectRef parent) => new(Options with { Parent = parent });
+		public ObjectCreateBuilder<T> Parent(ILunyObject parent) => new(Options with { Parent = new LunyObjectRef(parent) });
 
-		public ObjectCreateBuilder<T> Position(LunyVector3 localPosition) => new(Options with { LocalPosition = localPosition });
+		public ObjectCreateBuilder<T> LocalPosition(LunyVector3 localPosition) => new(Options with { LocalPosition = localPosition });
 
-		public ObjectCreateBuilder<T> Rotation(LunyQuaternion localRotation) => new(Options with { LocalRotation = localRotation });
+		public ObjectCreateBuilder<T> LocalRotation(LunyQuaternion localRotation) => new(Options with { LocalRotation = localRotation });
 
-		public ObjectCreateBuilder<T> Scale(LunyVector3 localScale) => new(Options with { LocalScale = localScale });
+		public ObjectCreateBuilder<T> LocalRotation(LunyVector3 localEulerAngles) =>
+			new(Options with { LocalRotation = LunyQuaternion.Euler(localEulerAngles) });
 
-		public ObjectCreateBuilder<T> Scale(Double uniformLocalScale) => new(Options with
+		public ObjectCreateBuilder<T> LocalScale(LunyVector3 localScale) => new(Options with { LocalScale = localScale });
+
+		public ObjectCreateBuilder<T> LocalScale(Double uniformLocalScale) => new(Options with
 		{
 			LocalScale = new LunyVector3(uniformLocalScale, uniformLocalScale, uniformLocalScale),
 		});
@@ -139,7 +144,7 @@ namespace LunyScript
 		public ObjectCreationMode CreateMode;
 		public LunyPrimitiveType PrimitiveType;
 		public String AssetName;
-		public ILunyObject Parent;
+		public LunyObjectRef Parent;
 		public String TemplateName;
 		public LunyVector3 LocalPosition;
 		public LunyQuaternion LocalRotation;
