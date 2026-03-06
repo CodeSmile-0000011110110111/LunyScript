@@ -95,19 +95,26 @@ namespace LunyScript
 		public ObjectCreateBuilder<T> Parent(LunyObjectRef parent) => new(Options with { Parent = parent });
 		public ObjectCreateBuilder<T> Parent(ILunyObject parent) => new(Options with { Parent = new LunyObjectRef(parent) });
 
+		public ObjectCreateBuilder<T> LocalPosition(Double x, Double y, Double z) =>
+			new(Options with { LocalPosition = new LunyVector3(x, y, z) });
+
 		public ObjectCreateBuilder<T> LocalPosition(LunyVector3 localPosition) => new(Options with { LocalPosition = localPosition });
 
-		public ObjectCreateBuilder<T> LocalRotation(LunyQuaternion localRotation) => new(Options with { LocalRotation = localRotation });
+		public ObjectCreateBuilder<T> LocalRotation(Double x, Double y, Double z) =>
+			new(Options with { LocalRotation = LunyQuaternion.Euler(x, y, z) });
 
 		public ObjectCreateBuilder<T> LocalRotation(LunyVector3 localEulerAngles) =>
 			new(Options with { LocalRotation = LunyQuaternion.Euler(localEulerAngles) });
 
-		public ObjectCreateBuilder<T> LocalScale(LunyVector3 localScale) => new(Options with { LocalScale = localScale });
+		public ObjectCreateBuilder<T> LocalRotation(LunyQuaternion localRotation) => new(Options with { LocalRotation = localRotation });
 
 		public ObjectCreateBuilder<T> LocalScale(Double uniformLocalScale) => new(Options with
 		{
 			LocalScale = new LunyVector3(uniformLocalScale, uniformLocalScale, uniformLocalScale),
 		});
+
+		public ObjectCreateBuilder<T> LocalScale(Double x, Double y, Double z) => new(Options with { LocalScale = new LunyVector3(x, y, z) });
+		public ObjectCreateBuilder<T> LocalScale(LunyVector3 localScale) => new(Options with { LocalScale = localScale });
 
 		internal static ScriptActionBlock Finish(Script script, BuilderToken token, in ObjectCreateOptions options)
 		{
