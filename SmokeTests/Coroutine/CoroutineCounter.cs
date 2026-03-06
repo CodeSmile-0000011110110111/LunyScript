@@ -16,34 +16,72 @@ namespace LunyScript.SmokeTests.Coroutine
 
 			var cubletContainer = "Cublets";
 			var cubletPath = "Packages/de.codesmile.lunyscript/LunyScript.Unity/SmokeTests/Prefabs/Cublet";
-			var cubletSpawnRate = 3;
+			var cubletSpawnRate = 2;
 
 			On.Ready(Object.Create(cubletContainer));
 
 			Coroutine("Counter: spawn")
 				.Every(cubletSpawnRate)
 				.Frames()
-				.WhenElapsed(Object.Create("Cublet").With(cubletPath).LocalPosition(1, 2, 1).Parent(cubletContainer));
+				.WhenElapsed(Object.Create("Cublet").With(cubletPath).LocalPosition(1, 1, 1).Parent(cubletContainer));
+
+			var createMegaCublet = Object.Create("Mega-Cublet")
+				.With(cubletPath)
+				.LocalScale(0.3)
+				.LocalPosition(1, 1, 1)
+				.LocalRotation(-45, -45, -45);
 
 			var destroyCoroutine = Coroutine("Counter: destroy all cubelets")
-				.In(600)
+				.In(1000)
 				.Heartbeats()
-				.WhenStarted(Object.Create("Mega-Cublet").With(cubletPath).LocalScale(0.6).LocalPosition(1, 2, 1))
-				.WhenElapsed(Object.Destroy(cubletContainer), Object.Create(cubletContainer));
+				.WhenStarted(createMegaCublet)
+				.WhenElapsed(Object.Destroy(cubletContainer), Object.Create(cubletContainer),
+					Object.Disable("Directional Light"), Object.Enable("Moon"));
 
 			Coroutine("Counter: restart")
-				.Every(665)
+				.Every(1234)
 				.Heartbeats()
-				.WhenElapsed(destroyCoroutine.Start());
+				.WhenElapsed(destroyCoroutine.Start(), Object.Enable("Directional Light"), Object.Disable("Moon"));
 
 			Coroutine("Timer: destroy")
 				.Every(cubletSpawnRate * 2 + 1)
 				.Frames()
 				.WhenElapsed(Object.Destroy("Cublet"), Object.Destroy("Cublet"));
 
+			Coroutine("Timer: spawn more Mega-Cublets")
+				.Every(2)
+				.Seconds()
+				.WhenElapsed(For(3).Do(createMegaCublet));
+
+			var destroyMegaCublet = Object.Destroy("Mega-Cublet");
+			Coroutine("Timer: destroy some Mega-Cublets")
+				.Every(2)
+				.Minutes()
+				.WhenElapsed(For(188).Do(destroyMegaCublet));
+
+			var tictoc = Var.Define("tictoc", false);
+			var tic = Coroutine("Timer: tic-toc tic");
+			var toc = Coroutine("Timer: tic-toc toc");
+			var ticBlock = tic.In(1).Seconds().WhenStarted(Object.Enable("Tic")).WhenElapsed(Object.Disable("Tic"));
+			var tocBlock = toc.In(1)
+				.Seconds()
+				.WhenStarted(Object.Enable("Toc"))
+				.WhenStopped(Object.Disable("Toc"))
+				.WhenElapsed(Object.Disable("Toc"));
+			// TODO: current necessity since we can't yet use "tocBlock" in "ticBlock" or vice versa
+			Coroutine("TicHelper")
+				.Every(1)
+				.Seconds()
+				.WhenElapsed(
+					If(tictoc == 0)
+						.Then(tictoc.Inc(), tocBlock.Start())
+						.ElseIf(tictoc == 1)
+						.Then(tictoc.Dec(), ticBlock.Start())
+				);
+
+			On.Ready(tocBlock.Stop());
 
 			// Non-visual tests ...
-
 			var beats = N * 2;
 
 			// Every() => repeating

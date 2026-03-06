@@ -26,6 +26,7 @@ namespace LunyScript.Blocks
 			if (target == null)
 				return;
 
+			//LunyLogger.LogInfo($"Destroy: {target.Transform.LocalPosition} {target}");
 			target.Destroy();
 		}
 	}

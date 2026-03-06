@@ -17,8 +17,8 @@ namespace LunyScript.Blocks
 	{
 		protected readonly String Name;
 		protected readonly LunyObjectRef Parent;
-		protected readonly LunyVector3 LocalPosition;
-		protected readonly LunyQuaternion LocalRotation;
+		protected readonly LunyVector3? LocalPosition;
+		protected readonly LunyQuaternion? LocalRotation;
 		protected readonly LunyVector3? LocalScale;
 
 		protected static ILunyObjectService Object => LunyEngine.Instance.Object;
