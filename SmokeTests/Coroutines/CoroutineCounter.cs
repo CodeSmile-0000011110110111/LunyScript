@@ -57,7 +57,7 @@ namespace LunyScript.SmokeTests.Coroutine
 			Coroutine("Timer: destroy some Mega-Cublets")
 				.Every(1)
 				.Minutes()
-				.WhenElapsed(For(77).Do(destroyMegaCublet));
+				.WhenElapsed(For(80).Do(destroyMegaCublet));
 
 			var tictoc = Var.Define("tictoc", false);
 			var tic = Coroutine("Timer: tic-toc tic");

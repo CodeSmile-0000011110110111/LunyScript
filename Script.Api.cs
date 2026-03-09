@@ -18,59 +18,59 @@ namespace LunyScript
 		/// <summary>
 		/// True if the script currently runs within the engine's editor (play mode). False in builds.
 		/// </summary>
-		protected Boolean IsEditor => LunyEngine.Instance.Application.IsEditor;
+		public Boolean IsEditor => LunyEngine.Instance.Application.IsEditor;
 
 		/// <summary>
 		/// Global variables
 		/// </summary>
-		protected VarAccessor GVar => _globalVariables;
+		public VarAccessor GVar => _globalVariables;
 		/// <summary>
 		/// Instance variables (unique per script/object)
 		/// </summary>
-		protected VarAccessor Var => _instanceVariables;
+		public VarAccessor Var => _instanceVariables;
 
-		protected ComponentApi Component => new(this);
-		protected DebugApi Debug => new(this);
-		protected EditorApi Editor => new(this);
-		protected InputBuilder Input => new(this);
-		protected ObjectBuilder Object => new(this);
-		protected OnObjectEventBuilder On => new(this);
-		protected PrefabBuilder Prefab => new(this);
-		protected SceneApi Scene => new(this);
-		protected TimeApi Time => new(this);
-		protected TransformBuilder Transform => new(this);
-		protected WhenGlobalEventBuilder When => new(this);
+		public ComponentApi Component => new(this);
+		public DebugApi Debug => new(this);
+		public EditorApi Editor => new(this);
+		public InputBuilder Input => new(this);
+		public ObjectBuilder Object => new(this);
+		public OnObjectEventBuilder On => new(this);
+		public PrefabBuilder Prefab => new(this);
+		public SceneApi Scene => new(this);
+		public TimeApi Time => new(this);
+		public TransformBuilder Transform => new(this);
+		public WhenGlobalEventBuilder When => new(this);
 
 		/// <summary>
 		/// Creates a named coroutine.
 		/// Usage: Coroutine("name").Duration(3).Seconds().OnUpdate(blocks).Elapsed(blocks);
 		/// </summary>
-		protected CoroutineBuilder Coroutine(String name) => new(this, name);
+		public CoroutineBuilder Coroutine(String name) => new(this, name);
 
 		/// <summary>
 		/// Conditional execution: If(conditions).Then(blocks).ElseIf(conditions).Then(blocks).Else(blocks);
 		/// Multiple conditions are implicitly AND combined.
 		/// </summary>
-		protected IfBlock If(params ScriptConditionBlock[] conditions) => new(this, conditions);
+		public IfBlock If(params ScriptConditionBlock[] conditions) => new(this, conditions);
 
 		/// <summary>
 		/// Loop execution: While(conditions).Do(blocks);
 		/// Multiple conditions are implicitly AND combined.
 		/// </summary>
-		protected WhileBlockBuilder While(params ScriptConditionBlock[] conditions) => new(conditions);
+		public WhileBlockBuilder While(params ScriptConditionBlock[] conditions) => new(conditions);
 
 		/// <summary>
 		/// For loop (1-based index): For(numberOfTimes).Do(blocks);
 		/// Starts at 1 and increments by 1 until limit is reached (inclusive).
 		/// </summary>
-		protected ForBlockBuilder For(Int32 numberOfTimes) => new(numberOfTimes);
+		public ForBlockBuilder For(Int32 numberOfTimes) => new(numberOfTimes);
 
 		/// <summary>
 		/// For loop (1-based index): For(limit, step).Do(blocks);
 		/// If step > 0: starts at 1 and increments by step until limit is reached.
 		/// If step < 0: starts at limit and decrements by step until 1 is reached.
 		/// </summary>
-		protected ForBlockBuilder For(Int32 numberOfTimes, Int32 step) => new(numberOfTimes, step);
+		public ForBlockBuilder For(Int32 numberOfTimes, Int32 step) => new(numberOfTimes, step);
 
 		/// <summary>
 		/// Executes a System.Func<bool> (lambda) or parameterless method returning bool.
@@ -136,16 +136,16 @@ namespace LunyScript
 		/// <summary>
 		/// Logical AND: Returns true if all conditions are true.
 		/// </summary>
-		protected ScriptConditionBlock AND(params ScriptConditionBlock[] conditions) => AndBlock.Create(conditions);
+		public ScriptConditionBlock AND(params ScriptConditionBlock[] conditions) => AndBlock.Create(conditions);
 
 		/// <summary>
 		/// Logical OR: Returns true if at least one condition is true.
 		/// </summary>
-		protected ScriptConditionBlock OR(params ScriptConditionBlock[] conditions) => OrBlock.Create(conditions);
+		public ScriptConditionBlock OR(params ScriptConditionBlock[] conditions) => OrBlock.Create(conditions);
 
 		/// <summary>
 		/// Logical NOT: Returns the inverse of the condition.
 		/// </summary>
-		protected ScriptConditionBlock NOT(ScriptConditionBlock condition) => NotBlock.Create(condition);
+		public ScriptConditionBlock NOT(ScriptConditionBlock condition) => NotBlock.Create(condition);
 	}
 }

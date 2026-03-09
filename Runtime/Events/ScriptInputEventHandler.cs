@@ -1,5 +1,6 @@
 ﻿using Luny;
 using Luny.Engine.Bridge;
+using LunyScript.Blocks.PhysicsEvent;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -52,11 +53,18 @@ namespace LunyScript.Events
 			if (context == null || !context.LunyObject.IsEnabled)
 				return;
 
+			var userName = inputEvent.UserName;
 			var sequences = context.Scheduler?.GetInputActionEventSequences(inputEvent.ActionName, inputEvent.Phase);
 			if (sequences != null)
 			{
 				context.SetEventArgs(inputEvent);
-				LunyScriptRunner.Run(sequences, context);
+				foreach (var inputSequence in sequences)
+				{
+					if (userName != null && inputSequence.UserName != userName)
+						continue;
+
+					LunyScriptRunner.Run(inputSequence, context);
+				}
 				context.SetEventArgs(null);
 			}
 		}

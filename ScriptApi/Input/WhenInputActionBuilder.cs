@@ -1,5 +1,6 @@
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
+using LunyScript.Blocks.PhysicsEvent;
 using LunyScript.Exceptions;
 using System;
 using System.Runtime.CompilerServices;
@@ -23,17 +24,30 @@ namespace LunyScript
 		internal void Finish(in InputActionOptions options)
 		{
 			var actionName = options.ActionName;
+			var userName = options.UserName;
 			var scheduler = options.Script.Scheduler;
-			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Started, options.StartedBlocks);
-			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Performed, options.PerformedBlocks);
-			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Performing, options.PerformingBlocks);
-			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Canceled, options.CanceledBlocks);
+
+			var started = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Started, options.StartedBlocks);
+			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Started, started);
+			var performed = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Performed, options.PerformedBlocks);
+			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Performed, performed);
+			var performing = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Performing, options.PerformingBlocks);
+			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Performing, performing);
+			var canceled = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Canceled, options.CanceledBlocks);
+			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Canceled, canceled);
+
 			options.Script.MarkBuilderTokenFinished(options.Token);
 		}
 	}
 
 	public static class WhenInputActionBuilderExtensions
 	{
+		public static WhenInputActionBuilder For(this WhenInputActionBuilder b, String userName)
+		{
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.UserName);
+			return new WhenInputActionBuilder(b.Options with { UserName = userName });
+		}
+
 		public static WhenInputActionBuilder Begins(this WhenInputActionBuilder b, params ScriptActionBlock[] startedBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.StartedBlocks);
@@ -76,6 +90,7 @@ namespace LunyScript
 		public Script Script;
 		public BuilderToken Token;
 		public String ActionName;
+		public String UserName;
 
 		public ScriptActionBlock[] StartedBlocks;
 		public ScriptActionBlock[] PerformedBlocks;

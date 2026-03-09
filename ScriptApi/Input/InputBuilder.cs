@@ -22,6 +22,8 @@ namespace LunyScript
 		/// </summary>
 		public VariableBlock<LunyQuaternion> Rotation(String actionName) => InputAxisRotationBlock.Create(actionName);
 
+		public ScriptActionBlock AssignUser(String userName) => InputAssignUserToSelfBlock.Create(userName);
+
 		/// <summary>
 		/// Returns a button handle with condition and value accessors for the named action.
 		/// </summary>
@@ -31,6 +33,7 @@ namespace LunyScript
 		/// Returns a axis handle with condition and value accessors for the named action.
 		/// </summary>
 		public InputAxisBuilder Axis(String actionName) => new(actionName);
+
 	}
 
 	/// <summary>

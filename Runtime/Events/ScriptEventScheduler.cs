@@ -27,7 +27,7 @@ namespace LunyScript.Events
 		private List<ISequenceBlock>[] _triggerSequences;
 		private List<ISequenceBlock>[] _collision2DSequences;
 		private List<ISequenceBlock>[] _trigger2DSequences;
-		private Dictionary<String, List<ISequenceBlock>[]> _inputActionSequences;
+		private Dictionary<String, List<InputEventSequenceBlock>[]> _inputActionSequences;
 
 		private static ISequenceBlock SchedulePhysicsSequence(ref List<ISequenceBlock>[] sequencesRef, ISequenceBlock sequence,
 			Int32 eventIndex, Int32 eventCount)
@@ -68,20 +68,19 @@ namespace LunyScript.Events
 		internal ISequenceBlock ScheduleTriggerEventSequence(TriggerSequenceBlock blocks, LunyTriggerEvent triggerEvent) =>
 			SchedulePhysicsSequence(ref _triggerSequences, blocks, (Int32)triggerEvent, s_TriggerEventCount);
 
-		internal ISequenceBlock ScheduleInputActionEventSequence(String actionName, LunyInputActionPhase phase, ScriptActionBlock[] blocks)
+		internal ISequenceBlock ScheduleInputActionEventSequence(String actionName, LunyInputActionPhase phase,
+			InputEventSequenceBlock sequence)
 		{
-			var sequence = SequenceBlock.TryCreate(blocks);
-			if (sequence != null && !sequence.IsEmpty)
-			{
-				_inputActionSequences ??= new Dictionary<String, List<ISequenceBlock>[]>();
-				if (!_inputActionSequences.TryGetValue(actionName, out var sequences))
-					_inputActionSequences[actionName] = sequences = new List<ISequenceBlock>[s_InputActionEventCount];
+			if (sequence == null || sequence.IsEmpty)
+				return null;
 
-				var eventIndex = (Int32)phase;
-				sequences[eventIndex] ??= new List<ISequenceBlock>();
-				sequences[eventIndex].Add(sequence);
-			}
+			_inputActionSequences ??= new Dictionary<String, List<InputEventSequenceBlock>[]>();
+			if (!_inputActionSequences.TryGetValue(actionName, out var sequences))
+				_inputActionSequences[actionName] = sequences = new List<InputEventSequenceBlock>[s_InputActionEventCount];
 
+			var eventIndex = (Int32)phase;
+			sequences[eventIndex] ??= new List<InputEventSequenceBlock>();
+			sequences[eventIndex].Add(sequence);
 			return sequence;
 		}
 
@@ -122,14 +121,14 @@ namespace LunyScript.Events
 				? _triggerSequences[(Int32)triggerEvent]
 				: null;
 
-		internal IEnumerable<ISequenceBlock> GetInputActionEventSequences(String actionName, LunyInputActionPhase phase) =>
+		internal IEnumerable<InputEventSequenceBlock> GetInputActionEventSequences(String actionName, LunyInputActionPhase phase) =>
 			IsObservingInputAction(actionName, phase, out var sequences) ? sequences : null;
 
 		// Observing queries
 		private Boolean IsObserving(Int32 eventIndex, ref List<ISequenceBlock>[] sequencesRef) =>
 			sequencesRef != null && sequencesRef[eventIndex] != null && sequencesRef[eventIndex].Count > 0;
 
-		private Boolean IsObservingInputAction(String actionName, LunyInputActionPhase phase, out List<ISequenceBlock> sequencesRef)
+		private Boolean IsObservingInputAction(String actionName, LunyInputActionPhase phase, out List<InputEventSequenceBlock> sequencesRef)
 		{
 			sequencesRef = _inputActionSequences.TryGetValue(actionName, out var sequences) ? sequences[(Int32)phase] : null;
 			return sequencesRef != null && sequencesRef.Count > 0;

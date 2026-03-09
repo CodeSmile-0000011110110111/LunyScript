@@ -6,14 +6,14 @@ namespace LunyScript.SmokeTests.Input
 		{
 			var upscale = Var.Constant("Upscale", 1.2);
 
-			When.InputAction("Move").Continues(Transform.MoveBy(Input.Direction("Move")));
-			When.InputAction("Look").Continues(Transform.SetLocalRotation(Input.Rotation("Look")));
-			When.InputAction("Jump").Begins(Transform.ShiftUp(10));
-			When.InputAction("Crouch").Begins(Transform.ShiftDown(10));
-			When.InputAction("Interact")
+			When.Input.Action("Move").Continues(Transform.MoveBy(Input.Direction("Move"), 25));
+			When.Input.Action("Look").Continues(Transform.SetLocalRotation(Input.Rotation("Look")));
+			When.Input.Action("Jump").Begins(Transform.ShiftUp(30));
+			When.Input.Action("Crouch").Begins(Transform.ShiftDown(30));
+			When.Input.Action("Interact")
 				.Begins(Transform.SetLocalScale(upscale))
 				.Ends(Transform.SetLocalScale(1));
-			When.InputAction("Attack")
+			When.Input.Action("Attack")
 				.Begins(Object.Enable("AttackButtonPressed"))
 				.Ends(Object.Disable("AttackButtonPressed"));
 		}

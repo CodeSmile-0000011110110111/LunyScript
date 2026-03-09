@@ -14,7 +14,7 @@ namespace LunyScript.Blocks
 		internal override Table.ScalarVarHandle VarHandle => _handle;
 
 		public String Name => _handle.Name;
-		public Variable Value => _handle.Value;
+		public new Variable Value => _handle.Value;
 
 		internal override Variable Variable
 		{
