@@ -33,14 +33,12 @@ namespace LunyScript.SmokeTests.Input
 			var playerNum = GetLastDigit(playerName);
 			var playerJoined = s.GVar[$"Player{playerNum} joined"];
 			var playerCount = s.GVar["PlayerCount"];
+
 			s.When.Input.Action("Leave")
 				.For(playerName) // only act for the player sending this action
-				.Begins(s.If(playerJoined)
-					.Then(playerJoined.Toggle(),
-						playerCount.Dec(),
-						s.Debug.Log($"LEAVE {playerName}"),
-						s.Input.Unpair(playerName),
-						s.Object.Enable($"JoinP{playerNum}"))
+				.Begins(s.If(playerJoined && s.Input.IsPaired(playerName))
+					.Then(playerJoined.Toggle(), playerCount.Dec(),
+						s.Input.Unpair(playerName), s.Object.Enable($"JoinP{playerNum}"), s.Debug.Log($"LEFT: {playerName}"))
 				);
 		}
 
@@ -57,23 +55,22 @@ namespace LunyScript.SmokeTests.Input
 		{
 			// Joining is done via the Host's Action Map since the Host owns all devices by default.
 			// The device that sends the "Join" action will then be paired with a specific script/object.
-
-			// FIXME: joining multiple times with the same device is possible
-			// Need: Input.Action("Join").Disable(), Input.Action("Leave").Enable()
-			var player1Joined = GVar.Define("Player1 joined", false);
-			var player2Joined = GVar.Define("Player2 joined", false);
-			var player3Joined = GVar.Define("Player3 joined", false);
-			var player4Joined = GVar.Define("Player4 joined", false);
+			var p1Joined = GVar.Define("Player1 joined", false);
+			var p2Joined = GVar.Define("Player2 joined", false);
+			var p3Joined = GVar.Define("Player3 joined", false);
+			var p4Joined = GVar.Define("Player4 joined", false);
 			var playerCount = GVar.Define("PlayerCount", 0);
+
 			When.Input.Action("Join")
-				.Begins(If(player1Joined == false)
-					.Then(player1Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player1)), Object.Disable("JoinP1"))
-					.ElseIf(player2Joined == false)
-					.Then(player2Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player2)), Object.Disable("JoinP2"))
-					.ElseIf(player3Joined == false)
-					.Then(player3Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player3)), Object.Disable("JoinP3"))
-					.ElseIf(player4Joined == false)
-					.Then(player4Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player4)), Object.Disable("JoinP4"))
+				.Begins(If(!p1Joined && !Input.IsPaired(nameof(Player1)))
+					.Then(p1Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player1)), Object.Disable("JoinP1"), Debug.Log("JOINED: P1"))
+					.ElseIf(!p2Joined && !Input.IsPaired(nameof(Player2)))
+					.Then(p2Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player2)), Object.Disable("JoinP2"), Debug.Log("JOINED: P2"))
+					.ElseIf(!p3Joined && !Input.IsPaired(nameof(Player3)))
+					.Then(p3Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player3)), Object.Disable("JoinP3"), Debug.Log("JOINED: P3"))
+					.ElseIf(!p4Joined && !Input.IsPaired(nameof(Player4)))
+					.Then(p4Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player4)), Object.Disable("JoinP4"), Debug.Log("JOINED: P4"))
+					.Else(Debug.LogWarning("Max Players reached. This demo supports up to four players but there's no hard limit."))
 				);
 
 			HandleInputActions(this, nameof(Player1));

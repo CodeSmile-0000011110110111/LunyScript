@@ -24,6 +24,7 @@ namespace LunyScript
 
 		public ScriptActionBlock Pair(String userName) => InputAssignUserBlock.Create(userName);
 		public ScriptActionBlock Unpair(String userName) => InputUnassignUserBlock.Create(userName);
+		public ScriptConditionBlock IsPaired(String userName) => InputIsPairedBlock.Create(userName);
 
 		/// <summary>
 		/// Returns a button handle with condition and value accessors for the named action.
