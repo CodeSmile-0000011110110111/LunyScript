@@ -4,6 +4,7 @@ using LunyScript.Blocks.PhysicsEvent;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace LunyScript.Events
 {
@@ -53,16 +54,23 @@ namespace LunyScript.Events
 			if (context == null || !context.LunyObject.IsEnabled)
 				return;
 
-			var userName = inputEvent.UserName;
 			var sequences = context.Scheduler?.GetInputActionEventSequences(inputEvent.ActionName, inputEvent.Phase);
 			if (sequences != null)
 			{
+				var userName = inputEvent.UserName;
+				//LunyLogger.LogInfo($"{inputEvent}: {sequences.Count()} input sequences for user: {userName}", this);
+
 				context.SetEventArgs(inputEvent);
 				foreach (var inputSequence in sequences)
 				{
-					if (userName != null && inputSequence.UserName != userName)
+					if (inputSequence.UserName != null && inputSequence.UserName != userName)
+					{
+						//LunyLogger.LogInfo($"\tSequence not run, user mismatch: {inputSequence.UserName} != {userName}", this);
 						continue;
+					}
 
+					// LunyLogger.LogInfo($"{inputSequence.ActionName} {inputSequence.Phase}: {inputSequence.Blocks.Count} blocks, " +
+					//                    $"user {userName}, context: {context}", this);
 					LunyScriptRunner.Run(inputSequence, context);
 				}
 				context.SetEventArgs(null);
