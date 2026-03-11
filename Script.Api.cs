@@ -67,13 +67,13 @@ namespace LunyScript
 
 		/// <summary>
 		/// For loop (1-based index): For(limit, step).Do(blocks);
-		/// If step > 0: starts at 1 and increments by step until limit is reached.
-		/// If step < 0: starts at limit and decrements by step until 1 is reached.
+		/// If step is positive: starts at 1 and increments by step until limit is reached.
+		/// If step is negative: starts at limit and decrements by step until 1 is reached.
 		/// </summary>
 		public ForBlockBuilder For(Int32 numberOfTimes, Int32 step) => new(numberOfTimes, step);
 
 		/// <summary>
-		/// Executes a System.Func<bool> (lambda) or parameterless method returning bool.
+		/// Executes a <see cref="System.Func{bool}"/> (lambda) or parameterless method returning bool.
 		/// </summary>
 		/// <remarks>
 		/// - Intended for quick prototyping and testing.
@@ -85,7 +85,7 @@ namespace LunyScript
 		public ScriptConditionBlock Check(Func<Boolean> func) => EvaluateBlock.Create(_ => func());
 
 		/// <summary>
-		/// Executes a System.Func<IScriptRuntimeContext, bool> (lambda) or method taking a IScriptRuntimeContext parameter and returns bool.
+		/// Executes a <see cref="System.Func{IScriptRuntimeContext, bool}" /> (lambda) or method taking a IScriptRuntimeContext parameter and returns bool.
 		/// </summary>
 		/// <remarks>
 		/// - Intended for quick prototyping and testing.

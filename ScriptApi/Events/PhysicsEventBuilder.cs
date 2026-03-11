@@ -23,7 +23,6 @@ namespace LunyScript
 	/// Filters (Tagged, Named, Layered, Masked, Typed) are order-independent and accumulate.
 	/// Event handlers (Begins, Updates, Ends) are also order-independent.
 	/// Parameters within a filter kind are OR-combined; different kinds are AND-combined.
-	/// Call <see cref="Do"/> to finalize and schedule the event sequences.
 	/// </summary>
 	public readonly struct PhysicsEventBuilder<T> where T : struct, ICollisionBuilderState
 	{

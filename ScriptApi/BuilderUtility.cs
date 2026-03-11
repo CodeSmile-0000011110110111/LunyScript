@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace LunyScript
 {
-	public static class BuilderUtility
+	internal static class BuilderUtility
 	{
 		[Conditional("DEBUG")] [Conditional("LUNYSCRIPT_DEBUG")]
 		public static void ThrowIfUnaryMethodUsedAgain(Script script, ScriptActionBlock[] blocks, [CallerMemberName] String callerName = "")

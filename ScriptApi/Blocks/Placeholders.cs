@@ -1,6 +1,6 @@
 ﻿namespace LunyScript
 {
-	public sealed class ApiPlaceholders
+	internal sealed class ApiPlaceholders
 	{
 		public readonly struct AnimationApi
 		{

@@ -1,6 +1,6 @@
 using System;
 
-namespace LunyScript.SmokeTests.Object
+namespace LunyScript.SmokeTests.Object.Create
 {
 	public sealed class ObjectCreateTestScript : Script
 	{

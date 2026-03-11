@@ -14,16 +14,19 @@ namespace LunyScript
 	/// Users inherit from this class and implement Build() to construct their script logic.
 	/// </summary>
 	/// <remarks>
-	/// Example script template (duplicate LunyScript.LunyScript is correct):
+	/// Minimal example script:
 	///
-	///		public class ExampleLunyScript : LunyScript.LunyScript
+	///		public class ExampleLunyScript : LunyScript.Script
 	///		{
-	///			public override void Build()
+	///			public override void Build(ScriptContext context)
 	///			{
-	///				// define behaviour using LunyScript API here ...
-	///				OnUpdate(Debug.Log("Hello, LunyScript!"));
+	///				// Define behaviour using declarative LunyScript API here ...
+	///				On.Ready(Debug.Log("Hello, LunyScript!"));
 	///			}
 	///		}
+	///
+	///	To run this script, create a GameObject in the scene and name it exactly as the script: ExampleLunyScript
+	/// In the future alternative script assignment options will be provided.
 	/// </remarks>
 	public abstract partial class Script
 	{

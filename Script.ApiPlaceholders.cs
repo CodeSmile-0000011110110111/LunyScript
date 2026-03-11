@@ -2,7 +2,7 @@ namespace LunyScript
 {
 	public abstract partial class Script
 	{
-		protected ApiPlaceholders.AnimationApi Animation => new(this);
+		/*protected ApiPlaceholders.AnimationApi Animation => new(this);
 		protected ApiPlaceholders.ApplicationApi Application => new(this);
 		protected ApiPlaceholders.AssetApi Asset => new(this);
 		protected ApiPlaceholders.AudioApi Audio => new(this);
@@ -45,6 +45,6 @@ namespace LunyScript
 		protected ApiPlaceholders.TutorialApi Tutorial => new(this);
 		protected ApiPlaceholders.UIApi UI => new(this);
 		protected ApiPlaceholders.VFXApi VFX => new(this);
-		protected ApiPlaceholders.VideoApi Video => new(this);
+		protected ApiPlaceholders.VideoApi Video => new(this);*/
 	}
 }
