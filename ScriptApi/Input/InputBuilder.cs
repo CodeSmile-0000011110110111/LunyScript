@@ -35,6 +35,18 @@ namespace LunyScript
 		/// Returns a axis handle with condition and value accessors for the named action.
 		/// </summary>
 		public InputAxisBuilder Axis(String actionName) => new(actionName);
+
+		public InputActionBuilder Action(String actionName) => new(actionName);
+	}
+
+	public readonly struct InputActionBuilder
+	{
+		private readonly String _actionName;
+
+		public InputActionBuilder(String actionName) => _actionName = actionName;
+
+		public ScriptActionBlock Enable() => InputActionEnableBlock.Create(_actionName);
+		public ScriptActionBlock Disable() => InputActionDisableBlock.Create(_actionName);
 	}
 
 	/// <summary>
