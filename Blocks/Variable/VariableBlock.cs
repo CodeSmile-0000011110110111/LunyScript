@@ -1,5 +1,4 @@
 ﻿using Luny;
-using LunyScript.Exceptions;
 using System;
 
 namespace LunyScript.Blocks

@@ -1,4 +1,4 @@
-﻿namespace LunyScript.SmokeTests.PhysicsEvents
+﻿namespace LunyScript.SmokeTests
 {
 	public class TriggerEvents : Script
 	{

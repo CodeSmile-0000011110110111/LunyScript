@@ -1,6 +1,5 @@
 ﻿using Luny;
 using Luny.Engine.Bridge;
-using LunyScript.Exceptions;
 using System;
 
 namespace LunyScript.Blocks

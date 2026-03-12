@@ -1,6 +1,6 @@
 using System;
 
-namespace LunyScript.Exceptions
+namespace LunyScript
 {
 	public sealed class LunyScriptVariableException : LunyScriptException
 	{

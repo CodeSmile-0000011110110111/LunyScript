@@ -1,4 +1,4 @@
-namespace LunyScript.SmokeTests.Input
+namespace LunyScript.SmokeTests
 {
 	public sealed class Player2 : Script
 	{

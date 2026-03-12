@@ -1,7 +1,7 @@
-﻿using Luny.Exceptions;
+﻿using Luny;
 using System;
 
-namespace LunyScript.Exceptions
+namespace LunyScript
 {
 	public class LunyScriptException : LunyException
 	{

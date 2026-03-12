@@ -1,4 +1,4 @@
-﻿namespace LunyScript.SmokeTests.InputMove
+﻿namespace LunyScript.SmokeTests
 {
 	/// <summary>
 	/// LunyScript implementing a 3-way motion relative to object's orientation

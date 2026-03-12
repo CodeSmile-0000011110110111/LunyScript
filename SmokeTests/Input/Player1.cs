@@ -1,6 +1,7 @@
+using LunyScript.Api;
 using System;
 
-namespace LunyScript.SmokeTests.Input
+namespace LunyScript.SmokeTests
 {
 	public sealed class Player1 : Script
 	{

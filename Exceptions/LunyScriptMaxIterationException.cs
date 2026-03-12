@@ -1,6 +1,6 @@
 using System;
 
-namespace LunyScript.Exceptions
+namespace LunyScript
 {
 	/// <summary>
 	/// Exception thrown when a script loop exceeds the maximum allowed iterations.

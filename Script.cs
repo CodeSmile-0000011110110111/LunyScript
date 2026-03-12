@@ -1,7 +1,7 @@
 using Luny;
+using LunyScript.Api;
 using LunyScript.Blocks;
 using LunyScript.Events;
-using LunyScript.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

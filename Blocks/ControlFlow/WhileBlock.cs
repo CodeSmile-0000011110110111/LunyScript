@@ -1,5 +1,3 @@
-using LunyScript.Exceptions;
-
 namespace LunyScript.Blocks
 {
 	/// <summary>

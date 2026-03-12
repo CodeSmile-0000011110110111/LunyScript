@@ -1,4 +1,6 @@
-namespace LunyScript.SmokeTests.Input
+using LunyScript.Api;
+
+namespace LunyScript.SmokeTests
 {
 	public sealed class InputTest : Script
 	{

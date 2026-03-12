@@ -2,7 +2,6 @@ using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Diagnostics;
 using LunyScript.Events;
-using LunyScript.Exceptions;
 using System;
 
 namespace LunyScript
