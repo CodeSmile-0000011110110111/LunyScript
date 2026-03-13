@@ -98,11 +98,11 @@ namespace LunyScript.Events
 			private void RegisterAllCallbacks()
 			{
 				var lunyObject = _runtimeContext.LunyObject;
-				lunyObject.OnCreate += OnCreate;
-				lunyObject.OnDestroy += OnDestroy;
+				lunyObject.OnCreated += OnCreated;
+				lunyObject.OnDestroyed += OnDestroyed;
 				lunyObject.OnReady += OnReady;
-				lunyObject.OnEnable += OnEnable;
-				lunyObject.OnDisable += OnDisable;
+				lunyObject.OnEnabled += OnEnabled;
+				lunyObject.OnDisabled += OnDisabled;
 				lunyObject.OnCollisionEntered += OnCollisionEntered;
 				lunyObject.OnCollisionExited += OnCollisionExited;
 				lunyObject.OnCollisionUpdate += OnCollisionUpdate;
@@ -120,11 +120,11 @@ namespace LunyScript.Events
 			internal void UnregisterAllCallbacks()
 			{
 				var lunyObject = _runtimeContext.LunyObject;
-				lunyObject.OnCreate -= OnCreate;
-				lunyObject.OnDestroy -= OnDestroy;
+				lunyObject.OnCreated -= OnCreated;
+				lunyObject.OnDestroyed -= OnDestroyed;
 				lunyObject.OnReady -= OnReady;
-				lunyObject.OnEnable -= OnEnable;
-				lunyObject.OnDisable -= OnDisable;
+				lunyObject.OnEnabled -= OnEnabled;
+				lunyObject.OnDisabled -= OnDisabled;
 				lunyObject.OnCollisionEntered -= OnCollisionEntered;
 				lunyObject.OnCollisionExited -= OnCollisionExited;
 				lunyObject.OnCollisionUpdate -= OnCollisionUpdate;
@@ -189,19 +189,19 @@ namespace LunyScript.Events
 					_runtimeContext.Scheduler.Unschedule(objectEvent);
 
 					if (objectEvent == LunyObjectEvent.OnCreated)
-						lunyObject.OnCreate -= OnCreate;
+						lunyObject.OnCreated -= OnCreated;
 					else if (objectEvent == LunyObjectEvent.OnReady)
 						lunyObject.OnReady -= OnReady;
 				}
 			}
 
-			private void OnCreate()
+			private void OnCreated()
 			{
 				RunObjectEventSequences(LunyObjectEvent.OnCreated);
 				UnscheduleOnceOnlyEvent(LunyObjectEvent.OnCreated);
 			}
 
-			private void OnDestroy()
+			private void OnDestroyed()
 			{
 				RunObjectEventSequences(LunyObjectEvent.OnDestroyed);
 				UnregisterAllCallbacks(); // no more events
@@ -214,8 +214,8 @@ namespace LunyScript.Events
 				UnscheduleOnceOnlyEvent(LunyObjectEvent.OnReady);
 			}
 
-			private void OnEnable() => RunObjectEventSequences(LunyObjectEvent.OnEnabled);
-			private void OnDisable() => RunObjectEventSequences(LunyObjectEvent.OnDisabled);
+			private void OnEnabled() => RunObjectEventSequences(LunyObjectEvent.OnEnabled);
+			private void OnDisabled() => RunObjectEventSequences(LunyObjectEvent.OnDisabled);
 
 			private void OnCollisionEntered(LunyCollision collision) =>
 				RunCollisionEventSequences(LunyCollisionEvent.OnCollisionEntered, collision);

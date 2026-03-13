@@ -38,7 +38,7 @@ namespace LunyScript
 		private static readonly ITable s_GlobalVariables = new Table();
 
 		private readonly IScriptDefinition _scriptDef;
-		private readonly ILunyObject _lunyObject;
+		private readonly LunyObject _lunyObject;
 
 		private ScriptEventScheduler _scheduler;
 		private ScriptCoroutineRunner _coroutines;
@@ -107,7 +107,7 @@ namespace LunyScript
 		public ScriptRuntimeContext(IScriptDefinition definition, ILunyObject lunyObject)
 		{
 			_scriptDef = definition ?? throw new ArgumentNullException(nameof(definition));
-			_lunyObject = lunyObject ?? throw new ArgumentNullException(nameof(lunyObject));
+			_lunyObject = lunyObject as LunyObject ?? throw new ArgumentNullException(nameof(lunyObject));
 			//LunyLogger.LogInfo($"new {this} ({GetHashCode()})", this);
 		}
 
