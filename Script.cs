@@ -10,13 +10,13 @@ namespace LunyScript
 {
 	/// <summary>
 	/// Abstract base class for all LunyScripts.
-	/// Provides the API interface for beginner-friendly visual scripting in C#.
-	/// Users inherit from this class and implement Build() to construct their script logic.
+	/// Provides the API interface for beginner-friendly block-based scripting in C#.
+	/// Inherit from this class and implement its Build() method to construct script logic.
 	/// </summary>
 	/// <remarks>
 	/// Minimal example script:
 	///
-	///		public class ExampleLunyScript : LunyScript.Script
+	///		public class Example : LunyScript.Script
 	///		{
 	///			public override void Build(ScriptContext context)
 	///			{
@@ -25,7 +25,7 @@ namespace LunyScript
 	///			}
 	///		}
 	///
-	///	To run this script, create a GameObject in the scene and name it exactly as the script: ExampleLunyScript
+	///	To run this script, create a GameObject in the scene and name it 'Example' - same as the script.
 	/// In the future alternative script assignment options will be provided.
 	/// </remarks>
 	public abstract partial class Script
