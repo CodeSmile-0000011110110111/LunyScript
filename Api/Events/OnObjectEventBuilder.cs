@@ -17,45 +17,45 @@ namespace LunyScript.Api
 		/// <summary>
 		/// Runs once the moment when the object is instantiated.
 		/// </summary>
-		public ISequenceBlock Created(params ScriptActionBlock[] blocks) =>
+		public ISequenceBlock Created(params ActionBlock[] blocks) =>
 			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnCreated);
 
 		/// <summary>
 		/// Runs every time the object's state changes to 'enabled' (visible and participating).
 		/// Runs directly after 'Created' if the object was just instantiated.
 		/// </summary>
-		public ISequenceBlock Enabled(params ScriptActionBlock[] blocks) =>
+		public ISequenceBlock Enabled(params ActionBlock[] blocks) =>
 			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnEnabled);
 
 		/// <summary>
 		/// Runs once per lifetime just before the object starts processing frame/time-step events.
 		/// </summary>
-		public ISequenceBlock Ready(params ScriptActionBlock[] blocks) =>
+		public ISequenceBlock Ready(params ActionBlock[] blocks) =>
 			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnReady);
 
 		/// <summary>
 		/// Runs every time the object's state changes to 'disabled' (not visible, not participating).
 		/// Runs directly before 'Destroyed' if the object was enabled as it got destroyed.
 		/// </summary>
-		public ISequenceBlock Disabled(params ScriptActionBlock[] blocks) =>
+		public ISequenceBlock Disabled(params ActionBlock[] blocks) =>
 			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnDisabled);
 
 		/// <summary>
 		/// Runs once when the object gets destroyed. The object is already disabled, the native engine instance still exists.
 		/// </summary>
-		public ISequenceBlock Destroyed(params ScriptActionBlock[] blocks) =>
+		public ISequenceBlock Destroyed(params ActionBlock[] blocks) =>
 			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnDestroyed);
 
 		/// <summary>
 		/// Runs every frame while object is enabled.
 		/// </summary>
-		public ISequenceBlock FrameUpdate(params ScriptActionBlock[] blocks) =>
+		public ISequenceBlock FrameUpdate(params ActionBlock[] blocks) =>
 			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnFrameUpdate);
 
 		/// <summary>
 		/// Runs after frame update while object is enabled.
 		/// </summary>
-		public ISequenceBlock AfterFrameUpdate(params ScriptActionBlock[] blocks) =>
+		public ISequenceBlock AfterFrameUpdate(params ActionBlock[] blocks) =>
 			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnFrameLateUpdate);
 
 		/// <summary>
@@ -63,7 +63,7 @@ namespace LunyScript.Api
 		/// Scheduling depends on engine and Time settings, but typically runs 30 or 50 times per second.
 		/// May run multiple times per frame and may not run in every frame.
 		/// </summary>
-		public ISequenceBlock Heartbeat(params ScriptActionBlock[] blocks) =>
+		public ISequenceBlock Heartbeat(params ActionBlock[] blocks) =>
 			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnHeartbeat);
 
 		/// <summary>

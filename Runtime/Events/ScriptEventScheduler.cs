@@ -56,10 +56,10 @@ namespace LunyScript.Events
 		}
 
 		// Scheduling
-		internal ISequenceBlock ScheduleObjectEventSequence(ScriptActionBlock[] blocks, LunyObjectEvent objectEvent) =>
+		internal ISequenceBlock ScheduleObjectEventSequence(ActionBlock[] blocks, LunyObjectEvent objectEvent) =>
 			ScheduleSequence(ref _objectSequences, SequenceBlock.TryCreate(blocks), (Int32)objectEvent, s_ObjectEventCount);
 
-		internal ISequenceBlock ScheduleSceneEventSequence(ScriptActionBlock[] blocks, LunySceneEvent sceneEvent) =>
+		internal ISequenceBlock ScheduleSceneEventSequence(ActionBlock[] blocks, LunySceneEvent sceneEvent) =>
 			ScheduleSequence(ref _sceneSequences, SequenceBlock.TryCreate(blocks), (Int32)sceneEvent, s_SceneEventCount);
 
 		internal ISequenceBlock ScheduleCollisionEventSequence(CollisionSequenceBlock blocks, LunyCollisionEvent collisionEvent) =>

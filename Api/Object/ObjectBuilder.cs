@@ -18,10 +18,10 @@ namespace LunyScript.Api
 		private readonly Script _script;
 		internal ObjectBuilder(Script script) => _script = script;
 
-		public ScriptActionBlock Enable(String name = null) =>
+		public ActionBlock Enable(String name = null) =>
 			String.IsNullOrEmpty(name) ? ObjectEnableSelfBlock.Create() : ObjectEnableTargetBlock.Create(name);
 
-		public ScriptActionBlock Disable(String name = null) =>
+		public ActionBlock Disable(String name = null) =>
 			String.IsNullOrEmpty(name) ? ObjectDisableSelfBlock.Create() : ObjectDisableTargetBlock.Create(name);
 
 		public ObjectCreateBuilder<ObjectBuilderNameSet> Create(String name)
@@ -32,7 +32,7 @@ namespace LunyScript.Api
 			return new ObjectCreateBuilder<ObjectBuilderNameSet>(options);
 		}
 
-		public ScriptActionBlock Destroy(String name = null) =>
+		public ActionBlock Destroy(String name = null) =>
 			String.IsNullOrEmpty(name) ? ObjectDestroySelfBlock.Create() : ObjectDestroyTargetBlock.Create(name);
 	}
 
@@ -88,7 +88,7 @@ namespace LunyScript.Api
 			options.Token.AutoFinish = () => Finish(capturedOptions.Script, capturedOptions.Token, capturedOptions);
 		}
 
-		public static implicit operator ScriptActionBlock(ObjectCreateBuilder<T> builder) =>
+		public static implicit operator ActionBlock(ObjectCreateBuilder<T> builder) =>
 			Finish(builder.Options.Script, builder.Options.Token, builder.Options);
 
 		public ObjectCreateBuilder<T> Parent(LunyObjectRef parent) => new(Options with { Parent = parent });
@@ -115,7 +115,7 @@ namespace LunyScript.Api
 		public ObjectCreateBuilder<T> LocalScale(Double x, Double y, Double z) => new(Options with { LocalScale = new LunyVector3(x, y, z) });
 		public ObjectCreateBuilder<T> LocalScale(LunyVector3 localScale) => new(Options with { LocalScale = localScale });
 
-		internal static ScriptActionBlock Finish(Script script, BuilderToken token, in ObjectCreateOptions options)
+		internal static ActionBlock Finish(Script script, BuilderToken token, in ObjectCreateOptions options)
 		{
 			var block = options.CreateMode switch
 			{

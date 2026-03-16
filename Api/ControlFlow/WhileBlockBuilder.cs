@@ -7,10 +7,10 @@ namespace LunyScript.Api
 	/// </summary>
 	public readonly struct WhileBlockBuilder
 	{
-		private readonly ScriptConditionBlock[] _conditions;
+		private readonly ConditionBlock[] _conditions;
 
-		internal WhileBlockBuilder(ScriptConditionBlock[] conditions) => _conditions = conditions;
+		internal WhileBlockBuilder(ConditionBlock[] conditions) => _conditions = conditions;
 
-		public ScriptActionBlock Do(params ScriptActionBlock[] blocks) => WhileBlock.Create(_conditions, blocks);
+		public ActionBlock Do(params ActionBlock[] blocks) => WhileBlock.Create(_conditions, blocks);
 	}
 }

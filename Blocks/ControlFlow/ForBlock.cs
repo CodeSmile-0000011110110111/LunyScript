@@ -5,15 +5,15 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// For loop execution block with 1-based indexing and safety limits.
 	/// </summary>
-	internal sealed class ForBlock : ScriptActionBlock
+	internal sealed class ForBlock : ActionBlock
 	{
 		private readonly Int32 _limit;
 		private readonly Int32 _step;
-		private readonly ScriptActionBlock[] _actions;
+		private readonly ActionBlock[] _actions;
 
-		public static ForBlock Create(Int32 limit, Int32 step, ScriptActionBlock[] actions) => new(limit, step, actions);
+		public static ForBlock Create(Int32 limit, Int32 step, ActionBlock[] actions) => new(limit, step, actions);
 
-		private ForBlock(Int32 limit, Int32 step, ScriptActionBlock[] actions)
+		private ForBlock(Int32 limit, Int32 step, ActionBlock[] actions)
 		{
 			_limit = limit;
 			_step = step == 0 ? 1 : step; // Prevent division by zero/infinite loop if step is 0

@@ -8,11 +8,11 @@ namespace LunyScript.Blocks
 	/// Debug-only block that pauses the player (Editor-only).
 	/// Completely stripped in release builds unless DEBUG or LUNYSCRIPT_DEBUG defined.
 	/// </summary>
-	internal sealed class EditorPausePlayerBlock : ScriptActionBlock
+	internal sealed class EditorPausePlayerBlock : ActionBlock
 	{
 		private readonly String _message;
 
-		public static ScriptActionBlock Create(String message) =>
+		public static ActionBlock Create(String message) =>
 			LunyEngine.Instance.Application.IsEditor ? new EditorPausePlayerBlock(message) : null;
 
 		private EditorPausePlayerBlock() {}

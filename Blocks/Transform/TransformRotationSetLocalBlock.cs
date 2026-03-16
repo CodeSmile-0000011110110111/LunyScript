@@ -3,7 +3,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformRotationSetLocalBlock : ScriptActionBlock
+	public sealed class TransformRotationSetLocalBlock : ActionBlock
 	{
 		private readonly VariableBlock<LunyQuaternion> _rotation;
 

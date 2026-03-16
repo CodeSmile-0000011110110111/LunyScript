@@ -83,7 +83,7 @@ namespace LunyScript
 
 			try
 			{
-				((ScriptActionBlock)sequence).Execute(runtimeContext);
+				((ActionBlock)sequence).Execute(runtimeContext);
 			}
 			catch (Exception ex)
 			{

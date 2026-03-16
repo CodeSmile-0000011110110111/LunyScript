@@ -22,9 +22,9 @@ namespace LunyScript.Api
 		/// </summary>
 		public VariableBlock<LunyQuaternion> Rotation(String actionName) => InputAxisRotationBlock.Create(actionName);
 
-		public ScriptActionBlock Pair(String userName) => InputAssignUserBlock.Create(userName);
-		public ScriptActionBlock Unpair(String userName) => InputUnassignUserBlock.Create(userName);
-		public ScriptConditionBlock IsPaired(String userName) => InputIsPairedBlock.Create(userName);
+		public ActionBlock Pair(String userName) => InputAssignUserBlock.Create(userName);
+		public ActionBlock Unpair(String userName) => InputUnassignUserBlock.Create(userName);
+		public ConditionBlock IsPaired(String userName) => InputIsPairedBlock.Create(userName);
 
 		/// <summary>
 		/// Returns a button handle with condition and value accessors for the named action.
@@ -45,8 +45,8 @@ namespace LunyScript.Api
 
 		public InputActionBuilder(String actionName) => _actionName = actionName;
 
-		public ScriptActionBlock Enable() => InputActionEnableBlock.Create(_actionName);
-		public ScriptActionBlock Disable() => InputActionDisableBlock.Create(_actionName);
+		public ActionBlock Enable() => InputActionEnableBlock.Create(_actionName);
+		public ActionBlock Disable() => InputActionDisableBlock.Create(_actionName);
 	}
 
 	/// <summary>

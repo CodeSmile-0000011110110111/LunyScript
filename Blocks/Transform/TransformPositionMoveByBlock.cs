@@ -3,7 +3,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformPositionMoveByBlock : ScriptActionBlock
+	public sealed class TransformPositionMoveByBlock : ActionBlock
 	{
 		private VariableBlock<LunyVector2> _direction;
 		private VariableBlock _speed;

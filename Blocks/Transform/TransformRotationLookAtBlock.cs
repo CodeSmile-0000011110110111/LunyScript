@@ -3,7 +3,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformRotationLookAtBlock : ScriptActionBlock
+	public sealed class TransformRotationLookAtBlock : ActionBlock
 	{
 		private readonly ILunyObject _target;
 		private readonly LunyVector3 _worldUp;

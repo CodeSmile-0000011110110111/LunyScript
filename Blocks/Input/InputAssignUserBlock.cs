@@ -7,7 +7,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Pairs object with the most recently used input device.
 	/// </summary>
-	internal sealed class InputAssignUserBlock : ScriptActionBlock
+	internal sealed class InputAssignUserBlock : ActionBlock
 	{
 		private String _userName;
 
@@ -34,7 +34,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Pairs object with the most recently used input device.
 	/// </summary>
-	internal sealed class InputUnassignUserBlock : ScriptActionBlock
+	internal sealed class InputUnassignUserBlock : ActionBlock
 	{
 		private String _userName;
 

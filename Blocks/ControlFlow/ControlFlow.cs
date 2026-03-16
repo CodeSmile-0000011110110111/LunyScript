@@ -4,7 +4,7 @@ namespace LunyScript.Blocks
 {
 	public static class ControlFlow
 	{
-		public static Boolean EvaluateAll(IScriptRuntimeContext runtimeContext, ScriptConditionBlock[] conditions)
+		public static Boolean EvaluateAll(IScriptRuntimeContext runtimeContext, ConditionBlock[] conditions)
 		{
 			foreach (var condition in conditions)
 			{
@@ -15,7 +15,7 @@ namespace LunyScript.Blocks
 			return true;
 		}
 
-		public static void ExecuteAll(IScriptRuntimeContext runtimeContext, ScriptActionBlock[] actions)
+		public static void ExecuteAll(IScriptRuntimeContext runtimeContext, ActionBlock[] actions)
 		{
 			foreach (var block in actions)
 				block?.Execute(runtimeContext);

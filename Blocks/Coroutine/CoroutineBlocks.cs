@@ -12,22 +12,22 @@ namespace LunyScript.Blocks
 		/// <summary>
 		/// Starts or restarts the coroutine.
 		/// </summary>
-		ScriptActionBlock Start();
+		ActionBlock Start();
 
 		/// <summary>
 		/// Stops the coroutine and resets its state.
 		/// </summary>
-		ScriptActionBlock Stop();
+		ActionBlock Stop();
 
 		/// <summary>
 		/// Pauses the coroutine, preserving current state.
 		/// </summary>
-		ScriptActionBlock Pause();
+		ActionBlock Pause();
 
 		/// <summary>
 		/// Resumes a paused coroutine.
 		/// </summary>
-		ScriptActionBlock Resume();
+		ActionBlock Resume();
 	}
 
 	/// <summary>
@@ -38,7 +38,7 @@ namespace LunyScript.Blocks
 		/// <summary>
 		/// Sets the time scale. Negative values are clamped to 0.
 		/// </summary>
-		ScriptActionBlock TimeScale(Double scale);
+		ActionBlock TimeScale(Double scale);
 	}
 
 	/// <summary>
@@ -50,7 +50,7 @@ namespace LunyScript.Blocks
 	/// Wraps a CoroutineInstance as a block for use in script sequences.
 	/// Provides control methods (Start, Stop, Pause, Resume) as action blocks.
 	/// </summary>
-	internal class CoroutineBlock : ScriptActionBlock, ICoroutineBlock
+	internal class CoroutineBlock : ActionBlock, ICoroutineBlock
 	{
 		protected readonly Coroutine _coroutine;
 
@@ -63,10 +63,10 @@ namespace LunyScript.Blocks
 
 		protected CoroutineBlock(Coroutine coroutine) => _coroutine = coroutine ?? throw new ArgumentNullException(nameof(coroutine));
 
-		public ScriptActionBlock Start() => new CoroutineStartBlock(_coroutine);
-		public ScriptActionBlock Stop() => new CoroutineStopBlock(_coroutine);
-		public ScriptActionBlock Pause() => new CoroutinePauseBlock(_coroutine);
-		public ScriptActionBlock Resume() => new CoroutineResumeBlock(_coroutine);
+		public ActionBlock Start() => new CoroutineStartBlock(_coroutine);
+		public ActionBlock Stop() => new CoroutineStopBlock(_coroutine);
+		public ActionBlock Pause() => new CoroutinePauseBlock(_coroutine);
+		public ActionBlock Resume() => new CoroutineResumeBlock(_coroutine);
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
 			throw new NotImplementedException($"{nameof(CoroutineBlock)} cannot be used in a block sequence");
@@ -77,7 +77,7 @@ namespace LunyScript.Blocks
 		internal TimerCoroutineBlock(TimerCoroutine coroutine)
 			: base(coroutine) {}
 
-		public ScriptActionBlock TimeScale(Double scale) => new TimerCoroutineSetTimeScaleBlock((TimerCoroutine)_coroutine, scale);
+		public ActionBlock TimeScale(Double scale) => new TimerCoroutineSetTimeScaleBlock((TimerCoroutine)_coroutine, scale);
 	}
 
 	internal sealed class CounterCoroutineBlock : CoroutineBlock, ICounterCoroutineBlock

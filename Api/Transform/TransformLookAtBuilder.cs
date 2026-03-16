@@ -19,9 +19,9 @@ namespace LunyScript.Api
 			options.Token.AutoFinish = () => Finish(capturedOptions);
 		}
 
-		public static implicit operator ScriptActionBlock(TransformLookAtBuilder<T> b) => Finish(b.Options);
+		public static implicit operator ActionBlock(TransformLookAtBuilder<T> b) => Finish(b.Options);
 
-		internal static ScriptActionBlock Finish(in TransformBuilderOptions options)
+		internal static ActionBlock Finish(in TransformBuilderOptions options)
 		{
 			var block = TransformRotationLookAtBlock.Create(options.Target, options.WorldUp, options.AxisLock);
 			options.Script.MarkBuilderTokenFinished(options.Token);

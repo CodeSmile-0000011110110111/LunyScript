@@ -52,13 +52,13 @@ namespace LunyScript
 		/// Conditional execution: If(conditions).Then(blocks).ElseIf(conditions).Then(blocks).Else(blocks);
 		/// Multiple conditions are implicitly AND combined.
 		/// </summary>
-		public IfBlock If(params ScriptConditionBlock[] conditions) => new(this, conditions);
+		public IfBlock If(params ConditionBlock[] conditions) => new(this, conditions);
 
 		/// <summary>
 		/// Loop execution: While(conditions).Do(blocks);
 		/// Multiple conditions are implicitly AND combined.
 		/// </summary>
-		public WhileBlockBuilder While(params ScriptConditionBlock[] conditions) => new(conditions);
+		public WhileBlockBuilder While(params ConditionBlock[] conditions) => new(conditions);
 
 		/// <summary>
 		/// For loop (1-based index): For(numberOfTimes).Do(blocks);
@@ -74,7 +74,7 @@ namespace LunyScript
 		public ForBlockBuilder For(Int32 numberOfTimes, Int32 step) => new(numberOfTimes, step);
 
 		/// <summary>
-		/// Executes a <see cref="System.Func{bool}"/> (lambda) or parameterless method returning bool.
+		/// Executes a `System.Func&lt;IScriptRuntimeContext, bool&gt;` (lambda) or method taking a IScriptRuntimeContext parameter and returns bool.
 		/// </summary>
 		/// <remarks>
 		/// - Intended for quick prototyping and testing.
@@ -83,10 +83,10 @@ namespace LunyScript
 		/// </remarks>
 		/// <param name="func"></param>
 		/// <returns></returns>
-		public ScriptConditionBlock Check(Func<Boolean> func) => EvaluateBlock.Create(_ => func());
+		public ConditionBlock Check(Func<IScriptRuntimeContext, Boolean> func) => CheckBlock.Create(func);
 
 		/// <summary>
-		/// Executes a <see cref="System.Func{IScriptRuntimeContext, bool}" /> (lambda) or method taking a IScriptRuntimeContext parameter and returns bool.
+		/// Executes a `System.Func&lt;bool&gt;` (lambda) or parameterless method returning bool.
 		/// </summary>
 		/// <remarks>
 		/// - Intended for quick prototyping and testing.
@@ -95,58 +95,62 @@ namespace LunyScript
 		/// </remarks>
 		/// <param name="func"></param>
 		/// <returns></returns>
-		public ScriptConditionBlock Check(Func<IScriptRuntimeContext, Boolean> func) => EvaluateBlock.Create(func);
+		public ConditionBlock Check(Func<Boolean> func) => CheckBlock.Create(_ => func());
 
 		/// <summary>
-		/// Executes a System.Action (lambda) or parameterless method returning void.
+		/// Executes a `System.Action` (lambda) or parameterless method returning void.
+		/// </summary>
+		/// <remarks>
+		/// - Intended for quick prototyping and testing.
+		/// - Prefer to convert "Run" code into a custom IBlock class after its initial development and testing,
+		/// - Prefer named methods over lambdas to ensure the block-based code continues to read like intent.
+		///
+		/// ```
+		///	// A lambda adds notable 'syntax noise':
+		/// On.Ready(Run(() => LunyLogger.LogInfo("custom log inline")));
+		///
+		///	// Multi-line lambdas are even worse:
+		///	On.Ready(Run(() => {
+		///	    LunyLogger.LogInfo("custom log inline");
+		///	}));
+		///
+		///	// A named method is much cleaner, and re-usable:
+		///	On.Ready(Run(MyCustomLog));
+		///
+		///	internal static void MyCustomLog() {
+		///	    LunyLogger.LogInfo("custom log");
+		///	}
+		/// ```
+		/// </remarks>
+		/// <param name="action"></param>
+		/// <returns></returns>
+		public ActionBlock Run(Action action) => RunBlock.Create(_ => action());
+
+		/// <summary>
+		/// Executes a `System.Action` (lambda) or a method that takes a IScriptRuntimeContext parameter and returns void.
 		/// </summary>
 		/// <remarks>
 		/// - Intended for quick prototyping and testing.
 		/// - Prefer to convert "Run" code into a custom IBlock class after its initial development and testing,
 		/// - Prefer named methods over lambdas to ensure the block-based code continues to read like intent.
 		/// </remarks>
-		/// <remarks>
-		///		// Even a single-line lambda adds notable 'syntax noise':
-		/// 	On.Update(Run(() => LunyLogger.LogInfo("custom log inline")));
-		///
-		///		// Multi-line lambdas are even worse:
-		///		On.Update(Run(() =>	{
-		///			LunyLogger.LogInfo("custom log inline");
-		///		}));
-		///
-		///		// A named method is much cleaner, and re-usable in the same script:
-		///		OnUpdate(Run(MyCustomLog));
-		///		private void MyCustomLog() => LunyLogger.LogInfo("custom log");
-		/// </remarks>
 		/// <param name="action"></param>
 		/// <returns></returns>
-		public ScriptActionBlock Run(Action action) => ExecuteBlock.Create(_ => action());
+		public ActionBlock Run(Action<IScriptRuntimeContext> action) => RunBlock.Create(action);
 
 		/// <summary>
-		/// Executes a System.Action (lambda) or a method that takes a IScriptRuntimeContext parameter and returns void.
+		/// Logical AND: Returns true if all conditions are true. Requires at least two conditions.
 		/// </summary>
-		/// <remarks>
-		/// - Intended for quick prototyping and testing.
-		/// - Prefer to convert "Run" code into a custom IBlock class after its initial development and testing,
-		/// - Prefer named methods over lambdas to ensure the block-based code continues to read like intent.
-		/// </remarks>
-		/// <param name="action"></param>
-		/// <returns></returns>
-		public ScriptActionBlock Run(Action<IScriptRuntimeContext> action) => ExecuteBlock.Create(action);
+		public ConditionBlock AND(params ConditionBlock[] conditions) => AndBlock.Create(conditions);
 
 		/// <summary>
-		/// Logical AND: Returns true if all conditions are true.
+		/// Logical OR: Returns true if at least one condition is true. Requires at least two conditions.
 		/// </summary>
-		public ScriptConditionBlock AND(params ScriptConditionBlock[] conditions) => AndBlock.Create(conditions);
-
-		/// <summary>
-		/// Logical OR: Returns true if at least one condition is true.
-		/// </summary>
-		public ScriptConditionBlock OR(params ScriptConditionBlock[] conditions) => OrBlock.Create(conditions);
+		public ConditionBlock OR(params ConditionBlock[] conditions) => OrBlock.Create(conditions);
 
 		/// <summary>
 		/// Logical NOT: Returns the inverse of the condition.
 		/// </summary>
-		public ScriptConditionBlock NOT(ScriptConditionBlock condition) => NotBlock.Create(condition);
+		public ConditionBlock NOT(ConditionBlock condition) => NotBlock.Create(condition);
 	}
 }

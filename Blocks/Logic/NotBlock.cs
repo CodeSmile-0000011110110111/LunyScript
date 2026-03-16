@@ -9,7 +9,7 @@ namespace LunyScript.Blocks
 	/// </summary>
 	internal sealed class NotBlock : VariableBlock
 	{
-		private readonly ScriptConditionBlock _condition;
+		private readonly ConditionBlock _condition;
 
 		internal override Table.ScalarVarHandle VarHandle => (_condition as VariableBlock)?.VarHandle;
 
@@ -19,9 +19,15 @@ namespace LunyScript.Blocks
 			get => Evaluate(null);
 		}
 
-		public static NotBlock Create(ScriptConditionBlock condition) => new(condition);
+		public static NotBlock Create(ConditionBlock condition) => new(condition);
 
-		private NotBlock(ScriptConditionBlock condition) => _condition = condition;
+		private NotBlock(ConditionBlock condition)
+		{
+			if (condition == null)
+				throw new ArgumentNullException(nameof(condition), $"{nameof(NotBlock)}: Condition cannot be null");
+
+			_condition = condition;
+		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>

@@ -3,7 +3,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformScaleSetLocalBlock : ScriptActionBlock
+	public sealed class TransformScaleSetLocalBlock : ActionBlock
 	{
 		private readonly VariableBlock<LunyVector3> _scale;
 

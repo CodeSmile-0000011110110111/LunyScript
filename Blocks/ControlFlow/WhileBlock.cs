@@ -3,14 +3,14 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// While loop execution block with safety limits.
 	/// </summary>
-	internal sealed class WhileBlock : ScriptActionBlock
+	internal sealed class WhileBlock : ActionBlock
 	{
-		private readonly ScriptConditionBlock[] _conditions;
-		private readonly ScriptActionBlock[] _actions;
+		private readonly ConditionBlock[] _conditions;
+		private readonly ActionBlock[] _actions;
 
-		public static WhileBlock Create(ScriptConditionBlock[] conditions, ScriptActionBlock[] actions) => new(conditions, actions);
+		public static WhileBlock Create(ConditionBlock[] conditions, ActionBlock[] actions) => new(conditions, actions);
 
-		private WhileBlock(ScriptConditionBlock[] conditions, ScriptActionBlock[] actions)
+		private WhileBlock(ConditionBlock[] conditions, ActionBlock[] actions)
 		{
 			_conditions = conditions;
 			_actions = actions;

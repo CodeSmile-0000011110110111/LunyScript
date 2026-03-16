@@ -78,7 +78,7 @@ namespace LunyScript.Api
 		// ── Event handlers ────────────────────────────────────────────────────
 
 		/// <summary>Blocks to run when the collision/trigger begins.</summary>
-		public PhysicsEventBuilder<CollisionBuilderReady> Begins(params ScriptActionBlock[] blocks)
+		public PhysicsEventBuilder<CollisionBuilderReady> Begins(params ActionBlock[] blocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.BeginsBlocks);
 			var options = Options with { BeginsBlocks = blocks };
@@ -87,7 +87,7 @@ namespace LunyScript.Api
 		}
 
 		/// <summary>Blocks to run each physics step while the collision/trigger persists.</summary>
-		public PhysicsEventBuilder<CollisionBuilderReady> Continues(params ScriptActionBlock[] blocks)
+		public PhysicsEventBuilder<CollisionBuilderReady> Continues(params ActionBlock[] blocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.ContinuesBlocks);
 			var options = Options with { ContinuesBlocks = blocks };
@@ -96,7 +96,7 @@ namespace LunyScript.Api
 		}
 
 		/// <summary>Blocks to run when the collision/trigger ends.</summary>
-		public PhysicsEventBuilder<CollisionBuilderReady> Ends(params ScriptActionBlock[] blocks)
+		public PhysicsEventBuilder<CollisionBuilderReady> Ends(params ActionBlock[] blocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.EndsBlocks);
 			var options = Options with { EndsBlocks = blocks };
@@ -244,9 +244,9 @@ namespace LunyScript.Api
 		internal Script Script;
 		internal BuilderToken Token;
 
-		public ScriptActionBlock[] BeginsBlocks;
-		public ScriptActionBlock[] ContinuesBlocks;
-		public ScriptActionBlock[] EndsBlocks;
+		public ActionBlock[] BeginsBlocks;
+		public ActionBlock[] ContinuesBlocks;
+		public ActionBlock[] EndsBlocks;
 		public Boolean IsTrigger;
 		/// <summary>Minimum seconds between successive reactions. Zero means no cooldown.</summary>
 		public Double Cooldown;

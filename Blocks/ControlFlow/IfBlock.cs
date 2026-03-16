@@ -7,26 +7,26 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Builder for constructing 'If' blocks with 'ElseIf' and 'Else' branches.
 	/// </summary>
-	public sealed class IfBlock : ScriptActionBlock
+	public sealed class IfBlock : ActionBlock
 	{
 		// builder-phase state (freed after Build)
-		private List<(ScriptConditionBlock[] conditions, ScriptActionBlock[] actions)> _branchesBuilder = new();
+		private List<(ConditionBlock[] conditions, ActionBlock[] actions)> _branchesBuilder = new();
 
 		// runtime-phase state (used in Execute)
-		private (ScriptConditionBlock[] conditions, ScriptActionBlock[] actions)[] _branches;
-		private ScriptActionBlock[] _elseBlocks;
+		private (ConditionBlock[] conditions, ActionBlock[] actions)[] _branches;
+		private ActionBlock[] _elseBlocks;
 
-		internal IfBlock(Script script, ScriptConditionBlock[] conditions)
+		internal IfBlock(Script script, ConditionBlock[] conditions)
 		{
 			if (conditions == null || conditions.Length == 0)
 				throw new LunyScriptException("If() conditions cannot be null or empty");
 
 			var token = script.CreateBuilderToken("If", "If");
 			token.AutoFinish = () => Build(script, token);
-			_branchesBuilder.Add((conditions, Array.Empty<ScriptActionBlock>()));
+			_branchesBuilder.Add((conditions, Array.Empty<ActionBlock>()));
 		}
 
-		public IfBlock Then(params ScriptActionBlock[] actions)
+		public IfBlock Then(params ActionBlock[] actions)
 		{
 			if (actions == null || actions.Length == 0)
 				throw new LunyScriptException("Then() blocks cannot be null or empty");
@@ -36,16 +36,16 @@ namespace LunyScript.Blocks
 			return this;
 		}
 
-		public IfBlock ElseIf(params ScriptConditionBlock[] conditions)
+		public IfBlock ElseIf(params ConditionBlock[] conditions)
 		{
 			if (conditions == null || conditions.Length == 0)
 				throw new LunyScriptException("ElseIf() conditions cannot be null or empty");
 
-			_branchesBuilder.Add((conditions, Array.Empty<ScriptActionBlock>()));
+			_branchesBuilder.Add((conditions, Array.Empty<ActionBlock>()));
 			return this;
 		}
 
-		public ScriptActionBlock Else(params ScriptActionBlock[] actions)
+		public ActionBlock Else(params ActionBlock[] actions)
 		{
 			if (actions == null || actions.Length == 0)
 				throw new LunyScriptException("Else() blocks cannot be null or empty");

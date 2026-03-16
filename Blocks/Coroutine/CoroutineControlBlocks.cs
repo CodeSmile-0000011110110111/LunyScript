@@ -3,7 +3,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	internal abstract class CoroutineControlBlock : ScriptActionBlock
+	internal abstract class CoroutineControlBlock : ActionBlock
 	{
 		protected readonly Coroutine _coroutine;
 

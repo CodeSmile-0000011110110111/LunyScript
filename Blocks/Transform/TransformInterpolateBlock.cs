@@ -7,7 +7,7 @@ namespace LunyScript.Blocks
 	/// Abstract base for blocks that interpolate or step a transform property toward a target over time.
 	/// Holds the shared optional parameters: speed, deadZone, axisLock, responsiveness.
 	/// </summary>
-	public abstract class TransformInterpolateBlock : ScriptActionBlock
+	public abstract class TransformInterpolateBlock : ActionBlock
 	{
 		protected readonly Single Speed;
 		protected readonly Single DeadZone;

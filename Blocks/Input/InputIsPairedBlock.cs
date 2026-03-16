@@ -7,7 +7,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Pairs object with the most recently used input device.
 	/// </summary>
-	internal sealed class InputIsPairedBlock : ScriptConditionBlock
+	internal sealed class InputIsPairedBlock : ConditionBlock
 	{
 		private String _userName;
 

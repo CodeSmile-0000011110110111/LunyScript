@@ -46,7 +46,7 @@ namespace LunyScript.Api
 			return new WhenInputActionBuilder(b.Options with { UserName = userName });
 		}
 
-		public static WhenInputActionBuilder Begins(this WhenInputActionBuilder b, params ScriptActionBlock[] startedBlocks)
+		public static WhenInputActionBuilder Begins(this WhenInputActionBuilder b, params ActionBlock[] startedBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.StartedBlocks);
 
@@ -55,7 +55,7 @@ namespace LunyScript.Api
 			return new WhenInputActionBuilder(options);
 		}
 
-		public static WhenInputActionBuilder Changes(this WhenInputActionBuilder b, params ScriptActionBlock[] performedBlocks)
+		public static WhenInputActionBuilder Changes(this WhenInputActionBuilder b, params ActionBlock[] performedBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.PerformedBlocks);
 
@@ -64,7 +64,7 @@ namespace LunyScript.Api
 			return new WhenInputActionBuilder(options);
 		}
 
-		public static WhenInputActionBuilder Continues(this WhenInputActionBuilder b, params ScriptActionBlock[] performingBlocks)
+		public static WhenInputActionBuilder Continues(this WhenInputActionBuilder b, params ActionBlock[] performingBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.PerformingBlocks);
 
@@ -73,7 +73,7 @@ namespace LunyScript.Api
 			return new WhenInputActionBuilder(options);
 		}
 
-		public static WhenInputActionBuilder Ends(this WhenInputActionBuilder b, params ScriptActionBlock[] canceledBlocks)
+		public static WhenInputActionBuilder Ends(this WhenInputActionBuilder b, params ActionBlock[] canceledBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.CanceledBlocks);
 
@@ -90,9 +90,9 @@ namespace LunyScript.Api
 		public String ActionName;
 		public String UserName;
 
-		public ScriptActionBlock[] StartedBlocks;
-		public ScriptActionBlock[] PerformedBlocks;
-		public ScriptActionBlock[] PerformingBlocks;
-		public ScriptActionBlock[] CanceledBlocks;
+		public ActionBlock[] StartedBlocks;
+		public ActionBlock[] PerformedBlocks;
+		public ActionBlock[] PerformingBlocks;
+		public ActionBlock[] CanceledBlocks;
 	}
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformPositionSetWorldBlock : ScriptActionBlock
+	public sealed class TransformPositionSetWorldBlock : ActionBlock
 	{
 		private readonly VariableBlock<LunyVector3> _position;
 

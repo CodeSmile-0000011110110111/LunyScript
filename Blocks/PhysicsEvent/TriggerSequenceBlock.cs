@@ -16,7 +16,7 @@ namespace LunyScript.Blocks.PhysicsEvent
 	{
 		private readonly Predicate<LunyCollider>[] _predicates;
 
-		public TriggerSequenceBlock(IReadOnlyList<ScriptActionBlock> blocks, EventGuard[] guards, Predicate<LunyCollider>[] predicates)
+		public TriggerSequenceBlock(IReadOnlyList<ActionBlock> blocks, EventGuard[] guards, Predicate<LunyCollider>[] predicates)
 			: base(blocks, guards) => _predicates = predicates;
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)

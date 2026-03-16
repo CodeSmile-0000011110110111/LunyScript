@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace LunyScript.Blocks
 {
-	internal sealed class VariableSetValueBlock : ScriptActionBlock
+	internal sealed class VariableSetValueBlock : ActionBlock
 	{
 		private readonly Table.ScalarVarHandle _handle;
 		private readonly VariableBlock _value;

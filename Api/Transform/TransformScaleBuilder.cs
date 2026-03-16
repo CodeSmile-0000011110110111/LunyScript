@@ -21,9 +21,9 @@ namespace LunyScript.Api
 			options.Token.AutoFinish = () => Finish(capturedOptions);
 		}
 
-		public static implicit operator ScriptActionBlock(TransformScaleBuilder<T> b) => Finish(b.Options);
+		public static implicit operator ActionBlock(TransformScaleBuilder<T> b) => Finish(b.Options);
 
-		internal static ScriptActionBlock Finish(in TransformBuilderOptions options)
+		internal static ActionBlock Finish(in TransformBuilderOptions options)
 		{
 			var block = TransformScaleTowardsBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.AxisLock,
 				options.Responsiveness);

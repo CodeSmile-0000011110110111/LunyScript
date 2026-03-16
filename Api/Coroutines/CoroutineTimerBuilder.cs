@@ -60,43 +60,43 @@ namespace LunyScript.Api
 	public static class TimerBuilderWhenExtensions
 	{
 		/// <summary>Blocks to run when the coroutine starts.</summary>
-		public static CoroutineTimerBuilder<T> WhenStarted<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] startedBlocks)
+		public static CoroutineTimerBuilder<T> WhenStarted<T>(this CoroutineTimerBuilder<T> b, params ActionBlock[] startedBlocks)
 			where T : struct, ICoroutineTimerWhen
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnStarted);
-			return ScriptActionBlock.IsNullOrEmpty(startedBlocks) ? b : NextBuilder(b, b.Options with { OnStarted = startedBlocks });
+			return ActionBlock.IsNullOrEmpty(startedBlocks) ? b : NextBuilder(b, b.Options with { OnStarted = startedBlocks });
 		}
 
 		/// <summary>Blocks to run when the coroutine stops.</summary>
-		public static CoroutineTimerBuilder<T> WhenStopped<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] stoppedBlocks)
+		public static CoroutineTimerBuilder<T> WhenStopped<T>(this CoroutineTimerBuilder<T> b, params ActionBlock[] stoppedBlocks)
 			where T : struct, ICoroutineTimerWhen
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnStopped);
-			return ScriptActionBlock.IsNullOrEmpty(stoppedBlocks) ? b : NextBuilder(b, b.Options with { OnStopped = stoppedBlocks });
+			return ActionBlock.IsNullOrEmpty(stoppedBlocks) ? b : NextBuilder(b, b.Options with { OnStopped = stoppedBlocks });
 		}
 
 		/// <summary>Blocks to run when the coroutine is paused.</summary>
-		public static CoroutineTimerBuilder<T> WhenPaused<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] pausedBlocks)
+		public static CoroutineTimerBuilder<T> WhenPaused<T>(this CoroutineTimerBuilder<T> b, params ActionBlock[] pausedBlocks)
 			where T : struct, ICoroutineTimerWhen
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnPaused);
-			return ScriptActionBlock.IsNullOrEmpty(pausedBlocks) ? b : NextBuilder(b, b.Options with { OnPaused = pausedBlocks });
+			return ActionBlock.IsNullOrEmpty(pausedBlocks) ? b : NextBuilder(b, b.Options with { OnPaused = pausedBlocks });
 		}
 
 		/// <summary>Blocks to run when the coroutine is resumed.</summary>
-		public static CoroutineTimerBuilder<T> WhenResumed<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] resumedBlocks)
+		public static CoroutineTimerBuilder<T> WhenResumed<T>(this CoroutineTimerBuilder<T> b, params ActionBlock[] resumedBlocks)
 			where T : struct, ICoroutineTimerWhen
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnResumed);
-			return ScriptActionBlock.IsNullOrEmpty(resumedBlocks) ? b : NextBuilder(b, b.Options with { OnResumed = resumedBlocks });
+			return ActionBlock.IsNullOrEmpty(resumedBlocks) ? b : NextBuilder(b, b.Options with { OnResumed = resumedBlocks });
 		}
 
 		/// <summary>Blocks to run when the coroutine is resumed.</summary>
-		public static CoroutineTimerBuilder<T> WhenProcessed<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] processBlocks)
+		public static CoroutineTimerBuilder<T> WhenProcessed<T>(this CoroutineTimerBuilder<T> b, params ActionBlock[] processBlocks)
 			where T : struct, ICoroutineTimerWhen
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnFrameUpdate);
-			return ScriptActionBlock.IsNullOrEmpty(processBlocks) ? b : NextBuilder(b, b.Options with { OnFrameUpdate = processBlocks });
+			return ActionBlock.IsNullOrEmpty(processBlocks) ? b : NextBuilder(b, b.Options with { OnFrameUpdate = processBlocks });
 		}
 
 		private static CoroutineTimerBuilder<T> NextBuilder<T>(CoroutineTimerBuilder<T> b, CoroutineOptions options)
@@ -110,7 +110,7 @@ namespace LunyScript.Api
 	public static class TimerBuilderFinalExtensions
 	{
 		/// <summary>Completes the timer and (optional) specifies blocks to run every frame.</summary>
-		public static ITimerCoroutineBlock WhenElapsed<T>(this CoroutineTimerBuilder<T> b, params ScriptActionBlock[] elapsedBlocks)
+		public static ITimerCoroutineBlock WhenElapsed<T>(this CoroutineTimerBuilder<T> b, params ActionBlock[] elapsedBlocks)
 			where T : struct, ICoroutineTimerUnitSet =>
 			(ITimerCoroutineBlock)CoroutineBuilder.Finish(b.Options.Script, b.Options.Token, b.Options with { OnElapsed = elapsedBlocks });
 	}

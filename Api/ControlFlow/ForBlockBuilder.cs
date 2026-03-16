@@ -17,6 +17,6 @@ namespace LunyScript.Api
 			_step = step;
 		}
 
-		public ScriptActionBlock Do(params ScriptActionBlock[] blocks) => ForBlock.Create(_limit, _step, blocks);
+		public ActionBlock Do(params ActionBlock[] blocks) => ForBlock.Create(_limit, _step, blocks);
 	}
 }

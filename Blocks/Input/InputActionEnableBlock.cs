@@ -3,7 +3,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	internal sealed class InputActionEnableBlock : ScriptActionBlock
+	internal sealed class InputActionEnableBlock : ActionBlock
 	{
 		private String _actionName;
 
@@ -21,7 +21,7 @@ namespace LunyScript.Blocks
 			LunyEngine.Instance.Input.EnableInputAction(_actionName, true);
 	}
 
-	internal sealed class InputActionDisableBlock : ScriptActionBlock
+	internal sealed class InputActionDisableBlock : ActionBlock
 	{
 		private String _actionName;
 

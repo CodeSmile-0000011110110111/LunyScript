@@ -26,13 +26,13 @@ namespace LunyScript.Api
 		internal Boolean IsCounter { get => !IsTimer; set => IsTimer = !value; }
 
 		// Handlers
-		public ScriptActionBlock[] OnFrameUpdate { get; init; }
-		public ScriptActionBlock[] OnHeartbeat { get; init; }
-		public ScriptActionBlock[] OnElapsed { get; init; }
-		public ScriptActionBlock[] OnStarted { get; init; }
-		public ScriptActionBlock[] OnStopped { get; init; }
-		public ScriptActionBlock[] OnPaused { get; init; }
-		public ScriptActionBlock[] OnResumed { get; init; }
+		public ActionBlock[] OnFrameUpdate { get; init; }
+		public ActionBlock[] OnHeartbeat { get; init; }
+		public ActionBlock[] OnElapsed { get; init; }
+		public ActionBlock[] OnStarted { get; init; }
+		public ActionBlock[] OnStopped { get; init; }
+		public ActionBlock[] OnPaused { get; init; }
+		public ActionBlock[] OnResumed { get; init; }
 
 		public static CoroutineOptions ForCoroutine(String name, Double duration, Boolean repeating) => new()
 		{
@@ -43,7 +43,7 @@ namespace LunyScript.Api
 		};
 
 		public static CoroutineOptions ForTimerCoroutine(String name, Double duration, Coroutine.Continuation continuationMode,
-			ScriptActionBlock[] processBlocks = null) => new()
+			ActionBlock[] processBlocks = null) => new()
 		{
 			Name = name,
 			Duration = duration,
@@ -53,7 +53,7 @@ namespace LunyScript.Api
 		};
 
 		public static CoroutineOptions ForCounterCoroutine(String name, Int32 countTarget, Coroutine.Continuation continuationMode,
-			Coroutine.Process processMode, ScriptActionBlock[] processBlocks = null, ScriptActionBlock[] elapsedBlocks = null) => new()
+			Coroutine.Process processMode, ActionBlock[] processBlocks = null, ActionBlock[] elapsedBlocks = null) => new()
 		{
 			Name = name,
 			Duration = countTarget,
@@ -65,7 +65,7 @@ namespace LunyScript.Api
 		};
 
 		public static CoroutineOptions ForIntervalCoroutine(String name, Int32 interval, Int32 offset, Coroutine.Process processMode,
-			ScriptActionBlock[] processBlocks = null) => new()
+			ActionBlock[] processBlocks = null) => new()
 		{
 			Name = name ?? GenerateUniqueName(interval, offset, processMode),
 			Duration = Math.Max(1, interval), // time-sliced intervals are always counters

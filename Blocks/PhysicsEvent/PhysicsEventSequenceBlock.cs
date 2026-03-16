@@ -10,15 +10,15 @@ namespace LunyScript.Blocks.PhysicsEvent
 	/// Guards are evaluated first (no event args needed); concrete subclasses evaluate their typed predicates second.
 	/// All guards and predicates must pass (AND logic) for child blocks to execute.
 	/// </summary>
-	internal abstract class PhysicsEventSequenceBlock : ScriptActionBlock, ISequenceBlock
+	internal abstract class PhysicsEventSequenceBlock : ActionBlock, ISequenceBlock
 	{
 		private readonly EventGuard[] _guards;
 
 		public ScriptBlockId Id { get; }
-		public IReadOnlyList<ScriptActionBlock> Blocks { get; }
+		public IReadOnlyList<ActionBlock> Blocks { get; }
 		public Boolean IsEmpty => Blocks.Count == 0;
 
-		protected PhysicsEventSequenceBlock(IReadOnlyList<ScriptActionBlock> blocks, EventGuard[] guards)
+		protected PhysicsEventSequenceBlock(IReadOnlyList<ActionBlock> blocks, EventGuard[] guards)
 		{
 			if (blocks == null || blocks.Count == 0)
 				throw new ArgumentException("Sequence must contain at least one block", nameof(blocks));

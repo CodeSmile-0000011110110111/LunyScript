@@ -3,20 +3,20 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	internal sealed class ObjectDestroySelfBlock : ScriptActionBlock
+	internal sealed class ObjectDestroySelfBlock : ActionBlock
 	{
-		public static ScriptActionBlock Create() => new ObjectDestroySelfBlock();
+		public static ActionBlock Create() => new ObjectDestroySelfBlock();
 
 		private ObjectDestroySelfBlock() {}
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => runtimeContext.LunyObject.Destroy();
 	}
 
-	internal sealed class ObjectDestroyTargetBlock : ScriptActionBlock
+	internal sealed class ObjectDestroyTargetBlock : ActionBlock
 	{
 		private readonly String _name;
 
-		public static ScriptActionBlock Create(String name) => new ObjectDestroyTargetBlock(name);
+		public static ActionBlock Create(String name) => new ObjectDestroyTargetBlock(name);
 
 		private ObjectDestroyTargetBlock(String name) => _name = name;
 

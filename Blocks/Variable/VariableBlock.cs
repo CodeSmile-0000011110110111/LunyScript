@@ -8,7 +8,7 @@ namespace LunyScript.Blocks
 	/// Extends ScriptConditionBlock because variables are implicitly usable as conditions
 	/// (via AsBoolean conversion).
 	/// </summary>
-	public abstract class VariableBlock : ScriptConditionBlock
+	public abstract class VariableBlock : ConditionBlock
 	{
 		internal virtual Table.ScalarVarHandle VarHandle => null;
 
@@ -127,18 +127,18 @@ namespace LunyScript.Blocks
 			return handle;
 		}
 
-		public ScriptActionBlock Set(Variable value) => VariableSetValueBlock.Create(GetHandleOrThrow(), ConstantVariableBlock.Create(value));
-		public ScriptActionBlock Set(VariableBlock value) => VariableSetValueBlock.Create(GetHandleOrThrow(), value);
-		public ScriptActionBlock Add(Variable value) => Set(this + value);
-		public ScriptActionBlock Add(VariableBlock value) => Set(this + value);
-		public ScriptActionBlock Sub(Variable value) => Set(this - value);
-		public ScriptActionBlock Sub(VariableBlock value) => Set(this - value);
-		public ScriptActionBlock Mul(Variable value) => Set(this * value);
-		public ScriptActionBlock Mul(VariableBlock value) => Set(this * value);
-		public ScriptActionBlock Div(Variable value) => Set(this / value);
-		public ScriptActionBlock Div(VariableBlock value) => Set(this / value);
-		public ScriptActionBlock Inc() => Set(this + 1);
-		public ScriptActionBlock Dec() => Set(this - 1);
-		public ScriptActionBlock Toggle() => Set(!this);
+		public ActionBlock Set(Variable value) => VariableSetValueBlock.Create(GetHandleOrThrow(), ConstantVariableBlock.Create(value));
+		public ActionBlock Set(VariableBlock value) => VariableSetValueBlock.Create(GetHandleOrThrow(), value);
+		public ActionBlock Add(Variable value) => Set(this + value);
+		public ActionBlock Add(VariableBlock value) => Set(this + value);
+		public ActionBlock Sub(Variable value) => Set(this - value);
+		public ActionBlock Sub(VariableBlock value) => Set(this - value);
+		public ActionBlock Mul(Variable value) => Set(this * value);
+		public ActionBlock Mul(VariableBlock value) => Set(this * value);
+		public ActionBlock Div(Variable value) => Set(this / value);
+		public ActionBlock Div(VariableBlock value) => Set(this / value);
+		public ActionBlock Inc() => Set(this + 1);
+		public ActionBlock Dec() => Set(this - 1);
+		public ActionBlock Toggle() => Set(!this);
 	}
 }

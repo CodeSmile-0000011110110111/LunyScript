@@ -14,7 +14,7 @@ namespace LunyScript.Blocks
 		Clone,
 	}
 
-	internal abstract class ObjectCreateBlock : ScriptActionBlock
+	internal abstract class ObjectCreateBlock : ActionBlock
 	{
 		protected readonly String Name;
 		protected readonly LunyObjectRef Parent;
@@ -36,7 +36,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class ObjectCreateEmptyBlock : ObjectCreateBlock
 	{
-		public static ScriptActionBlock Create(ObjectCreateOptions options) => new ObjectCreateEmptyBlock(options);
+		public static ActionBlock Create(ObjectCreateOptions options) => new ObjectCreateEmptyBlock(options);
 
 		private ObjectCreateEmptyBlock(ObjectCreateOptions options)
 			: base(options) {}
@@ -47,7 +47,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class ObjectCreateCubeBlock : ObjectCreateBlock
 	{
-		public static ScriptActionBlock Create(ObjectCreateOptions options) => new ObjectCreateCubeBlock(options);
+		public static ActionBlock Create(ObjectCreateOptions options) => new ObjectCreateCubeBlock(options);
 
 		private ObjectCreateCubeBlock(ObjectCreateOptions options)
 			: base(options) {}
@@ -58,7 +58,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class ObjectCreateSphereBlock : ObjectCreateBlock
 	{
-		public static ScriptActionBlock Create(ObjectCreateOptions options) => new ObjectCreateSphereBlock(options);
+		public static ActionBlock Create(ObjectCreateOptions options) => new ObjectCreateSphereBlock(options);
 
 		private ObjectCreateSphereBlock(ObjectCreateOptions options)
 			: base(options) {}
@@ -69,7 +69,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class ObjectCreateCapsuleBlock : ObjectCreateBlock
 	{
-		public static ScriptActionBlock Create(ObjectCreateOptions options) => new ObjectCreateCapsuleBlock(options);
+		public static ActionBlock Create(ObjectCreateOptions options) => new ObjectCreateCapsuleBlock(options);
 
 		private ObjectCreateCapsuleBlock(ObjectCreateOptions options)
 			: base(options) {}
@@ -80,7 +80,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class ObjectCreateCylinderBlock : ObjectCreateBlock
 	{
-		public static ScriptActionBlock Create(ObjectCreateOptions options) => new ObjectCreateCylinderBlock(options);
+		public static ActionBlock Create(ObjectCreateOptions options) => new ObjectCreateCylinderBlock(options);
 
 		private ObjectCreateCylinderBlock(ObjectCreateOptions options)
 			: base(options) {}
@@ -91,7 +91,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class ObjectCreatePlaneBlock : ObjectCreateBlock
 	{
-		public static ScriptActionBlock Create(ObjectCreateOptions options) => new ObjectCreatePlaneBlock(options);
+		public static ActionBlock Create(ObjectCreateOptions options) => new ObjectCreatePlaneBlock(options);
 
 		private ObjectCreatePlaneBlock(ObjectCreateOptions options)
 			: base(options) {}
@@ -102,7 +102,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class ObjectCreateQuadBlock : ObjectCreateBlock
 	{
-		public static ScriptActionBlock Create(ObjectCreateOptions options) => new ObjectCreateQuadBlock(options);
+		public static ActionBlock Create(ObjectCreateOptions options) => new ObjectCreateQuadBlock(options);
 
 		private ObjectCreateQuadBlock(ObjectCreateOptions options)
 			: base(options) {}
@@ -115,7 +115,7 @@ namespace LunyScript.Blocks
 	{
 		private readonly String _prefabAssetName;
 
-		public static ScriptActionBlock Create(ObjectCreateOptions options) => new ObjectCreatePrefabBlock(options);
+		public static ActionBlock Create(ObjectCreateOptions options) => new ObjectCreatePrefabBlock(options);
 
 		private ObjectCreatePrefabBlock(ObjectCreateOptions options)
 			: base(options) => _prefabAssetName = String.IsNullOrEmpty(options.AssetName)
@@ -137,7 +137,7 @@ namespace LunyScript.Blocks
 	{
 		private readonly String _templateName;
 
-		public static ScriptActionBlock Create(ObjectCreateOptions options) => new ObjectCreateCloneBlock(options);
+		public static ActionBlock Create(ObjectCreateOptions options) => new ObjectCreateCloneBlock(options);
 
 		private ObjectCreateCloneBlock(ObjectCreateOptions options)
 			: base(options) => _templateName = options.TemplateName;

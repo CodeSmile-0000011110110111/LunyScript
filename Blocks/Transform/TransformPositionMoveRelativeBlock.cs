@@ -3,7 +3,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformPositionMoveRelativeBlock : ScriptActionBlock
+	public sealed class TransformPositionMoveRelativeBlock : ActionBlock
 	{
 		private VariableBlock _distance;
 		private LunyVector3 _axis;
