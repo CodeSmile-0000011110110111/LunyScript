@@ -18,7 +18,7 @@ namespace LunyScript.Activation
 			var sw = Stopwatch.StartNew();
 
 			var activatedCount = 0;
-			var buildContext = new ScriptContext();
+			var buildContext = new ScriptBuildContext();
 			var runtimeContexts = CreateRuntimeContexts(lunyObjects, runner.Scripts, runner.Contexts);
 			foreach (var runtimeContext in runtimeContexts)
 			{
@@ -38,7 +38,7 @@ namespace LunyScript.Activation
 		{
 			//LunyLogger.LogInfo($"{lunyObject} Activating Script ...", nameof(ScriptBuilder));
 
-			var buildContext = new ScriptContext();
+			var buildContext = new ScriptBuildContext();
 			var runtimeContext = TryCreateRuntimeContext(runner.Scripts, runner.Contexts, lunyObject);
 			if (runtimeContext != null)
 			{
@@ -47,7 +47,7 @@ namespace LunyScript.Activation
 			}
 		}
 
-		private static void BuildAndRegisterLunyScript(ScriptContext scriptContext, ScriptRuntimeContext runtimeContext,
+		private static void BuildAndRegisterLunyScript(ScriptBuildContext scriptContext, ScriptRuntimeContext runtimeContext,
 			LunyScriptRunner runner)
 		{
 			//LunyLogger.LogInfo($"Building {runtimeContext} ...", nameof(ScriptBuilder));

@@ -6,7 +6,7 @@ namespace LunyScript.SmokeTests
 	{
 		private const Int32 N = 10;
 
-		public override void Build(ScriptContext context)
+		public override void Build(ScriptBuildContext context)
 		{
 			/*var forFrames = Coroutine($"For {N} Frames")
 				.For(N)

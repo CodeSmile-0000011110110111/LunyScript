@@ -52,7 +52,7 @@ namespace LunyScript.SmokeTests
 			return Char.IsDigit(lastChar) ? lastChar - '0' : -1;
 		}
 
-		public override void Build(ScriptContext context)
+		public override void Build(ScriptBuildContext context)
 		{
 			// Joining is done via the Host's Action Map since the Host owns all devices by default.
 			// The device that sends the "Join" action will then be paired with a specific script/object.

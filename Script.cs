@@ -60,7 +60,7 @@ namespace LunyScript
 		/// Users can use regular C# syntax (ie call methods, use loops) to construct complex and/or reusable blocks.
 		/// </summary>
 		/// <param name="context"></param>
-		public abstract void Build(ScriptContext context);
+		public abstract void Build(ScriptBuildContext context);
 
 		internal BuilderToken CreateBuilderToken(String name, String type)
 		{

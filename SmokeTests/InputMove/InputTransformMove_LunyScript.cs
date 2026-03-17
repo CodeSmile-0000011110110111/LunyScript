@@ -6,7 +6,7 @@
 	/// </summary>
 	public sealed class InputTransformMove_LunyScript : Script
 	{
-		public override void Build(ScriptContext context)
+		public override void Build(ScriptBuildContext context)
 		{
 			On.FrameUpdate(
 				Transform.MoveBy(Input.Direction("Move"), 4),

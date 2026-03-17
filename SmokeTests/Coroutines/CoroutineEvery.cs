@@ -2,7 +2,7 @@
 {
 	public class CoroutineEvery : Script
 	{
-		public override void Build(ScriptContext context)
+		public override void Build(ScriptBuildContext context)
 		{
 			/*var beat0 = Every(2).Heartbeats().Do(Debug.Log("even beat"));
 			var beat1 = Every(2).Heartbeats().Offset(1).Do(Debug.Log("odd beat"));

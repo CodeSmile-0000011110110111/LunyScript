@@ -7,7 +7,7 @@ namespace LunyScript.SmokeTests
 	{
 		private const Int32 N = 40;
 
-		public override void Build(ScriptContext context)
+		public override void Build(ScriptBuildContext context)
 		{
 			// Every() => repeating
 			var timer = Coroutine("Coroutine.Every.{Unit}")
