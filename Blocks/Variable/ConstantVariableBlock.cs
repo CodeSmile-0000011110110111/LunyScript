@@ -7,7 +7,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Block that returns a constant variable value.
 	/// </summary>
-	public sealed class ConstantVariableBlock : VariableBlock
+	internal sealed class ConstantVariableBlock : VariableBlock
 	{
 		private readonly Variable _value;
 

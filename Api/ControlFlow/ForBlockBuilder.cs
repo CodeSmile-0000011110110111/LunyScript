@@ -8,10 +8,13 @@ namespace LunyScript.Api
 	/// </summary>
 	public readonly struct ForBlockBuilder
 	{
-		private readonly Int32 _limit;
-		private readonly Int32 _step;
+		private readonly VariableBlock _limit;
+		private readonly VariableBlock _step;
 
-		internal ForBlockBuilder(Int32 limit, Int32 step = 1)
+		internal ForBlockBuilder(VariableBlock limit)
+			: this(limit, 1) {}
+
+		internal ForBlockBuilder(VariableBlock limit, VariableBlock step)
 		{
 			_limit = limit;
 			_step = step;

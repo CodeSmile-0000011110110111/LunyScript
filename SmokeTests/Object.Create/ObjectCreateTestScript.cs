@@ -66,6 +66,9 @@ namespace LunyScript.SmokeTests
 
 			IncrementallyDeleteSceneObjects(prefabDoesNotExist, axisPrefabPath);
 			CreateFinalObjectsWhenDestroyed();
+
+			var createCount = Var.Define("create count", 600);
+			On.Ready(For(createCount).Do(Object.Create("Placeholder").With("???").LocalPosition(3, 2, .5).LocalScale(.1)));
 		}
 
 		private void IncrementallyDeleteSceneObjects(String prefabDoesNotExist, String axisPrefabPath)

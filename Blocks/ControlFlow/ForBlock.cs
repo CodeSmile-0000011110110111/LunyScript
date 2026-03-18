@@ -7,16 +7,16 @@ namespace LunyScript.Blocks
 	/// </summary>
 	internal sealed class ForBlock : ActionBlock
 	{
-		private readonly Int32 _limit;
-		private readonly Int32 _step;
+		private readonly VariableBlock _limit;
+		private readonly VariableBlock _step;
 		private readonly ActionBlock[] _actions;
 
-		public static ForBlock Create(Int32 limit, Int32 step, ActionBlock[] actions) => new(limit, step, actions);
+		public static ForBlock Create(VariableBlock limit, VariableBlock step, ActionBlock[] actions) => new(limit, step, actions);
 
-		private ForBlock(Int32 limit, Int32 step, ActionBlock[] actions)
+		private ForBlock(VariableBlock limit, VariableBlock step, ActionBlock[] actions)
 		{
 			_limit = limit;
-			_step = step == 0 ? 1 : step; // Prevent division by zero/infinite loop if step is 0
+			_step = step;
 			_actions = actions;
 		}
 
@@ -27,9 +27,12 @@ namespace LunyScript.Blocks
 			var maxLimit = ScriptEngine.MaxLoopIterations;
 #endif
 
-			var start = _step > 0 ? 1 : _limit;
-			var end = _step > 0 ? _limit : 1;
-			for (var i = start; _step > 0 ? i <= end : i >= end; i += _step)
+			var step = _step.Variable.AsInt32();
+			step = step == 0 ? 1 : step; // don't allow zero step => would cause an infinite loop
+			var limit = _limit.Variable.AsInt32();
+			var start = step > 0 ? 1 : limit;
+			var end = step > 0 ? limit : 1;
+			for (var i = start; step > 0 ? i <= end : i >= end; i += step)
 			{
 #if DEBUG || UNITY_EDITOR
 				if (++iterations > maxLimit)

@@ -7,7 +7,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Reads the analog trigger value (0.0–1.0) for a named button action from the input service.
 	/// </summary>
-	internal sealed class InputAxisValueBlock : ComputedVariableBlock
+	internal sealed class InputAxisValueBlock : VariableBlock
 	{
 		private readonly String _actionName;
 

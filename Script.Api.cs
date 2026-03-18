@@ -64,14 +64,14 @@ namespace LunyScript
 		/// For loop (1-based index): For(numberOfTimes).Do(blocks);
 		/// Starts at 1 and increments by 1 until limit is reached (inclusive).
 		/// </summary>
-		public ForBlockBuilder For(Int32 numberOfTimes) => new(numberOfTimes);
+		public ForBlockBuilder For(VariableBlock numberOfTimes) => new(numberOfTimes);
 
 		/// <summary>
 		/// For loop (1-based index): For(limit, step).Do(blocks);
 		/// If step is positive: starts at 1 and increments by step until limit is reached.
 		/// If step is negative: starts at limit and decrements by step until 1 is reached.
 		/// </summary>
-		public ForBlockBuilder For(Int32 numberOfTimes, Int32 step) => new(numberOfTimes, step);
+		public ForBlockBuilder For(VariableBlock numberOfTimes, VariableBlock step) => new(numberOfTimes, step);
 
 		/// <summary>
 		/// Executes a `System.Func&lt;IScriptRuntimeContext, bool&gt;` (lambda) or method taking a IScriptRuntimeContext parameter and returns bool.
