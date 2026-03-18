@@ -1,4 +1,6 @@
-﻿namespace LunyScript.SmokeTests
+﻿using LunyScript.Api;
+
+namespace LunyScript.SmokeTests
 {
 	public class CollisionEvents : Script
 	{

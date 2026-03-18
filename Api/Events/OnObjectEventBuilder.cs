@@ -71,13 +71,13 @@ namespace LunyScript.Api
 		/// Chain filter methods (Tagged, Named, Layered, Masked, Typed, Cooldown) then event handlers
 		/// (Begins, Updates, Ends) and finalize with Do().
 		/// </summary>
-		public PhysicsEventBuilder<CollisionBuilderStart> Collision() => new(_script, false);
+		public CollisionEventBuilder<CollisionStart> Collision() => new(_script);
 
 		/// <summary>
 		/// Starts a filtered 3D trigger event builder.
 		/// Chain filter methods (Tagged, Named, Layered, Masked, Typed, Cooldown) then event handlers
 		/// (Begins, Updates, Ends) and finalize with Do().
 		/// </summary>
-		public PhysicsEventBuilder<CollisionBuilderStart> Trigger() => new(_script, true);
+		public TriggerEventBuilder<TriggerStart> Trigger() => new(_script);
 	}
 }

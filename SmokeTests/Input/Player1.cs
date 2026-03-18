@@ -10,18 +10,18 @@ namespace LunyScript.SmokeTests
 			var upscale = s.Var.Constant("Upscale", 1.2);
 
 			// input actions filtered by player name
-			s.When.Input.Action("Move").For(playerName).Continues(s.Transform.MoveBy(s.Input.Direction("Move")));
-			s.When.Input.Action("Look").For(playerName).Continues(s.Transform.SetLocalRotation(s.Input.Rotation("Look")));
-			s.When.Input.Action("Jump").For(playerName).Begins(s.Transform.ShiftUp(10));
-			s.When.Input.Action("Crouch").For(playerName).Begins(s.Transform.ShiftDown(10));
+			s.When.Input.Action("Move").For(playerName).Continuing(s.Transform.MoveBy(s.Input.Direction("Move")));
+			s.When.Input.Action("Look").For(playerName).Continuing(s.Transform.SetLocalRotation(s.Input.Rotation("Look")));
+			s.When.Input.Action("Jump").For(playerName).Started(s.Transform.ShiftUp(10));
+			s.When.Input.Action("Crouch").For(playerName).Started(s.Transform.ShiftDown(10));
 			s.When.Input.Action("Interact")
 				.For(playerName)
-				.Begins(s.Transform.SetLocalScale(upscale))
-				.Ends(s.Transform.SetLocalScale(1));
+				.Started(s.Transform.SetLocalScale(upscale))
+				.Ended(s.Transform.SetLocalScale(1));
 			s.When.Input.Action("Attack")
 				.For(playerName)
-				.Begins(s.Object.Enable("AttackButtonPressed"))
-				.Ends(s.Object.Disable("AttackButtonPressed"));
+				.Started(s.Object.Enable("AttackButtonPressed"))
+				.Ended(s.Object.Disable("AttackButtonPressed"));
 
 			// Allow joined players to leave a session
 			HandlePlayerLeave(s, playerName);
@@ -37,7 +37,7 @@ namespace LunyScript.SmokeTests
 
 			s.When.Input.Action("Leave")
 				.For(playerName) // only act for the player sending this action
-				.Begins(s.If(playerJoined && s.Input.IsPaired(playerName))
+				.Started(s.If(playerJoined && s.Input.IsPaired(playerName))
 					.Then(playerJoined.Toggle(), playerCount.Dec(),
 						s.Input.Unpair(playerName), s.Object.Enable($"JoinP{playerNum}"), s.Debug.Log($"LEFT: {playerName}"))
 				);
@@ -63,7 +63,7 @@ namespace LunyScript.SmokeTests
 			var playerCount = GVar.Define("PlayerCount", 0);
 
 			When.Input.Action("Join")
-				.Begins(If(!p1Joined && !Input.IsPaired(nameof(Player1)))
+				.Started(If(!p1Joined && !Input.IsPaired(nameof(Player1)))
 					.Then(p1Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player1)), Object.Disable("JoinP1"), Debug.Log("JOINED: P1"))
 					.ElseIf(!p2Joined && !Input.IsPaired(nameof(Player2)))
 					.Then(p2Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player2)), Object.Disable("JoinP2"), Debug.Log("JOINED: P2"))

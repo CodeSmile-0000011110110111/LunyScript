@@ -4,7 +4,7 @@ using System;
 
 namespace LunyScript.Blocks.Guards
 {
-	internal sealed class CooldownGuard<T> : EventGuard where T : struct, ICollisionBuilderState
+	internal sealed class CooldownGuard : EventGuard
 	{
 		private ILunyTimeService _time;
 		private Double _lastExecutionTime;
