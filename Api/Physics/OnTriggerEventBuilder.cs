@@ -126,7 +126,7 @@ namespace LunyScript.Api
 		}
 
 		/// <summary>Blocks to run each physics step while overlapping a trigger collider.</summary>
-		public static TriggerEventBuilder<TriggerEventSet> Staying<T>(this TriggerEventBuilder<T> b, params ActionBlock[] blocks)
+		public static TriggerEventBuilder<TriggerEventSet> Overlapping<T>(this TriggerEventBuilder<T> b, params ActionBlock[] blocks)
 			where T : struct, ITriggerBuilderState
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.ContinuingBlocks);

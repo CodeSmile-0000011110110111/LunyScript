@@ -6,7 +6,7 @@ namespace LunyScript.SmokeTests
 	{
 		public override void Build(ScriptBuildContext context) => On.Collision()
 			.Started(Debug.Log("Collision STARTED"))
-			.Continuing(Debug.Log("Collision continuing ..."))
+			.Touching(Debug.Log("Collision continuing ..."))
 			.Ended(Debug.Log("Collision ENDED"));
 	}
 }

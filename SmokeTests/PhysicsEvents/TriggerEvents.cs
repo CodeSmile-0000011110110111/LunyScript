@@ -6,7 +6,7 @@ namespace LunyScript.SmokeTests
 	{
 		public override void Build(ScriptBuildContext context) => On.Trigger()
 			.Entered(Debug.Log("Trigger ENTERED"))
-			.Staying(Debug.Log("Trigger staying ..."))
+			.Overlapping(Debug.Log("Trigger staying ..."))
 			.Exited(Debug.Log("Trigger EXITED"));
 	}
 }

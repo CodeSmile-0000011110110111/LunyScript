@@ -126,7 +126,7 @@ namespace LunyScript.Api
 		}
 
 		/// <summary>Blocks to run each physics step while the collision persists.</summary>
-		public static CollisionEventBuilder<CollisionEventSet> Continuing<T>(this CollisionEventBuilder<T> b, params ActionBlock[] blocks)
+		public static CollisionEventBuilder<CollisionEventSet> Touching<T>(this CollisionEventBuilder<T> b, params ActionBlock[] blocks)
 			where T : struct, ICollisionBuilderState
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.ContinuingBlocks);
