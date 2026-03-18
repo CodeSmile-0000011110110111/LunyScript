@@ -77,8 +77,8 @@ namespace LunyScript.Api
 
 		// ── Event handlers ────────────────────────────────────────────────────
 
-		/// <summary>Blocks to run when the collision/trigger begins.</summary>
-		public PhysicsEventBuilder<CollisionBuilderReady> Begins(params ActionBlock[] blocks)
+		/// <summary>Blocks to run when the collision began.</summary>
+		public PhysicsEventBuilder<CollisionBuilderReady> Started(params ActionBlock[] blocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.BeginsBlocks);
 			var options = Options with { BeginsBlocks = blocks };
@@ -86,8 +86,8 @@ namespace LunyScript.Api
 			return new PhysicsEventBuilder<CollisionBuilderReady>(options);
 		}
 
-		/// <summary>Blocks to run each physics step while the collision/trigger persists.</summary>
-		public PhysicsEventBuilder<CollisionBuilderReady> Continues(params ActionBlock[] blocks)
+		/// <summary>Blocks to run each physics step while the collision persists.</summary>
+		public PhysicsEventBuilder<CollisionBuilderReady> Continuing(params ActionBlock[] blocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.ContinuesBlocks);
 			var options = Options with { ContinuesBlocks = blocks };
@@ -95,8 +95,36 @@ namespace LunyScript.Api
 			return new PhysicsEventBuilder<CollisionBuilderReady>(options);
 		}
 
-		/// <summary>Blocks to run when the collision/trigger ends.</summary>
-		public PhysicsEventBuilder<CollisionBuilderReady> Ends(params ActionBlock[] blocks)
+		/// <summary>Blocks to run when the collision ended.</summary>
+		public PhysicsEventBuilder<CollisionBuilderReady> Ended(params ActionBlock[] blocks)
+		{
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.EndsBlocks);
+			var options = Options with { EndsBlocks = blocks };
+			SetAutoFinish(options);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(options);
+		}
+
+
+		/// <summary>Blocks to run when the object entered a trigger collider.</summary>
+		public PhysicsEventBuilder<CollisionBuilderReady> Entered(params ActionBlock[] blocks)
+		{
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.BeginsBlocks);
+			var options = Options with { BeginsBlocks = blocks };
+			SetAutoFinish(options);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(options);
+		}
+
+		/// <summary>Blocks to run each physics step while overlapping a trigger collider.</summary>
+		public PhysicsEventBuilder<CollisionBuilderReady> Staying(params ActionBlock[] blocks)
+		{
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.ContinuesBlocks);
+			var options = Options with { ContinuesBlocks = blocks };
+			SetAutoFinish(options);
+			return new PhysicsEventBuilder<CollisionBuilderReady>(options);
+		}
+
+		/// <summary>Blocks to run when the object exited a trigger collider.</summary>
+		public PhysicsEventBuilder<CollisionBuilderReady> Exited(params ActionBlock[] blocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(Options.Script, Options.EndsBlocks);
 			var options = Options with { EndsBlocks = blocks };

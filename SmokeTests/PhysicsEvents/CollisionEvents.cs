@@ -3,8 +3,8 @@
 	public class CollisionEvents : Script
 	{
 		public override void Build(ScriptBuildContext context) => On.Collision()
-			.Begins(Debug.Log("Collision BEGINS"))
-			.Continues(Debug.Log("Collision continues ..."))
-			.Ends(Debug.Log("Collision ENDS"));
+			.Started(Debug.Log("Collision STARTED"))
+			.Continuing(Debug.Log("Collision continuing ..."))
+			.Ended(Debug.Log("Collision ENDED"));
 	}
 }

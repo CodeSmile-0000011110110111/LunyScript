@@ -27,8 +27,8 @@ namespace LunyScript.SmokeTests
 			On.Ready(Run(() => LunyLogger.LogInfo($"{GetType().Name} READY...", this)));
 			On.Enabled(Run(() => LunyLogger.LogInfo($"{GetType().Name} ENABLED...", this)));
 			On.Disabled(Run(() => LunyLogger.LogInfo($"{GetType().Name} DISABLED...", this)));
-			When.Scene.Unloads(Run(() => LunyLogger.LogInfo($"{GetType().Name} SCENE UNLOADS...", this)));
-			When.Scene.Loads(Run(() => LunyLogger.LogInfo($"{GetType().Name} SCENE LOADS...", this)));
+			When.Scene.Unloaded(Run(() => LunyLogger.LogInfo($"{GetType().Name} SCENE UNLOADS...", this)));
+			When.Scene.Loaded(Run(() => LunyLogger.LogInfo($"{GetType().Name} SCENE LOADS...", this)));
 		}
 	}
 }
