@@ -10,16 +10,16 @@ namespace LunyScript.SmokeTests
 			var upscale = s.Var.Constant("Upscale", 1.2);
 
 			// input actions filtered by player name
-			s.When.Input.Action("Move").For(playerName).Continuing(s.Transform.MoveBy(s.Input.Direction("Move")));
-			s.When.Input.Action("Look").For(playerName).Continuing(s.Transform.SetLocalRotation(s.Input.Rotation("Look")));
-			s.When.Input.Action("Jump").For(playerName).Started(s.Transform.ShiftUp(10));
-			s.When.Input.Action("Crouch").For(playerName).Started(s.Transform.ShiftDown(10));
+			s.When.Input.Action("Move").ForUser(playerName).Continuing(s.Transform.MoveBy(s.Input.Direction("Move")));
+			s.When.Input.Action("Look").ForUser(playerName).Continuing(s.Transform.SetLocalRotation(s.Input.Rotation("Look")));
+			s.When.Input.Action("Jump").ForUser(playerName).Started(s.Transform.ShiftUp(10));
+			s.When.Input.Action("Crouch").ForUser(playerName).Started(s.Transform.ShiftDown(10));
 			s.When.Input.Action("Interact")
-				.For(playerName)
+				.ForUser(playerName)
 				.Started(s.Transform.SetLocalScale(upscale))
 				.Ended(s.Transform.SetLocalScale(1));
 			s.When.Input.Action("Attack")
-				.For(playerName)
+				.ForUser(playerName)
 				.Started(s.Object.Enable("AttackButtonPressed"))
 				.Ended(s.Object.Disable("AttackButtonPressed"));
 
@@ -36,7 +36,7 @@ namespace LunyScript.SmokeTests
 			var playerCount = s.GVar["PlayerCount"];
 
 			s.When.Input.Action("Leave")
-				.For(playerName) // only act for the player sending this action
+				.ForUser(playerName) // only act for the player sending this action
 				.Started(s.If(playerJoined && s.Input.IsPaired(playerName))
 					.Then(playerJoined.Toggle(), playerCount.Dec(),
 						s.Input.Unpair(playerName), s.Object.Enable($"JoinP{playerNum}"), s.Debug.Log($"LEFT: {playerName}"))

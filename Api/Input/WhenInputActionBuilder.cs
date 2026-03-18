@@ -40,12 +40,29 @@ namespace LunyScript.Api
 
 	public static class WhenInputActionBuilderExtensions
 	{
-		public static WhenInputActionBuilder For(this WhenInputActionBuilder b, String userName)
+		/// <summary>
+		/// Specifies that event should only run when sent from a device paired with the named input user.
+		/// </summary>
+		/// <param name="b"></param>
+		/// <param name="userName"></param>
+		/// <returns></returns>
+		public static WhenInputActionBuilder ForUser(this WhenInputActionBuilder b, String userName)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.UserName);
 			return new WhenInputActionBuilder(b.Options with { UserName = userName });
 		}
 
+		/// <summary>
+		/// Runs when the input action has started processing. All input actions run Start event.
+		/// For unconditional actions it is the same as Performed event.
+		/// </summary>
+		/// <remarks>
+		/// For "hold" or "slow tap" interactions the Started event runs with the beginning of the hold or tap.
+		/// The Performed even will be delayed accordingly.
+		/// </remarks>
+		/// <param name="b"></param>
+		/// <param name="startedBlocks"></param>
+		/// <returns></returns>
 		public static WhenInputActionBuilder Started(this WhenInputActionBuilder b, params ActionBlock[] startedBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.StartedBlocks);
@@ -55,6 +72,12 @@ namespace LunyScript.Api
 			return new WhenInputActionBuilder(options);
 		}
 
+		/// <summary>
+		/// Runs when the input action is performed. When interactions are used, it runs when the interactions (hold, slow tap) are satisfied.
+		/// </summary>
+		/// <param name="b"></param>
+		/// <param name="performedBlocks"></param>
+		/// <returns></returns>
 		public static WhenInputActionBuilder Performed(this WhenInputActionBuilder b, params ActionBlock[] performedBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.PerformedBlocks);
@@ -64,6 +87,13 @@ namespace LunyScript.Api
 			return new WhenInputActionBuilder(options);
 		}
 
+		/// <summary>
+		/// Runs repeatedly every frame, before frame processing begins (Heartbeat, FixedUpdate), until the input action ended.
+		/// Use this for continuous processing of axis and analog input values, or button holds.
+		/// </summary>
+		/// <param name="b"></param>
+		/// <param name="performingBlocks"></param>
+		/// <returns></returns>
 		public static WhenInputActionBuilder Continuing(this WhenInputActionBuilder b, params ActionBlock[] performingBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.PerformingBlocks);
@@ -73,6 +103,12 @@ namespace LunyScript.Api
 			return new WhenInputActionBuilder(options);
 		}
 
+		/// <summary>
+		/// Runs when an input action ended, even when it merely Started but never Performed.
+		/// </summary>
+		/// <param name="b"></param>
+		/// <param name="canceledBlocks"></param>
+		/// <returns></returns>
 		public static WhenInputActionBuilder Ended(this WhenInputActionBuilder b, params ActionBlock[] canceledBlocks)
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.CanceledBlocks);

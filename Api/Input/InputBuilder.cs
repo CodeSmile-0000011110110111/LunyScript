@@ -22,8 +22,23 @@ namespace LunyScript.Api
 		/// </summary>
 		public VariableBlock<LunyQuaternion> Rotation(String actionName) => InputAxisRotationBlock.Create(actionName);
 
+		/// <summary>
+		/// Pairs a named input user with the most recently used input device. Only pairs with unused devices. Should be used within an Input.Action event.
+		/// </summary>
+		/// <param name="userName"></param>
+		/// <returns></returns>
 		public ActionBlock Pair(String userName) => InputAssignUserBlock.Create(userName);
+		/// <summary>
+		/// Unpairs a named input user from input devices.
+		/// </summary>
+		/// <param name="userName"></param>
+		/// <returns></returns>
 		public ActionBlock Unpair(String userName) => InputUnassignUserBlock.Create(userName);
+		/// <summary>
+		/// Checks if the named input user has an input device assigned.
+		/// </summary>
+		/// <param name="userName"></param>
+		/// <returns></returns>
 		public ConditionBlock IsPaired(String userName) => InputIsPairedBlock.Create(userName);
 
 		/// <summary>
@@ -36,6 +51,11 @@ namespace LunyScript.Api
 		/// </summary>
 		public InputAxisBuilder Axis(String actionName) => new(actionName);
 
+		/// <summary>
+		/// Used with Input Action maps.
+		/// </summary>
+		/// <param name="actionName"></param>
+		/// <returns></returns>
 		public InputActionBuilder Action(String actionName) => new(actionName);
 	}
 
@@ -45,7 +65,15 @@ namespace LunyScript.Api
 
 		public InputActionBuilder(String actionName) => _actionName = actionName;
 
+		/// <summary>
+		/// Enables an input action or action map.
+		/// </summary>
+		/// <returns></returns>
 		public ActionBlock Enable() => InputActionEnableBlock.Create(_actionName);
+		/// <summary>
+		/// Disables an input action or action map.
+		/// </summary>
+		/// <returns></returns>
 		public ActionBlock Disable() => InputActionDisableBlock.Create(_actionName);
 	}
 
