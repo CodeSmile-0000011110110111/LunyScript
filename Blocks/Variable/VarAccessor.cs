@@ -4,7 +4,7 @@ using System;
 namespace LunyScript.Blocks
 {
 	/// <summary>
-	/// Provides indexed access to script variables.
+	/// Provides access to script variables.
 	/// Getter returns a VariableBlock for use in script expressions and conditions.
 	/// Setter performs immediate variable assignment during Build().
 	/// </summary>
@@ -20,7 +20,19 @@ namespace LunyScript.Blocks
 
 		internal VarAccessor(ITable table) => _table = table;
 
-		public TableVariableBlock Define(String name, Variable value) => TableVariableBlock.Create(_table.DefineVariable(name, value));
-		public TableVariableBlock Constant(String name, Variable value) => TableVariableBlock.Create(_table.DefineConstant(name, value));
+		/// <summary>
+		/// Defines (or gets) a variable with the given name and the default value 0.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		public TableVariableBlock Define(String name) => TableVariableBlock.Create(_table.DefineVariable(name, 0.0));
+		/// <summary>
+		/// Defines (or gets) a variable with the given name and assigns the provided Variable.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="variable"></param>
+		/// <returns></returns>
+		public TableVariableBlock Define(String name, Variable variable) => TableVariableBlock.Create(_table.DefineVariable(name, variable));
+		public TableVariableBlock Constant(String name, Variable variable) => TableVariableBlock.Create(_table.DefineConstant(name, variable));
 	}
 }

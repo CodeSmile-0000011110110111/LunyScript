@@ -113,7 +113,7 @@ namespace LunyScript.Blocks
 			return Equals((VariableBlock)obj);
 		}
 
-		public override Int32 GetHashCode() => throw new NotImplementedException($"{nameof(VariableBlock)}.{nameof(GetHashCode)}()");
+		public override Int32 GetHashCode() => HashCode.Combine(Variable != null ? Variable.GetHashCode() : 0, Value);
 
 		public ActionBlock Set(Variable value) => VariableSetValueBlock.Create(VarHandle, ConstantVariableBlock.Create(value));
 		public ActionBlock Set(VariableBlock value) => VariableSetValueBlock.Create(VarHandle, value);

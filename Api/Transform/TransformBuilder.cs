@@ -42,10 +42,11 @@ namespace LunyScript.Api
 			TransformRotationSetLocalBlock.Create(rotation);
 
 		/// <summary> Instantly set the Local scale. </summary>
-		public TransformScaleSetLocalBlock SetLocalScale(Double scale) => TransformScaleSetLocalBlock.Create(LunyVector3.Uniform(scale));
+		public TransformScaleSetLocalBlock SetLocalScale(Double uniformScale) =>
+			TransformScaleSetLocalBlock.Create(LunyVector3.Uniform(uniformScale));
 
-		public TransformScaleSetLocalBlock SetLocalScale(VariableBlock scale) =>
-			TransformScaleSetLocalBlock.Create(LunyVector3.Uniform(scale.Value));
+		public TransformScaleSetLocalUniformBlock SetLocalScale(VariableBlock uniformScale) =>
+			TransformScaleSetLocalUniformBlock.Create(uniformScale);
 
 		/// <summary> Instantly set the Local scale. </summary>
 		public TransformScaleSetLocalBlock SetLocalScale(VariableBlock<LunyVector3> scale) => TransformScaleSetLocalBlock.Create(scale);

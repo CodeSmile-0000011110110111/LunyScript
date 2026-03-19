@@ -62,7 +62,14 @@ namespace LunyScript.Blocks
 		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable / _right.Variable.Value;
+			get
+			{
+				// A common "safe" threshold for dividing without provoking "div by zero" or "Infinity" results
+				const Double SafeDivideThreshold = 1e-10;
+
+				var denominator = _right.Variable.Value;
+				return Math.Abs(denominator) >= SafeDivideThreshold ? _left.Variable / denominator : 0d;
+			}
 		}
 		public static VariableDivideBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 

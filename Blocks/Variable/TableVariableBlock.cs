@@ -26,6 +26,12 @@ namespace LunyScript.Blocks
 
 		private TableVariableBlock(Table.VarHandle handle) => _handle = handle;
 
+		/// <summary>
+		/// Used to set a variable's value during Build() time.
+		/// </summary>
+		/// <param name="value"></param>
+		public void SetImmediate(Variable value) => _handle.Variable = value;
+
 		public override String ToString() => _handle.ToString();
 	}
 }

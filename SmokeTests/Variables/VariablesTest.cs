@@ -7,6 +7,7 @@ namespace LunyScript.SmokeTests
 		public override void Build(ScriptBuildContext context)
 		{
 			// Object-bound (local) variables use 'Var'
+			var variable = Var.Define("variable");
 			var integer = Var.Define("integer", 123);
 			var floating = Var.Define("floating point", 1.234);
 			var boolean = Var.Define("boolean", true);
@@ -20,6 +21,14 @@ namespace LunyScript.SmokeTests
 			LunyLogger.LogInfo(boolean, this);
 			LunyLogger.LogInfo(text, this);
 			LunyLogger.LogInfo(constant, this);
+
+			LunyLogger.LogInfo(Var["undefined variable"], this);
+
+			var newVar = Var["not defined"];
+			newVar.SetImmediate(95.96); // set value at build time "immediately"
+			newVar.Set(111.222); // this returns a block, it won't change the value until it executes at runtime
+			var sameVar = Var["not defined"];
+			LunyLogger.LogInfo($"{newVar} and {sameVar} are equal: {newVar.Value == sameVar.Value}");
 
 			On.Ready(
 				Debug.Log("------------------------------------------------------------------------------"),
@@ -38,12 +47,6 @@ namespace LunyScript.SmokeTests
 
 				// Constants cannot be modified => ERROR: trying to modify constant variable!
 				Debug.Log(constant), constant.Add(100), Debug.Log(constant),
-				Debug.Log("------------------------------------------------------------------------------"),
-
-				// CAUTION!
-				// This string concatenation uses the integer's value when Build() runs, it does not run as a block:
-				Debug.Log($"integer value at Build() time: {integer}"), // prints value during Build()
-				Debug.Log(integer), // prints the runtime value
 				Debug.Log("------------------------------------------------------------------------------"),
 
 				// COMPARISON
@@ -67,7 +70,6 @@ namespace LunyScript.SmokeTests
 				If(text || text == true || text == 0)
 					.Then(Debug.Log(text), Debug.Log("The text variable is true or 0"))
 					.Else(Debug.Log(text), Debug.Log("The text variable is neither true nor 0")),
-
 				Debug.Log("------------------------------------------------------------------------------"),
 
 				// DUCK TYPING: variable types can change
@@ -76,9 +78,21 @@ namespace LunyScript.SmokeTests
 				// Changes string to integer
 				text.Set(-123456789), Debug.Log("text is now an integer value..."), Debug.Log(text),
 				// Changes boolean to string
-				boolean.Set("Once upon a Boolean, there was .."), Debug.Log("boolean is now a string..."), Debug.Log(boolean)
+				boolean.Set("Once upon a Boolean, there was .."), Debug.Log("boolean is now a string..."), Debug.Log(boolean),
 
+				// CAUTION!
+				// This string concatenation uses the integer's value when Build() runs, it does not run as a block:
+				Debug.Log($"integer value at Build() time: {integer}"), // prints value during Build()
+				Debug.Log(integer), // prints the runtime value
+				Debug.Log("------------------------------------------------------------------------------"),
+
+				// Division by Zero is "allowed" => it will return 0, not Infinity! (unexpected by programmers and mathematicians)
+				Debug.Log(floating), floating.Div(0), Debug.Log(floating)
 			);
+
+			var scale = Var.Define("scale", 0.01);
+			On.FrameUpdate(Transform.SetLocalScale(scale), scale.Add(0.001));
+
 		}
 	}
 }
