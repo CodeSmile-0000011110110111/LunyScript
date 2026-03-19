@@ -11,7 +11,7 @@ namespace LunyScript.Blocks
 	{
 		private readonly ConditionBlock _condition;
 
-		internal override Table.ScalarVarHandle VarHandle => (_condition as VariableBlock)?.VarHandle;
+		internal override Table.VarHandle VarHandle => (_condition as VariableBlock)?.VarHandle;
 
 		internal override Variable Variable
 		{

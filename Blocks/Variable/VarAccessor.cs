@@ -15,7 +15,7 @@ namespace LunyScript.Blocks
 		public TableVariableBlock this[String name]
 		{
 			get => TableVariableBlock.Create(_table.GetHandle(name));
-			set => _table.GetHandle(name).Value = value.Variable;
+			set => _table.GetHandle(name).Variable = value.Variable;
 		}
 
 		internal VarAccessor(ITable table) => _table = table;

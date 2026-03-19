@@ -10,7 +10,7 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class VariableBlock : ConditionBlock
 	{
-		internal virtual Table.ScalarVarHandle VarHandle => null;
+		internal virtual Table.VarHandle VarHandle => null;
 
 		public static implicit operator VariableBlock(Variable value) => ConstantVariableBlock.Create(value);
 		public static implicit operator VariableBlock(Int32 value) => ConstantVariableBlock.Create(value);
@@ -115,20 +115,8 @@ namespace LunyScript.Blocks
 
 		public override Int32 GetHashCode() => throw new NotImplementedException($"{nameof(VariableBlock)}.{nameof(GetHashCode)}()");
 
-		// Actions
-		private Table.ScalarVarHandle GetHandleOrThrow()
-		{
-			var handle = VarHandle;
-			if (handle == null)
-				throw new LunyScriptVariableException($"Cannot modify read-only variable: {GetType().Name}");
-			if (handle.IsConstant)
-				throw new LunyScriptVariableException($"Cannot modify constant variable: {handle.Name}");
-
-			return handle;
-		}
-
-		public ActionBlock Set(Variable value) => VariableSetValueBlock.Create(GetHandleOrThrow(), ConstantVariableBlock.Create(value));
-		public ActionBlock Set(VariableBlock value) => VariableSetValueBlock.Create(GetHandleOrThrow(), value);
+		public ActionBlock Set(Variable value) => VariableSetValueBlock.Create(VarHandle, ConstantVariableBlock.Create(value));
+		public ActionBlock Set(VariableBlock value) => VariableSetValueBlock.Create(VarHandle, value);
 		public ActionBlock Add(Variable value) => Set(this + value);
 		public ActionBlock Add(VariableBlock value) => Set(this + value);
 		public ActionBlock Sub(Variable value) => Set(this - value);
@@ -140,5 +128,7 @@ namespace LunyScript.Blocks
 		public ActionBlock Inc() => Set(this + 1);
 		public ActionBlock Dec() => Set(this - 1);
 		public ActionBlock Toggle() => Set(!this);
+
+		public override String ToString() => VarHandle != null ? VarHandle.Variable.ToString() : Variable.ToString();
 	}
 }

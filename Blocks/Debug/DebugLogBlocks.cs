@@ -39,13 +39,13 @@ namespace LunyScript.Blocks
 			switch (_logLevel)
 			{
 				case LogLevel.Info:
-					LunyLogger.LogInfo($"{_message} ({runtimeContext})", this);
+					LunyLogger.LogInfo(_message, runtimeContext.LunyObject.Name);
 					break;
 				case LogLevel.Warning:
-					LunyLogger.LogWarning($"{_message} ({runtimeContext})", this);
+					LunyLogger.LogWarning(_message, runtimeContext.LunyObject.Name);
 					break;
 				case LogLevel.Error:
-					LunyLogger.LogError($"{_message} ({runtimeContext})", this);
+					LunyLogger.LogError(_message, runtimeContext.LunyObject.Name);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(_logLevel), _logLevel, runtimeContext?.ToString());
@@ -77,10 +77,19 @@ namespace LunyScript.Blocks
 #endif
 		}
 
-		public static ActionBlock Create(VariableBlock variableBlock)
+		public static ActionBlock Create(String[] messages)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
-			return new DebugLogInfoBlock(variableBlock);
+			return new DebugLogInfoBlock(String.Join(", ", messages));
+#else
+			return null;
+#endif
+		}
+
+		public static ActionBlock Create(VariableBlock variable)
+		{
+#if DEBUG || LUNYSCRIPT_DEBUG
+			return new DebugLogInfoBlock(variable);
 #else
 			return null;
 #endif

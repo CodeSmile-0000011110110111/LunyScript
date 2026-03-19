@@ -9,22 +9,22 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public sealed class TableVariableBlock : VariableBlock
 	{
-		private readonly Table.ScalarVarHandle _handle;
+		private readonly Table.VarHandle _handle;
 
-		internal override Table.ScalarVarHandle VarHandle => _handle;
+		internal override Table.VarHandle VarHandle => _handle;
 
 		public String Name => _handle.Name;
-		public new Variable Value => _handle.Value;
+		public new Variable Value => _handle.Variable;
 
 		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _handle.Value;
+			get => _handle.Variable;
 		}
 
-		internal static TableVariableBlock Create(Table.ScalarVarHandle handle) => new(handle);
+		internal static TableVariableBlock Create(Table.VarHandle handle) => new(handle);
 
-		private TableVariableBlock(Table.ScalarVarHandle handle) => _handle = handle;
+		private TableVariableBlock(Table.VarHandle handle) => _handle = handle;
 
 		public override String ToString() => _handle.ToString();
 	}

@@ -12,9 +12,9 @@ namespace LunyScript
 		/// <summary>
 		/// Reference to proxy for engine object.
 		/// </summary>
-		[MaybeNull] protected ILunyObject Owner => _runtimeContext.LunyObject;
+		[MaybeNull] protected ILunyObject Owner => _runtimeContext?.LunyObject;
 
-		public String Name => GetType().Name;
+		[NotNull] public String Name => GetType().Name;
 
 		/// <summary>
 		/// True if the script currently runs within the engine's editor (play mode). False in builds.
@@ -24,11 +24,11 @@ namespace LunyScript
 		/// <summary>
 		/// Global variables
 		/// </summary>
-		public VarAccessor GVar => _globalVariables;
+		[NotNull] public VarAccessor GVar => _globalVariables;
 		/// <summary>
 		/// Instance variables (unique per script/object)
 		/// </summary>
-		public VarAccessor Var => _instanceVariables;
+		[NotNull] public VarAccessor Var => _instanceVariables;
 
 		public ComponentApi Component => new(this);
 		public DebugApi Debug => new(this);

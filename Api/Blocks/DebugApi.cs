@@ -26,6 +26,8 @@ namespace LunyScript.Api
 		/// <returns></returns>
 		public ActionBlock Log(String message) => LogInfo(message);
 
+		public ActionBlock Log(params String[] messages) => LogInfo(messages);
+
 		/// <summary>
 		/// Logs a variable.
 		/// </summary>
@@ -38,6 +40,8 @@ namespace LunyScript.Api
 		/// Only logs when DEBUG or LUNYSCRIPT_DEBUG is defined.
 		/// </summary>
 		public ActionBlock LogInfo(String message) => DebugLogInfoBlock.Create(message);
+
+		private ActionBlock LogInfo(params String[] messages) => DebugLogInfoBlock.Create(messages);
 
 		/// <summary>
 		/// Logs a debug "warning" (yellow text) message.

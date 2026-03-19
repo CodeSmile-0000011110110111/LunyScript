@@ -29,9 +29,9 @@ namespace LunyScript
 		[NotNull] private ScriptInputEventHandler _inputEventHandler;
 
 		private ILunyTimeService _engineTime;
-		private Table.ScalarVarHandle gvar_Time_HeartbeatCount;
-		private Table.ScalarVarHandle gvar_Time_FrameCount;
-		private Table.ScalarVarHandle gvar_Time_ElapsedSeconds;
+		private Table.VarHandle gvar_Time_HeartbeatCount;
+		private Table.VarHandle gvar_Time_FrameCount;
+		private Table.VarHandle gvar_Time_ElapsedSeconds;
 
 		internal ScriptDefinitionRegistry Scripts => _scripts;
 		internal ScriptRuntimeContextRegistry Contexts => _contexts;
@@ -221,8 +221,8 @@ namespace LunyScript
 
 		public void OnEngineHeartbeat()
 		{
-			gvar_Time_ElapsedSeconds.Value = _engineTime.ElapsedSeconds;
-			gvar_Time_HeartbeatCount.Value = _engineTime.HeartbeatCount;
+			gvar_Time_ElapsedSeconds.Variable = _engineTime.ElapsedSeconds;
+			gvar_Time_HeartbeatCount.Variable = _engineTime.HeartbeatCount;
 
 			foreach (var context in _contexts.AllContexts)
 				_objectEventHandler.OnHeartbeat(context);
@@ -230,8 +230,8 @@ namespace LunyScript
 
 		public void OnEngineFrameUpdate()
 		{
-			gvar_Time_ElapsedSeconds.Value = _engineTime.ElapsedSeconds;
-			gvar_Time_FrameCount.Value = _engineTime.FrameCount;
+			gvar_Time_ElapsedSeconds.Variable = _engineTime.ElapsedSeconds;
+			gvar_Time_FrameCount.Variable = _engineTime.FrameCount;
 
 			foreach (var context in _contexts.AllContexts)
 				_objectEventHandler.OnFrameUpdate(context);

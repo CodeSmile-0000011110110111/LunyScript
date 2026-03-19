@@ -9,7 +9,7 @@ namespace LunyScript.Blocks
 		protected readonly VariableBlock _left;
 		protected readonly VariableBlock _right;
 
-		internal override Table.ScalarVarHandle VarHandle => _left?.VarHandle ?? _right?.VarHandle;
+		internal override Table.VarHandle VarHandle => _left?.VarHandle ?? _right?.VarHandle;
 
 		protected VariableArithmeticBlock(VariableBlock left, VariableBlock right)
 		{
@@ -23,7 +23,7 @@ namespace LunyScript.Blocks
 		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable + (Double)_right.Variable;
+			get => _left.Variable + _right.Variable.Value;
 		}
 		public static VariableAddBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
@@ -36,7 +36,7 @@ namespace LunyScript.Blocks
 		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable - (Double)_right.Variable;
+			get => _left.Variable - _right.Variable.Value;
 		}
 		public static VariableSubtractBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
@@ -49,7 +49,7 @@ namespace LunyScript.Blocks
 		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable * (Double)_right.Variable;
+			get => _left.Variable * _right.Variable.Value;
 		}
 		public static VariableMultiplyBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
@@ -62,7 +62,7 @@ namespace LunyScript.Blocks
 		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable / (Double)_right.Variable;
+			get => _left.Variable / _right.Variable.Value;
 		}
 		public static VariableDivideBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
