@@ -34,8 +34,7 @@ namespace LunyScript.Api
 
 		[DebuggerHidden]
 		internal static void LogUnfinishedBuilder(BuilderToken token) => LunyLogger.LogWarning(
-			$"{Path.GetFileName(token._file)}, line {token._line}: {token._type} '{token._name}' is incomplete. " +
-			"Did you forget to append a final blocks method like '.Do(blocks)' ?");
+			$"{Path.GetFileName(token._file)}, line {token._line}: {token._name} ('{token._type}') is incomplete or unused.");
 
 		internal BuilderToken(String name, String type, [CallerFilePath] String file = "", [CallerLineNumber] Int32 lineNumber = -1)
 		{

@@ -7,7 +7,7 @@ namespace LunyScript.SmokeTests
 		public override void Build(ScriptBuildContext context)
 		{
 			// Object-bound (local) variables use 'Var'
-			var variable = Var.Define("variable");
+			var variable = Var.Define("variable"); // will have a value of 0
 			var integer = Var.Define("integer", 123);
 			var floating = Var.Define("floating point", 1.234);
 			var boolean = Var.Define("boolean", true);
@@ -24,10 +24,13 @@ namespace LunyScript.SmokeTests
 
 			LunyLogger.LogInfo(Var["undefined variable"], this);
 
-			var newVar = Var["not defined"];
+			// CAUTION: Build()-time vs run-time block execution
+			var newVar = Var["previously undefined"];
 			newVar.SetImmediate(95.96); // set value at build time "immediately"
 			newVar.Set(111.222); // this returns a block, it won't change the value until it executes at runtime
-			var sameVar = Var["not defined"];
+			LunyLogger.LogInfo(newVar); // this will log '95.96' !!
+
+			var sameVar = Var["previously undefined"]; // gets the now-defined variable eg the same
 			LunyLogger.LogInfo($"{newVar} and {sameVar} are equal: {newVar.Value == sameVar.Value}");
 
 			On.Ready(
@@ -90,9 +93,103 @@ namespace LunyScript.SmokeTests
 				Debug.Log(floating), floating.Div(0), Debug.Log(floating)
 			);
 
+			// grow the object over time
 			var scale = Var.Define("scale", 0.01);
-			On.FrameUpdate(Transform.SetLocalScale(scale), scale.Add(0.001));
+			On.FrameUpdate(
+				Transform.SetLocalScale(scale),
+				scale.Add(0.0004)
+			);
 
+			// ARITHMETICS
+			var num1 = Var.Define("num1", 1);
+			var num2 = Var.Define("num2", 2);
+			On.Ready(
+				Debug.Log(num1), // prints '1'
+				Debug.Log(num2), // prints '2'
+				num1.Add(num2), // num1: (1 + 2) = 3
+				Debug.Log(num1), // prints '3'
+				num2.Sub(num1), // num2: (2 - 3) = -1
+				Debug.Log(num2), // prints '-1'
+				num1.Mul(num2), // num1: (3 * -1) = -3
+				Debug.Log(num1), // prints '-3'
+				num2.Div(num1), // num2: (-1 / -3) = 0.333333333333333
+				Debug.Log(num2) // prints '0.333333333333333'
+			);
+
+			// ARITHMETICS WITH OPERATORS
+			var num3 = Var.Define("num3", 1);
+			var num4 = Var.Define("num4", 2);
+			var result = Var.Define("result");
+			// Note: operators return VariableBlock instances which must be passed to a Set() method for the final result
+			On.Ready(
+				result.Set((num4 - (num3 + num4)) / ((num3 + num4) * (num4 - (num3 + num4)))),
+				Debug.Log(result) // prints '0.333333333333333' (same as above)
+			);
+
+			// ARITHMETICS WITH OPERATORS AND INTERMEDIATE VALUE
+			var num5 = Var.Define("num5", 1);
+			var num6 = Var.Define("num6", 2);
+			var three = Var.Define("intermediate");
+			var result2 = Var.Define("result2");
+			// Note: operators return VariableBlock instances which must be passed to a Set() method for the final result
+			On.Ready(
+				three.Set(num5 + num6),
+				result2.Set((num6 - three) / (three * (num6 - three))),
+				Debug.Log(result2) // prints '0.333333333333333' (same as above)
+			);
+
+			// INCREMENT/DECREMENT
+			var increasing = Var.Define("inc");
+			var decreasing = Var.Define("dec");
+			On.Heartbeat(If(increasing < 3)
+				.Then(increasing.Inc(), Debug.Log(increasing),
+					decreasing.Dec(), Debug.Log(decreasing))
+			);
+
+			// FLIP A BOOLEAN
+			var fact = Var.Define("fact", false);
+			On.Ready(
+				fact.Toggle(), Debug.Log(fact),
+				fact.Toggle(), Debug.Log(fact)
+			);
+
+			// COMPARISONS
+			var compare = Var.Define("compare1", 0.123456789);
+			var truth = Var.Define("another fact", true);
+			var message = Var.Define("peace", "We come in peace!");
+			On.Ready(
+				If(compare >= 0.123456789) // compare with literal
+					.Then(Debug.Log($"{compare.Value} is >= 0.123456789"))
+					.Else(Debug.Log($"{compare.Value} is < 0.123456789")),
+				If(compare >= compare) // compare with variable
+					.Then(Debug.Log($"{compare.Value} is >= 0.123456789"))
+					.Else(Debug.Log($"{compare.Value} is < 0.123456789")),
+				If(compare) // compare as boolean (non-zero => true)
+					.Then(Debug.Log($"{compare.Value} is true."))
+					.Else(Debug.Log($"{compare.Value} is false.")),
+				If(!truth) // compare boolean, negated
+					.Then(Debug.Log($"It's a fact. ({truth.Value})"))
+					.Else(Debug.Log($"It's an alternative fact!! ({truth.Value})")),
+				If(message == "We come in peace!")
+					.Then(Debug.Log("They come in peace!"))
+					.Else(Debug.Log("They'll leave in pieces .."))
+			);
+
+			// STRING CONCATENATION
+			var str1 = Var.Define("str1", "A long, long time ago ...");
+			var str2 = Var.Define("str2", " in a galaxy far, far away.");
+			var drei = Var.Define("three", 3);
+			var antisocial = Var.Define("truth", true);
+			On.Ready(
+				str1.Add(str2),
+				Debug.Log(str1),
+				str1.Add(" There were "),
+				str1.Add(drei),
+				str1.Add(" "),
+				str1.Add(antisocial),
+				str1.Add(" little piggies."),
+				Debug.Log(str1)
+			);
 		}
 	}
 }

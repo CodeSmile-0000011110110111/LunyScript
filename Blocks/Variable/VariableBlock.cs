@@ -129,6 +129,16 @@ namespace LunyScript.Blocks
 		public ActionBlock Dec() => Set(this - 1);
 		public ActionBlock Toggle() => Set(!this);
 
+		// Aliases
+		public ActionBlock Subtract(Variable value) => Sub(value);
+		public ActionBlock Subtract(VariableBlock value) => Sub(value);
+		public ActionBlock Multiply(Variable value) => Mul(value);
+		public ActionBlock Multiply(VariableBlock value) => Mul(value);
+		public ActionBlock Divide(Variable value) => Div(value);
+		public ActionBlock Divide(VariableBlock value) => Div(value);
+		public ActionBlock Increment() => Inc();
+		public ActionBlock Decrement() => Dec();
+
 		public override String ToString() => VarHandle != null ? VarHandle.Variable.ToString() : Variable.ToString();
 	}
 }

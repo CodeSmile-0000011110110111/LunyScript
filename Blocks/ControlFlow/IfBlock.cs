@@ -21,7 +21,7 @@ namespace LunyScript.Blocks
 			if (conditions == null || conditions.Length == 0)
 				throw new LunyScriptException("If() conditions cannot be null or empty");
 
-			var token = script.CreateBuilderToken("If", "If");
+			var token = script.CreateBuilderToken(nameof(IfBlock), "If");
 			token.AutoFinish = () => Build(script, token);
 			_branchesBuilder.Add((conditions, Array.Empty<ActionBlock>()));
 		}
@@ -63,6 +63,9 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
+			if (_branches == null)
+				return;
+
 			foreach (var (conditions, actions) in _branches)
 			{
 				if (ControlFlow.EvaluateAll(runtimeContext, conditions))

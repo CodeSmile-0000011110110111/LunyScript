@@ -15,6 +15,20 @@ namespace LunyScript.Blocks
 		{
 			_left = left ?? throw new ArgumentNullException(nameof(left));
 			_right = right ?? throw new ArgumentNullException(nameof(right));
+
+#if DEBUG || LUNYSCRIPT_DEBUG
+			var leftType = _left.Variable.Type;
+			// allow "string.Add(whatever)" for string concat, but everything else should fail
+			if (leftType != Variable.ValueType.String || GetType() != typeof(VariableAddBlock))
+			{
+				if (leftType != Variable.ValueType.Number)
+					throw new LunyScriptException($"Attempt to perform {ToString()} with: {_left.Variable}");
+
+				var rightType = _right.Variable.Type;
+				if (rightType != Variable.ValueType.Number)
+					throw new LunyScriptException($"Attempt to perform {ToString()} with: {_right.Variable}");
+			}
+#endif
 		}
 	}
 
@@ -23,12 +37,21 @@ namespace LunyScript.Blocks
 		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			get => _left.Variable + _right.Variable.Value;
+			get
+			{
+				var leftVar = _left.Variable;
+				if (leftVar.Type == Variable.ValueType.String)
+					return leftVar + _right.Variable.AsString();
+
+				return leftVar + _right.Variable.Value;
+			}
 		}
 		public static VariableAddBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
 		private VariableAddBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
+
+		public override String ToString() => "Add";
 	}
 
 	internal sealed class VariableSubtractBlock : VariableArithmeticBlock
@@ -42,6 +65,8 @@ namespace LunyScript.Blocks
 
 		private VariableSubtractBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
+
+		public override String ToString() => "Subtract";
 	}
 
 	internal sealed class VariableMultiplyBlock : VariableArithmeticBlock
@@ -55,6 +80,8 @@ namespace LunyScript.Blocks
 
 		private VariableMultiplyBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
+
+		public override String ToString() => "Multiply";
 	}
 
 	internal sealed class VariableDivideBlock : VariableArithmeticBlock
@@ -75,5 +102,7 @@ namespace LunyScript.Blocks
 
 		private VariableDivideBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
+
+		public override String ToString() => "Divide";
 	}
 }
