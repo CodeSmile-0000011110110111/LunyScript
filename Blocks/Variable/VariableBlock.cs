@@ -21,40 +21,40 @@ namespace LunyScript.Blocks
 		public static implicit operator VariableBlock(String value) => ConstantVariableBlock.Create(value);
 
 		// Arithmetic Operators
-		public static VariableBlock operator +(VariableBlock left, Variable right) =>
+		public static VariableArithmeticBlock operator +(VariableBlock left, Variable right) =>
 			VariableAddBlock.Create(left, ConstantVariableBlock.Create(right));
 
-		public static VariableBlock operator +(VariableBlock left, VariableBlock right) => VariableAddBlock.Create(left, right);
+		public static VariableArithmeticBlock operator +(VariableBlock left, VariableBlock right) => VariableAddBlock.Create(left, right);
 
-		public static VariableBlock operator +(Variable left, VariableBlock right) =>
+		public static VariableArithmeticBlock operator +(Variable left, VariableBlock right) =>
 			VariableAddBlock.Create(ConstantVariableBlock.Create(left), right);
 
-		public static VariableBlock operator -(VariableBlock left, Variable right) =>
+		public static VariableArithmeticBlock operator -(VariableBlock left, Variable right) =>
 			VariableSubtractBlock.Create(left, ConstantVariableBlock.Create(right));
 
-		public static VariableBlock operator -(VariableBlock left, VariableBlock right) => VariableSubtractBlock.Create(left, right);
+		public static VariableArithmeticBlock operator -(VariableBlock left, VariableBlock right) => VariableSubtractBlock.Create(left, right);
 
-		public static VariableBlock operator -(Variable left, VariableBlock right) =>
+		public static VariableArithmeticBlock operator -(Variable left, VariableBlock right) =>
 			VariableSubtractBlock.Create(ConstantVariableBlock.Create(left), right);
 
-		public static VariableBlock operator *(VariableBlock left, Variable right) =>
+		public static VariableArithmeticBlock operator *(VariableBlock left, Variable right) =>
 			VariableMultiplyBlock.Create(left, ConstantVariableBlock.Create(right));
 
-		public static VariableBlock operator *(VariableBlock left, VariableBlock right) => VariableMultiplyBlock.Create(left, right);
+		public static VariableArithmeticBlock operator *(VariableBlock left, VariableBlock right) => VariableMultiplyBlock.Create(left, right);
 
-		public static VariableBlock operator *(Variable left, VariableBlock right) =>
+		public static VariableArithmeticBlock operator *(Variable left, VariableBlock right) =>
 			VariableMultiplyBlock.Create(ConstantVariableBlock.Create(left), right);
 
-		public static VariableBlock operator /(VariableBlock left, Variable right) =>
+		public static VariableArithmeticBlock operator /(VariableBlock left, Variable right) =>
 			VariableDivideBlock.Create(left, ConstantVariableBlock.Create(right));
 
-		public static VariableBlock operator /(VariableBlock left, VariableBlock right) => VariableDivideBlock.Create(left, right);
+		public static VariableArithmeticBlock operator /(VariableBlock left, VariableBlock right) => VariableDivideBlock.Create(left, right);
 
-		public static VariableBlock operator /(Variable left, VariableBlock right) =>
+		public static VariableArithmeticBlock operator /(Variable left, VariableBlock right) =>
 			VariableDivideBlock.Create(ConstantVariableBlock.Create(left), right);
 
-		public static VariableBlock operator ++(VariableBlock a) => a + 1;
-		public static VariableBlock operator --(VariableBlock a) => a - 1;
+		public static VariableArithmeticBlock operator ++(VariableBlock a) => VariableAddBlock.Create(a, ConstantVariableBlock.Create(1));
+		public static VariableArithmeticBlock operator --(VariableBlock a) => VariableSubtractBlock.Create(a, ConstantVariableBlock.Create(1));
 
 		// Comparison Operators
 		public static VariableBlock operator ==(VariableBlock left, Variable right) => left is null

@@ -31,8 +31,6 @@ namespace LunyScript.Blocks
 			}
 #endif
 		}
-
-		public override String ToString() => $"{GetType().Name}({_left}, {_right})";
 	}
 
 	internal sealed class VariableIsEqualToBlock : VariableComparisonBlock
@@ -50,7 +48,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => "EqualTo";
+		public override String ToString() => $"({_left} == {_right})";
 	}
 
 	internal sealed class VariableIsNotEqualToBlock : VariableComparisonBlock
@@ -68,7 +66,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => "NotEqualTo";
+		public override String ToString() => $"({_left} != {_right})";
 	}
 
 	internal sealed class VariableIsGreaterThanBlock : VariableComparisonBlock
@@ -86,7 +84,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => "GreaterThan";
+		public override String ToString() => $"({_left} > {_right})";
 	}
 
 	internal sealed class VariableIsAtLeastBlock : VariableComparisonBlock
@@ -104,7 +102,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => "GreaterThanOrEqualTo";
+		public override String ToString() => $"({_left} >= {_right})";
 	}
 
 	internal sealed class VariableIsLessThanBlock : VariableComparisonBlock
@@ -122,7 +120,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => "LessThan";
+		public override String ToString() => $"({_left} < {_right})";
 	}
 
 	internal sealed class VariableIsAtMostBlock : VariableComparisonBlock
@@ -140,6 +138,6 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => "LessThanOrEqualTo";
+		public override String ToString() => $"({_left} <= {_right})";
 	}
 }

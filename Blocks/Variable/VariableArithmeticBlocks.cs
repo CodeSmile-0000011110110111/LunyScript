@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace LunyScript.Blocks
 {
-	internal abstract class VariableArithmeticBlock : VariableBlock
+	public abstract class VariableArithmeticBlock : VariableBlock
 	{
 		protected readonly VariableBlock _left;
 		protected readonly VariableBlock _right;
@@ -51,7 +51,7 @@ namespace LunyScript.Blocks
 		private VariableAddBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
 
-		public override String ToString() => "Add";
+		public override String ToString() => $"({_left} + {_right})";
 	}
 
 	internal sealed class VariableSubtractBlock : VariableArithmeticBlock
@@ -66,7 +66,7 @@ namespace LunyScript.Blocks
 		private VariableSubtractBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
 
-		public override String ToString() => "Subtract";
+		public override String ToString() => $"({_left} - {_right})";
 	}
 
 	internal sealed class VariableMultiplyBlock : VariableArithmeticBlock
@@ -81,7 +81,7 @@ namespace LunyScript.Blocks
 		private VariableMultiplyBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
 
-		public override String ToString() => "Multiply";
+		public override String ToString() => $"({_left} * {_right})";
 	}
 
 	internal sealed class VariableDivideBlock : VariableArithmeticBlock
@@ -103,6 +103,6 @@ namespace LunyScript.Blocks
 		private VariableDivideBlock(VariableBlock left, VariableBlock right)
 			: base(left, right) {}
 
-		public override String ToString() => "Divide";
+		public override String ToString() => $"({_left} / {_right})";
 	}
 }

@@ -99,6 +99,7 @@ namespace LunyScript.SmokeTests
 				Transform.SetLocalScale(scale),
 				scale.Add(0.0004)
 			);
+			//On.Ready(Transform.SetLocalScale(scale / scale + scale / scale));
 
 			// ARITHMETICS
 			var num1 = Var.Define("num1", 1);
@@ -137,6 +138,14 @@ namespace LunyScript.SmokeTests
 				result2.Set((num6 - three) / (three * (num6 - three))),
 				Debug.Log(result2) // prints '0.333333333333333' (same as above)
 			);
+
+			// STORED ARITHMETIC OPERATION
+			var v1 = Var.Define("v1", 2);
+			var v2 = Var.Define("v2", 3);
+			var sumOf1And2 = v1 + v2;
+			On.Ready(v1.Set(sumOf1And2), Debug.Log(v1)); // (2 + 3) = 5
+			On.Ready(v1.Set(sumOf1And2), Debug.Log(v1)); // (5 + 3) = 8
+			On.Ready(v1.Set(sumOf1And2), Debug.Log(v1)); // (8 + 3) = 11
 
 			// INCREMENT/DECREMENT
 			var increasing = Var.Define("inc");
