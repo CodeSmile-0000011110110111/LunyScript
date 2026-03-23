@@ -43,7 +43,7 @@ namespace LunyScript.SmokeTests
 
 			// alias for Prefab.Instantiate()
 			On.Ready(Object.Create("Another Axis")
-				.With(axisPrefabPath)
+				.From(axisPrefabPath)
 				.Parent(ParentName)
 				.LocalPosition(2.2, 0, -1.1)
 				.LocalScale(0.4)
@@ -68,7 +68,7 @@ namespace LunyScript.SmokeTests
 			CreateFinalObjectsWhenDestroyed();
 
 			var createCount = Var.Define("create count", 300);
-			On.Ready(For(createCount).Do(Object.Create("Placeholder").With("???").LocalPosition(1, 2.5, .5).LocalScale(.1)));
+			On.Ready(For(createCount).Do(Object.Create("Placeholder").From("???").LocalPosition(1, 2.5, .5).LocalScale(.1)));
 		}
 
 		private void IncrementallyDeleteSceneObjects(String prefabDoesNotExist, String axisPrefabPath)

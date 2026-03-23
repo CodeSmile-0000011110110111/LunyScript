@@ -42,7 +42,7 @@ namespace LunyScript.Api
 		internal PrefabBuilder(Script script) => _script = script;
 
 		public ObjectCreateBuilder<ObjectBuilderNameSet> Instantiate(String prefabName) =>
-			new ObjectBuilder(_script).Create(prefabName).With(prefabName);
+			new ObjectBuilder(_script).Create(prefabName).From(prefabName);
 	}
 
 	public static class ObjectBuilderExtensions
@@ -65,7 +65,7 @@ namespace LunyScript.Api
 		public static ObjectCreateBuilder<ObjectBuilderNameSet> AsQuad<T>(this ObjectCreateBuilder<T> b)
 			where T : struct, IObjectBuilderNameSet => b.WithPrimitive(LunyPrimitiveType.Quad);
 
-		public static ObjectCreateBuilder<ObjectBuilderNameSet> With<T>(this ObjectCreateBuilder<T> b, String prefabName)
+		public static ObjectCreateBuilder<ObjectBuilderNameSet> From<T>(this ObjectCreateBuilder<T> b, String prefabName)
 			where T : struct, IObjectBuilderNameSet => new(b.Options with { CreateMode = ObjectCreationMode.Prefab, AssetName = prefabName });
 
 		public static ObjectCreateBuilder<ObjectBuilderNameSet> Clone<T>(this ObjectCreateBuilder<T> b, String existingName)

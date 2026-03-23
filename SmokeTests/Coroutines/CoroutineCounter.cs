@@ -24,10 +24,10 @@ namespace LunyScript.SmokeTests
 			Coroutine("Counter: spawn")
 				.Every(cubletSpawnRate)
 				.Frames()
-				.WhenElapsed(Object.Create("Cublet").With(cubletPath).LocalPosition(1, 1, 1).Parent(cubletContainer));
+				.WhenElapsed(Object.Create("Cublet").From(cubletPath).LocalPosition(1, 1, 1).Parent(cubletContainer));
 
 			var createMegaCublet = Object.Create("Mega-Cublet")
-				.With(cubletPath)
+				.From(cubletPath)
 				.LocalScale(0.3)
 				.LocalPosition(1, 1, 1)
 				.LocalRotation(-45, -45, -45);
