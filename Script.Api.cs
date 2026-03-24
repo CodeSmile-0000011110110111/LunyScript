@@ -10,9 +10,9 @@ namespace LunyScript
 	public abstract partial class Script
 	{
 		/// <summary>
-		/// Reference to proxy for engine object.
+		/// Reference to script's engine object.
 		/// </summary>
-		[MaybeNull] protected ILunyObject Owner => _runtimeContext?.LunyObject;
+		[MaybeNull] protected ILunyObject Self => _runtimeContext?.LunyObject;
 
 		[NotNull] public String Name => GetType().Name;
 
@@ -24,11 +24,11 @@ namespace LunyScript
 		/// <summary>
 		/// Global variables
 		/// </summary>
-		[NotNull] public VarAccessor GVar => _globalVariables;
+		[NotNull] public ScriptVariables GVar => _globalVariableses;
 		/// <summary>
 		/// Instance variables (unique per script/object)
 		/// </summary>
-		[NotNull] public VarAccessor Var => _instanceVariables;
+		[NotNull] public ScriptVariables Var => _instanceVariableses;
 
 		public ComponentApi Component => new(this);
 		public DebugApi Debug => new(this);

@@ -33,8 +33,8 @@ namespace LunyScript
 		private IScriptRuntimeContext _runtimeContext;
 		private List<BuilderToken> _pendingBuilders;
 		private HashSet<BuilderToken> _finishedBuilders;
-		private VarAccessor _globalVariables;
-		private VarAccessor _instanceVariables;
+		private ScriptVariables _globalVariableses;
+		private ScriptVariables _instanceVariableses;
 
 		internal ScriptRuntimeContext RuntimeContext => _runtimeContext as ScriptRuntimeContext;
 		internal ScriptEventScheduler Scheduler => RuntimeContext.Scheduler;
@@ -42,8 +42,8 @@ namespace LunyScript
 		internal void Initialize(IScriptRuntimeContext runtimeContext)
 		{
 			_runtimeContext = runtimeContext ?? throw new ArgumentNullException(nameof(runtimeContext));
-			_globalVariables = new VarAccessor(_runtimeContext.GlobalVariables);
-			_instanceVariables = new VarAccessor(_runtimeContext.LocalVariables);
+			_globalVariableses = new ScriptVariables(_runtimeContext.GlobalVariables);
+			_instanceVariableses = new ScriptVariables(_runtimeContext.LocalVariables);
 		}
 
 		~Script() => LunyTraceLogger.LogInfoFinalized(this);

@@ -7,7 +7,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Block that holds a reference to a script variable.
 	/// </summary>
-	public sealed class TableVariableBlock : VariableBlock
+	public sealed class ScriptVariableBlock : VariableBlock
 	{
 		private readonly Table.VarHandle _handle;
 
@@ -22,9 +22,9 @@ namespace LunyScript.Blocks
 			get => _handle.Variable;
 		}
 
-		internal static TableVariableBlock Create(Table.VarHandle handle) => new(handle);
+		internal static ScriptVariableBlock Create(Table.VarHandle handle) => new(handle);
 
-		private TableVariableBlock(Table.VarHandle handle) => _handle = handle;
+		private ScriptVariableBlock(Table.VarHandle handle) => _handle = handle;
 
 		/// <summary>
 		/// Used to set a variable's value during Build() time.
