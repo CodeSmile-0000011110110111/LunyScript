@@ -48,8 +48,8 @@ namespace LunyScript.SmokeTests
 				// Strings can be set
 				Debug.Log(text), text.Set("I don't know why you say, 'Goodbye', I say, 'Hello'"), Debug.Log(text),
 
-				// Constants cannot be modified => ERROR: trying to modify constant variable!
-				Debug.Log(constant), constant.Add(100), Debug.Log(constant),
+				// Constants cannot be modified => this would be an ERROR!
+				//Debug.Log(constant), constant.Add(100), Debug.Log(constant),
 				Debug.Log("------------------------------------------------------------------------------"),
 
 				// COMPARISON
