@@ -163,19 +163,20 @@ namespace LunyScript.SmokeTests
 			);
 
 			// COMPARISONS
-			var compare = Var.Define("compare1", 0.123456789);
+			var compare1 = Var.Define("compare1", 0.123456789);
+			var compare2 = Var.Define("compare2", 0.1111111111);
 			var truth = Var.Define("another fact", true);
 			var message = Var.Define("peace", "We come in peace!");
 			On.Ready(
-				If(compare >= 0.123456789) // compare with literal
-					.Then(Debug.Log($"{compare.Value} is >= 0.123456789"))
-					.Else(Debug.Log($"{compare.Value} is < 0.123456789")),
-				If(compare >= compare) // compare with variable
-					.Then(Debug.Log($"{compare.Value} is >= 0.123456789"))
-					.Else(Debug.Log($"{compare.Value} is < 0.123456789")),
-				If(compare) // compare as boolean (non-zero => true)
-					.Then(Debug.Log($"{compare.Value} is true."))
-					.Else(Debug.Log($"{compare.Value} is false.")),
+				If(compare1 >= 0.123456789) // compare with literal
+					.Then(Debug.Log($"{compare1.Value} is >= 0.123456789"))
+					.Else(Debug.Log($"{compare1.Value} is < 0.123456789")),
+				If(compare1 >= compare2) // compare with variable
+					.Then(Debug.Log($"{compare1.Value} is >= 0.123456789"))
+					.Else(Debug.Log($"{compare1.Value} is < 0.123456789")),
+				If(compare1) // compare as boolean (non-zero => true)
+					.Then(Debug.Log($"{compare1.Value} is true."))
+					.Else(Debug.Log($"{compare1.Value} is false.")),
 				If(!truth) // compare boolean, negated
 					.Then(Debug.Log($"It's a fact. ({truth.Value})"))
 					.Else(Debug.Log($"It's an alternative fact!! ({truth.Value})")),
