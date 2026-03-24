@@ -1,4 +1,4 @@
-using Luny;
+﻿using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using LunyScript.Blocks.PhysicsEvent;
@@ -12,149 +12,242 @@ namespace LunyScript.Events
 	/// </summary>
 	internal sealed class ScriptEventScheduler
 	{
-		private static readonly Int32 s_ObjectEventCount = Enum.GetNames(typeof(LunyObjectEvent)).Length;
-		private static readonly Int32 s_SceneEventCount = Enum.GetNames(typeof(LunySceneEvent)).Length;
-		private static readonly Int32 s_CollisionEventCount = Enum.GetNames(typeof(LunyCollisionEvent)).Length;
-		private static readonly Int32 s_TriggerEventCount = Enum.GetNames(typeof(LunyTriggerEvent)).Length;
-		private static readonly Int32 s_Collision2DEventCount = Enum.GetNames(typeof(LunyCollision2DEvent)).Length;
-		private static readonly Int32 s_Trigger2DEventCount = Enum.GetNames(typeof(LunyTrigger2DEvent)).Length;
-		private static readonly Int32 s_InputActionEventCount = Enum.GetNames(typeof(LunyInputActionPhase)).Length;
+		// ── Category registry ─────────────────────────────────────────────
+		private static readonly Dictionary<Type, Int32> s_CategoryOffsets = new();
+		private static readonly Dictionary<Type, Int32> s_CategoryCounts = new();
+		private static Int32 s_NextOffset;
 
-		// Fast array-based storage for lifecycle events (hot path)
-		private List<ISequenceBlock>[] _objectSequences;
-		private List<ISequenceBlock>[] _sceneSequences;
-		private List<ISequenceBlock>[] _collisionSequences;
-		private List<ISequenceBlock>[] _triggerSequences;
-		private List<ISequenceBlock>[] _collision2DSequences;
-		private List<ISequenceBlock>[] _trigger2DSequences;
+		// ── Cached per-category offsets for allocation-free hot-path gets ─
+		private static readonly Int32 s_ObjectEventOffset;
+		private static readonly Int32 s_SceneEventOffset;
+		private static readonly Int32 s_CollisionEventOffset;
+		private static readonly Int32 s_TriggerEventOffset;
+		private static readonly Int32 s_Collision2DEventOffset;
+		private static readonly Int32 s_Trigger2DEventOffset;
+		private static readonly Int32 s_InputActionPhaseOffset;
+
+		// ── Instance storage ─────────────────────────────────────────────
+		// Generic flat store: key = categoryOffset + (Int32)enumValue
+		private Dictionary<Int32, List<ISequenceBlock>> _sequences;
+
+		// Input-action fast runtime store: action name → sequences per phase
+		// References are duplicated from _sequences at setup time
 		private Dictionary<String, List<InputEventSequenceBlock>[]> _inputActionSequences;
 
-		private static ISequenceBlock SchedulePhysicsSequence(ref List<ISequenceBlock>[] sequencesRef, ISequenceBlock sequence,
-			Int32 eventIndex, Int32 eventCount)
+		/// <summary>
+		/// Registers an event enum category with the scheduler, assigning it a contiguous
+		/// block of integer keys sized to the number of enum members.
+		/// Must be called before scheduling or querying sequences for the given enum.
+		/// </summary>
+		private static void RegisterEventCategory<TEvent>() where TEvent : Enum
 		{
-			if (sequence != null && !sequence.IsEmpty)
-			{
-				sequencesRef ??= new List<ISequenceBlock>[eventCount];
-				sequencesRef[eventIndex] ??= new List<ISequenceBlock>();
-				sequencesRef[eventIndex].Add(sequence);
-			}
+			var type = typeof(TEvent);
+			if (s_CategoryOffsets.ContainsKey(type))
+				return;
 
+			var count = Enum.GetNames(type).Length;
+			s_CategoryOffsets[type] = s_NextOffset;
+			s_CategoryCounts[type] = count;
+			s_NextOffset += count;
+		}
+
+		static ScriptEventScheduler()
+		{
+			RegisterEventCategory<LunyObjectEvent>();
+			s_ObjectEventOffset = s_CategoryOffsets[typeof(LunyObjectEvent)];
+
+			RegisterEventCategory<LunySceneEvent>();
+			s_SceneEventOffset = s_CategoryOffsets[typeof(LunySceneEvent)];
+
+			RegisterEventCategory<LunyCollisionEvent>();
+			s_CollisionEventOffset = s_CategoryOffsets[typeof(LunyCollisionEvent)];
+
+			RegisterEventCategory<LunyTriggerEvent>();
+			s_TriggerEventOffset = s_CategoryOffsets[typeof(LunyTriggerEvent)];
+
+			RegisterEventCategory<LunyCollision2DEvent>();
+			s_Collision2DEventOffset = s_CategoryOffsets[typeof(LunyCollision2DEvent)];
+
+			RegisterEventCategory<LunyTrigger2DEvent>();
+			s_Trigger2DEventOffset = s_CategoryOffsets[typeof(LunyTrigger2DEvent)];
+
+			RegisterEventCategory<LunyInputActionPhase>();
+			s_InputActionPhaseOffset = s_CategoryOffsets[typeof(LunyInputActionPhase)];
+		}
+
+		// ── Flat-store helpers ────────────────────────────────────────────
+
+		private void AddToFlatStore(Int32 key, ISequenceBlock sequence)
+		{
+			_sequences ??= new Dictionary<Int32, List<ISequenceBlock>>();
+			if (!_sequences.TryGetValue(key, out var list))
+				_sequences[key] = list = new List<ISequenceBlock>();
+			list.Add(sequence);
+		}
+
+		private IEnumerable<ISequenceBlock> GetFromFlatStore(Int32 key) =>
+			_sequences != null && _sequences.TryGetValue(key, out var list) ? list : null;
+
+		// ── Scheduling ────────────────────────────────────────────────────
+
+		internal ISequenceBlock ScheduleObjectEventSequence(ActionBlock[] blocks, LunyObjectEvent objectEvent)
+		{
+			var sequence = SequenceBlock.TryCreate(blocks);
+			if (sequence == null)
+				return sequence;
+
+			AddToFlatStore(s_ObjectEventOffset + (Int32)objectEvent, sequence);
 			return sequence;
 		}
 
-		private static ISequenceBlock ScheduleSequence(ref List<ISequenceBlock>[] sequencesRef, ISequenceBlock sequence,
-			Int32 eventIndex, Int32 eventCount)
+		internal ISequenceBlock ScheduleSceneEventSequence(ActionBlock[] blocks, LunySceneEvent sceneEvent)
 		{
-			if (sequence != null && !sequence.IsEmpty)
-			{
-				sequencesRef ??= new List<ISequenceBlock>[eventCount];
-				sequencesRef[eventIndex] ??= new List<ISequenceBlock>();
-				sequencesRef[eventIndex].Add(sequence);
-			}
+			var sequence = SequenceBlock.TryCreate(blocks);
+			if (sequence == null)
+				return sequence;
 
+			AddToFlatStore(s_SceneEventOffset + (Int32)sceneEvent, sequence);
 			return sequence;
 		}
 
-		// Scheduling
-		internal ISequenceBlock ScheduleObjectEventSequence(ActionBlock[] blocks, LunyObjectEvent objectEvent) =>
-			ScheduleSequence(ref _objectSequences, SequenceBlock.TryCreate(blocks), (Int32)objectEvent, s_ObjectEventCount);
+		internal ISequenceBlock ScheduleCollisionEventSequence(CollisionSequenceBlock sequence, LunyCollisionEvent collisionEvent)
+		{
+			if (sequence == null)
+				return sequence;
 
-		internal ISequenceBlock ScheduleSceneEventSequence(ActionBlock[] blocks, LunySceneEvent sceneEvent) =>
-			ScheduleSequence(ref _sceneSequences, SequenceBlock.TryCreate(blocks), (Int32)sceneEvent, s_SceneEventCount);
+			AddToFlatStore(s_CollisionEventOffset + (Int32)collisionEvent, sequence);
+			return sequence;
+		}
 
-		internal ISequenceBlock ScheduleCollisionEventSequence(CollisionSequenceBlock blocks, LunyCollisionEvent collisionEvent) =>
-			SchedulePhysicsSequence(ref _collisionSequences, blocks, (Int32)collisionEvent, s_CollisionEventCount);
+		internal ISequenceBlock ScheduleTriggerEventSequence(TriggerSequenceBlock sequence, LunyTriggerEvent triggerEvent)
+		{
+			if (sequence == null)
+				return sequence;
 
-		internal ISequenceBlock ScheduleTriggerEventSequence(TriggerSequenceBlock blocks, LunyTriggerEvent triggerEvent) =>
-			SchedulePhysicsSequence(ref _triggerSequences, blocks, (Int32)triggerEvent, s_TriggerEventCount);
+			AddToFlatStore(s_TriggerEventOffset + (Int32)triggerEvent, sequence);
+			return sequence;
+		}
+
+		internal ISequenceBlock ScheduleCollision2DEventSequence(CollisionSequenceBlock sequence, LunyCollision2DEvent collisionEvent)
+		{
+			if (sequence == null)
+				return sequence;
+
+			AddToFlatStore(s_Collision2DEventOffset + (Int32)collisionEvent, sequence);
+			return sequence;
+		}
+
+		internal ISequenceBlock ScheduleTrigger2DEventSequence(TriggerSequenceBlock sequence, LunyTrigger2DEvent triggerEvent)
+		{
+			if (sequence == null)
+				return sequence;
+
+			AddToFlatStore(s_Trigger2DEventOffset + (Int32)triggerEvent, sequence);
+			return sequence;
+		}
 
 		internal ISequenceBlock ScheduleInputActionEventSequence(String actionName, LunyInputActionPhase phase,
 			InputEventSequenceBlock sequence)
 		{
+			if (sequence == null)
+				return null;
+
+			// 1. Generic flat store (diagnostics / tree view)
+			AddToFlatStore(s_InputActionPhaseOffset + (Int32)phase, sequence);
+
+			// 2. Fast runtime store (hot path) — references duplicated from flat store
+			var phaseCount = s_CategoryCounts[typeof(LunyInputActionPhase)];
+			_inputActionSequences ??= new Dictionary<String, List<InputEventSequenceBlock>[]>();
+			if (!_inputActionSequences.TryGetValue(actionName, out var byPhase))
+				_inputActionSequences[actionName] = byPhase = new List<InputEventSequenceBlock>[phaseCount];
+
+			byPhase[(Int32)phase] ??= new List<InputEventSequenceBlock>();
+			byPhase[(Int32)phase].Add(sequence);
+			return sequence;
+		}
+
+		/// <summary>
+		/// Schedules a sequence for a custom/extension event category.
+		/// </summary>
+		public ISequenceBlock ScheduleGeneric<TEvent>(TEvent eventMethod, ISequenceBlock sequence) where TEvent : Enum
+		{
 			if (sequence == null || sequence.IsEmpty)
 				return null;
 
-			_inputActionSequences ??= new Dictionary<String, List<InputEventSequenceBlock>[]>();
-			if (!_inputActionSequences.TryGetValue(actionName, out var sequences))
-				_inputActionSequences[actionName] = sequences = new List<InputEventSequenceBlock>[s_InputActionEventCount];
-
-			var eventIndex = (Int32)phase;
-			sequences[eventIndex] ??= new List<InputEventSequenceBlock>();
-			sequences[eventIndex].Add(sequence);
+			// Intentional boxing — acceptable at setup time for extension categories
+			var key = s_CategoryOffsets[typeof(TEvent)] + (Int32)(Object)eventMethod;
+			AddToFlatStore(key, sequence);
 			return sequence;
 		}
 
 		internal void Unschedule(LunyObjectEvent objectEvent)
 		{
-			if (_objectSequences == null)
+			if (_sequences == null)
 				return;
 
-			_objectSequences[(Int32)objectEvent] = null;
+			var key = s_ObjectEventOffset + (Int32)objectEvent;
+			if (_sequences.TryGetValue(key, out var list))
+				list.Clear();
 		}
 
-		// Get scheduled sequences
+		// ── Get scheduled sequences ───────────────────────────────────────
+
 		internal IEnumerable<ISequenceBlock> GetObjectEventSequences(LunyObjectEvent objectEvent) =>
-			IsObserving((Int32)objectEvent, ref _objectSequences) ? _objectSequences[(Int32)objectEvent] : null;
+			GetFromFlatStore(s_ObjectEventOffset + (Int32)objectEvent);
 
 		internal IEnumerable<ISequenceBlock> GetSceneEventSequences(LunySceneEvent sceneEvent) =>
-			IsObserving((Int32)sceneEvent, ref _sceneSequences)
-				? _sceneSequences[(Int32)sceneEvent]
-				: null;
+			GetFromFlatStore(s_SceneEventOffset + (Int32)sceneEvent);
 
 		internal IEnumerable<ISequenceBlock> GetCollisionEventSequences(LunyCollisionEvent collisionEvent) =>
-			IsObserving((Int32)collisionEvent, ref _collisionSequences)
-				? _collisionSequences[(Int32)collisionEvent]
-				: null;
+			GetFromFlatStore(s_CollisionEventOffset + (Int32)collisionEvent);
 
 		internal IEnumerable<ISequenceBlock> GetTriggerEventSequences(LunyTriggerEvent triggerEvent) =>
-			IsObserving((Int32)triggerEvent, ref _triggerSequences)
-				? _triggerSequences[(Int32)triggerEvent]
-				: null;
+			GetFromFlatStore(s_TriggerEventOffset + (Int32)triggerEvent);
 
 		internal IEnumerable<ISequenceBlock> GetCollision2DEventSequences(LunyCollision2DEvent collisionEvent) =>
-			IsObserving((Int32)collisionEvent, ref _collisionSequences)
-				? _collisionSequences[(Int32)collisionEvent]
-				: null;
+			GetFromFlatStore(s_Collision2DEventOffset + (Int32)collisionEvent);
 
 		internal IEnumerable<ISequenceBlock> GetTrigger2DEventSequences(LunyTrigger2DEvent triggerEvent) =>
-			IsObserving((Int32)triggerEvent, ref _triggerSequences)
-				? _triggerSequences[(Int32)triggerEvent]
-				: null;
+			GetFromFlatStore(s_Trigger2DEventOffset + (Int32)triggerEvent);
 
-		internal IEnumerable<InputEventSequenceBlock> GetInputActionEventSequences(String actionName, LunyInputActionPhase phase) =>
-			IsObservingInputAction(actionName, phase, out var sequences) ? sequences : null;
-
-		// Observing queries
-		private Boolean IsObserving(Int32 eventIndex, ref List<ISequenceBlock>[] sequencesRef) =>
-			sequencesRef != null && sequencesRef[eventIndex] != null && sequencesRef[eventIndex].Count > 0;
-
-		private Boolean IsObservingInputAction(String actionName, LunyInputActionPhase phase, out List<InputEventSequenceBlock> sequencesRef)
+		internal IEnumerable<InputEventSequenceBlock> GetInputActionEventSequences(String actionName, LunyInputActionPhase phase)
 		{
-			sequencesRef = _inputActionSequences.TryGetValue(actionName, out var sequences) ? sequences[(Int32)phase] : null;
-			return sequencesRef != null && sequencesRef.Count > 0;
+			if (_inputActionSequences == null || !_inputActionSequences.TryGetValue(actionName, out var byPhase))
+				return null;
+
+			var list = byPhase[(Int32)phase];
+			return list != null ? list : null;
 		}
+
+		/// <summary>
+		/// Returns all scheduled sequences for the given event method.
+		/// Intended for diagnostics and tree-view tooling; boxing is acceptable here.
+		/// </summary>
+		internal IEnumerable<ISequenceBlock> GetSequences<TEvent>(TEvent eventMethod) where TEvent : Enum =>
+			GetFromFlatStore(s_CategoryOffsets[typeof(TEvent)] + (Int32)(Object)eventMethod);
+
+		// ── Observing queries ─────────────────────────────────────────────
 
 		internal Boolean IsObservingAnyOf(Type enumType)
 		{
-			switch (enumType)
+			if (_sequences == null)
+				return false;
+
+			// LunyInputActionEvent is a class used as the event arg type;
+			// its scheduling is keyed by LunyInputActionPhase so check the fast store directly
+			if (enumType == typeof(LunyInputActionEvent))
+				return _inputActionSequences != null;
+
+			if (!s_CategoryOffsets.TryGetValue(enumType, out var offset))
+				throw new ArgumentOutOfRangeException(nameof(enumType), enumType?.ToString());
+
+			var count = s_CategoryCounts[enumType];
+			for (var i = 0; i < count; i++)
 			{
-				case not null when enumType == typeof(LunyObjectEvent):
-					return _objectSequences != null;
-				case not null when enumType == typeof(LunySceneEvent):
-					return _sceneSequences != null;
-				case not null when enumType == typeof(LunyCollisionEvent):
-					return _collisionSequences != null;
-				case not null when enumType == typeof(LunyTriggerEvent):
-					return _triggerSequences != null;
-				case not null when enumType == typeof(LunyCollision2DEvent):
-					return _collision2DSequences != null;
-				case not null when enumType == typeof(LunyTrigger2DEvent):
-					return _trigger2DSequences != null;
-				case not null when enumType == typeof(LunyInputActionEvent):
-					return _inputActionSequences != null;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(enumType), enumType?.ToString());
+				if (_sequences.ContainsKey(offset + i))
+					return true;
 			}
+			return false;
 		}
 
 		internal void Shutdown() => GC.SuppressFinalize(this);

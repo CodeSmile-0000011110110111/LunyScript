@@ -218,19 +218,19 @@ namespace LunyScript.Events
 			private void OnDisabled() => RunObjectEventSequences(LunyObjectEvent.OnDisabled);
 
 			private void OnCollisionEntered(LunyCollision collision) =>
-				RunCollisionEventSequences(LunyCollisionEvent.OnCollisionEntered, collision);
+				RunCollisionEventSequences(LunyCollisionEvent.OnCollisionStarted, collision);
 
 			private void OnCollisionExited(LunyCollision collision) =>
-				RunCollisionEventSequences(LunyCollisionEvent.OnCollisionExited, collision);
+				RunCollisionEventSequences(LunyCollisionEvent.OnCollisionEnded, collision);
 
 			private void OnCollisionUpdate(LunyCollision collision) =>
-				RunCollisionEventSequences(LunyCollisionEvent.OnCollisionUpdate, collision);
+				RunCollisionEventSequences(LunyCollisionEvent.OnCollisionTouching, collision);
 
 			private void OnTriggerEntered(LunyCollider collider) => RunTriggerEventSequences(LunyTriggerEvent.OnTriggerEntered, collider);
 
 			private void OnTriggerExited(LunyCollider collider) => RunTriggerEventSequences(LunyTriggerEvent.OnTriggerExited, collider);
 
-			private void OnTriggerUpdate(LunyCollider collider) => RunTriggerEventSequences(LunyTriggerEvent.OnTriggerUpdate, collider);
+			private void OnTriggerUpdate(LunyCollider collider) => RunTriggerEventSequences(LunyTriggerEvent.OnTriggerOverlapping, collider);
 
 			private void OnCollisionEntered2D(LunyCollision2D collision) =>
 				RunCollision2DEventSequences(LunyCollision2DEvent.OnCollisionEntered2D, collision);

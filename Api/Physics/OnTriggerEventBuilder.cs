@@ -165,7 +165,7 @@ namespace LunyScript.Api
 			if (options.ContinuingBlocks != null)
 			{
 				var block = new TriggerSequenceBlock(options.ContinuingBlocks, guards, predicates);
-				script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerUpdate);
+				script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerOverlapping);
 			}
 
 			if (options.EndedBlocks != null)

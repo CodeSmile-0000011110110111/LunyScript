@@ -159,19 +159,19 @@ namespace LunyScript.Api
 			if (options.StartedBlocks != null)
 			{
 				var block = new CollisionSequenceBlock(options.StartedBlocks, guards, predicates);
-				script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionEntered);
+				script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionStarted);
 			}
 
 			if (options.ContinuingBlocks != null)
 			{
 				var block = new CollisionSequenceBlock(options.ContinuingBlocks, guards, predicates);
-				script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionUpdate);
+				script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionTouching);
 			}
 
 			if (options.EndedBlocks != null)
 			{
 				var block = new CollisionSequenceBlock(options.EndedBlocks, guards, predicates);
-				script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionExited);
+				script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionEnded);
 			}
 
 			script.MarkBuilderTokenFinished(token);
