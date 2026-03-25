@@ -36,8 +36,9 @@ namespace LunyScript
 		private ScriptVariables _globalVariableses;
 		private ScriptVariables _instanceVariableses;
 
-		internal ScriptRuntimeContext RuntimeContext => _runtimeContext as ScriptRuntimeContext;
-		internal ScriptEventScheduler Scheduler => RuntimeContext.Scheduler;
+		internal IScriptRuntimeContext RuntimeContext => _runtimeContext;
+		internal ScriptEventScheduler Scheduler => ((ScriptRuntimeContext)_runtimeContext).Scheduler;
+		internal ScriptCoroutineRunner Coroutines => ((ScriptRuntimeContext)_runtimeContext).Coroutines;
 
 		internal void Initialize(IScriptRuntimeContext runtimeContext)
 		{

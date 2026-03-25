@@ -39,7 +39,7 @@ namespace LunyScript.Api
 		{
 			ThrowIfAllSequencesEmpty(script, token, options);
 
-			var block = script.RuntimeContext.Coroutines.Register(options);
+			var block = script.Coroutines.Register(options);
 			script.MarkBuilderTokenFinished(token);
 			return block;
 		}

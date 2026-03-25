@@ -27,13 +27,11 @@ namespace LunyScript
 		//Int32 LoopCount { get; }
 	}
 
-	internal interface IScriptContextInternal {}
-
 	/// <summary>
 	/// Runtime context for a LunyScript instance operating on a specific object.
 	/// Contains the script metadata, object reference, variables, and registered sequences.
 	/// </summary>
-	internal sealed class ScriptRuntimeContext : IScriptRuntimeContext, IScriptContextInternal
+	internal sealed class ScriptRuntimeContext : IScriptRuntimeContext
 	{
 		private static readonly ITable s_GlobalVariables = new Table();
 
@@ -95,7 +93,6 @@ namespace LunyScript
 		/// Event scheduler for managing sequences across all event types.
 		/// </summary>
 		internal ScriptEventScheduler Scheduler => _scheduler ??= _isShuttingDown ? null : new ScriptEventScheduler();
-
 		/// <summary>
 		/// Coroutine runner for managing timers and coroutines.
 		/// </summary>

@@ -226,6 +226,45 @@ namespace LunyScript.Events
 		internal IEnumerable<ISequenceBlock> GetSequences<TEvent>(TEvent eventMethod) where TEvent : Enum =>
 			GetFromFlatStore(s_CategoryOffsets[typeof(TEvent)] + (Int32)(Object)eventMethod);
 
+		/// <summary>
+		/// Returns all scheduled sequences for the given enum category type and enum ordinal.
+		/// Returns null when no sequences are registered for that key.
+		/// Intended for diagnostics and tree-view tooling; boxing is acceptable here.
+		/// </summary>
+		internal IEnumerable<ISequenceBlock> GetSequences(Type enumType, Int32 enumValue)
+		{
+			if (!s_CategoryOffsets.TryGetValue(enumType, out var offset))
+				return null;
+
+			return GetFromFlatStore(offset + enumValue);
+		}
+
+		// ── Diagnostics accessors ────────────────────────────────────────
+
+		/// <summary>
+		/// All registered event enum categories, excluding <see cref="LunyInputActionPhase"/>.
+		/// Input-action events are enumerated separately via <see cref="GetInputActionNames"/>.
+		/// Intended for diagnostics and tree-view tooling only.
+		/// </summary>
+		internal static IEnumerable<Type> RegisteredCategories
+		{
+			get
+			{
+				foreach (var type in s_CategoryOffsets.Keys)
+				{
+					if (type != typeof(LunyInputActionPhase))
+						yield return type;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Returns all action names that have at least one scheduled input-action sequence.
+		/// Intended for diagnostics and tree-view tooling only.
+		/// </summary>
+		internal IEnumerable<String> GetInputActionNames() =>
+			_inputActionSequences != null ? (IEnumerable<String>)_inputActionSequences.Keys : Array.Empty<String>();
+
 		// ── Observing queries ─────────────────────────────────────────────
 
 		internal Boolean IsObservingAnyOf(Type enumType)
