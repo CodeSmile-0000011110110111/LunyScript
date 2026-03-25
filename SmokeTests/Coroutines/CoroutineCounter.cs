@@ -60,7 +60,7 @@ namespace LunyScript.SmokeTests
 				.Minutes()
 				.WhenElapsed(For(80).Do(destroyMegaCublet));
 
-			var tictoc = Var.Define("tictoc", false);
+			var tictoc = Var.Define("tictoc", true);
 			var tic = Coroutine("Timer: tic-toc tic");
 			var toc = Coroutine("Timer: tic-toc toc");
 			var ticBlock = tic.In(1).Seconds().WhenStarted(Object.Enable("Tic")).WhenElapsed(Object.Disable("Tic"));
@@ -74,10 +74,9 @@ namespace LunyScript.SmokeTests
 				.Every(1)
 				.Seconds()
 				.WhenElapsed(
-					If(tictoc == 0)
-						.Then(tictoc.Inc(), tocBlock.Start())
-						.ElseIf(tictoc == 1)
-						.Then(tictoc.Dec(), ticBlock.Start())
+					If(tictoc)
+						.Then(tictoc.Toggle(), tocBlock.Start())
+						.Else(tictoc.Toggle(), ticBlock.Start())
 				);
 
 			On.Ready(tocBlock.Stop());
