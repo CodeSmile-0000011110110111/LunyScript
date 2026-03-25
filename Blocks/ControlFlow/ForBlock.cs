@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 
 namespace LunyScript.Blocks
 {
 	/// <summary>
 	/// For loop execution block with 1-based indexing and safety limits.
 	/// </summary>
-	internal sealed class ForBlock : ActionBlock
+	internal sealed class ForBlock : ActionBlock, IBlockContainer
 	{
 		private readonly VariableBlock _limit;
 		private readonly VariableBlock _step;
@@ -19,6 +20,14 @@ namespace LunyScript.Blocks
 			_step = step;
 			_actions = actions;
 		}
+
+		// ── IBlockContainer ───────────────────────────────────────────────
+
+		Int32 IBlockContainer.ActionSequenceCount => 1;
+		String IBlockContainer.GetActionSequenceName(Int32 index) => "Do";
+		IEnumerable<IScriptBlock> IBlockContainer.GetActionSequence(Int32 index) => _actions;
+
+		// ── Execute ───────────────────────────────────────────────────────
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{

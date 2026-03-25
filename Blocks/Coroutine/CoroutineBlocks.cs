@@ -50,7 +50,7 @@ namespace LunyScript.Blocks
 	/// Wraps a CoroutineInstance as a block for use in script sequences.
 	/// Provides control methods (Start, Stop, Pause, Resume) as action blocks.
 	/// </summary>
-	internal class CoroutineBlock : ActionBlock, ICoroutineBlock
+	internal class CoroutineBlock : ActionBlock, ICoroutineBlock, IBlockContainer
 	{
 		protected readonly Coroutine _coroutine;
 

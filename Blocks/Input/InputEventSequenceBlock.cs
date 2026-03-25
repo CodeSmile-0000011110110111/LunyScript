@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace LunyScript.Blocks
 {
 	/// <summary>
-	/// Abstract base for physics event sequence blocks (collision and trigger).
+	/// Abstract base for input event sequences.
 	/// Holds child blocks and context-free guards (e.g. cooldown).
 	/// Guards are evaluated first (no event args needed); concrete subclasses evaluate their typed predicates second.
 	/// All guards and predicates must pass (AND logic) for child blocks to execute.

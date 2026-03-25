@@ -7,7 +7,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Builder for constructing 'If' blocks with 'ElseIf' and 'Else' branches.
 	/// </summary>
-	public sealed class IfBlock : ActionBlock
+	public sealed class IfBlock : ActionBlock, IBlockContainer
 	{
 		// builder-phase state (freed after Build)
 		private List<(ConditionBlock[] conditions, ActionBlock[] actions)> _branchesBuilder = new();
@@ -15,6 +15,11 @@ namespace LunyScript.Blocks
 		// runtime-phase state (used in Execute)
 		private (ConditionBlock[] conditions, ActionBlock[] actions)[] _branches;
 		private ActionBlock[] _elseBlocks;
+
+		// ── IBlockContainer ───────────────────────────────────────────────
+
+		Int32 IBlockContainer.ConditionSequenceCount => _branches.Length;
+		Int32 IBlockContainer.ActionSequenceCount => _branches.Length + (_elseBlocks != null ? 1 : 0);
 
 		internal IfBlock(Script script, ConditionBlock[] conditions)
 		{
@@ -25,6 +30,15 @@ namespace LunyScript.Blocks
 			token.AutoFinish = () => Build(script, token);
 			_branchesBuilder.Add((conditions, Array.Empty<ActionBlock>()));
 		}
+
+		String IBlockContainer.GetConditionSequenceName(Int32 index) => index == 0 ? "If" : "ElseIf";
+		String IBlockContainer.GetActionSequenceName(Int32 index) => index < _branches.Length ? "Then" : "Else";
+
+		IEnumerable<IScriptBlock> IBlockContainer.GetConditionSequence(Int32 index) =>
+			index < _branches.Length ? _branches[index].conditions : Array.Empty<IScriptBlock>();
+
+		IEnumerable<IScriptBlock> IBlockContainer.GetActionSequence(Int32 index) =>
+			index < _branches.Length ? _branches[index].actions : _elseBlocks ?? Array.Empty<ActionBlock>();
 
 		public IfBlock Then(params ActionBlock[] actions)
 		{
@@ -56,10 +70,15 @@ namespace LunyScript.Blocks
 
 		private void Build(Script script, BuilderToken token)
 		{
+			if (_branchesBuilder.Count == 0)
+				throw new LunyScriptException($"{nameof(IfBlock)} has no branches");
+
 			_branches = _branchesBuilder.ToArray();
 			_branchesBuilder = null;
 			script.MarkBuilderTokenFinished(token);
 		}
+
+		// ── Execute ───────────────────────────────────────────────────────
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{

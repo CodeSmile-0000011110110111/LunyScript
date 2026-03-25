@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
+
 namespace LunyScript.Blocks
 {
 	/// <summary>
 	/// While loop execution block with safety limits.
 	/// </summary>
-	internal sealed class WhileBlock : ActionBlock
+	internal sealed class WhileBlock : ActionBlock, IBlockContainer
 	{
 		private readonly ConditionBlock[] _conditions;
 		private readonly ActionBlock[] _actions;
@@ -15,6 +18,17 @@ namespace LunyScript.Blocks
 			_conditions = conditions;
 			_actions = actions;
 		}
+
+		// ── IBlockContainer ───────────────────────────────────────────────
+
+		Int32 IBlockContainer.ConditionSequenceCount => 1;
+		Int32 IBlockContainer.ActionSequenceCount => 1;
+		String IBlockContainer.GetConditionSequenceName(Int32 index) => "While";
+		String IBlockContainer.GetActionSequenceName(Int32 index) => "Do";
+		IEnumerable<IScriptBlock> IBlockContainer.GetConditionSequence(Int32 index) => _conditions;
+		IEnumerable<IScriptBlock> IBlockContainer.GetActionSequence(Int32 index) => _actions;
+
+		// ── Execute ───────────────────────────────────────────────────────
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
