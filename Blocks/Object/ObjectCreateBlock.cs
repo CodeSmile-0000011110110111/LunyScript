@@ -3,6 +3,7 @@ using Luny.Engine.Bridge;
 using Luny.Engine.Services;
 using LunyScript.Api;
 using System;
+using System.Text;
 
 namespace LunyScript.Blocks
 {
@@ -32,6 +33,40 @@ namespace LunyScript.Blocks
 			LocalRotation = options.LocalRotation;
 			LocalScale = options.LocalScale;
 		}
+
+		public override String ToString()
+		{
+			var sb = new StringBuilder("(");
+			sb.Append('\"');
+			sb.Append(Name);
+			sb.Append('\"');
+			if (Parent != null && Parent.Value != null)
+			{
+				sb.Append(", parent:");
+				sb.Append(Parent.Value);
+			}
+			if (LocalPosition.HasValue && LocalPosition.Value != LunyVector3.Zero)
+			{
+				sb.Append(", position:");
+				sb.Append(LocalPosition.Value);
+			}
+			if (LocalRotation.HasValue)
+			{
+				var eulerAngles = LocalRotation.Value.EulerAngles;
+				if (eulerAngles != LunyVector3.Zero)
+				{
+					sb.Append(", rotation:");
+					sb.Append(eulerAngles);
+				}
+			}
+			if (LocalScale.HasValue && LocalScale.Value != LunyVector3.One)
+			{
+				sb.Append(", scale:");
+				sb.Append(LocalScale.Value);
+			}
+			sb.Append(")");
+			return sb.ToString();
+		}
 	}
 
 	internal sealed class ObjectCreateEmptyBlock : ObjectCreateBlock
@@ -43,6 +78,8 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => Object.CreateEmpty(Name, Parent?.Value, LocalPosition,
 			LocalRotation, LocalScale.HasValue ? LocalScale.Value : LunyVector3.One);
+
+		public override String ToString() => $"Object.CreateEmpty{base.ToString()}";
 	}
 
 	internal sealed class ObjectCreateCubeBlock : ObjectCreateBlock

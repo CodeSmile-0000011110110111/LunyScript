@@ -11,7 +11,7 @@ namespace LunyScript.Diagnostics
 		private readonly ActionBlock _block;
 
 		public Int32 FrameStamp { get; set; }
-		public String DisplayString => _block.ToString();
+		public String DisplayString => _block?.ToString();
 
 		public ScriptBlockState(ActionBlock block) => _block = block;
 
