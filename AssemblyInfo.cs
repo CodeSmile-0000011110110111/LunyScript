@@ -5,6 +5,7 @@
 [assembly:InternalsVisibleTo("LunyScript.Godot")]
 [assembly:InternalsVisibleTo("LunyScript.GodotEditor")]
 [assembly:InternalsVisibleTo("LunyScript.Unity")]
+[assembly:InternalsVisibleTo("LunyScript.Unity.UI")]
 [assembly:InternalsVisibleTo("LunyScript.UnityEditor")]
 
 // reserved namespaces for future C# engine implementations

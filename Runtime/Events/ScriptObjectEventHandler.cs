@@ -186,8 +186,6 @@ namespace LunyScript.Events
 				if (objectEvent == LunyObjectEvent.OnCreated || objectEvent == LunyObjectEvent.OnReady)
 				{
 					// event never fires again for this object
-					_runtimeContext.Scheduler.Unschedule(objectEvent);
-
 					if (objectEvent == LunyObjectEvent.OnCreated)
 						lunyObject.OnCreated -= OnCreated;
 					else if (objectEvent == LunyObjectEvent.OnReady)

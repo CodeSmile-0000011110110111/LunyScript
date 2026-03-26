@@ -34,6 +34,25 @@ namespace LunyScript.Events
 		// References are duplicated from _sequences at setup time
 		private Dictionary<String, List<InputEventSequenceBlock>[]> _inputActionSequences;
 
+		// ── Diagnostics accessors ────────────────────────────────────────
+
+		/// <summary>
+		/// All registered event enum categories, excluding <see cref="LunyInputActionPhase"/>.
+		/// Input-action events are enumerated separately via <see cref="GetInputActionNames"/>.
+		/// Intended for diagnostics and tree-view tooling only.
+		/// </summary>
+		internal static IEnumerable<Type> RegisteredCategories
+		{
+			get
+			{
+				foreach (var type in s_CategoryOffsets.Keys)
+				{
+					if (type != typeof(LunyInputActionPhase))
+						yield return type;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Registers an event enum category with the scheduler, assigning it a contiguous
 		/// block of integer keys sized to the number of enum members.
@@ -180,16 +199,6 @@ namespace LunyScript.Events
 			return sequence;
 		}
 
-		internal void Unschedule(LunyObjectEvent objectEvent)
-		{
-			if (_sequences == null)
-				return;
-
-			var key = s_ObjectEventOffset + (Int32)objectEvent;
-			if (_sequences.TryGetValue(key, out var list))
-				list.Clear();
-		}
-
 		// ── Get scheduled sequences ───────────────────────────────────────
 
 		internal IEnumerable<ISequenceBlock> GetObjectEventSequences(LunyObjectEvent objectEvent) =>
@@ -239,31 +248,12 @@ namespace LunyScript.Events
 			return GetFromFlatStore(offset + enumValue);
 		}
 
-		// ── Diagnostics accessors ────────────────────────────────────────
-
-		/// <summary>
-		/// All registered event enum categories, excluding <see cref="LunyInputActionPhase"/>.
-		/// Input-action events are enumerated separately via <see cref="GetInputActionNames"/>.
-		/// Intended for diagnostics and tree-view tooling only.
-		/// </summary>
-		internal static IEnumerable<Type> RegisteredCategories
-		{
-			get
-			{
-				foreach (var type in s_CategoryOffsets.Keys)
-				{
-					if (type != typeof(LunyInputActionPhase))
-						yield return type;
-				}
-			}
-		}
-
 		/// <summary>
 		/// Returns all action names that have at least one scheduled input-action sequence.
 		/// Intended for diagnostics and tree-view tooling only.
 		/// </summary>
 		internal IEnumerable<String> GetInputActionNames() =>
-			_inputActionSequences != null ? (IEnumerable<String>)_inputActionSequences.Keys : Array.Empty<String>();
+			_inputActionSequences != null ? _inputActionSequences.Keys : Array.Empty<String>();
 
 		// ── Observing queries ─────────────────────────────────────────────
 

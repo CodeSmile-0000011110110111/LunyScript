@@ -17,21 +17,18 @@ namespace LunyScript.Api
 		/// <summary>
 		/// Runs once the moment when the object is instantiated.
 		/// </summary>
-		public ISequenceBlock Created(params ActionBlock[] blocks) =>
-			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnCreated);
+		public ISequenceBlock Created(params ActionBlock[] blocks) => Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnCreated);
 
 		/// <summary>
 		/// Runs every time the object's state changes to 'enabled' (visible and participating).
 		/// Runs directly after 'Created' if the object was just instantiated.
 		/// </summary>
-		public ISequenceBlock Enabled(params ActionBlock[] blocks) =>
-			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnEnabled);
+		public ISequenceBlock Enabled(params ActionBlock[] blocks) => Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnEnabled);
 
 		/// <summary>
 		/// Runs once per lifetime just before the object starts processing frame/time-step events.
 		/// </summary>
-		public ISequenceBlock Ready(params ActionBlock[] blocks) =>
-			Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnReady);
+		public ISequenceBlock Ready(params ActionBlock[] blocks) => Scheduler?.ScheduleObjectEventSequence(blocks, LunyObjectEvent.OnReady);
 
 		/// <summary>
 		/// Runs every time the object's state changes to 'disabled' (not visible, not participating).
