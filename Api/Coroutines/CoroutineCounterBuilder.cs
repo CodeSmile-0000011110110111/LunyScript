@@ -58,19 +58,8 @@ namespace LunyScript.Api
 		public static CoroutineCounterBuilder<T> WhenProcessed<T>(this CoroutineCounterBuilder<T> b, params ActionBlock[] processBlocks)
 			where T : struct, ICoroutineCounterWhen
 		{
-			if (b.Options.ProcessMode == Coroutine.Process.Heartbeat)
-			{
-				BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnHeartbeat);
-				return ActionBlock.IsNullOrEmpty(processBlocks) ? b : NextBuilder(b, b.Options with { OnHeartbeat = processBlocks });
-			}
-
-			if (b.Options.ProcessMode == Coroutine.Process.FrameUpdate)
-			{
-				BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnFrameUpdate);
-				return ActionBlock.IsNullOrEmpty(processBlocks) ? b : NextBuilder(b, b.Options with { OnFrameUpdate = processBlocks });
-			}
-
-			throw new ArgumentOutOfRangeException(nameof(b.Options.ProcessMode), b.Options.ProcessMode.ToString());
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnProcess);
+			return ActionBlock.IsNullOrEmpty(processBlocks) ? b : NextBuilder(b, b.Options with { OnProcess = processBlocks });
 		}
 
 		private static CoroutineCounterBuilder<T> NextBuilder<T>(CoroutineCounterBuilder<T> b, CoroutineOptions options)

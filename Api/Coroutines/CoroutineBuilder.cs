@@ -46,7 +46,7 @@ namespace LunyScript.Api
 
 		private static void ThrowIfAllSequencesEmpty(Script script, BuilderToken token, in CoroutineOptions options)
 		{
-			if (options.OnFrameUpdate == null && options.OnHeartbeat == null && options.OnElapsed == null &&
+ 		if (options.OnProcess == null && options.OnElapsed == null &&
 			    options.OnStarted == null && options.OnStopped == null && options.OnPaused == null && options.OnResumed == null)
 				throw new LunyScriptException($"{token.Type} '{options.Name}' has no blocks. Add blocks or remove coroutine. Script: {script}");
 		}

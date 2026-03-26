@@ -130,31 +130,15 @@ namespace LunyScript.Coroutines
 		}
 
 		/// <summary>
-		/// Updates coroutine heartbeat state. Returns events that occurred.
+		/// Advances the coroutine by one step. Returns events that occurred.
 		/// </summary>
-		internal Events ProcessHeartbeat()
+		internal Events Process()
 		{
 			StartIfNew();
 			if (IsRunning && !IsElapsed)
 			{
-				_pendingEvents |= Events.Heartbeat;
-				if (ConsumeHeartbeat())
-					SetElapsedOrRestart();
-			}
-
-			return GetAndClearPendingEvents();
-		}
-
-		/// <summary>
-		/// Updates coroutine frame update state. Returns events that occurred.
-		/// </summary>
-		internal Events ProcessFrameUpdate()
-		{
-			StartIfNew();
-			if (IsRunning && !IsElapsed)
-			{
-				_pendingEvents |= Events.FrameUpdate;
-				if (ConsumeFrameUpdate())
+				_pendingEvents |= Events.Process;
+				if (ConsumeProcess())
 					SetElapsedOrRestart();
 			}
 
@@ -183,8 +167,7 @@ namespace LunyScript.Coroutines
 		protected virtual void OnResumed() {}
 		protected virtual void OnElapsed() {}
 
-		protected virtual Boolean ConsumeFrameUpdate() => false;
-		protected virtual Boolean ConsumeHeartbeat() => false;
+		protected virtual Boolean ConsumeProcess() => false;
 		public override String ToString() => $"{GetType().Name}({Name}, {State})";
 
 		/// <summary>
@@ -224,17 +207,16 @@ namespace LunyScript.Coroutines
 			None = 0,
 			Started = 1 << 0,
 			Resumed = 1 << 1,
-			Heartbeat = 1 << 2,
-			FrameUpdate = 1 << 3,
+			Process = 1 << 2,
 			Paused = 1 << 4,
 			Stopped = 1 << 5,
 			Elapsed = 1 << 6,
 		}
 
 		/// <summary>
-		/// For Counter coroutines: Whether it counts frames or heartbeats.
+		/// Whether the coroutine advances on frame updates or heartbeats.
 		/// </summary>
-		internal enum Process
+		internal enum UpdateMode
 		{
 			FrameUpdate,
 			Heartbeat,

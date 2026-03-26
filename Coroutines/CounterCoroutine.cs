@@ -30,8 +30,7 @@ namespace LunyScript.Coroutines
 
 		//protected override void OnPaused() {} // no need to pause counter: Consume* methods won't be called when paused
 		//protected override void OnResumed() {}
-		protected override Boolean ConsumeHeartbeat() => IncrementCounter();
-		protected override Boolean ConsumeFrameUpdate() => IncrementCounter();
+		protected override Boolean ConsumeProcess() => IncrementCounter();
 
 		private Boolean IncrementCounter()
 		{

@@ -1,11 +1,9 @@
 ﻿using Luny;
-using Luny.Engine.Services;
 using LunyScript.Api;
 using LunyScript.Blocks;
 using LunyScript.Coroutines;
 using System;
 using System.Collections.Generic;
-using CoroutineBlock = LunyScript.Blocks.CoroutineBlock;
 
 namespace LunyScript
 {
@@ -16,11 +14,9 @@ namespace LunyScript
 	/// </summary>
 	internal sealed class ScriptCoroutineRunner
 	{
-		private readonly Dictionary<String, CoroutineEntry> _registry = new();
-		private readonly List<CoroutineEntry> _heartbeatOnly = new();
-		private readonly List<CoroutineEntry> _frameOnly = new();
-
-		private ILunyTimeService _time;
+		private readonly Dictionary<String, CoroutineBlock> _registry = new();
+		private readonly List<CoroutineBlock> _heartbeatOnly = new();
+		private readonly List<CoroutineBlock> _frameOnly = new();
 
 		/// <summary>
 		/// Gets the count of registered coroutines.
@@ -32,18 +28,7 @@ namespace LunyScript
 		/// </summary>
 		internal IEnumerable<String> Names => _registry.Keys;
 
-		private static Boolean ShouldProcess(in CoroutineEntry entry, Int64 tickCount, Coroutine.Process mode)
-		{
-			if (!entry.IsTimeSliced)
-				return true;
-
-			if (entry.ProcessMode != mode)
-				return true; // slicing applies only to the designated mode
-
-			return (tickCount - entry.TimeSliceOffset) % entry.TimeSliceInterval == 0;
-		}
-
-		public ScriptCoroutineRunner(ScriptRuntimeContext runtimeContext) => _time = LunyEngine.Instance.Time;
+		public ScriptCoroutineRunner(ScriptRuntimeContext runtimeContext) {}
 
 		/// <summary>
 		/// Registers a new coroutine. Throws if name already exists.
@@ -53,27 +38,26 @@ namespace LunyScript
 			if (_registry.ContainsKey(options.Name))
 				throw new InvalidOperationException($"Coroutine '{options.Name}' already exists. Duplicate names are not allowed.");
 
-			var coroutine = Coroutine.Create(options);
-			var entry = new CoroutineEntry(coroutine, options);
-			_registry[options.Name] = entry;
+			var block = CoroutineBlock.Create(options);
+			_registry[options.Name] = block;
 
 			switch (options.ProcessMode)
 			{
-				case Coroutine.Process.Heartbeat:
-					_heartbeatOnly.Add(entry);
+				case Coroutine.UpdateMode.Heartbeat:
+					_heartbeatOnly.Add(block);
 					break;
-				case Coroutine.Process.FrameUpdate:
-					_frameOnly.Add(entry);
+				case Coroutine.UpdateMode.FrameUpdate:
+					_frameOnly.Add(block);
 					break;
 			}
 
-			return CoroutineBlock.Create(coroutine);
+			return block;
 		}
 
 		/// <summary>
 		/// Gets an existing coroutine by name. Returns null if not found.
 		/// </summary>
-		internal Coroutine Get(String name) => _registry.TryGetValue(name, out var entry) ? entry.Coroutine : null;
+		internal Coroutine Get(String name) => _registry.TryGetValue(name, out var block) ? block.Coroutine : null;
 
 		/// <summary>
 		/// Checks if a coroutine with the given name exists.
@@ -81,110 +65,35 @@ namespace LunyScript
 		internal Boolean Exists(String name) => _registry.ContainsKey(name);
 
 		/// <summary>
-		/// Called on fixed step (heartbeat). Advances all running coroutines with OnHeartbeat sequences.
-		/// Also advances count-based (heartbeat) coroutines.
-		/// Should be called from LunyScriptRunner AFTER non-coroutine updates.
+		/// Called on fixed step (heartbeat). Advances all heartbeat coroutines.
 		/// </summary>
 		internal void OnHeartbeat(ScriptRuntimeContext runtimeContext)
 		{
-			var heartbeatCount = _time?.HeartbeatCount ?? 0;
 			for (var i = 0; i < _heartbeatOnly.Count; i++)
-			{
-				var entry = _heartbeatOnly[i];
-				if (ShouldProcess(entry, heartbeatCount, Coroutine.Process.Heartbeat))
-					CoroutineEntry.RunSequences(entry, entry.Coroutine.ProcessHeartbeat(), runtimeContext);
-			}
+				_heartbeatOnly[i].Execute(runtimeContext);
 		}
 
 		/// <summary>
-		/// Called on frame update. Advances all running time-based coroutines.
-		/// Should be called from LunyScriptRunner AFTER non-coroutine updates.
+		/// Called on frame update. Advances all frame-update coroutines.
 		/// </summary>
 		internal void OnFrameUpdate(ScriptRuntimeContext runtimeContext)
 		{
-			var frameCount = _time?.FrameCount ?? 0;
 			for (var i = 0; i < _frameOnly.Count; i++)
-			{
-				var entry = _frameOnly[i];
-				if (ShouldProcess(entry, frameCount, Coroutine.Process.FrameUpdate))
-					CoroutineEntry.RunSequences(entry, entry.Coroutine.ProcessFrameUpdate(), runtimeContext);
-			}
+				_frameOnly[i].Execute(runtimeContext);
 		}
 
 		~ScriptCoroutineRunner() => LunyTraceLogger.LogInfoFinalized(this);
 
 		public void Shutdown()
 		{
-			foreach (var entry in _registry.Values)
-				entry.Coroutine.OnObjectDestroyed();
+			foreach (var block in _registry.Values)
+				block.Coroutine.OnObjectDestroyed();
 
-			// TODO: shouldn't clear, move collections to registry (same with Scheduler)
 			_registry.Clear();
 			_heartbeatOnly.Clear();
 			_frameOnly.Clear();
-			_time = null;
 
 			GC.SuppressFinalize(this);
-		}
-
-		private sealed class CoroutineEntry
-		{
-			private const Int32 OnStarted = 0;
-			private const Int32 OnResumed = 1;
-			private const Int32 OnHeartbeat = 2;
-			private const Int32 OnFrameUpdate = 3;
-			private const Int32 OnPaused = 4;
-			private const Int32 OnStopped = 5;
-			private const Int32 OnElapsed = 6;
-
-			public readonly Coroutine Coroutine;
-			public readonly SequenceBlock[] Sequences;
-			public readonly Int32 TimeSliceInterval;
-			public readonly Int32 TimeSliceOffset;
-			public readonly Coroutine.Process ProcessMode;
-			public Boolean IsTimeSliced => TimeSliceInterval > 0;
-
-			public static void RunSequences(in CoroutineEntry entry, Coroutine.Events events, ScriptRuntimeContext context)
-			{
-				if (events == Coroutine.Events.None)
-					return;
-
-				// intentional order in which events should fire within a single frame
-				if (events.Has(Coroutine.Events.Started))
-					LunyScriptRunner.Run(entry.Sequences[OnStarted], context);
-				if (events.Has(Coroutine.Events.Resumed))
-					LunyScriptRunner.Run(entry.Sequences[OnResumed], context);
-
-				if (events.Has(Coroutine.Events.Heartbeat))
-					LunyScriptRunner.Run(entry.Sequences[OnHeartbeat], context);
-				if (events.Has(Coroutine.Events.FrameUpdate))
-					LunyScriptRunner.Run(entry.Sequences[OnFrameUpdate], context);
-
-				if (events.Has(Coroutine.Events.Elapsed))
-					LunyScriptRunner.Run(entry.Sequences[OnElapsed], context);
-
-				if (events.Has(Coroutine.Events.Paused))
-					LunyScriptRunner.Run(entry.Sequences[OnPaused], context);
-				if (events.Has(Coroutine.Events.Stopped))
-					LunyScriptRunner.Run(entry.Sequences[OnStopped], context);
-			}
-
-			public CoroutineEntry(Coroutine coroutine, in CoroutineOptions options)
-			{
-				Coroutine = coroutine;
-				TimeSliceInterval = options.TimeSliceInterval;
-				TimeSliceOffset = options.TimeSliceOffset;
-				ProcessMode = options.ProcessMode;
-
-				Sequences = new SequenceBlock[7];
-				Sequences[OnStarted] = SequenceBlock.TryCreate(options.OnStarted);
-				Sequences[OnResumed] = SequenceBlock.TryCreate(options.OnResumed);
-				Sequences[OnHeartbeat] = SequenceBlock.TryCreate(options.OnHeartbeat);
-				Sequences[OnFrameUpdate] = SequenceBlock.TryCreate(options.OnFrameUpdate);
-				Sequences[OnPaused] = SequenceBlock.TryCreate(options.OnPaused);
-				Sequences[OnStopped] = SequenceBlock.TryCreate(options.OnStopped);
-				Sequences[OnElapsed] = SequenceBlock.TryCreate(options.OnElapsed);
-			}
 		}
 	}
 }

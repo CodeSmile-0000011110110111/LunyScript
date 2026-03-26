@@ -3,13 +3,6 @@ using System.Collections.Generic;
 
 namespace LunyScript.Blocks
 {
-	public interface ISequenceBlock
-	{
-		ScriptBlockId Id { get; }
-		IReadOnlyList<ActionBlock> Blocks { get; }
-		Boolean IsEmpty => Blocks.Count == 0;
-	}
-
 	/// <summary>
 	/// Abstract base for sequence blocks that contain child action blocks.
 	/// </summary>

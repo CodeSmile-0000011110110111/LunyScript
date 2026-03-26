@@ -50,11 +50,10 @@ namespace LunyScript.Api
 	{
 		/// <summary>Counts frame updates.</summary>
 		public static CoroutineCounterBuilder<CoroutineCounterBuilderUnitSet> Frames<T>(this CoroutineTimerBuilder<T> b)
-			where T : struct, ICoroutineTimerAmountSet => new(b.Options with { IsCounter = true, ProcessMode = Coroutine.Process.FrameUpdate });
-
+			where T : struct, ICoroutineTimerAmountSet => new(b.Options with { IsCounter = true, ProcessMode = Coroutine.UpdateMode.FrameUpdate });
 		/// <summary>Counts heartbeat (fixed step) updates.</summary>
 		public static CoroutineCounterBuilder<CoroutineCounterBuilderUnitSet> Heartbeats<T>(this CoroutineTimerBuilder<T> b)
-			where T : struct, ICoroutineTimerAmountSet => new(b.Options with { IsCounter = true, ProcessMode = Coroutine.Process.Heartbeat });
+			where T : struct, ICoroutineTimerAmountSet => new(b.Options with { IsCounter = true, ProcessMode = Coroutine.UpdateMode.Heartbeat });
 	}
 
 	public static class TimerBuilderWhenExtensions
@@ -95,8 +94,8 @@ namespace LunyScript.Api
 		public static CoroutineTimerBuilder<T> WhenProcessed<T>(this CoroutineTimerBuilder<T> b, params ActionBlock[] processBlocks)
 			where T : struct, ICoroutineTimerWhen
 		{
-			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnFrameUpdate);
-			return ActionBlock.IsNullOrEmpty(processBlocks) ? b : NextBuilder(b, b.Options with { OnFrameUpdate = processBlocks });
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnProcess);
+			return ActionBlock.IsNullOrEmpty(processBlocks) ? b : NextBuilder(b, b.Options with { OnProcess = processBlocks });
 		}
 
 		private static CoroutineTimerBuilder<T> NextBuilder<T>(CoroutineTimerBuilder<T> b, CoroutineOptions options)

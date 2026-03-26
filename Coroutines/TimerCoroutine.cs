@@ -37,14 +37,12 @@ namespace LunyScript.Coroutines
 		//protected override void OnPaused() {} // no need to pause timer: Consume* methods won't be called when paused
 		//protected override void OnResumed() {}
 
-		protected override Boolean ConsumeFrameUpdate()
+		protected override Boolean ConsumeProcess()
 		{
 			_elapsedThisTick = false;
 			_timer.Tick(LunyEngine.Instance.Time.DeltaTime);
 			return _elapsedThisTick;
 		}
-
-		protected override Boolean ConsumeHeartbeat() => throw new NotImplementedException(nameof(ConsumeHeartbeat));
 
 		public override String ToString()
 		{
