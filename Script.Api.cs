@@ -141,16 +141,16 @@ namespace LunyScript
 		/// <summary>
 		/// Logical AND: Returns true if all conditions are true. Requires at least two conditions.
 		/// </summary>
-		public ConditionBlock AND(params ConditionBlock[] conditions) => AndBlock.Create(conditions);
+		public ConditionBlock AND(params ConditionBlock[] conditions) => AndOperatorBlock.Create(conditions);
 
 		/// <summary>
 		/// Logical OR: Returns true if at least one condition is true. Requires at least two conditions.
 		/// </summary>
-		public ConditionBlock OR(params ConditionBlock[] conditions) => OrBlock.Create(conditions);
+		public ConditionBlock OR(params ConditionBlock[] conditions) => OrOperatorBlock.Create(conditions);
 
 		/// <summary>
 		/// Logical NOT: Returns the inverse of the condition.
 		/// </summary>
-		public ConditionBlock NOT(ConditionBlock condition) => NotBlock.Create(condition);
+		public ConditionBlock NOT(ConditionBlock condition) => NegationOperatorBlock.Create(condition);
 	}
 }

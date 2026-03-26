@@ -7,11 +7,11 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class ConditionBlock : ScriptBlock
 	{
-		public static ConditionBlock operator !(ConditionBlock block) => NotBlock.Create(block);
+		public static ConditionBlock operator !(ConditionBlock block) => NegationOperatorBlock.Create(block);
 
-		public static ConditionBlock operator &(ConditionBlock left, ConditionBlock right) => AndBlock.Create(left, right);
+		public static ConditionBlock operator &(ConditionBlock left, ConditionBlock right) => AndOperatorBlock.Create(left, right);
 
-		public static ConditionBlock operator |(ConditionBlock left, ConditionBlock right) => OrBlock.Create(left, right);
+		public static ConditionBlock operator |(ConditionBlock left, ConditionBlock right) => OrOperatorBlock.Create(left, right);
 
 		// Return false to force always calling operators & | which then return a new block instance
 		public static Boolean operator true(ConditionBlock _) => false;

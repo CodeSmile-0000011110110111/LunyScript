@@ -7,9 +7,9 @@ using System.Runtime.CompilerServices;
 namespace LunyScript.Blocks
 {
 	/// <summary>
-	/// Logical AND condition block.
+	/// Logical OR condition block.
 	/// </summary>
-	internal sealed class AndBlock : VariableBlock, IBlockContainer
+	internal sealed class OrOperatorBlock : VariableBlock, ILogicalOperatorBlock, IBlockContainer
 	{
 		private readonly ConditionBlock[] _conditions;
 
@@ -19,24 +19,24 @@ namespace LunyScript.Blocks
 			get => Evaluate(null);
 		}
 
-		public static AndBlock Create(params ConditionBlock[] conditions) => new(conditions);
+		public static OrOperatorBlock Create(params ConditionBlock[] conditions) => new(conditions);
 
-		private AndBlock(ConditionBlock[] conditions)
+		private OrOperatorBlock(ConditionBlock[] conditions)
 		{
 			_conditions = conditions ?? throw new ArgumentNullException(nameof(conditions));
 
 #if DEBUG || LUNYSCRIPT_DEBUG
 			if (_conditions.Length <= 1)
-				LunyLogger.LogWarning($"{nameof(AndBlock)} with {_conditions.Length} condition(s) can be removed");
+				LunyLogger.LogWarning($"{nameof(OrOperatorBlock)} with {_conditions.Length} condition(s) can be removed");
 			if (_conditions.All(condition => condition == null))
-				throw new ArgumentNullException(nameof(conditions), $"{nameof(AndBlock)}: Conditions cannot be null");
+				throw new ArgumentNullException(nameof(conditions), $"{nameof(OrOperatorBlock)}: Conditions cannot be null");
 #endif
 		}
 
 		// ── IBlockContainer ───────────────────────────────────────────────
 
 		Int32 IBlockContainer.ConditionSequenceCount => 1;
-		String IBlockContainer.GetConditionSequenceName(Int32 index) => "AND";
+		String IBlockContainer.GetConditionSequenceName(Int32 index) => "OR";
 		IEnumerable<IScriptBlock> IBlockContainer.GetConditionSequence(Int32 index) => _conditions;
 
 		// ── Evaluate ──────────────────────────────────────────────────────
@@ -46,11 +46,11 @@ namespace LunyScript.Blocks
 		{
 			foreach (var condition in _conditions)
 			{
-				if (!condition.Evaluate(runtimeContext))
-					return false;
+				if (condition.Evaluate(runtimeContext))
+					return true;
 			}
 
-			return true;
+			return false;
 		}
 	}
 }

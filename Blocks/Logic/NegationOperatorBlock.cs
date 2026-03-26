@@ -7,7 +7,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Logical NOT condition block.
 	/// </summary>
-	internal sealed class NotBlock : VariableBlock
+	internal sealed class NegationOperatorBlock : VariableBlock, ILogicalOperatorBlock
 	{
 		private readonly ConditionBlock _condition;
 
@@ -19,12 +19,12 @@ namespace LunyScript.Blocks
 			get => Evaluate(null);
 		}
 
-		public static NotBlock Create(ConditionBlock condition) => new(condition);
+		public static NegationOperatorBlock Create(ConditionBlock condition) => new(condition);
 
-		private NotBlock(ConditionBlock condition)
+		private NegationOperatorBlock(ConditionBlock condition)
 		{
 			if (condition == null)
-				throw new ArgumentNullException(nameof(condition), $"{nameof(NotBlock)}: Condition cannot be null");
+				throw new ArgumentNullException(nameof(condition), $"{nameof(NegationOperatorBlock)}: Condition cannot be null");
 
 			_condition = condition;
 		}
@@ -32,5 +32,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
 			_condition == null || !_condition.Evaluate(runtimeContext);
+
+		public override String ToString() => $"NOT({_condition})";
 	}
 }

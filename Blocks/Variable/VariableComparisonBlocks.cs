@@ -48,7 +48,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => $"({_left} == {_right})";
+		public override String ToString() => $"{_left} == {_right}";
 	}
 
 	internal sealed class VariableIsNotEqualToBlock : VariableComparisonBlock
@@ -66,7 +66,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => $"({_left} != {_right})";
+		public override String ToString() => $"{_left} != {_right}";
 	}
 
 	internal sealed class VariableIsGreaterThanBlock : VariableComparisonBlock
@@ -84,7 +84,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => $"({_left} > {_right})";
+		public override String ToString() => $"{_left} > {_right}";
 	}
 
 	internal sealed class VariableIsAtLeastBlock : VariableComparisonBlock
@@ -102,7 +102,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => $"({_left} >= {_right})";
+		public override String ToString() => $"{_left} >= {_right}";
 	}
 
 	internal sealed class VariableIsLessThanBlock : VariableComparisonBlock
@@ -120,7 +120,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => $"({_left} < {_right})";
+		public override String ToString() => $"{_left} < {_right}";
 	}
 
 	internal sealed class VariableIsAtMostBlock : VariableComparisonBlock
@@ -138,6 +138,6 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => $"({_left} <= {_right})";
+		public override String ToString() => $"{_left} <= {_right}";
 	}
 }

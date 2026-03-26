@@ -20,6 +20,6 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => _handle.Variable = _value.Variable;
 
-		public override String ToString() => $"{_handle} = {_value}";
+		public override String ToString() => $"\"{_handle.Name}\" = {_value}";
 	}
 }

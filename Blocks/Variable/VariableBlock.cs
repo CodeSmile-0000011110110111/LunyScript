@@ -91,7 +91,7 @@ namespace LunyScript.Blocks
 
 		public static VariableBlock operator <=(VariableBlock left, VariableBlock right) => VariableIsAtMostBlock.Create(left, right);
 
-		public static VariableBlock operator !(VariableBlock operand) => NotBlock.Create(operand);
+		public static VariableBlock operator !(VariableBlock operand) => NegationOperatorBlock.Create(operand);
 
 		internal Double Value => Variable.AsDouble();
 
@@ -139,6 +139,6 @@ namespace LunyScript.Blocks
 		public ActionBlock Increment() => Inc();
 		public ActionBlock Decrement() => Dec();
 
-		public override String ToString() => VarHandle != null ? VarHandle.Variable.ToString() : Variable.ToString();
+		public override String ToString() => VarHandle != null ? $"\"{VarHandle.Name}\"" : $"\"{Variable.Name}\"";
 	}
 }

@@ -14,7 +14,6 @@ namespace LunyScript.Blocks
 	{
 		public ScriptBlockId Id { get; }
 		public IReadOnlyList<ActionBlock> Blocks { get; }
-		public Boolean IsEmpty => Blocks.Count == 0;
 		public String ActionName { get; }
 		public String UserName { get; }
 		public LunyInputActionPhase Phase { get; }

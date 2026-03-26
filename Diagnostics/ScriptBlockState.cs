@@ -11,7 +11,7 @@ namespace LunyScript.Diagnostics
 		private readonly ScriptBlock _block;
 
 		public Int32 FrameStamp { get; set; }
-		public String DisplayString => _block?.ToString();
+		public String DisplayString => _block.ToString(); // $"{_block}    {{{_block?.GetType().Name}}}";
 		public Boolean IsAction => _block is ActionBlock;
 		public Boolean IsCondition => _block is ConditionBlock;
 		public ActionBlock Action => _block as ActionBlock;

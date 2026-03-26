@@ -57,12 +57,12 @@ namespace LunyScript.Blocks
 	/// </summary>
 	internal class CoroutineBlock : ActionBlock, ICoroutineBlock, IBlockContainer, ISequenceBlock
 	{
-		private const Int32 SeqOnStarted = 0;
-		private const Int32 SeqOnResumed = 1;
-		private const Int32 SeqOnProcess = 2;
-		private const Int32 SeqOnPaused  = 3;
-		private const Int32 SeqOnStopped = 4;
-		private const Int32 SeqOnElapsed = 5;
+		private const Int32 OnStartedIndex = 0;
+		private const Int32 OnResumedIndex = 1;
+		private const Int32 OnProcessIndex = 2;
+		private const Int32 OnPausedIndex = 3;
+		private const Int32 OnStoppedIndex = 4;
+		private const Int32 OnElapsedIndex = 5;
 
 		protected readonly Coroutine _coroutine;
 		private readonly SequenceBlock[] _sequences;
@@ -73,25 +73,21 @@ namespace LunyScript.Blocks
 
 		// ── ISequenceBlock ────────────────────────────────────────────────
 		public ScriptBlockId Id { get; }
-		IReadOnlyList<ActionBlock> ISequenceBlock.Blocks => Array.Empty<ActionBlock>();
+		IReadOnlyList<ActionBlock> ISequenceBlock.Blocks => new ActionBlock[] { this };
+		public Int32 BlockCount
+		{
+			get
+			{
+				var count = 0;
+				foreach (var sequence in _sequences)
+					count += ((ISequenceBlock)sequence)?.BlockCount ?? 0;
+				return count;
+			}
+		}
 		Boolean ISequenceBlock.IsEmpty => false;
 
 		// ── IBlockContainer ───────────────────────────────────────────────
 		Int32 IBlockContainer.ActionSequenceCount => 6;
-
-		String IBlockContainer.GetActionSequenceName(Int32 index) => index switch
-		{
-			SeqOnStarted => "OnStarted",
-			SeqOnResumed => "OnResumed",
-			SeqOnProcess => "OnProcess",
-			SeqOnPaused  => "OnPaused",
-			SeqOnStopped => "OnStopped",
-			SeqOnElapsed => "OnElapsed",
-			_ => String.Empty,
-		};
-
-		IEnumerable<IScriptBlock> IBlockContainer.GetActionSequence(Int32 index) =>
-			index >= 0 && index < _sequences.Length ? _sequences[index]?.Blocks : null;
 
 		// ── Internal accessors ────────────────────────────────────────────
 		internal Coroutine Coroutine => _coroutine;
@@ -118,13 +114,27 @@ namespace LunyScript.Blocks
 			_time = options.TimeSliceInterval > 0 ? LunyEngine.Instance.Time : null;
 
 			_sequences = new SequenceBlock[6];
-			_sequences[SeqOnStarted] = SequenceBlock.TryCreate(options.OnStarted);
-			_sequences[SeqOnResumed] = SequenceBlock.TryCreate(options.OnResumed);
-			_sequences[SeqOnProcess] = SequenceBlock.TryCreate(options.OnProcess);
-			_sequences[SeqOnPaused]  = SequenceBlock.TryCreate(options.OnPaused);
-			_sequences[SeqOnStopped] = SequenceBlock.TryCreate(options.OnStopped);
-			_sequences[SeqOnElapsed] = SequenceBlock.TryCreate(options.OnElapsed);
+			_sequences[OnStartedIndex] = SequenceBlock.TryCreate(options.OnStarted);
+			_sequences[OnResumedIndex] = SequenceBlock.TryCreate(options.OnResumed);
+			_sequences[OnProcessIndex] = SequenceBlock.TryCreate(options.OnProcess);
+			_sequences[OnPausedIndex] = SequenceBlock.TryCreate(options.OnPaused);
+			_sequences[OnStoppedIndex] = SequenceBlock.TryCreate(options.OnStopped);
+			_sequences[OnElapsedIndex] = SequenceBlock.TryCreate(options.OnElapsed);
 		}
+
+		String IBlockContainer.GetActionSequenceName(Int32 index) => index switch
+		{
+			OnStartedIndex => Coroutine.Events.Started.ToString(),
+			OnResumedIndex => Coroutine.Events.Resumed.ToString(),
+			OnProcessIndex => Coroutine.Events.Process.ToString(),
+			OnPausedIndex => Coroutine.Events.Paused.ToString(),
+			OnStoppedIndex => Coroutine.Events.Stopped.ToString(),
+			OnElapsedIndex => Coroutine.Events.Elapsed.ToString(),
+			var _ => String.Empty,
+		};
+
+		IEnumerable<IScriptBlock> IBlockContainer.GetActionSequence(Int32 index) =>
+			index >= 0 && index < _sequences.Length ? _sequences[index]?.Blocks : null;
 
 		// ── ICoroutineBlock ───────────────────────────────────────────────
 		public ActionBlock Start() => new CoroutineStartBlock(_coroutine);
@@ -138,7 +148,8 @@ namespace LunyScript.Blocks
 			if (_time != null)
 			{
 				var count = _updateMode == Coroutine.UpdateMode.Heartbeat
-					? _time.HeartbeatCount : _time.FrameCount;
+					? _time.HeartbeatCount
+					: _time.FrameCount;
 				if ((count - _timeSliceOffset) % _timeSliceInterval != 0)
 					return;
 			}
@@ -148,12 +159,18 @@ namespace LunyScript.Blocks
 				return;
 
 			var context = (ScriptRuntimeContext)runtimeContext;
-			if (events.Has(Coroutine.Events.Started)) LunyScriptRunner.Run(_sequences[SeqOnStarted], context);
-			if (events.Has(Coroutine.Events.Resumed)) LunyScriptRunner.Run(_sequences[SeqOnResumed], context);
-			if (events.Has(Coroutine.Events.Process)) LunyScriptRunner.Run(_sequences[SeqOnProcess], context);
-			if (events.Has(Coroutine.Events.Elapsed)) LunyScriptRunner.Run(_sequences[SeqOnElapsed], context);
-			if (events.Has(Coroutine.Events.Paused))  LunyScriptRunner.Run(_sequences[SeqOnPaused],  context);
-			if (events.Has(Coroutine.Events.Stopped)) LunyScriptRunner.Run(_sequences[SeqOnStopped], context);
+			if (events.Has(Coroutine.Events.Started))
+				LunyScriptRunner.Run(_sequences[OnStartedIndex], context);
+			if (events.Has(Coroutine.Events.Resumed))
+				LunyScriptRunner.Run(_sequences[OnResumedIndex], context);
+			if (events.Has(Coroutine.Events.Process))
+				LunyScriptRunner.Run(_sequences[OnProcessIndex], context);
+			if (events.Has(Coroutine.Events.Elapsed))
+				LunyScriptRunner.Run(_sequences[OnElapsedIndex], context);
+			if (events.Has(Coroutine.Events.Paused))
+				LunyScriptRunner.Run(_sequences[OnPausedIndex], context);
+			if (events.Has(Coroutine.Events.Stopped))
+				LunyScriptRunner.Run(_sequences[OnStoppedIndex], context);
 		}
 	}
 

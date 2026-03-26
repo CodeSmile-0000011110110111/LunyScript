@@ -23,11 +23,8 @@ namespace LunyScript.Blocks
 
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext)
 		{
-			var inputEvent = runtimeContext.EventArgs as LunyInputActionEvent;
-			if (inputEvent == null)
-				throw new LunyScriptException($"{nameof(InputIsPairedBlock)} can only be used in Input event sequences.");
-
-			return LunyEngine.Instance.Input.IsUserPairedWithDevice(_userName, inputEvent.DeviceId);
+			var inputEvent = runtimeContext?.EventArgs as LunyInputActionEvent;
+			return inputEvent != null && LunyEngine.Instance.Input.IsUserPairedWithDevice(_userName, inputEvent.DeviceId);
 		}
 	}
 }

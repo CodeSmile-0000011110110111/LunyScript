@@ -63,14 +63,14 @@ namespace LunyScript.SmokeTests
 			var playerCount = GVar.Define("PlayerCount", 0);
 
 			When.Input.Action("Join")
-				.Started(If(!p1Joined && !Input.IsPaired(nameof(Player1)))
-					.Then(p1Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player1)), Object.Disable("JoinP1"), Debug.Log("JOINED: P1"))
+				.Started(If(p1Joined == false && !Input.IsPaired(nameof(Player1)))
+					.Then(p1Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player1)), Object.Disable("JoinP1"), Debug.Log("JOIN: P1"))
 					.ElseIf(!p2Joined && !Input.IsPaired(nameof(Player2)))
-					.Then(p2Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player2)), Object.Disable("JoinP2"), Debug.Log("JOINED: P2"))
+					.Then(p2Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player2)), Object.Disable("JoinP2"), Debug.Log("JOIN: P2"))
 					.ElseIf(!p3Joined && !Input.IsPaired(nameof(Player3)))
-					.Then(p3Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player3)), Object.Disable("JoinP3"), Debug.Log("JOINED: P3"))
+					.Then(p3Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player3)), Object.Disable("JoinP3"), Debug.Log("JOIN: P3"))
 					.ElseIf(!p4Joined && !Input.IsPaired(nameof(Player4)))
-					.Then(p4Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player4)), Object.Disable("JoinP4"), Debug.Log("JOINED: P4"))
+					.Then(p4Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player4)), Object.Disable("JoinP4"), Debug.Log("JOIN: P4"))
 					.Else(Debug.LogWarning("Max Players reached. This demo supports up to four players but there's no hard limit."))
 				);
 

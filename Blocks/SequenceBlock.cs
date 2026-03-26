@@ -10,7 +10,6 @@ namespace LunyScript.Blocks
 	{
 		public ScriptBlockId Id { get; }
 		public IReadOnlyList<ActionBlock> Blocks { get; }
-		public Boolean IsEmpty => Blocks.Count == 0;
 
 		public static SequenceBlock TryCreate(IReadOnlyList<ActionBlock> blocks) => blocks?.Count > 0 ? new SequenceBlock(blocks) : null;
 

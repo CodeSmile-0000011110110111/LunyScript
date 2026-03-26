@@ -32,6 +32,6 @@ namespace LunyScript.Blocks
 		/// <param name="value"></param>
 		public void SetImmediate(Variable value) => _handle.Variable = value;
 
-		public override String ToString() => _handle.ToString();
+		public override String ToString() => $"\"{_handle.Name}\"";
 	}
 }
