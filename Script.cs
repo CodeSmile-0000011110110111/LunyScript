@@ -38,7 +38,6 @@ namespace LunyScript
 
 		internal IScriptRuntimeContext RuntimeContext => _runtimeContext;
 		internal ScriptEventScheduler Scheduler => ((ScriptRuntimeContext)_runtimeContext).Scheduler;
-		internal ScriptCoroutineRunner Coroutines => ((ScriptRuntimeContext)_runtimeContext).Coroutines;
 
 		internal void Initialize(IScriptRuntimeContext runtimeContext)
 		{

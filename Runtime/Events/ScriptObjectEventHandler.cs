@@ -47,8 +47,6 @@ namespace LunyScript.Events
 			{
 				var sequences = runtimeContext.Scheduler.GetObjectEventSequences(LunyObjectEvent.OnHeartbeat);
 				LunyScriptRunner.Run(sequences, runtimeContext);
-
-				runtimeContext.Coroutines?.OnHeartbeat(runtimeContext);
 			}
 		}
 
@@ -59,8 +57,6 @@ namespace LunyScript.Events
 			{
 				var sequences = runtimeContext.Scheduler.GetObjectEventSequences(LunyObjectEvent.OnFrameUpdate);
 				LunyScriptRunner.Run(sequences, runtimeContext);
-
-				runtimeContext.Coroutines?.OnFrameUpdate(runtimeContext);
 			}
 		}
 

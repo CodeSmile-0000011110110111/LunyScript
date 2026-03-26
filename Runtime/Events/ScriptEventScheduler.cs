@@ -109,15 +109,18 @@ namespace LunyScript.Events
 
 		// ── Scheduling ────────────────────────────────────────────────────
 
-		internal ISequenceBlock ScheduleObjectEventSequence(ActionBlock[] blocks, LunyObjectEvent objectEvent)
-		{
-			var sequence = SequenceBlock.TryCreate(blocks);
-			if (sequence == null)
-				return sequence;
+ 	internal ISequenceBlock ScheduleObjectEventSequence(ActionBlock[] blocks, LunyObjectEvent objectEvent)
+ 	{
+ 		var sequence = SequenceBlock.TryCreate(blocks);
+ 		if (sequence == null)
+ 			return sequence;
 
-			AddToFlatStore(s_ObjectEventOffset + (Int32)objectEvent, sequence);
-			return sequence;
-		}
+ 		AddToFlatStore(s_ObjectEventOffset + (Int32)objectEvent, sequence);
+ 		return sequence;
+ 	}
+
+ 	internal void ScheduleObjectEventSequence(ISequenceBlock sequence, LunyObjectEvent objectEvent) =>
+ 		AddToFlatStore(s_ObjectEventOffset + (Int32)objectEvent, sequence);
 
 		internal ISequenceBlock ScheduleSceneEventSequence(ActionBlock[] blocks, LunySceneEvent sceneEvent)
 		{

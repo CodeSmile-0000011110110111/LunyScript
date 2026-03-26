@@ -73,7 +73,7 @@ namespace LunyScript.Blocks
 
 		// ── ISequenceBlock ────────────────────────────────────────────────
 		public ScriptBlockId Id { get; }
-		IReadOnlyList<ActionBlock> ISequenceBlock.Blocks => throw new NotImplementedException(nameof(ISequenceBlock.Blocks));
+		IReadOnlyList<ActionBlock> ISequenceBlock.Blocks => Array.Empty<ActionBlock>();
 		Boolean ISequenceBlock.IsEmpty => false;
 
 		// ── IBlockContainer ───────────────────────────────────────────────

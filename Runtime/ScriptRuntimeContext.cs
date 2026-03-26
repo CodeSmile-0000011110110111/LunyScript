@@ -39,7 +39,6 @@ namespace LunyScript
 		private readonly LunyObject _lunyObject;
 
 		private ScriptEventScheduler _scheduler;
-		private ScriptCoroutineRunner _coroutines;
 		private ScriptDebugHooks _debugHooks;
 		private ScriptBlockProfiler _blockProfiler;
 		private ITable _localVariables;
@@ -93,10 +92,6 @@ namespace LunyScript
 		/// Event scheduler for managing sequences across all event types.
 		/// </summary>
 		internal ScriptEventScheduler Scheduler => _scheduler ??= _isShuttingDown ? null : new ScriptEventScheduler();
-		/// <summary>
-		/// Coroutine runner for managing timers and coroutines.
-		/// </summary>
-		internal ScriptCoroutineRunner Coroutines => _coroutines ??= _isShuttingDown ? null : new ScriptCoroutineRunner(this);
 
 		internal static void ClearGlobalVariables() => s_GlobalVariables?.RemoveAll();
 		internal static ITable GetGlobalVariables() => s_GlobalVariables;
@@ -118,9 +113,7 @@ namespace LunyScript
 				throw new LunyScriptException($"Shutdown() called again on: {this}");
 
 			_isShuttingDown = true;
-			_coroutines?.Shutdown();
 			_scheduler?.Shutdown();
-			_coroutines = null;
 			_scheduler = null;
 			_eventArgs = null;
 			GC.SuppressFinalize(this);

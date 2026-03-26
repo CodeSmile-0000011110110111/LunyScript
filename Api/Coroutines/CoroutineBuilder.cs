@@ -1,4 +1,7 @@
-﻿using LunyScript.Blocks;
+﻿using Luny.Engine.Bridge;
+using LunyScript.Blocks;
+using LunyScript.Coroutines;
+using LunyScript.Events;
 using System;
 
 namespace LunyScript.Api
@@ -39,7 +42,12 @@ namespace LunyScript.Api
 		{
 			ThrowIfAllSequencesEmpty(script, token, options);
 
-			var block = script.Coroutines.Register(options);
+			var block = CoroutineBlock.Create(options);
+			var objectEvent = options.ProcessMode == Coroutine.UpdateMode.Heartbeat
+				? LunyObjectEvent.OnHeartbeat
+				: LunyObjectEvent.OnFrameUpdate;
+
+			script.Scheduler.ScheduleObjectEventSequence(block, objectEvent);
 			script.MarkBuilderTokenFinished(token);
 			return block;
 		}
