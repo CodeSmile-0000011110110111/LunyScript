@@ -58,11 +58,17 @@ namespace LunyScript.SmokeTests
 			var number = Var.Define("number", 1234.56789);
 			var boolean = Var.Define("bool", true);
 			var text = Var.Define("text", "Hello, Luny!");
+
 			On.Created(Debug.Log(number), Debug.Log(boolean), Debug.Log(text));
+
 			On.Created(Debug.Log(number), Debug.Log(boolean), Debug.Log(text));
-			On.Ready(Debug.Log("ready"));
+
 			On.Destroyed(Debug.Log("destroyed"));
+
+			On.Ready(Debug.Log("ready"));
+
 			Coroutine("test1").Every(1000).Heartbeats().WhenElapsed(Debug.Log("tic"));
+
 			Coroutine("test2").In(5).Minutes().WhenElapsed(Debug.Log("5 min"));
 
 

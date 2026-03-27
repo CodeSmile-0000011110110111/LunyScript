@@ -1,7 +1,5 @@
 using Luny;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LunyScript.Blocks
 {
@@ -30,37 +28,6 @@ namespace LunyScript.Blocks
 
 			foreach (var block in Blocks)
 				block?.Execute(runtimeContext);
-		}
-
-		public override String ToString()
-		{
-			var sb = new StringBuilder();
-			var trace = Trace;
-			if (trace != null && trace.Count > 0)
-			{
-				for (var i = 0; i < trace.Count; i++)
-				{
-					if (i > 0)
-						sb.Append('.');
-
-					sb.Append(trace[i].Name);
-				}
-
-				sb.Append('(');
-				sb.Append(Blocks.Count);
-				sb.Append(" blocks");
-				sb.Append(')');
-
-				sb.Append("    (");
-				sb.Append(trace[0].FileName);
-				sb.Append(':');
-				sb.Append(trace[0].Line);
-				sb.Append(')');
-			}
-			else
-				sb.Append(base.ToString());
-
-			return sb.ToString();
 		}
 	}
 }

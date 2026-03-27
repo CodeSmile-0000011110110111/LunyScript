@@ -16,10 +16,10 @@ namespace LunyScript.Diagnostics
 		{
 			get
 			{
-				var sb = new StringBuilder();
 				var trace = _block.Trace;
 				if (trace != null && trace.Count > 1)
 				{
+					var sb = new StringBuilder();
 					for (var i = 0; i < trace.Count; i++)
 					{
 						if (i > 0)
@@ -31,21 +31,14 @@ namespace LunyScript.Diagnostics
 					sb.Append('(');
 					sb.Append(_block);
 					sb.Append(')');
-
-					sb.Append(" (at ");
-					sb.Append(trace[0].FileName);
-					sb.Append(':');
-					sb.Append(trace[0].Line);
-					sb.Append(')');
+					return sb.ToString();
 				}
-				else
-					sb.Append(_block);
 
-				return sb.ToString();
+				return $"{_block?.GetType().Name}({_block}) <-- FIXME";
 			}
 		}
-		public String FileName => _block.Trace?.Count > 1 ? _block.Trace[0].FileName : String.Empty;
-		public String Line => _block.Trace?.Count > 1 && _block.Trace[0].Line > 0 ? _block.Trace[0].Line.ToString() : String.Empty;
+		public String FileName => _block.Trace?.Count > 1 ? _block.Trace[0].FileName : null;
+		public int Line => _block.Trace?.Count > 1 ? _block.Trace[0].Line : 0;
 		public Boolean IsAction => _block is ActionBlock;
 		public Boolean IsCondition => _block is ConditionBlock;
 		public ActionBlock Action => _block as ActionBlock;
