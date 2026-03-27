@@ -54,6 +54,17 @@ namespace LunyScript.SmokeTests
 
 		public override void Build(ScriptBuildContext context)
 		{
+			// dummy events for the Blocks Inspector
+			var number = Var.Define("number", 1234.56789);
+			var boolean = Var.Define("bool", true);
+			var text = Var.Define("text", "Hello, Luny!");
+			On.Created(Debug.Log(number), Debug.Log(boolean), Debug.Log(text));
+			On.Ready(Debug.Log("ready"));
+			On.Destroyed(Debug.Log("destroyed"));
+			Coroutine("test1").Every(1000).Heartbeats().WhenElapsed(Debug.Log("tic"));
+			Coroutine("test2").In(5).Minutes().WhenElapsed(Debug.Log("5 min"));
+
+
 			// Joining is done via the Host's Action Map since the Host owns all devices by default.
 			// The device that sends the "Join" action will then be paired with a specific script/object.
 			var p1Joined = GVar.Define("Player1 joined", false);

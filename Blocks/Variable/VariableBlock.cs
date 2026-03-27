@@ -139,6 +139,7 @@ namespace LunyScript.Blocks
 		public ActionBlock Increment() => Inc();
 		public ActionBlock Decrement() => Dec();
 
-		public override String ToString() => VarHandle != null ? $"\"{VarHandle.Name}\"" : $"\"{Variable.Name}\"";
+		public override String ToString() =>
+			VarHandle != null ? $"\"{VarHandle.Name}\" ({VarHandle.Variable.Value})" : $"\"{Variable.Name}\" ({Variable.Value})";
 	}
 }

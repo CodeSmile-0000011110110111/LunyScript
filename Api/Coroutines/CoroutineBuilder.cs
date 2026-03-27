@@ -44,8 +44,8 @@ namespace LunyScript.Api
 
 			var block = CoroutineBlock.Create(options);
 			var objectEvent = options.ProcessMode == Coroutine.UpdateMode.Heartbeat
-				? LunyObjectEvent.OnHeartbeat
-				: LunyObjectEvent.OnFrameUpdate;
+				? LunyObjectEvent.Heartbeat
+				: LunyObjectEvent.FrameUpdate;
 
 			script.Scheduler.ScheduleObjectEventSequence(block, objectEvent);
 			script.MarkBuilderTokenFinished(token);

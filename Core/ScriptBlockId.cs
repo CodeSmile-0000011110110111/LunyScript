@@ -25,7 +25,7 @@ namespace LunyScript
 		public override Boolean Equals(Object obj) => obj is ScriptBlockId other && Equals(other);
 		public override Int32 GetHashCode() => Value;
 		public Int32 CompareTo(ScriptBlockId other) => Value.CompareTo(other.Value);
-		public override String ToString() => $"BlockId:{Value}";
+		public override String ToString() => $"Id:{Value}";
 
 		public static Boolean operator ==(ScriptBlockId left, ScriptBlockId right) => left.Equals(right);
 		public static Boolean operator !=(ScriptBlockId left, ScriptBlockId right) => !left.Equals(right);

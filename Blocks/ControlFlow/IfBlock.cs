@@ -1,6 +1,8 @@
 using LunyScript.Api;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace LunyScript.Blocks
 {
@@ -15,8 +17,6 @@ namespace LunyScript.Blocks
 		// runtime-phase state (used in Execute)
 		private (ConditionBlock[] conditions, ActionBlock[] actions)[] _branches;
 		private ActionBlock[] _elseBlocks;
-
-		// ── IBlockContainer ───────────────────────────────────────────────
 
 		Int32 IBlockContainer.ConditionSequenceCount => _branches.Length;
 		Int32 IBlockContainer.ActionSequenceCount => _branches.Length + (_elseBlocks != null ? 1 : 0);
@@ -96,6 +96,34 @@ namespace LunyScript.Blocks
 
 			if (_elseBlocks != null)
 				ControlFlow.ExecuteAll(runtimeContext, _elseBlocks);
+		}
+
+		public override String ToString()
+		{
+			var container = (IBlockContainer)this;
+			var sb = new StringBuilder();
+			var conditionCount = container.ConditionSequenceCount;
+			var actionCount = container.ActionSequenceCount;
+			for (int i = 0; i < conditionCount; i++)
+			{
+				var name = container.GetConditionSequenceName(i);
+				sb.Append(name);
+				sb.Append('(');
+				sb.Append(')');
+				if (i < actionCount)
+					sb.Append('.');
+			}
+
+			var hasElse = conditionCount < container.ActionSequenceCount;
+			if (hasElse)
+			{
+				var lastIndex = actionCount - 1;
+				sb.Append(container.GetActionSequenceName(lastIndex));
+				sb.Append('(');
+				sb.Append(')');
+			}
+
+			return sb.ToString();
 		}
 	}
 }

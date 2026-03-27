@@ -31,11 +31,25 @@ namespace LunyScript
 		[NotNull] public ScriptVariables Var => _instanceVariableses;
 
 		public ComponentApi Component => new(this);
-		public DebugApi Debug => new(this);
+		public DebugApi Debug
+		{
+			get
+			{
+				var frame = new System.Diagnostics.StackFrame(1, true);
+				return new DebugApi(this, new StackTrace(nameof(Debug), frame));
+			}
+		}
 		public EditorApi Editor => new(this);
 		public InputBuilder Input => new(this);
 		public ObjectBuilder Object => new(this);
-		public OnObjectEventBuilder On => new(this);
+		public OnObjectEventBuilder On
+		{
+			get
+			{
+				var frame = new System.Diagnostics.StackFrame(1, true);
+				return new OnObjectEventBuilder(this, new StackTrace(nameof(On), frame));
+			}
+		}
 		public PrefabBuilder Prefab => new(this);
 		public SceneApi Scene => new(this);
 		public TimeApi Time => new(this);

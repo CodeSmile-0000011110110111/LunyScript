@@ -109,9 +109,9 @@ namespace LunyScript.Events
 
 		// ── Scheduling ────────────────────────────────────────────────────
 
- 	internal ISequenceBlock ScheduleObjectEventSequence(ActionBlock[] blocks, LunyObjectEvent objectEvent)
+ 	internal ISequenceBlock ScheduleObjectEventSequence(ActionBlock[] blocks, LunyObjectEvent objectEvent, StackTrace trace = null)
  	{
- 		var sequence = SequenceBlock.TryCreate(blocks);
+ 		var sequence = SequenceBlock.TryCreate(blocks, trace);
  		if (sequence == null)
  			return sequence;
 

@@ -45,7 +45,7 @@ namespace LunyScript.Events
 		{
 			if (runtimeContext.LunyObject.IsEnabled)
 			{
-				var sequences = runtimeContext.Scheduler.GetObjectEventSequences(LunyObjectEvent.OnHeartbeat);
+				var sequences = runtimeContext.Scheduler.GetObjectEventSequences(LunyObjectEvent.Heartbeat);
 				LunyScriptRunner.Run(sequences, runtimeContext);
 			}
 		}
@@ -55,7 +55,7 @@ namespace LunyScript.Events
 			var lunyObject = runtimeContext.LunyObject;
 			if (lunyObject.IsEnabled)
 			{
-				var sequences = runtimeContext.Scheduler.GetObjectEventSequences(LunyObjectEvent.OnFrameUpdate);
+				var sequences = runtimeContext.Scheduler.GetObjectEventSequences(LunyObjectEvent.FrameUpdate);
 				LunyScriptRunner.Run(sequences, runtimeContext);
 			}
 		}
@@ -64,7 +64,7 @@ namespace LunyScript.Events
 		{
 			if (runtimeContext.LunyObject.IsEnabled)
 			{
-				var sequences = runtimeContext.Scheduler.GetObjectEventSequences(LunyObjectEvent.OnFrameLateUpdate);
+				var sequences = runtimeContext.Scheduler.GetObjectEventSequences(LunyObjectEvent.AfterFrameUpdate);
 				LunyScriptRunner.Run(sequences, runtimeContext);
 			}
 		}
@@ -179,37 +179,37 @@ namespace LunyScript.Events
 				if (!lunyObject.IsValid)
 					return;
 
-				if (objectEvent == LunyObjectEvent.OnCreated || objectEvent == LunyObjectEvent.OnReady)
+				if (objectEvent == LunyObjectEvent.Created || objectEvent == LunyObjectEvent.Ready)
 				{
 					// event never fires again for this object
-					if (objectEvent == LunyObjectEvent.OnCreated)
+					if (objectEvent == LunyObjectEvent.Created)
 						lunyObject.OnCreated -= OnCreated;
-					else if (objectEvent == LunyObjectEvent.OnReady)
+					else if (objectEvent == LunyObjectEvent.Ready)
 						lunyObject.OnReady -= OnReady;
 				}
 			}
 
 			private void OnCreated()
 			{
-				RunObjectEventSequences(LunyObjectEvent.OnCreated);
-				UnscheduleOnceOnlyEvent(LunyObjectEvent.OnCreated);
+				RunObjectEventSequences(LunyObjectEvent.Created);
+				UnscheduleOnceOnlyEvent(LunyObjectEvent.Created);
 			}
 
 			private void OnDestroyed()
 			{
-				RunObjectEventSequences(LunyObjectEvent.OnDestroyed);
+				RunObjectEventSequences(LunyObjectEvent.Destroyed);
 				UnregisterAllCallbacks(); // no more events
 				_objectEventHandler.Unregister(_runtimeContext);
 			}
 
 			private void OnReady()
 			{
-				RunObjectEventSequences(LunyObjectEvent.OnReady);
-				UnscheduleOnceOnlyEvent(LunyObjectEvent.OnReady);
+				RunObjectEventSequences(LunyObjectEvent.Ready);
+				UnscheduleOnceOnlyEvent(LunyObjectEvent.Ready);
 			}
 
-			private void OnEnabled() => RunObjectEventSequences(LunyObjectEvent.OnEnabled);
-			private void OnDisabled() => RunObjectEventSequences(LunyObjectEvent.OnDisabled);
+			private void OnEnabled() => RunObjectEventSequences(LunyObjectEvent.Enabled);
+			private void OnDisabled() => RunObjectEventSequences(LunyObjectEvent.Disabled);
 
 			private void OnCollisionEntered(LunyCollision collision) =>
 				RunCollisionEventSequences(LunyCollisionEvent.OnCollisionStarted, collision);

@@ -1,4 +1,6 @@
+using Luny;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace LunyScript.Blocks
 {
@@ -16,6 +18,9 @@ namespace LunyScript.Blocks
 		// Return false to force always calling operators & | which then return a new block instance
 		public static Boolean operator true(ConditionBlock _) => false;
 		public static Boolean operator false(ConditionBlock _) => false;
+
+		protected ConditionBlock([CallerMemberName] String name = "", [CallerFilePath] String path = "", [CallerLineNumber] Int32 line = 0)
+			: base(new StackTrace($"{nameof(ConditionBlock)}.{name}: missing stack trace", path, line)) {}
 
 		protected internal abstract Boolean Evaluate(IScriptRuntimeContext runtimeContext);
 	}

@@ -5,6 +5,7 @@ using LunyScript.Events;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using StackFrame = System.Diagnostics.StackFrame;
 
 namespace LunyScript
 {
