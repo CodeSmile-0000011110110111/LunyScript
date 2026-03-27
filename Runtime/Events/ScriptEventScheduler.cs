@@ -104,8 +104,8 @@ namespace LunyScript.Events
 			list.Add(sequence);
 		}
 
-		private IEnumerable<ISequenceBlock> GetFromFlatStore(Int32 key) =>
-			_sequences != null && _sequences.TryGetValue(key, out var list) ? list : null;
+		private IReadOnlyList<ISequenceBlock> GetFromFlatStore(Int32 key) =>
+			_sequences != null && _sequences.TryGetValue(key, out var list) ? list.AsReadOnly() : null;
 
 		// ── Scheduling ────────────────────────────────────────────────────
 
@@ -204,25 +204,25 @@ namespace LunyScript.Events
 
 		// ── Get scheduled sequences ───────────────────────────────────────
 
-		internal IEnumerable<ISequenceBlock> GetObjectEventSequences(LunyObjectEvent objectEvent) =>
+		internal IReadOnlyList<ISequenceBlock> GetObjectEventSequences(LunyObjectEvent objectEvent) =>
 			GetFromFlatStore(s_ObjectEventOffset + (Int32)objectEvent);
 
-		internal IEnumerable<ISequenceBlock> GetSceneEventSequences(LunySceneEvent sceneEvent) =>
+		internal IReadOnlyList<ISequenceBlock> GetSceneEventSequences(LunySceneEvent sceneEvent) =>
 			GetFromFlatStore(s_SceneEventOffset + (Int32)sceneEvent);
 
-		internal IEnumerable<ISequenceBlock> GetCollisionEventSequences(LunyCollisionEvent collisionEvent) =>
+		internal IReadOnlyList<ISequenceBlock> GetCollisionEventSequences(LunyCollisionEvent collisionEvent) =>
 			GetFromFlatStore(s_CollisionEventOffset + (Int32)collisionEvent);
 
-		internal IEnumerable<ISequenceBlock> GetTriggerEventSequences(LunyTriggerEvent triggerEvent) =>
+		internal IReadOnlyList<ISequenceBlock> GetTriggerEventSequences(LunyTriggerEvent triggerEvent) =>
 			GetFromFlatStore(s_TriggerEventOffset + (Int32)triggerEvent);
 
-		internal IEnumerable<ISequenceBlock> GetCollision2DEventSequences(LunyCollision2DEvent collisionEvent) =>
+		internal IReadOnlyList<ISequenceBlock> GetCollision2DEventSequences(LunyCollision2DEvent collisionEvent) =>
 			GetFromFlatStore(s_Collision2DEventOffset + (Int32)collisionEvent);
 
-		internal IEnumerable<ISequenceBlock> GetTrigger2DEventSequences(LunyTrigger2DEvent triggerEvent) =>
+		internal IReadOnlyList<ISequenceBlock> GetTrigger2DEventSequences(LunyTrigger2DEvent triggerEvent) =>
 			GetFromFlatStore(s_Trigger2DEventOffset + (Int32)triggerEvent);
 
-		internal IEnumerable<InputEventSequenceBlock> GetInputActionEventSequences(String actionName, LunyInputActionPhase phase)
+		internal IReadOnlyList<InputEventSequenceBlock> GetInputActionEventSequences(String actionName, LunyInputActionPhase phase)
 		{
 			if (_inputActionSequences == null || !_inputActionSequences.TryGetValue(actionName, out var byPhase))
 				return null;
@@ -235,7 +235,7 @@ namespace LunyScript.Events
 		/// Returns all scheduled sequences for the given event method.
 		/// Intended for diagnostics and tree-view tooling; boxing is acceptable here.
 		/// </summary>
-		internal IEnumerable<ISequenceBlock> GetSequences<TEvent>(TEvent eventMethod) where TEvent : Enum =>
+		internal IReadOnlyList<ISequenceBlock> GetObjectEventSequences<TEvent>(TEvent eventMethod) where TEvent : Enum =>
 			GetFromFlatStore(s_CategoryOffsets[typeof(TEvent)] + (Int32)(Object)eventMethod);
 
 		/// <summary>
@@ -243,7 +243,7 @@ namespace LunyScript.Events
 		/// Returns null when no sequences are registered for that key.
 		/// Intended for diagnostics and tree-view tooling; boxing is acceptable here.
 		/// </summary>
-		internal IEnumerable<ISequenceBlock> GetSequences(Type enumType, Int32 enumValue)
+		internal IReadOnlyList<ISequenceBlock> GetObjectEventSequences(Type enumType, Int32 enumValue)
 		{
 			if (!s_CategoryOffsets.TryGetValue(enumType, out var offset))
 				return null;

@@ -52,7 +52,7 @@ namespace LunyScript.Blocks
 				sb.Append(')');
 
 				sb.Append("    (");
-				sb.Append(trace[0].Filename);
+				sb.Append(trace[0].FileName);
 				sb.Append(':');
 				sb.Append(trace[0].Line);
 				sb.Append(')');

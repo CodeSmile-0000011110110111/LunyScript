@@ -33,7 +33,7 @@ namespace LunyScript.Diagnostics
 					sb.Append(')');
 
 					sb.Append(" (at ");
-					sb.Append(trace[0].Filename);
+					sb.Append(trace[0].FileName);
 					sb.Append(':');
 					sb.Append(trace[0].Line);
 					sb.Append(')');
@@ -44,6 +44,8 @@ namespace LunyScript.Diagnostics
 				return sb.ToString();
 			}
 		}
+		public String FileName => _block.Trace?.Count > 1 ? _block.Trace[0].FileName : String.Empty;
+		public String Line => _block.Trace?.Count > 1 && _block.Trace[0].Line > 0 ? _block.Trace[0].Line.ToString() : String.Empty;
 		public Boolean IsAction => _block is ActionBlock;
 		public Boolean IsCondition => _block is ConditionBlock;
 		public ActionBlock Action => _block as ActionBlock;

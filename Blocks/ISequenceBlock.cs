@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LunyScript.Blocks
 {
-	public interface ISequenceBlock
+	public interface ISequenceBlock : IScriptBlock
 	{
 		ScriptBlockId Id { get; }
 		IReadOnlyList<ActionBlock> Blocks => throw new NotImplementedException(nameof(Blocks));
