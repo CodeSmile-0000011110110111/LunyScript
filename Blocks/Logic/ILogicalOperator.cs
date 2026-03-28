@@ -3,5 +3,5 @@
 	/// <summary>
 	/// Marker interface for logical "operator" blocks.
 	/// </summary>
-	public interface ILogicalOperatorBlock {}
+	public interface ILogicalOperator {}
 }

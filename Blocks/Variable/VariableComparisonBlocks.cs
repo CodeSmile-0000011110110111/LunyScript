@@ -11,7 +11,8 @@ namespace LunyScript.Blocks
 
 		internal override Table.VarHandle VarHandle => _left?.VarHandle ?? _right?.VarHandle;
 
-		protected VariableComparisonBlock(VariableBlock left, VariableBlock right = null)
+		protected VariableComparisonBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(trace)
 		{
 			_left = left ?? throw new ArgumentNullException(nameof(left));
 			_right = right;
@@ -40,10 +41,10 @@ namespace LunyScript.Blocks
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable == _right.Variable;
 		}
-		public static VariableIsEqualToBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
+		public static VariableIsEqualToBlock Create(VariableBlock left, VariableBlock right, StackTrace trace) => new(left, right, trace);
 
-		private VariableIsEqualToBlock(VariableBlock left, VariableBlock right)
-			: base(left, right) {}
+		private VariableIsEqualToBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(left, right, trace) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
@@ -58,10 +59,11 @@ namespace LunyScript.Blocks
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable != _right.Variable;
 		}
-		public static VariableIsNotEqualToBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
-		private VariableIsNotEqualToBlock(VariableBlock left, VariableBlock right)
-			: base(left, right) {}
+		public static VariableIsNotEqualToBlock Create(VariableBlock left, VariableBlock right, StackTrace trace) => new(left, right, trace);
+
+		private VariableIsNotEqualToBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(left, right, trace) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
@@ -76,10 +78,11 @@ namespace LunyScript.Blocks
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable > (Double)_right.Variable;
 		}
-		public static VariableIsGreaterThanBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
-		private VariableIsGreaterThanBlock(VariableBlock left, VariableBlock right)
-			: base(left, right) {}
+		public static VariableIsGreaterThanBlock Create(VariableBlock left, VariableBlock right, StackTrace trace) => new(left, right, trace);
+
+		private VariableIsGreaterThanBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(left, right, trace) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
@@ -94,10 +97,11 @@ namespace LunyScript.Blocks
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable >= (Double)_right.Variable;
 		}
-		public static VariableIsAtLeastBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
-		private VariableIsAtLeastBlock(VariableBlock left, VariableBlock right)
-			: base(left, right) {}
+		public static VariableIsAtLeastBlock Create(VariableBlock left, VariableBlock right, StackTrace trace) => new(left, right, trace);
+
+		private VariableIsAtLeastBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(left, right, trace) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
@@ -112,10 +116,11 @@ namespace LunyScript.Blocks
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable < (Double)_right.Variable;
 		}
-		public static VariableIsLessThanBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
 
-		private VariableIsLessThanBlock(VariableBlock left, VariableBlock right)
-			: base(left, right) {}
+		public static VariableIsLessThanBlock Create(VariableBlock left, VariableBlock right, StackTrace trace) => new(left, right, trace);
+
+		private VariableIsLessThanBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(left, right, trace) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
@@ -130,10 +135,10 @@ namespace LunyScript.Blocks
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable <= (Double)_right.Variable;
 		}
-		public static VariableIsAtMostBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
+		public static VariableIsAtMostBlock Create(VariableBlock left, VariableBlock right, StackTrace trace) => new(left, right, trace);
 
-		private VariableIsAtMostBlock(VariableBlock left, VariableBlock right)
-			: base(left, right) {}
+		private VariableIsAtMostBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(left, right, trace) {}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;

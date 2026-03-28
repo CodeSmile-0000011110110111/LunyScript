@@ -1,4 +1,5 @@
-﻿using Luny.Engine.Bridge;
+﻿using Luny;
+using Luny.Engine.Bridge;
 using System;
 
 namespace LunyScript.Blocks
@@ -9,13 +10,15 @@ namespace LunyScript.Blocks
 		private VariableBlock _speed;
 		private LunyTransformSpace _space;
 
-		public static TransformPositionMoveByBlock
-			Create(VariableBlock<LunyVector2> direction, VariableBlock speed, LunyTransformSpace space) => new(direction, speed, space);
+		public static TransformPositionMoveByBlock Create(VariableBlock<LunyVector2> direction, VariableBlock speed, LunyTransformSpace space,
+			StackTrace trace) => new(direction, speed, space, trace);
 
-		private TransformPositionMoveByBlock(VariableBlock<LunyVector2> direction, VariableBlock speed, LunyTransformSpace space)
+		private TransformPositionMoveByBlock(VariableBlock<LunyVector2> direction, VariableBlock speed, LunyTransformSpace space,
+			StackTrace trace)
+			: base(trace)
 		{
 			_direction = direction ?? LunyVector2.One;
-			_speed = speed ?? ConstantVariableBlock.Create(1);
+			_speed = speed ?? LiteralVariableBlock.Create(1, trace);
 			_space = space;
 		}
 
@@ -28,6 +31,6 @@ namespace LunyScript.Blocks
 			transform.Translate(translation, _space);
 		}
 
-		public override String ToString() => $"{GetType().Name}({_direction}, {_speed}, {_space})";
+		public override String ToString() => $"({_direction}, {_speed}, {_space})";
 	}
 }

@@ -1,3 +1,4 @@
+using Luny;
 using Luny.Engine.Bridge;
 using System;
 
@@ -11,14 +12,16 @@ namespace LunyScript.Blocks
 		private LunyTransformSpace _space;
 
 		public static TransformPositionMoveRelativeBlock
-			Create(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunyTransformSpace space) =>
-			new(distance, axis, speed, space);
+			Create(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunyTransformSpace space, StackTrace trace) =>
+			new(distance, axis, speed, space, trace);
 
-		private TransformPositionMoveRelativeBlock(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunyTransformSpace space)
+		private TransformPositionMoveRelativeBlock(VariableBlock distance, LunyVector3 axis, VariableBlock speed, LunyTransformSpace space,
+			StackTrace trace)
+			: base(trace)
 		{
-			_distance = distance ?? ConstantVariableBlock.Create(1);
+			_distance = distance ?? LiteralVariableBlock.Create(1, trace);
 			_axis = axis;
-			_speed = speed ?? ConstantVariableBlock.Create(1);
+			_speed = speed ?? LiteralVariableBlock.Create(1, trace);
 			_space = space;
 		}
 

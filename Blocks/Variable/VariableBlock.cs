@@ -12,92 +12,122 @@ namespace LunyScript.Blocks
 	{
 		internal virtual Table.VarHandle VarHandle => null;
 
-		protected VariableBlock(StackTrace trace = null) : base(trace) {}
+		public static implicit operator VariableBlock(Variable value) =>
+			LiteralVariableBlock.Create(value, LunyScript.Trace.TryCreateStackTrace($"implicit({value})"));
 
-		public static implicit operator VariableBlock(Variable value) => ConstantVariableBlock.Create(value);
-		public static implicit operator VariableBlock(Int32 value) => ConstantVariableBlock.Create(value);
-		public static implicit operator VariableBlock(Int64 value) => ConstantVariableBlock.Create(value);
-		public static implicit operator VariableBlock(Single value) => ConstantVariableBlock.Create(value);
-		public static implicit operator VariableBlock(Double value) => ConstantVariableBlock.Create(value);
-		public static implicit operator VariableBlock(Boolean value) => ConstantVariableBlock.Create(value);
-		public static implicit operator VariableBlock(String value) => ConstantVariableBlock.Create(value);
+		public static implicit operator VariableBlock(Int32 value) =>
+			LiteralVariableBlock.Create(value, LunyScript.Trace.TryCreateStackTrace($"implicit({value})"));
+
+		public static implicit operator VariableBlock(Int64 value) =>
+			LiteralVariableBlock.Create(value, LunyScript.Trace.TryCreateStackTrace($"implicit({value})"));
+
+		public static implicit operator VariableBlock(Single value) =>
+			LiteralVariableBlock.Create(value, LunyScript.Trace.TryCreateStackTrace($"implicit({value})"));
+
+		public static implicit operator VariableBlock(Double value) =>
+			LiteralVariableBlock.Create(value, LunyScript.Trace.TryCreateStackTrace($"implicit({value})"));
+
+		public static implicit operator VariableBlock(Boolean value) =>
+			LiteralVariableBlock.Create(value, LunyScript.Trace.TryCreateStackTrace($"implicit({value})"));
+
+		public static implicit operator VariableBlock(String value) =>
+			LiteralVariableBlock.Create(value, LunyScript.Trace.TryCreateStackTrace($"implicit({value})"));
 
 		// Arithmetic Operators
-		public static VariableArithmeticBlock operator +(VariableBlock left, Variable right) =>
-			VariableAddBlock.Create(left, ConstantVariableBlock.Create(right));
+		public static VariableArithmeticBlock operator +(VariableBlock left, Variable right) => VariableAddBlock.Create(left,
+			LiteralVariableBlock.Create(right, LunyScript.Trace.TryCreateStackTrace("+")), LunyScript.Trace.TryCreateStackTrace("+"));
 
-		public static VariableArithmeticBlock operator +(VariableBlock left, VariableBlock right) => VariableAddBlock.Create(left, right);
+		public static VariableArithmeticBlock operator +(VariableBlock left, VariableBlock right) =>
+			VariableAddBlock.Create(left, right, LunyScript.Trace.TryCreateStackTrace("+"));
 
-		public static VariableArithmeticBlock operator +(Variable left, VariableBlock right) =>
-			VariableAddBlock.Create(ConstantVariableBlock.Create(left), right);
+		public static VariableArithmeticBlock operator +(Variable left, VariableBlock right) => VariableAddBlock.Create(
+			LiteralVariableBlock.Create(left, LunyScript.Trace.TryCreateStackTrace("+")), right, LunyScript.Trace.TryCreateStackTrace("+"));
 
-		public static VariableArithmeticBlock operator -(VariableBlock left, Variable right) =>
-			VariableSubtractBlock.Create(left, ConstantVariableBlock.Create(right));
+		public static VariableArithmeticBlock operator -(VariableBlock left, Variable right) => VariableSubtractBlock.Create(left,
+			LiteralVariableBlock.Create(right, LunyScript.Trace.TryCreateStackTrace("-")), LunyScript.Trace.TryCreateStackTrace("-"));
 
-		public static VariableArithmeticBlock operator -(VariableBlock left, VariableBlock right) => VariableSubtractBlock.Create(left, right);
+		public static VariableArithmeticBlock operator -(VariableBlock left, VariableBlock right) =>
+			VariableSubtractBlock.Create(left, right, LunyScript.Trace.TryCreateStackTrace("-"));
 
-		public static VariableArithmeticBlock operator -(Variable left, VariableBlock right) =>
-			VariableSubtractBlock.Create(ConstantVariableBlock.Create(left), right);
+		public static VariableArithmeticBlock operator -(Variable left, VariableBlock right) => VariableSubtractBlock.Create(
+			LiteralVariableBlock.Create(left, LunyScript.Trace.TryCreateStackTrace("-")), right, LunyScript.Trace.TryCreateStackTrace("-"));
 
-		public static VariableArithmeticBlock operator *(VariableBlock left, Variable right) =>
-			VariableMultiplyBlock.Create(left, ConstantVariableBlock.Create(right));
+		public static VariableArithmeticBlock operator *(VariableBlock left, Variable right) => VariableMultiplyBlock.Create(left,
+			LiteralVariableBlock.Create(right, LunyScript.Trace.TryCreateStackTrace("*")), LunyScript.Trace.TryCreateStackTrace("*"));
 
-		public static VariableArithmeticBlock operator *(VariableBlock left, VariableBlock right) => VariableMultiplyBlock.Create(left, right);
+		public static VariableArithmeticBlock operator *(VariableBlock left, VariableBlock right) =>
+			VariableMultiplyBlock.Create(left, right, LunyScript.Trace.TryCreateStackTrace("*"));
 
-		public static VariableArithmeticBlock operator *(Variable left, VariableBlock right) =>
-			VariableMultiplyBlock.Create(ConstantVariableBlock.Create(left), right);
+		public static VariableArithmeticBlock operator *(Variable left, VariableBlock right) => VariableMultiplyBlock.Create(
+			LiteralVariableBlock.Create(left, LunyScript.Trace.TryCreateStackTrace("*")), right, LunyScript.Trace.TryCreateStackTrace("*"));
 
-		public static VariableArithmeticBlock operator /(VariableBlock left, Variable right) =>
-			VariableDivideBlock.Create(left, ConstantVariableBlock.Create(right));
+		public static VariableArithmeticBlock operator /(VariableBlock left, Variable right) => VariableDivideBlock.Create(left,
+			LiteralVariableBlock.Create(right, LunyScript.Trace.TryCreateStackTrace("/")), LunyScript.Trace.TryCreateStackTrace("/"));
 
-		public static VariableArithmeticBlock operator /(VariableBlock left, VariableBlock right) => VariableDivideBlock.Create(left, right);
+		public static VariableArithmeticBlock operator /(VariableBlock left, VariableBlock right) =>
+			VariableDivideBlock.Create(left, right, LunyScript.Trace.TryCreateStackTrace("/"));
 
-		public static VariableArithmeticBlock operator /(Variable left, VariableBlock right) =>
-			VariableDivideBlock.Create(ConstantVariableBlock.Create(left), right);
+		public static VariableArithmeticBlock operator /(Variable left, VariableBlock right) => VariableDivideBlock.Create(
+			LiteralVariableBlock.Create(left, LunyScript.Trace.TryCreateStackTrace("/")), right, LunyScript.Trace.TryCreateStackTrace("/"));
 
-		public static VariableArithmeticBlock operator ++(VariableBlock a) => VariableAddBlock.Create(a, ConstantVariableBlock.Create(1));
-		public static VariableArithmeticBlock operator --(VariableBlock a) => VariableSubtractBlock.Create(a, ConstantVariableBlock.Create(1));
+		public static VariableArithmeticBlock operator ++(VariableBlock a) => VariableAddBlock.Create(a,
+			LiteralVariableBlock.Create(1, LunyScript.Trace.TryCreateStackTrace("++")), LunyScript.Trace.TryCreateStackTrace("++"));
+
+		public static VariableArithmeticBlock operator --(VariableBlock a) => VariableSubtractBlock.Create(a,
+			LiteralVariableBlock.Create(1, LunyScript.Trace.TryCreateStackTrace("--")), LunyScript.Trace.TryCreateStackTrace("--"));
 
 		// Comparison Operators
 		public static VariableBlock operator ==(VariableBlock left, Variable right) => left is null
 			? right.Object is null
-			: VariableIsEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
+			: VariableIsEqualToBlock.Create(left, LiteralVariableBlock.Create(right, LunyScript.Trace.TryCreateStackTrace("==")),
+				LunyScript.Trace.TryCreateStackTrace("=="));
 
-		public static VariableBlock operator ==(VariableBlock left, VariableBlock right) =>
-			left is null ? right is null : VariableIsEqualToBlock.Create(left, right);
+		public static VariableBlock operator ==(VariableBlock left, VariableBlock right) => left is null
+			? right is null
+			: VariableIsEqualToBlock.Create(left, right, LunyScript.Trace.TryCreateStackTrace("=="));
 
 		public static VariableBlock operator !=(VariableBlock left, Variable right) => left is null
 			? right.Object is not null
-			: VariableIsNotEqualToBlock.Create(left, ConstantVariableBlock.Create(right));
+			: VariableIsNotEqualToBlock.Create(left, LiteralVariableBlock.Create(right, LunyScript.Trace.TryCreateStackTrace("!=")),
+				LunyScript.Trace.TryCreateStackTrace("!="));
 
-		public static VariableBlock operator !=(VariableBlock left, VariableBlock right) =>
-			left is null ? right is null : VariableIsNotEqualToBlock.Create(left, right);
+		public static VariableBlock operator !=(VariableBlock left, VariableBlock right) => left is null
+			? right is null
+			: VariableIsNotEqualToBlock.Create(left, right, LunyScript.Trace.TryCreateStackTrace("!="));
 
-		public static VariableBlock operator >(VariableBlock left, Variable right) =>
-			VariableIsGreaterThanBlock.Create(left, ConstantVariableBlock.Create(right));
+		public static VariableBlock operator >(VariableBlock left, Variable right) => VariableIsGreaterThanBlock.Create(left,
+			LiteralVariableBlock.Create(right, LunyScript.Trace.TryCreateStackTrace(">")), LunyScript.Trace.TryCreateStackTrace(">"));
 
-		public static VariableBlock operator >(VariableBlock left, VariableBlock right) => VariableIsGreaterThanBlock.Create(left, right);
+		public static VariableBlock operator >(VariableBlock left, VariableBlock right) =>
+			VariableIsGreaterThanBlock.Create(left, right, LunyScript.Trace.TryCreateStackTrace(">"));
 
-		public static VariableBlock operator >=(VariableBlock left, Variable right) =>
-			VariableIsAtLeastBlock.Create(left, ConstantVariableBlock.Create(right));
+		public static VariableBlock operator >=(VariableBlock left, Variable right) => VariableIsAtLeastBlock.Create(left,
+			LiteralVariableBlock.Create(right, LunyScript.Trace.TryCreateStackTrace(">=")), LunyScript.Trace.TryCreateStackTrace(">="));
 
-		public static VariableBlock operator >=(VariableBlock left, VariableBlock right) => VariableIsAtLeastBlock.Create(left, right);
+		public static VariableBlock operator >=(VariableBlock left, VariableBlock right) =>
+			VariableIsAtLeastBlock.Create(left, right, LunyScript.Trace.TryCreateStackTrace(">="));
 
-		public static VariableBlock operator <(VariableBlock left, Variable right) =>
-			VariableIsLessThanBlock.Create(left, ConstantVariableBlock.Create(right));
+		public static VariableBlock operator <(VariableBlock left, Variable right) => VariableIsLessThanBlock.Create(left,
+			LiteralVariableBlock.Create(right, LunyScript.Trace.TryCreateStackTrace("<")), LunyScript.Trace.TryCreateStackTrace("<"));
 
-		public static VariableBlock operator <(VariableBlock left, VariableBlock right) => VariableIsLessThanBlock.Create(left, right);
+		public static VariableBlock operator <(VariableBlock left, VariableBlock right) =>
+			VariableIsLessThanBlock.Create(left, right, LunyScript.Trace.TryCreateStackTrace("<"));
 
-		public static VariableBlock operator <=(VariableBlock left, Variable right) =>
-			VariableIsAtMostBlock.Create(left, ConstantVariableBlock.Create(right));
+		public static VariableBlock operator <=(VariableBlock left, Variable right) => VariableIsAtMostBlock.Create(left,
+			LiteralVariableBlock.Create(right, LunyScript.Trace.TryCreateStackTrace("<=")), LunyScript.Trace.TryCreateStackTrace("<="));
 
-		public static VariableBlock operator <=(VariableBlock left, VariableBlock right) => VariableIsAtMostBlock.Create(left, right);
+		public static VariableBlock operator <=(VariableBlock left, VariableBlock right) =>
+			VariableIsAtMostBlock.Create(left, right, LunyScript.Trace.TryCreateStackTrace("<="));
 
-		public static VariableBlock operator !(VariableBlock operand) => NegationOperatorBlock.Create(operand);
+		public static VariableBlock operator !(VariableBlock operand) =>
+			NegationOperatorBlock.Create(operand, LunyScript.Trace.TryCreateStackTrace("!"));
 
 		internal Double Value => Variable.AsDouble();
 
 		internal abstract Variable Variable { get; }
+
+		protected VariableBlock(StackTrace trace = null)
+			: base(trace) {}
 
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable.AsBoolean();
 
@@ -117,8 +147,13 @@ namespace LunyScript.Blocks
 
 		public override Int32 GetHashCode() => HashCode.Combine(Variable != null ? Variable.GetHashCode() : 0, Value);
 
-		public ActionBlock Set(Variable value) => VariableSetValueBlock.Create(VarHandle, ConstantVariableBlock.Create(value));
-		public ActionBlock Set(VariableBlock value) => VariableSetValueBlock.Create(VarHandle, value);
+		public ActionBlock Set(Variable value) => VariableSetValueBlock.Create(VarHandle,
+			LiteralVariableBlock.Create(value, LunyScript.Trace.TryCreateStackTrace(nameof(Set))),
+			LunyScript.Trace.TryCreateStackTrace(nameof(Set)));
+
+		public ActionBlock Set(VariableBlock value) =>
+			VariableSetValueBlock.Create(VarHandle, value, LunyScript.Trace.TryCreateStackTrace(nameof(Set)));
+
 		public ActionBlock Add(Variable value) => Set(this + value);
 		public ActionBlock Add(VariableBlock value) => Set(this + value);
 		public ActionBlock Sub(Variable value) => Set(this - value);
@@ -141,7 +176,12 @@ namespace LunyScript.Blocks
 		public ActionBlock Increment() => Inc();
 		public ActionBlock Decrement() => Dec();
 
-		public override String ToString() =>
-			VarHandle != null ? $"\"{VarHandle.Name}\" ({VarHandle.Variable.Value})" : $"\"{Variable.Name}\" ({Variable.Value})";
+		public override String ToString()
+		{
+			if (VarHandle != null)
+				return !String.IsNullOrEmpty(VarHandle.Name) ? $"(\"{VarHandle.Name}\": {VarHandle.Variable})" : $"({VarHandle.Variable})";
+
+			return !String.IsNullOrEmpty(Variable.Name) ? $"(\"{Variable.Name}\": {Variable})" : $"({Variable})";
+		}
 	}
 }

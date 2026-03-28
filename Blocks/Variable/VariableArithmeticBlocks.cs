@@ -11,7 +11,8 @@ namespace LunyScript.Blocks
 
 		internal override Table.VarHandle VarHandle => _left?.VarHandle ?? _right?.VarHandle;
 
-		protected VariableArithmeticBlock(VariableBlock left, VariableBlock right)
+		protected VariableArithmeticBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(trace)
 		{
 			_left = left ?? throw new ArgumentNullException(nameof(left));
 			_right = right ?? throw new ArgumentNullException(nameof(right));
@@ -46,10 +47,10 @@ namespace LunyScript.Blocks
 				return leftVar + _right.Variable.Value;
 			}
 		}
-		public static VariableAddBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
+		public static VariableAddBlock Create(VariableBlock left, VariableBlock right, StackTrace trace) => new(left, right, trace);
 
-		private VariableAddBlock(VariableBlock left, VariableBlock right)
-			: base(left, right) {}
+		private VariableAddBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(left, right, trace) {}
 
 		public override String ToString() => $"{_left} + {_right}";
 	}
@@ -61,10 +62,10 @@ namespace LunyScript.Blocks
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable - _right.Variable.Value;
 		}
-		public static VariableSubtractBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
+		public static VariableSubtractBlock Create(VariableBlock left, VariableBlock right, StackTrace trace) => new(left, right, trace);
 
-		private VariableSubtractBlock(VariableBlock left, VariableBlock right)
-			: base(left, right) {}
+		private VariableSubtractBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(left, right, trace) {}
 
 		public override String ToString() => $"{_left} - {_right}";
 	}
@@ -76,10 +77,10 @@ namespace LunyScript.Blocks
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable * _right.Variable.Value;
 		}
-		public static VariableMultiplyBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
+		public static VariableMultiplyBlock Create(VariableBlock left, VariableBlock right, StackTrace trace) => new(left, right, trace);
 
-		private VariableMultiplyBlock(VariableBlock left, VariableBlock right)
-			: base(left, right) {}
+		private VariableMultiplyBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(left, right, trace) {}
 
 		public override String ToString() => $"{_left} * {_right}";
 	}
@@ -98,10 +99,10 @@ namespace LunyScript.Blocks
 				return Math.Abs(denominator) >= SafeDivideThreshold ? _left.Variable / denominator : 0d;
 			}
 		}
-		public static VariableDivideBlock Create(VariableBlock left, VariableBlock right) => new(left, right);
+		public static VariableDivideBlock Create(VariableBlock left, VariableBlock right, StackTrace trace) => new(left, right, trace);
 
-		private VariableDivideBlock(VariableBlock left, VariableBlock right)
-			: base(left, right) {}
+		private VariableDivideBlock(VariableBlock left, VariableBlock right, StackTrace trace)
+			: base(left, right, trace) {}
 
 		public override String ToString() => $"{_left} / {_right}";
 	}

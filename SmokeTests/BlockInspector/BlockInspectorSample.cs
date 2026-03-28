@@ -11,19 +11,29 @@
 			var text = Var.Define("text", "Hello, Luny!");
 
 			On.Created(Debug.Log(number), Debug.Log(boolean), Debug.Log(text));
+			On.Created(
+				If(!number, number > 1, number < 2, number >= 3, number <= 4, number == 5, number != 6)
+					.Then(Debug.Log(number), Debug.Log(boolean), Debug.Log(text))
+					.Else(Debug.Log("else"))
+			);
 
 			On.Ready(
 				While(boolean).Do(boolean.Toggle(), Debug.Log("ready")),
 				For(3).Do(Debug.Log("log thrice"))
 			);
 
-			Coroutine("test1").Every(1000).Heartbeats().WhenElapsed(Debug.Log("tic"));
+			On.Heartbeat(number.Inc());
 
-			On.Created(
-				If(number > 0)
-					.Then(Debug.Log(number), Debug.Log(boolean), Debug.Log(text))
-					.Else(Debug.Log("else"))
+			var permaToggle = Var.Define("toggles continuously", true);
+			On.Heartbeat(
+				If(permaToggle)
+					.Then(permaToggle.Toggle())
+					.ElseIf(!permaToggle)
+					.Then(permaToggle.Toggle())
+					.Else(Debug.Log("unreachable branch"))
 			);
+
+			Coroutine("test1").Every(1000).Heartbeats().WhenElapsed(Debug.Log("tic"));
 
 			Coroutine("test2").In(5).Minutes().WhenElapsed(Debug.Log("5 min"));
 

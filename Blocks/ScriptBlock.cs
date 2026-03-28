@@ -1,6 +1,5 @@
 using Luny;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace LunyScript.Blocks
 {
@@ -14,10 +13,11 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class ScriptBlock : IScriptBlock
 	{
-		public StackTrace Trace { get; private init; }
+		private readonly StackTrace _trace;
+		public StackTrace Trace => _trace;
 
-		public ScriptBlock(StackTrace trace) => Trace = trace;
+		public ScriptBlock(StackTrace trace) => _trace = trace;
 
-		public override String ToString() => $"{GetType().Name} <-- should override ToString()!";
+		public override String ToString() => GetType().Name;
 	}
 }

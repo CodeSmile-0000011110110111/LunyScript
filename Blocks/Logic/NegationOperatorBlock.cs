@@ -7,7 +7,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Logical NOT condition block.
 	/// </summary>
-	internal sealed class NegationOperatorBlock : VariableBlock, ILogicalOperatorBlock
+	internal sealed class NegationOperatorBlock : VariableBlock, ILogicalOperator
 	{
 		private readonly ConditionBlock _condition;
 

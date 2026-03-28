@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using StackTrace = Luny.StackTrace;
 
 namespace LunyScript.Blocks
@@ -22,7 +21,7 @@ namespace LunyScript.Blocks
 			{
 				return sequence.Blocks?.Count switch
 				{
-					0 => "No blocks",
+					0 => "Empty",
 					1 => "1 block",
 					var _ => $"{sequence.Blocks?.Count} blocks",
 				};

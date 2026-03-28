@@ -135,61 +135,61 @@ namespace LunyScript
 
 		/// <summary> Forward/Backward based on orientation. </summary>
 		public TransformPositionMoveByBlock MoveBy(VariableBlock<LunyVector2> direction, VariableBlock speed = null) =>
-			TransformPositionMoveByBlock.Create(direction, speed, LunyTransformSpace.Self);
+			TransformPositionMoveByBlock.Create(direction, speed, LunyTransformSpace.Self, _trace.Add(nameof(MoveBy)));
 
 		/// <summary> Forward/Backward based on orientation. </summary>
 		public TransformPositionMoveRelativeBlock MoveForward(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Forward, speed, LunyTransformSpace.Self);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Forward, speed, LunyTransformSpace.Self, _trace.Add(nameof(MoveForward)));
 
 		/// <summary> Sideways relative to orientation. </summary>
 		public TransformPositionMoveRelativeBlock MoveRight(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Right, speed, LunyTransformSpace.Self);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Right, speed, LunyTransformSpace.Self, _trace.Add(nameof(MoveRight)));
 
 		/// <summary> Sideways relative to orientation. </summary>
 		public TransformPositionMoveRelativeBlock MoveUp(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Up, speed, LunyTransformSpace.Self);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Up, speed, LunyTransformSpace.Self, _trace.Add(nameof(MoveUp)));
 
 		/// <summary> Forward/Backward based on orientation. </summary>
 		public TransformPositionMoveRelativeBlock MoveBack(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Back, speed, LunyTransformSpace.Self);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Back, speed, LunyTransformSpace.Self, _trace.Add(nameof(MoveBack)));
 
 		/// <summary> Sideways relative to orientation. </summary>
 		public TransformPositionMoveRelativeBlock MoveLeft(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Left, speed, LunyTransformSpace.Self);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Left, speed, LunyTransformSpace.Self, _trace.Add(nameof(MoveLeft)));
 
 		/// <summary> Sideways relative to orientation. </summary>
 		public TransformPositionMoveRelativeBlock MoveDown(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Down, speed, LunyTransformSpace.Self);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Down, speed, LunyTransformSpace.Self, _trace.Add(nameof(MoveDown)));
 
 		// --- World Scalar Movement (Relative to "Map") ---
 
 		/// <summary> Forward/Backward based on orientation. </summary>
 		public TransformPositionMoveByBlock ShiftBy(VariableBlock<LunyVector2> direction, VariableBlock speed = null) =>
-			TransformPositionMoveByBlock.Create(direction, speed, LunyTransformSpace.World);
+			TransformPositionMoveByBlock.Create(direction, speed, LunyTransformSpace.World,_trace.Add(nameof(ShiftBy)));
 
 		/// <summary> Forward/backward on the World forward axis. </summary>
 		public TransformPositionMoveRelativeBlock ShiftForward(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Forward, speed, LunyTransformSpace.World);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Forward, speed, LunyTransformSpace.World,_trace.Add(nameof(ShiftForward)));
 
 		/// <summary> Left/Right on the World right axis. </summary>
 		public TransformPositionMoveRelativeBlock ShiftRight(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Right, speed, LunyTransformSpace.World);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Right, speed, LunyTransformSpace.World,_trace.Add(nameof(ShiftRight)));
 
 		/// <summary> Up/Down on the World up axis. </summary>
 		public TransformPositionMoveRelativeBlock ShiftUp(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Up, speed, LunyTransformSpace.World);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Up, speed, LunyTransformSpace.World,_trace.Add(nameof(ShiftUp)));
 
 		/// <summary> Forward/backward on the World forward axis. </summary>
 		public TransformPositionMoveRelativeBlock ShiftBack(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Back, speed, LunyTransformSpace.World);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Back, speed, LunyTransformSpace.World,_trace.Add(nameof(ShiftBack)));
 
 		/// <summary> Left/Right on the World right axis. </summary>
 		public TransformPositionMoveRelativeBlock ShiftLeft(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Left, speed, LunyTransformSpace.World);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Left, speed, LunyTransformSpace.World,_trace.Add(nameof(ShiftLeft)));
 
 		/// <summary> Up/Down on the World up axis. </summary>
 		public TransformPositionMoveRelativeBlock ShiftDown(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Down, speed, LunyTransformSpace.World);
+			TransformPositionMoveRelativeBlock.Create(amount, LunyVector3.Down, speed, LunyTransformSpace.World,_trace.Add(nameof(ShiftDown)));
 
 		// --- Absolute Positioning (Targeting) ---
 

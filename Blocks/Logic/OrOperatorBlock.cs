@@ -9,7 +9,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Logical OR condition block.
 	/// </summary>
-	internal sealed class OrOperatorBlock : VariableBlock, ILogicalOperatorBlock, IBlockContainer
+	internal sealed class OrOperatorBlock : VariableBlock, ILogicalOperator, IBlockContainer
 	{
 		private readonly ConditionBlock[] _conditions;
 

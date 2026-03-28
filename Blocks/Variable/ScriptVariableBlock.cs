@@ -22,16 +22,15 @@ namespace LunyScript.Blocks
 			get => _handle.Variable;
 		}
 
-		internal static ScriptVariableBlock Create(Table.VarHandle handle) => new(handle);
+		internal static ScriptVariableBlock Create(Table.VarHandle handle, StackTrace trace) => new(handle, trace);
 
-		private ScriptVariableBlock(Table.VarHandle handle) => _handle = handle;
+		private ScriptVariableBlock(Table.VarHandle handle, StackTrace trace)
+			: base(trace) => _handle = handle;
 
 		/// <summary>
 		/// Used to set a variable's value during Build() time.
 		/// </summary>
 		/// <param name="value"></param>
 		public void SetImmediate(Variable value) => _handle.Variable = value;
-
-		public override String ToString() => $"\"{_handle.Name}\"";
 	}
 }

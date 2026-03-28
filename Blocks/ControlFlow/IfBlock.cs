@@ -11,7 +11,7 @@ namespace LunyScript.Blocks
 	internal sealed class IfBlock : ActionBlock, IBlockContainer
 	{
 		private readonly (ConditionBlock[] conditions, ActionBlock[] actions)[] _branches;
-		private readonly ActionBlock[] _elseBlocks;
+		private readonly ActionBlock[] _elseBranch;
 
 		public static IfBlock Create(
 			(ConditionBlock[] conditions, ActionBlock[] actions)[] branches,
@@ -20,17 +20,17 @@ namespace LunyScript.Blocks
 
 		private IfBlock(
 			(ConditionBlock[] conditions, ActionBlock[] actions)[] branches,
-			ActionBlock[] elseBlocks,
+			ActionBlock[] elseBranch,
 			StackTrace trace) : base(trace)
 		{
 			_branches = branches;
-			_elseBlocks = elseBlocks;
+			_elseBranch = elseBranch;
 		}
 
 		// ── IBlockContainer ───────────────────────────────────────────────
 
 		Int32 IBlockContainer.ConditionSequenceCount => _branches.Length;
-		Int32 IBlockContainer.ActionSequenceCount => _branches.Length + (_elseBlocks != null ? 1 : 0);
+		Int32 IBlockContainer.ActionSequenceCount => _branches.Length + (_elseBranch != null ? 1 : 0);
 
 		String IBlockContainer.GetConditionSequenceName(Int32 index) => index == 0 ? "If" : "ElseIf";
 		String IBlockContainer.GetActionSequenceName(Int32 index) => index < _branches.Length ? "Then" : "Else";
@@ -39,7 +39,7 @@ namespace LunyScript.Blocks
 			index < _branches.Length ? _branches[index].conditions : Array.Empty<IScriptBlock>();
 
 		IEnumerable<IScriptBlock> IBlockContainer.GetActionSequence(Int32 index) =>
-			index < _branches.Length ? _branches[index].actions : _elseBlocks ?? Array.Empty<ActionBlock>();
+			index < _branches.Length ? _branches[index].actions : _elseBranch ?? Array.Empty<ActionBlock>();
 
 		// ── Execute ───────────────────────────────────────────────────────
 
@@ -54,8 +54,8 @@ namespace LunyScript.Blocks
 				}
 			}
 
-			if (_elseBlocks != null)
-				ControlFlow.ExecuteAll(runtimeContext, _elseBlocks);
+			if (_elseBranch != null)
+				ControlFlow.ExecuteAll(runtimeContext, _elseBranch);
 		}
 
 		public override String ToString()
@@ -68,10 +68,12 @@ namespace LunyScript.Blocks
 			{
 				var name = container.GetConditionSequenceName(i);
 				sb.Append(name);
-				sb.Append('(');
-				sb.Append(')');
-				if (i < actionCount)
-					sb.Append('.');
+				sb.Append('/');
+				// sb.Append('(');
+				// sb.Append(_branches[i].conditions.Length);
+				// sb.Append(')');
+				// if (i < actionCount)
+				// 	sb.Append('.');
 			}
 
 			var hasElse = conditionCount < container.ActionSequenceCount;
@@ -79,8 +81,10 @@ namespace LunyScript.Blocks
 			{
 				var lastIndex = actionCount - 1;
 				sb.Append(container.GetActionSequenceName(lastIndex));
-				sb.Append('(');
-				sb.Append(')');
+				// sb.Append('/');
+				// sb.Append('(');
+				// sb.Append(_elseBranch?.Length);
+				// sb.Append(')');
 			}
 
 			return sb.ToString();
