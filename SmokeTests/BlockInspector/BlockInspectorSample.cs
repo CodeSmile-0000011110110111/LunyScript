@@ -19,7 +19,11 @@
 
 			Coroutine("test1").Every(1000).Heartbeats().WhenElapsed(Debug.Log("tic"));
 
-			On.Created(If(number > 0).Then(Debug.Log(number), Debug.Log(boolean), Debug.Log(text)));
+			On.Created(
+				If(number > 0)
+					.Then(Debug.Log(number), Debug.Log(boolean), Debug.Log(text))
+					.Else(Debug.Log("else"))
+			);
 
 			Coroutine("test2").In(5).Minutes().WhenElapsed(Debug.Log("5 min"));
 

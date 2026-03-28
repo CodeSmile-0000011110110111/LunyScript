@@ -53,11 +53,11 @@ namespace LunyScript
 		/// </summary>
 		public CoroutineBuilder Coroutine(String name) => new(this, name, TryCreateStackTrace(nameof(Coroutine)));
 
-		/// <summary>
+ 	/// <summary>
 		/// Conditional execution: If(conditions).Then(blocks).ElseIf(conditions).Then(blocks).Else(blocks);
 		/// Multiple conditions are implicitly AND combined.
 		/// </summary>
-		public IfBlock If(params ConditionBlock[] conditions) => new(this, conditions, TryCreateStackTrace(nameof(If)));
+		public IfBlockBuilder If(params ConditionBlock[] conditions) => new(this, conditions, TryCreateStackTrace(nameof(If)));
 
 		/// <summary>
 		/// Loop execution: While(conditions).Do(blocks);

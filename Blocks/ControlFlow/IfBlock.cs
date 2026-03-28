@@ -1,35 +1,36 @@
-using Luny;
+﻿using Luny;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace LunyScript.Blocks
 {
 	/// <summary>
-	/// Builder for constructing 'If' blocks with 'ElseIf' and 'Else' branches.
+	/// Conditional execution block supporting If / ElseIf / Else branches.
 	/// </summary>
-	public sealed class IfBlock : ActionBlock, IBlockContainer
+	internal sealed class IfBlock : ActionBlock, IBlockContainer
 	{
-		// builder-phase state (freed after Build)
-		private List<(ConditionBlock[] conditions, ActionBlock[] actions)> _branchesBuilder = new();
+		private readonly (ConditionBlock[] conditions, ActionBlock[] actions)[] _branches;
+		private readonly ActionBlock[] _elseBlocks;
 
-		// runtime-phase state (used in Execute)
-		private (ConditionBlock[] conditions, ActionBlock[] actions)[] _branches;
-		private ActionBlock[] _elseBlocks;
+		public static IfBlock Create(
+			(ConditionBlock[] conditions, ActionBlock[] actions)[] branches,
+			ActionBlock[] elseBlocks,
+			StackTrace trace) => new(branches, elseBlocks, trace);
+
+		private IfBlock(
+			(ConditionBlock[] conditions, ActionBlock[] actions)[] branches,
+			ActionBlock[] elseBlocks,
+			StackTrace trace) : base(trace)
+		{
+			_branches = branches;
+			_elseBlocks = elseBlocks;
+		}
+
+		// ── IBlockContainer ───────────────────────────────────────────────
 
 		Int32 IBlockContainer.ConditionSequenceCount => _branches.Length;
 		Int32 IBlockContainer.ActionSequenceCount => _branches.Length + (_elseBlocks != null ? 1 : 0);
-
-		internal IfBlock(Script script, ConditionBlock[] conditions, StackTrace trace) : base(trace)
-		{
-			if (conditions == null || conditions.Length == 0)
-				throw new LunyScriptException("If() conditions cannot be null or empty");
-
-			var token = script.CreateBuilderToken(nameof(IfBlock), "If");
-			token.AutoFinish = () => Build(script, token);
-			_branchesBuilder.Add((conditions, Array.Empty<ActionBlock>()));
-		}
 
 		String IBlockContainer.GetConditionSequenceName(Int32 index) => index == 0 ? "If" : "ElseIf";
 		String IBlockContainer.GetActionSequenceName(Int32 index) => index < _branches.Length ? "Then" : "Else";
@@ -40,51 +41,10 @@ namespace LunyScript.Blocks
 		IEnumerable<IScriptBlock> IBlockContainer.GetActionSequence(Int32 index) =>
 			index < _branches.Length ? _branches[index].actions : _elseBlocks ?? Array.Empty<ActionBlock>();
 
-		public IfBlock Then(params ActionBlock[] actions)
-		{
-			if (actions == null || actions.Length == 0)
-				throw new LunyScriptException("Then() blocks cannot be null or empty");
-
-			var last = _branchesBuilder.Count - 1;
-			_branchesBuilder[last] = (_branchesBuilder[last].conditions, actions);
-			return this;
-		}
-
-		public IfBlock ElseIf(params ConditionBlock[] conditions)
-		{
-			if (conditions == null || conditions.Length == 0)
-				throw new LunyScriptException("ElseIf() conditions cannot be null or empty");
-
-			_branchesBuilder.Add((conditions, Array.Empty<ActionBlock>()));
-			return this;
-		}
-
-		public ActionBlock Else(params ActionBlock[] actions)
-		{
-			if (actions == null || actions.Length == 0)
-				throw new LunyScriptException("Else() blocks cannot be null or empty");
-
-			_elseBlocks = actions;
-			return this;
-		}
-
-		private void Build(Script script, BuilderToken token)
-		{
-			if (_branchesBuilder.Count == 0)
-				throw new LunyScriptException($"{nameof(IfBlock)} has no branches");
-
-			_branches = _branchesBuilder.ToArray();
-			_branchesBuilder = null;
-			script.MarkBuilderTokenFinished(token);
-		}
-
 		// ── Execute ───────────────────────────────────────────────────────
 
 		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
 		{
-			if (_branches == null)
-				return;
-
 			foreach (var (conditions, actions) in _branches)
 			{
 				if (ControlFlow.EvaluateAll(runtimeContext, conditions))
@@ -104,7 +64,7 @@ namespace LunyScript.Blocks
 			var container = (IBlockContainer)this;
 			var conditionCount = container.ConditionSequenceCount;
 			var actionCount = container.ActionSequenceCount;
-			for (int i = 0; i < conditionCount; i++)
+			for (var i = 0; i < conditionCount; i++)
 			{
 				var name = container.GetConditionSequenceName(i);
 				sb.Append(name);
