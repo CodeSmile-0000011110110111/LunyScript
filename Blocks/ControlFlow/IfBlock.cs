@@ -1,4 +1,4 @@
-using LunyScript.Api;
+using Luny;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace LunyScript.Blocks
 		Int32 IBlockContainer.ConditionSequenceCount => _branches.Length;
 		Int32 IBlockContainer.ActionSequenceCount => _branches.Length + (_elseBlocks != null ? 1 : 0);
 
-		internal IfBlock(Script script, ConditionBlock[] conditions)
+		internal IfBlock(Script script, ConditionBlock[] conditions, StackTrace trace) : base(trace)
 		{
 			if (conditions == null || conditions.Length == 0)
 				throw new LunyScriptException("If() conditions cannot be null or empty");
@@ -100,8 +100,8 @@ namespace LunyScript.Blocks
 
 		public override String ToString()
 		{
-			var container = (IBlockContainer)this;
 			var sb = new StringBuilder();
+			var container = (IBlockContainer)this;
 			var conditionCount = container.ConditionSequenceCount;
 			var actionCount = container.ActionSequenceCount;
 			for (int i = 0; i < conditionCount; i++)

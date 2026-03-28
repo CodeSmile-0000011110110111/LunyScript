@@ -1,6 +1,4 @@
-﻿using LunyScript.Api;
-
-namespace LunyScript.SmokeTests
+﻿namespace LunyScript.SmokeTests
 {
 	public class TriggerEvents : Script
 	{

@@ -3,7 +3,7 @@ using Luny.Engine.Bridge;
 using LunyScript.Blocks.Guards;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	// ── Shared Helpers ────────────────────────────────────────────────────────
 	internal static class PhysicsEventBuilderHelper

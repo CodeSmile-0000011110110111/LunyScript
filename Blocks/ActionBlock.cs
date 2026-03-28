@@ -11,12 +11,8 @@ namespace LunyScript.Blocks
 	{
 		public static Boolean IsNullOrEmpty(ActionBlock[] blocks) => blocks == null || blocks.Length == 0;
 
-		protected ActionBlock(StackTrace trace)
+		protected ActionBlock(StackTrace trace = null)
 			: base(trace) {}
-
-		// placeholder until all blocks have stacktrace
-		protected ActionBlock([CallerMemberName] String name = "", [CallerFilePath] String path = "", [CallerLineNumber] Int32 line = 0)
-			: base(new StackTrace($"{nameof(ActionBlock)}.{name}: missing stack trace", path, line)) {}
 
 		protected internal abstract void Execute(IScriptRuntimeContext runtimeContext);
 

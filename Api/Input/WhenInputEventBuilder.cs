@@ -1,6 +1,6 @@
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	public readonly struct WhenInputEventBuilder
 	{

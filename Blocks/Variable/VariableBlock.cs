@@ -12,6 +12,8 @@ namespace LunyScript.Blocks
 	{
 		internal virtual Table.VarHandle VarHandle => null;
 
+		protected VariableBlock(StackTrace trace = null) : base(trace) {}
+
 		public static implicit operator VariableBlock(Variable value) => ConstantVariableBlock.Create(value);
 		public static implicit operator VariableBlock(Int32 value) => ConstantVariableBlock.Create(value);
 		public static implicit operator VariableBlock(Int64 value) => ConstantVariableBlock.Create(value);

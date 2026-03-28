@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using Object = System.Object;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Used to detect and report any 'unfinished' builders after a script's Build() method returns.

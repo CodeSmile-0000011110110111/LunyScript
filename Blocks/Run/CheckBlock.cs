@@ -1,3 +1,4 @@
+using Luny;
 using System;
 
 namespace LunyScript.Blocks
@@ -9,9 +10,12 @@ namespace LunyScript.Blocks
 	{
 		private readonly Func<IScriptRuntimeContext, Boolean> _func;
 
-		public static ConditionBlock Create(Func<IScriptRuntimeContext, Boolean> func) => new CheckBlock(func);
+		public static ConditionBlock Create(Func<IScriptRuntimeContext, Boolean> func, StackTrace trace = null) => new CheckBlock(func, trace);
 
-		private CheckBlock(Func<IScriptRuntimeContext, Boolean> func) => _func = func ?? throw new ArgumentNullException(nameof(func));
+		private CheckBlock(Func<IScriptRuntimeContext, Boolean> func, StackTrace trace) : base(trace)
+		{
+			_func = func ?? throw new ArgumentNullException(nameof(func));
+		}
 
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => _func(runtimeContext);
 	}

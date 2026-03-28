@@ -1,8 +1,9 @@
+using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	public interface IObjectBuilderState {}
 
@@ -16,7 +17,12 @@ namespace LunyScript.Api
 	public readonly struct ObjectBuilder
 	{
 		private readonly Script _script;
-		internal ObjectBuilder(Script script) => _script = script;
+		private readonly StackTrace _trace;
+		internal ObjectBuilder(Script script, StackTrace trace)
+		{
+			_script = script;
+			_trace = trace;
+		}
 
 		public ActionBlock Enable(String name = null) =>
 			String.IsNullOrEmpty(name) ? ObjectEnableSelfBlock.Create() : ObjectEnableTargetBlock.Create(name);
@@ -39,10 +45,15 @@ namespace LunyScript.Api
 	public readonly struct PrefabBuilder
 	{
 		private readonly Script _script;
-		internal PrefabBuilder(Script script) => _script = script;
+		private readonly StackTrace _trace;
+		internal PrefabBuilder(Script script, StackTrace trace)
+		{
+			_script = script;
+			_trace = trace;
+		}
 
 		public ObjectCreateBuilder<ObjectBuilderNameSet> Instantiate(String prefabName) =>
-			new ObjectBuilder(_script).Create(prefabName).From(prefabName);
+			new ObjectBuilder(_script, _trace).Create(prefabName).From(prefabName);
 	}
 
 	public static class ObjectBuilderExtensions

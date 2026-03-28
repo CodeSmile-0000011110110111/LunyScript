@@ -3,7 +3,7 @@ using LunyScript.Blocks;
 using System;
 using System.Runtime.CompilerServices;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	public readonly struct WhenInputActionBuilder
 	{

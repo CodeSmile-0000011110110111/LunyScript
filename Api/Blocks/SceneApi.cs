@@ -1,6 +1,7 @@
+using Luny;
 using LunyScript.Blocks;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Provides operations for managing Scenes and accessing the scene hierarchy.
@@ -8,7 +9,12 @@ namespace LunyScript.Api
 	public readonly struct SceneApi
 	{
 		private readonly Script _script;
-		internal SceneApi(Script script) => _script = script;
+		private readonly StackTrace _trace;
+		internal SceneApi(Script script, StackTrace trace)
+		{
+			_script = script;
+			_trace = trace;
+		}
 
 		public ActionBlock Reload() => SceneReloadBlock.Create();
 	}

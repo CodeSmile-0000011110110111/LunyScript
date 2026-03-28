@@ -1,7 +1,7 @@
 ﻿using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Fluent builder for Scale-Towards blocks.

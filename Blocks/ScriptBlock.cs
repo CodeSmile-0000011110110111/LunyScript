@@ -18,9 +18,6 @@ namespace LunyScript.Blocks
 
 		public ScriptBlock(StackTrace trace) => Trace = trace;
 
-		public ScriptBlock([CallerMemberName] String name = "", [CallerFilePath] String path = "", [CallerLineNumber] Int32 line = 0) =>
-			Trace = new StackTrace(name, path, line);
-
 		public override String ToString() => $"{GetType().Name} <-- should override ToString()!";
 	}
 }

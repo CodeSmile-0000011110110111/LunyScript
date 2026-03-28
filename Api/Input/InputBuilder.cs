@@ -1,8 +1,9 @@
+using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Provides access to input action values. Blocks poll the input service for last known state.
@@ -10,7 +11,12 @@ namespace LunyScript.Api
 	public readonly struct InputBuilder
 	{
 		private readonly Script _script;
-		internal InputBuilder(Script script) => _script = script;
+		private readonly StackTrace _trace;
+		internal InputBuilder(Script script, StackTrace trace)
+		{
+			_script = script;
+			_trace = trace;
+		}
 
 		/// <summary>
 		/// Returns a VariableBlock reading the last known axis value (Vector2) for the named action.

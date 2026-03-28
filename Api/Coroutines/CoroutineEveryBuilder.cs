@@ -1,4 +1,4 @@
-﻿namespace LunyScript.Api
+﻿namespace LunyScript
 {
 	/*public interface ICoroutineEveryBuilder {}
 	public interface ICoroutineEveryBuilderStart : ICoroutineEveryBuilder {}

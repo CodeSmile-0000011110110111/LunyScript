@@ -1,5 +1,4 @@
-﻿using LunyScript.Api;
-using System;
+﻿using System;
 
 namespace LunyScript.SmokeTests
 {

@@ -2,7 +2,7 @@
 using LunyScript.Coroutines;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	public interface ICoroutineTimerBuilderState {}
 	public interface ICoroutineTimerAmountSet : ICoroutineTimerBuilderState {}

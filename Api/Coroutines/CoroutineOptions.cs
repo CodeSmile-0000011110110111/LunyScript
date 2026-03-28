@@ -1,7 +1,8 @@
 ﻿using LunyScript.Blocks;
 using LunyScript.Coroutines;
 using System;
-namespace LunyScript.Api
+
+namespace LunyScript
 {
 	/// <summary>
 	/// Configuration options for creating a coroutine.

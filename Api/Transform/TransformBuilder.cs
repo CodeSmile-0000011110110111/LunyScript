@@ -1,8 +1,9 @@
-﻿using Luny.Engine.Bridge;
+﻿using Luny;
+using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	public interface ITransformBuilderState {}
 	public interface ITransformBuilderReady : ITransformBuilderState {}
@@ -12,8 +13,13 @@ namespace LunyScript.Api
 	public readonly struct TransformBuilder
 	{
 		private readonly Script _script;
+		private readonly StackTrace _trace;
 
-		internal TransformBuilder(Script script) => _script = script;
+		internal TransformBuilder(Script script, StackTrace trace)
+		{
+			_script = script;
+			_trace = trace;
+		}
 
 		// --- Set (Absolute Snap) ---
 

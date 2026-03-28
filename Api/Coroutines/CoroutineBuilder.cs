@@ -1,10 +1,10 @@
-﻿using Luny.Engine.Bridge;
+﻿using Luny;
+using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using LunyScript.Coroutines;
-using LunyScript.Events;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Entry point for the Coroutine fluent builder chain.
@@ -16,11 +16,12 @@ namespace LunyScript.Api
 	{
 		private readonly Script _script;
 		private readonly String _name;
-
-		internal CoroutineBuilder(Script script, String name)
+		private readonly StackTrace _trace;
+		internal CoroutineBuilder(Script script, String name, StackTrace trace)
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_name = !String.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Coroutine name is null or empty", nameof(name));
+			_trace = trace;
 		}
 		// TODO:
 		// add .OnUpdate(blocks) that run every time the coroutine updates (frames, or heartbeats)

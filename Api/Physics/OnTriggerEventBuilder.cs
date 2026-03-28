@@ -3,7 +3,7 @@ using LunyScript.Blocks;
 using LunyScript.Blocks.PhysicsEvent;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	// ── Trigger Builder States ───────────────────────────────────────────────
 	public interface ITriggerBuilderState {}

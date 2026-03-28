@@ -1,7 +1,7 @@
+using Luny;
 using LunyScript.Blocks;
-using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Builder for 'For' loops.
@@ -10,14 +10,16 @@ namespace LunyScript.Api
 	{
 		private readonly VariableBlock _limit;
 		private readonly VariableBlock _step;
+		private readonly StackTrace _trace;
 
-		internal ForBlockBuilder(VariableBlock limit)
-			: this(limit, 1) {}
+		internal ForBlockBuilder(VariableBlock limit, StackTrace trace)
+			: this(limit, 1, trace) {}
 
-		internal ForBlockBuilder(VariableBlock limit, VariableBlock step)
+		internal ForBlockBuilder(VariableBlock limit, VariableBlock step, StackTrace trace)
 		{
 			_limit = limit;
 			_step = step;
+			_trace = trace;
 		}
 
 		public ActionBlock Do(params ActionBlock[] blocks) => ForBlock.Create(_limit, _step, blocks);

@@ -19,9 +19,9 @@ namespace LunyScript.Blocks
 			get => Evaluate(null);
 		}
 
-		public static OrOperatorBlock Create(params ConditionBlock[] conditions) => new(conditions);
+		public static OrOperatorBlock Create(ConditionBlock[] conditions, StackTrace trace = null) => new(conditions, trace);
 
-		private OrOperatorBlock(ConditionBlock[] conditions)
+		private OrOperatorBlock(ConditionBlock[] conditions, StackTrace trace) : base(trace)
 		{
 			_conditions = conditions ?? throw new ArgumentNullException(nameof(conditions));
 

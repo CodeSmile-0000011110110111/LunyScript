@@ -3,7 +3,7 @@ using LunyScript.Blocks;
 using LunyScript.Events;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Scene Events

@@ -19,9 +19,9 @@ namespace LunyScript.Blocks
 			get => Evaluate(null);
 		}
 
-		public static AndOperatorBlock Create(params ConditionBlock[] conditions) => new(conditions);
+		public static AndOperatorBlock Create(ConditionBlock[] conditions, StackTrace trace = null) => new(conditions, trace);
 
-		private AndOperatorBlock(ConditionBlock[] conditions)
+		private AndOperatorBlock(ConditionBlock[] conditions, StackTrace trace) : base(trace)
 		{
 			_conditions = conditions ?? throw new ArgumentNullException(nameof(conditions));
 

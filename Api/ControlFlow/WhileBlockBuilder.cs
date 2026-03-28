@@ -1,6 +1,7 @@
+using Luny;
 using LunyScript.Blocks;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Builder for 'While' loops.
@@ -8,8 +9,13 @@ namespace LunyScript.Api
 	public readonly struct WhileBlockBuilder
 	{
 		private readonly ConditionBlock[] _conditions;
+		private readonly StackTrace _trace;
 
-		internal WhileBlockBuilder(ConditionBlock[] conditions) => _conditions = conditions;
+		internal WhileBlockBuilder(ConditionBlock[] conditions, StackTrace trace)
+		{
+			_conditions = conditions;
+			_trace = trace;
+		}
 
 		public ActionBlock Do(params ActionBlock[] blocks) => WhileBlock.Create(_conditions, blocks);
 	}

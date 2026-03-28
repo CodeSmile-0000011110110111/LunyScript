@@ -1,10 +1,8 @@
 using Luny;
 using LunyScript.Blocks;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Provides diagnostics blocks which are omitted from release builds,

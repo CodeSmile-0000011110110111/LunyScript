@@ -1,7 +1,8 @@
+using Luny;
 using LunyScript.Blocks;
 using System;
 
-namespace LunyScript.Api
+namespace LunyScript
 {
 	/// <summary>
 	/// Provides Editor-only functionality.
@@ -10,7 +11,12 @@ namespace LunyScript.Api
 	public readonly struct EditorApi
 	{
 		private readonly Script _script;
-		internal EditorApi(Script script) => _script = script;
+		private readonly StackTrace _trace;
+		internal EditorApi(Script script, StackTrace trace)
+		{
+			_script = script;
+			_trace = trace;
+		}
 
 		/// <summary>
 		/// Pauses playmode.

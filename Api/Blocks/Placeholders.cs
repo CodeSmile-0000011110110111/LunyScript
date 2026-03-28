@@ -1,4 +1,4 @@
-﻿namespace LunyScript.Api
+﻿namespace LunyScript
 {
 	internal sealed class ApiPlaceholders
 	{
