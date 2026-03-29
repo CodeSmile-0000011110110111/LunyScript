@@ -4,25 +4,35 @@
 	{
 		public override void Build(ScriptBuildContext context)
 		{
-			On.Ready(Debug.Log($"Hello, {nameof(BlockInspectorSample)}"));
+			On.Created(Debug.Log($"Hello, {nameof(BlockInspectorSample)}!"));
+
 			// dummy events for the Blocks Inspector
-			var number = Var.Define("number", 1234.56789);
-			var boolean = Var.Define("bool", true);
+			var number = Var.Define("number", 1234);
+			var boolean = Var.Define("boolean", true);
 			var text = Var.Define("text", "Hello, Luny!");
 
-			On.Created(Debug.Log(number), Debug.Log(boolean), Debug.Log(text));
-			On.Created(
-				If(!number, number > 1, number < 2, number >= 3, number <= 4, number == 5, number != 6)
-					.Then(Debug.Log(number), Debug.Log(boolean), Debug.Log(text))
-					.Else(Debug.Log("else"))
+			var counter = Var.Define("counter", 0);
+			On.Heartbeat(number.Inc(), counter.Inc(),
+				If(counter < 50)
+					.Then(Debug.Log("less than 50"))
+					.ElseIf(counter < 100)
+					.Then(Debug.Log("less than 100"))
+					.ElseIf(counter < 150)
+					.Then(Debug.Log("less than 150"))
+					.ElseIf(counter < 200)
+					.Then(Debug.Log("less than 200"))
+					.Else(counter.Set(0), boolean.Toggle()),
+				While(!boolean, number > 1700, text == "Hello, Luny!").Do(text.Set("Why do you say 'Hello'? I say goodbye.")),
+				If(boolean)
+					.Then(Debug.Log(text))
+					.ElseIf(boolean != false)
+					.Then(Debug.Log(text))
+					.ElseIf(!boolean == false)
+					.Then(Debug.Log(text))
+					.ElseIf(!boolean != true)
+					.Then(Debug.Log(text))
+					.Else(Debug.Log(text))
 			);
-
-			On.Ready(
-				While(boolean).Do(boolean.Toggle(), Debug.Log("ready")),
-				For(3).Do(Debug.Log("log thrice"))
-			);
-
-			On.Heartbeat(number.Inc());
 
 			var permaToggle = Var.Define("toggles continuously", true);
 			On.Heartbeat(
@@ -30,7 +40,14 @@
 					.Then(permaToggle.Toggle())
 					.ElseIf(!permaToggle)
 					.Then(permaToggle.Toggle())
-					.Else(Debug.Log("unreachable branch"))
+					.Else(Debug.Log("unreachable branch")),
+				For(3).Do(Debug.Log("thrice")),
+				For(9, 3).Do(Debug.Log("thrice too")),
+				For(5, -1).Do(Debug.Log("five time, but backwards")),
+				For(5, -2).Do(Debug.Log("five time, but backwards in steps 2")),
+				For(5, -3).Do(Debug.Log("five time, but backwards in steps 3")),
+				For(5, 2).Do(Debug.Log("five time, steps 2")),
+				For(5, 3).Do(Debug.Log("five time, steps 3"))
 			);
 
 			Coroutine("test1").Every(1000).Heartbeats().WhenElapsed(Debug.Log("tic"));
@@ -56,8 +73,6 @@
 					.Then(p4Joined.Toggle(), playerCount.Inc(), Input.Pair(nameof(Player4)), Object.Disable("JoinP4"), Debug.Log("JOIN: P4"))
 					.Else(Debug.LogWarning("Max Players reached. This demo supports up to four players but there's no hard limit."))
 				);
-
-			On.Destroyed(Debug.Log("destroyed"));
 		}
 	}
 }

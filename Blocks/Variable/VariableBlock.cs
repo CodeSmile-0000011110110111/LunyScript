@@ -154,19 +154,26 @@ namespace LunyScript.Blocks
 		public ActionBlock Set(VariableBlock value) =>
 			VariableSetValueBlock.Create(VarHandle, value, LunyScript.Trace.TryCreateStackTrace(nameof(Set)));
 
-		public ActionBlock Add(Variable value) => Set(this + value);
-		public ActionBlock Add(VariableBlock value) => Set(this + value);
-		public ActionBlock Sub(Variable value) => Set(this - value);
-		public ActionBlock Sub(VariableBlock value) => Set(this - value);
-		public ActionBlock Mul(Variable value) => Set(this * value);
-		public ActionBlock Mul(VariableBlock value) => Set(this * value);
-		public ActionBlock Div(Variable value) => Set(this / value);
-		public ActionBlock Div(VariableBlock value) => Set(this / value);
-		public ActionBlock Inc() => Set(this + 1);
-		public ActionBlock Dec() => Set(this - 1);
-		public ActionBlock Toggle() => Set(!this);
+		private ActionBlock Set(Variable value, StackTrace trace) => VariableSetValueBlock.Create(VarHandle,
+			LiteralVariableBlock.Create(value, trace), trace);
+
+		private ActionBlock Set(VariableBlock value, StackTrace trace) =>
+			VariableSetValueBlock.Create(VarHandle, value, trace);
+
+		public ActionBlock Add(Variable value) => Set(this + value, LunyScript.Trace.TryCreateStackTrace(nameof(Add)));
+		public ActionBlock Add(VariableBlock value) => Set(this + value, LunyScript.Trace.TryCreateStackTrace(nameof(Add)));
+		public ActionBlock Sub(Variable value) => Set(this - value, LunyScript.Trace.TryCreateStackTrace(nameof(Sub)));
+		public ActionBlock Sub(VariableBlock value) => Set(this - value, LunyScript.Trace.TryCreateStackTrace(nameof(Sub)));
+		public ActionBlock Mul(Variable value) => Set(this * value, LunyScript.Trace.TryCreateStackTrace(nameof(Mul)));
+		public ActionBlock Mul(VariableBlock value) => Set(this * value, LunyScript.Trace.TryCreateStackTrace(nameof(Mul)));
+		public ActionBlock Div(Variable value) => Set(this / value, LunyScript.Trace.TryCreateStackTrace(nameof(Div)));
+		public ActionBlock Div(VariableBlock value) => Set(this / value, LunyScript.Trace.TryCreateStackTrace(nameof(Div)));
+		public ActionBlock Inc() => Set(this + 1, LunyScript.Trace.TryCreateStackTrace(nameof(Inc)));
+		public ActionBlock Dec() => Set(this - 1, LunyScript.Trace.TryCreateStackTrace(nameof(Dec)));
+		public ActionBlock Toggle() => Set(!this, LunyScript.Trace.TryCreateStackTrace(nameof(Toggle)));
 
 		// Aliases
+		/*
 		public ActionBlock Subtract(Variable value) => Sub(value);
 		public ActionBlock Subtract(VariableBlock value) => Sub(value);
 		public ActionBlock Multiply(Variable value) => Mul(value);
@@ -175,6 +182,7 @@ namespace LunyScript.Blocks
 		public ActionBlock Divide(VariableBlock value) => Div(value);
 		public ActionBlock Increment() => Inc();
 		public ActionBlock Decrement() => Dec();
+		*/
 
 		public override String ToString()
 		{
