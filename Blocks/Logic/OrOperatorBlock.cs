@@ -52,5 +52,7 @@ namespace LunyScript.Blocks
 
 			return false;
 		}
+
+		public override String ToString() => $"OR({base.ToString()})";
 	}
 }

@@ -14,7 +14,12 @@
 			var counter = Var.Define("counter", 0);
 			On.Heartbeat(number.Inc(), counter.Inc(),
 				If(counter < 50)
-					.Then(Debug.Log("less than 50"))
+					.Then(Debug.Log("less than 50"),
+						If(counter < 22)
+							.Then(Debug.Log("nested If: < 22"))
+							.ElseIf(counter < 44)
+							.Then(Debug.Log("nested If: < 44"))
+							.Else(Debug.Log("nested If: < 50")))
 					.ElseIf(counter < 100)
 					.Then(Debug.Log("less than 100"))
 					.ElseIf(counter < 150)
@@ -31,7 +36,19 @@
 					.Then(Debug.Log(text))
 					.ElseIf(!boolean != true)
 					.Then(Debug.Log(text))
-					.Else(Debug.Log(text))
+					.Else(Debug.Log(text)),
+				If(OR(boolean, AND(boolean, boolean, !OR(NOT(boolean == false), !boolean), NOT(!boolean))))
+					.Then(Debug.Log("testing nested logical operators")),
+				If(OR(boolean, !boolean))
+					.Then(Debug.Log("OR must be true always"))
+					.ElseIf(OR(boolean, boolean))
+					.Then(Debug.Log("OR must be true or false"))
+					.ElseIf(OR(!boolean, !boolean))
+					.Then(Debug.Log("OR must be true or false"))
+					.ElseIf(!OR(boolean, boolean))
+					.Then(Debug.Log("OR must be true or false"))
+					.ElseIf(!OR(!boolean, !boolean))
+					.Then(Debug.Log("OR must be true or false"))
 			);
 
 			var permaToggle = Var.Define("toggles continuously", true);

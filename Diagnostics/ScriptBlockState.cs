@@ -1,4 +1,5 @@
-﻿using LunyScript.Blocks;
+﻿using Luny;
+using LunyScript.Blocks;
 using System;
 using System.Text;
 
@@ -9,23 +10,20 @@ namespace LunyScript.Diagnostics
 	/// </summary>
 	internal sealed class ScriptBlockState
 	{
-		private static String s_SymbolTrue = "🟢";//"✅";
-		private static String s_SymbolFalse = "🔴";//"❌";
-		private static String s_SymbolUndecided = "🤔";
 		private readonly ScriptBlock _block;
 
 		public Int32 FrameStamp { get; set; }
 
 		public String FileName => _block.Trace?.Count > 0 ? _block.Trace[0].FileName : null;
 		public Int32 Line => _block.Trace?.Count > 0 ? _block.Trace[0].Line : 0;
-		public Boolean IsAction => _block is ActionBlock;
-		public Boolean IsCondition => _block is ConditionBlock;
-		public ActionBlock Action => _block as ActionBlock;
-		public ConditionBlock Condition => _block as ConditionBlock;
+		// public Boolean IsAction => _block is ActionBlock;
+		// public Boolean IsCondition => _block is ConditionBlock;
+		// public ActionBlock Action => _block as ActionBlock;
+		// public ConditionBlock Condition => _block as ConditionBlock;
 		public ScriptBlock Block => _block;
 
 		public static String GetTruthSymbol(ScriptRuntimeContext context, ConditionBlock condition) =>
-			context != null ? condition.Evaluate(context) ? s_SymbolTrue : s_SymbolFalse : s_SymbolUndecided;
+			context != null ? Emoji.IsSatisfied(condition.Evaluate(context)) : Emoji.IsKnown(false);
 
 		public ScriptBlockState(ScriptBlock block) => _block = block;
 
@@ -63,18 +61,6 @@ namespace LunyScript.Diagnostics
 			return $"{_block?.GetType().Name}({_block}) <-- FIXME: no trace";
 		}
 
-		public Boolean TryGetAction(out ActionBlock action)
-		{
-			action = Action;
-			return IsAction;
-		}
-
-		public Boolean TryGetCondition(out ConditionBlock condition)
-		{
-			condition = Condition;
-			return IsCondition;
-		}
-
 		public Boolean Contains(String filterText) => GetDisplayString(null).IndexOf(filterText, StringComparison.OrdinalIgnoreCase) >= 0;
 
 		public override String ToString() => GetDisplayString(null);
@@ -103,8 +89,7 @@ namespace LunyScript.Diagnostics
 			}
 
 			var branchName = container.GetConditionSequenceName(branchIndex);
-			var truthSymbol = truthValue ? s_SymbolTrue : s_SymbolFalse;
-			return $"{truthSymbol} {branchName}";
+			return $"{Emoji.IsSatisfied(truthValue)} {branchName}";
 		}
 	}
 }
