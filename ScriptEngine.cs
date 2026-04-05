@@ -25,6 +25,8 @@ namespace LunyScript
 	{
 		private LunyScriptRunner _runner;
 
+		public static event Action<IScriptEngine> OnScriptEngineInitialized;
+
 		public static IScriptEngine Instance { get; private set; }
 		public ITable GlobalVariables => ScriptRuntimeContext.GetGlobalVariables();
 
@@ -53,6 +55,9 @@ namespace LunyScript
 
 			_runner = scriptRunner;
 			Instance = this;
+
+			OnScriptEngineInitialized?.Invoke(Instance);
+			OnScriptEngineInitialized = null;
 		}
 
 		public IScriptRuntimeContext GetScriptContext(LunyNativeObjectId lunyNativeObjectID) =>
