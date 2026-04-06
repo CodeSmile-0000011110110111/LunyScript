@@ -12,7 +12,7 @@ namespace LunyScript.Blocks
 	{
 		private readonly String _actionName;
 
-		internal override LunyVector2 Value
+		public override LunyVector2 Value
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => LunyEngine.Instance.Input.GetDirection(_actionName);

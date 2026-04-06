@@ -9,7 +9,7 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class VariableBlock<T> where T : struct
 	{
-		internal abstract T Value { get; }
+		public abstract T Value { get; }
 
 		public static implicit operator VariableBlock<T>(T value) => new ConstantBlock(value);
 
@@ -19,7 +19,7 @@ namespace LunyScript.Blocks
 		{
 			private readonly T _value;
 
-			internal override T Value => _value;
+			public override T Value => _value;
 
 			internal ConstantBlock(T value) => _value = value;
 

@@ -13,7 +13,7 @@ namespace LunyScript.Blocks
 		private readonly String _actionName;
 		private readonly LunyVector3 _worldUp;
 
-		internal override LunyQuaternion Value
+		public override LunyQuaternion Value
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => LunyEngine.Instance.Input.GetRotation(_actionName, _worldUp);
