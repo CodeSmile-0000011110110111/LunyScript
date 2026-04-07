@@ -12,6 +12,7 @@ namespace LunyScript
 	{
 		private readonly Script _script;
 		private readonly StackTrace _trace;
+
 		internal InputBuilder(Script script, StackTrace trace)
 		{
 			_script = script;
@@ -34,12 +35,14 @@ namespace LunyScript
 		/// <param name="userName"></param>
 		/// <returns></returns>
 		public ActionBlock Pair(String userName) => InputAssignUserBlock.Create(userName);
+
 		/// <summary>
 		/// Unpairs a named input user from input devices.
 		/// </summary>
 		/// <param name="userName"></param>
 		/// <returns></returns>
 		public ActionBlock Unpair(String userName) => InputUnassignUserBlock.Create(userName);
+
 		/// <summary>
 		/// Checks if the named input user has an input device assigned.
 		/// </summary>
@@ -76,6 +79,7 @@ namespace LunyScript
 		/// </summary>
 		/// <returns></returns>
 		public ActionBlock Enable() => InputActionEnableBlock.Create(_actionName);
+
 		/// <summary>
 		/// Disables an input action or action map.
 		/// </summary>
@@ -118,5 +122,7 @@ namespace LunyScript
 		/// Analog trigger value (0.0–1.0).
 		/// </summary>
 		public VariableBlock Value => InputAxisValueBlock.Create(_actionName);
+
+		public static implicit operator VariableBlock(InputAxisBuilder axis) => axis.Value;
 	}
 }
