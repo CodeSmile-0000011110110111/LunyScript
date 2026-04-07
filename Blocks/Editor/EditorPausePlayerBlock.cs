@@ -18,7 +18,7 @@ namespace LunyScript.Blocks
 		private EditorPausePlayerBlock() {}
 		private EditorPausePlayerBlock(String message = null) => _message = message;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => DoPausePlayer(runtimeContext);
+		protected internal override void Execute(IScriptRuntimeContext context) => DoPausePlayer(context);
 
 		[Conditional("DEBUG")] [Conditional("LUNYSCRIPT_DEBUG")]
 		private void DoPausePlayer(IScriptRuntimeContext runtimeContext)

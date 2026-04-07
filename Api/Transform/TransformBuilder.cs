@@ -21,6 +21,11 @@ namespace LunyScript
 			_trace = trace;
 		}
 
+		/// <summary> Instantly set the World position. </summary>
+		public TransformRotationAddLocalAngleBlock RotateByAxisAngle(VariableBlock deltaAngle, VariableBlock speed, LunyVector3 angleAxis,
+			Double minAngle = Double.NegativeInfinity, Double maxAngle = Double.PositiveInfinity) =>
+			TransformRotationAddLocalAngleBlock.Create(deltaAngle, speed, angleAxis, minAngle, maxAngle);
+
 		// --- Set (Absolute Snap) ---
 
 		/// <summary> Instantly set the World position. </summary>

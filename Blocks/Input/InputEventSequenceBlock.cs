@@ -30,10 +30,10 @@ namespace LunyScript.Blocks
 			Phase = phase;
 		}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
 			foreach (var block in Blocks)
-				block.Execute(runtimeContext);
+				block.Execute(context);
 		}
 	}
 }

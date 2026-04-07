@@ -9,7 +9,7 @@ namespace LunyScript.Blocks
 
 		private ObjectEnableSelfBlock() {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => runtimeContext.LunyObject.IsEnabled = true;
+		protected internal override void Execute(IScriptRuntimeContext context) => context.LunyObject.IsEnabled = true;
 	}
 
 	internal sealed class ObjectEnableTargetBlock : ActionBlock
@@ -20,7 +20,7 @@ namespace LunyScript.Blocks
 
 		private ObjectEnableTargetBlock(String name) => _name = name;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
 			var target = LunyEngine.Instance.TryGetObject(_name);
 			if (target == null)

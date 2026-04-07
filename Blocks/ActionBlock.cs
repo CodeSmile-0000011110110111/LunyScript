@@ -13,7 +13,7 @@ namespace LunyScript.Blocks
 		protected ActionBlock(StackTrace trace = null)
 			: base(trace) {}
 
-		protected internal abstract void Execute(IScriptRuntimeContext runtimeContext);
+		protected internal abstract void Execute(IScriptRuntimeContext context);
 
 		public override String ToString()
 		{

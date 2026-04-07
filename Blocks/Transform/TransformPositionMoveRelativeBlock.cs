@@ -24,9 +24,9 @@ namespace LunyScript.Blocks
 			_space = space;
 		}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var transform = runtimeContext.LunyObject.Transform;
+			var transform = context.LunyObject.Transform;
 			var distance = _distance.Value;
 			var speed = _speed.Value;
 			var translation = distance * _axis * (speed * LunyTime.DeltaTime);

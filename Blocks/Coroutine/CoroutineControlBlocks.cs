@@ -15,7 +15,7 @@ namespace LunyScript.Blocks
 		public CoroutineStartBlock(Coroutine coroutine)
 			: base(coroutine) {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => _coroutine.Start();
+		protected internal override void Execute(IScriptRuntimeContext context) => _coroutine.Start();
 	}
 
 	internal sealed class CoroutineStopBlock : CoroutineControlBlock
@@ -23,7 +23,7 @@ namespace LunyScript.Blocks
 		public CoroutineStopBlock(Coroutine coroutine)
 			: base(coroutine) {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => _coroutine.Stop();
+		protected internal override void Execute(IScriptRuntimeContext context) => _coroutine.Stop();
 	}
 
 	internal sealed class CoroutinePauseBlock : CoroutineControlBlock
@@ -31,7 +31,7 @@ namespace LunyScript.Blocks
 		public CoroutinePauseBlock(Coroutine coroutine)
 			: base(coroutine) {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => _coroutine.Pause();
+		protected internal override void Execute(IScriptRuntimeContext context) => _coroutine.Pause();
 	}
 
 	internal sealed class CoroutineResumeBlock : CoroutineControlBlock
@@ -39,6 +39,6 @@ namespace LunyScript.Blocks
 		public CoroutineResumeBlock(Coroutine coroutine)
 			: base(coroutine) {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => _coroutine.Resume();
+		protected internal override void Execute(IScriptRuntimeContext context) => _coroutine.Resume();
 	}
 }

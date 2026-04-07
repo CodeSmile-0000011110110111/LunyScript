@@ -8,7 +8,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Reads the last known axis value (LunyVector2) for a named input action from the input service.
 	/// </summary>
-	internal sealed class InputAxisDirectionBlock : VariableBlock<LunyVector2>
+	internal sealed class InputVector2Block : VariableBlock<LunyVector2>
 	{
 		private readonly String _actionName;
 
@@ -18,9 +18,9 @@ namespace LunyScript.Blocks
 			get => LunyEngine.Instance.Input.GetDirection(_actionName);
 		}
 
-		internal static InputAxisDirectionBlock Create(String actionName) => new(actionName);
+		internal static InputVector2Block Create(String actionName) => new(actionName);
 
-		private InputAxisDirectionBlock(String actionName) => _actionName = actionName;
+		private InputVector2Block(String actionName) => _actionName = actionName;
 
 		public override String ToString() => $"Input.Axis(\"{_actionName}\")";
 	}

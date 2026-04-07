@@ -21,13 +21,13 @@ namespace LunyScript.Blocks
 
 		private InputAssignUserBlock(String userName) => _userName = userName;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var inputEvent = runtimeContext.EventArgs as LunyInputActionEvent;
+			var inputEvent = context.EventArgs as LunyInputActionEvent;
 			if (inputEvent == null)
 				throw new LunyScriptException($"{nameof(InputAssignUserBlock)} can only be used in Input event sequences.");
 
-			LunyEngine.Instance.Input.AssignUserToLastDevice(_userName, inputEvent.DeviceId, runtimeContext.LunyObject);
+			LunyEngine.Instance.Input.AssignUserToLastDevice(_userName, inputEvent.DeviceId, context.LunyObject);
 		}
 	}
 
@@ -48,6 +48,6 @@ namespace LunyScript.Blocks
 
 		private InputUnassignUserBlock(String userName) => _userName = userName;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) => LunyEngine.Instance.Input.UnassignUser(_userName);
+		protected internal override void Execute(IScriptRuntimeContext context) => LunyEngine.Instance.Input.UnassignUser(_userName);
 	}
 }

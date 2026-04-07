@@ -11,8 +11,8 @@ namespace LunyScript.Blocks
 
 		private TransformRotationSetLocalBlock(VariableBlock<LunyQuaternion> rotation) => _rotation = rotation;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			runtimeContext.LunyObject.Transform.LocalRotation = _rotation.Value;
+		protected internal override void Execute(IScriptRuntimeContext context) =>
+			context.LunyObject.Transform.LocalRotation = _rotation.Value;
 
 		public override String ToString() => $"{GetType().Name}({_rotation})";
 	}

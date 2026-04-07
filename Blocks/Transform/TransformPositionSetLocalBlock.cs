@@ -11,8 +11,8 @@ namespace LunyScript.Blocks
 
 		private TransformPositionSetLocalBlock(VariableBlock<LunyVector3> position) => _position = position;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			runtimeContext.LunyObject.Transform.LocalPosition = _position.Value;
+		protected internal override void Execute(IScriptRuntimeContext context) =>
+			context.LunyObject.Transform.LocalPosition = _position.Value;
 
 		public override String ToString() => $"{GetType().Name}({_position})";
 	}

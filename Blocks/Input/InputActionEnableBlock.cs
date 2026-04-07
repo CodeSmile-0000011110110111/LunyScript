@@ -17,7 +17,7 @@ namespace LunyScript.Blocks
 
 		private InputActionEnableBlock(String actionName) => _actionName = actionName;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
+		protected internal override void Execute(IScriptRuntimeContext context) =>
 			LunyEngine.Instance.Input.EnableInputAction(_actionName);
 	}
 
@@ -35,7 +35,7 @@ namespace LunyScript.Blocks
 
 		private InputActionDisableBlock(String actionName) => _actionName = actionName;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
+		protected internal override void Execute(IScriptRuntimeContext context) =>
 			LunyEngine.Instance.Input.DisableInputAction(_actionName);
 	}
 }

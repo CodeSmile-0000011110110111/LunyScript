@@ -11,8 +11,8 @@ namespace LunyScript.Blocks
 
 		private TransformScaleSetLocalBlock(VariableBlock<LunyVector3> scale) => _scale = scale;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			runtimeContext.LunyObject.Transform.LocalScale = _scale.Value;
+		protected internal override void Execute(IScriptRuntimeContext context) =>
+			context.LunyObject.Transform.LocalScale = _scale.Value;
 
 		public override String ToString() => $"{GetType().Name}({_scale})";
 	}
@@ -25,8 +25,8 @@ namespace LunyScript.Blocks
 
 		private TransformScaleSetLocalUniformBlock(VariableBlock uniformScale) => _uniformScale = uniformScale;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext) =>
-			runtimeContext.LunyObject.Transform.LocalScale = LunyVector3.Uniform(_uniformScale.Value);
+		protected internal override void Execute(IScriptRuntimeContext context) =>
+			context.LunyObject.Transform.LocalScale = LunyVector3.Uniform(_uniformScale.Value);
 
 		public override String ToString() => $"{GetType().Name}({_uniformScale})";
 	}

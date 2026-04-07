@@ -8,7 +8,7 @@ namespace LunyScript.Blocks
 	/// <summary>
 	/// Reads the last known rotation (LunyQuaternion) for a named input action from the input service.
 	/// </summary>
-	internal sealed class InputAxisRotationBlock : VariableBlock<LunyQuaternion>
+	internal sealed class InputRotationBlock : VariableBlock<LunyQuaternion>
 	{
 		private readonly String _actionName;
 		private readonly LunyVector3 _worldUp;
@@ -19,10 +19,10 @@ namespace LunyScript.Blocks
 			get => LunyEngine.Instance.Input.GetRotation(_actionName, _worldUp);
 		}
 
-		internal static InputAxisRotationBlock Create(String actionName) => new(actionName, LunyVector3.Up);
-		internal static InputAxisRotationBlock Create(String actionName, LunyVector3 worldUp) => new(actionName, worldUp);
+		internal static InputRotationBlock Create(String actionName) => new(actionName, LunyVector3.Up);
+		internal static InputRotationBlock Create(String actionName, LunyVector3 worldUp) => new(actionName, worldUp);
 
-		private InputAxisRotationBlock(String actionName, LunyVector3 worldUp)
+		private InputRotationBlock(String actionName, LunyVector3 worldUp)
 		{
 			_actionName = actionName;
 			_worldUp = worldUp;

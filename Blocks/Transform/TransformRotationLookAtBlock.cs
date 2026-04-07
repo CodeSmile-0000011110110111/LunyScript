@@ -19,9 +19,9 @@ namespace LunyScript.Blocks
 			_axisLock = axisLock;
 		}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var transform = runtimeContext.LunyObject.Transform;
+			var transform = context.LunyObject.Transform;
 			if (!VectorUtil.TryGetMaskedDirection(transform.Position, _target.Transform.Position, _axisLock, out var maskedDirection))
 				return;
 

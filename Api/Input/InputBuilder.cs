@@ -22,12 +22,12 @@ namespace LunyScript
 		/// <summary>
 		/// Returns a VariableBlock reading the last known axis value (Vector2) for the named action.
 		/// </summary>
-		public VariableBlock<LunyVector2> Direction(String actionName) => InputAxisDirectionBlock.Create(actionName);
+		public VariableBlock<LunyVector2> Direction(String actionName) => InputVector2Block.Create(actionName);
 
 		/// <summary>
 		/// Returns a VariableBlock reading the last known axis value (Vector2) for the named action.
 		/// </summary>
-		public VariableBlock<LunyQuaternion> Rotation(String actionName) => InputAxisRotationBlock.Create(actionName);
+		public VariableBlock<LunyQuaternion> Rotation(String actionName) => InputRotationBlock.Create(actionName);
 
 		/// <summary>
 		/// Pairs a named input user with the most recently used input device. Only pairs with unused devices. Should be used within an Input.Action event.
@@ -121,7 +121,10 @@ namespace LunyScript
 		/// <summary>
 		/// Analog trigger value (0.0–1.0).
 		/// </summary>
-		public VariableBlock Value => InputAxisValueBlock.Create(_actionName);
+		public VariableBlock Value => InputAxisBlock.Create(_actionName);
+
+		public VariableBlock Horizontal => InputAxisHorizontalBlock.Create(_actionName);
+		public VariableBlock Vertical => InputAxisVerticalBlock.Create(_actionName);
 
 		public static implicit operator VariableBlock(InputAxisBuilder axis) => axis.Value;
 	}

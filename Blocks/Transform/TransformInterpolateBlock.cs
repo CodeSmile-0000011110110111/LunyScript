@@ -66,12 +66,12 @@ namespace LunyScript.Blocks
 			Double responsiveness)
 			: base(targetScale, speed, deadZone, axisLock, responsiveness) {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			if (!TryGetScaleDelta(runtimeContext, out var current, out var maskedTarget))
+			if (!TryGetScaleDelta(context, out var current, out var maskedTarget))
 				return;
 
-			runtimeContext.LunyObject.Transform.LocalScale = LunyVector3.MoveTowards(current, maskedTarget, ComputeStep());
+			context.LunyObject.Transform.LocalScale = LunyVector3.MoveTowards(current, maskedTarget, ComputeStep());
 		}
 
 		public override String ToString() => $"{GetType().Name}({TowardsVariableToString()})";
@@ -89,13 +89,13 @@ namespace LunyScript.Blocks
 			Double responsiveness, Boolean spherical)
 			: base(targetScale, speed, deadZone, axisLock, responsiveness) => _spherical = spherical;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			if (!TryGetScaleDelta(runtimeContext, out var current, out var maskedTarget))
+			if (!TryGetScaleDelta(context, out var current, out var maskedTarget))
 				return;
 
 			var t = ComputeStep();
-			runtimeContext.LunyObject.Transform.LocalScale = _spherical
+			context.LunyObject.Transform.LocalScale = _spherical
 				? LunyVector3.Slerp(current, maskedTarget, t)
 				: LunyVector3.Lerp(current, maskedTarget, t);
 		}
@@ -156,12 +156,12 @@ namespace LunyScript.Blocks
 			Double responsiveness)
 			: base(target, speed, deadZone, axisLock, responsiveness) {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			if (!TryGetPositionDelta(runtimeContext, out var current, out var maskedTarget))
+			if (!TryGetPositionDelta(context, out var current, out var maskedTarget))
 				return;
 
-			runtimeContext.LunyObject.Transform.Position = LunyVector3.MoveTowards(current, maskedTarget, ComputeStep());
+			context.LunyObject.Transform.Position = LunyVector3.MoveTowards(current, maskedTarget, ComputeStep());
 		}
 
 		public override String ToString() => $"{GetType().Name}({TowardsObjectToString()})";
@@ -179,13 +179,13 @@ namespace LunyScript.Blocks
 			Double responsiveness, Boolean spherical)
 			: base(target, speed, deadZone, axisLock, responsiveness) => _spherical = spherical;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			if (!TryGetPositionDelta(runtimeContext, out var current, out var maskedTarget))
+			if (!TryGetPositionDelta(context, out var current, out var maskedTarget))
 				return;
 
 			var t = ComputeStep();
-			runtimeContext.LunyObject.Transform.Position =
+			context.LunyObject.Transform.Position =
 				_spherical ? LunyVector3.Slerp(current, maskedTarget, t) : LunyVector3.Lerp(current, maskedTarget, t);
 		}
 
@@ -201,12 +201,12 @@ namespace LunyScript.Blocks
 			Double responsiveness)
 			: base(target, speed, deadZone, axisLock, responsiveness) {}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			if (!TryGetTargetRotation(runtimeContext, out var currentRotation, out var targetRotation))
+			if (!TryGetTargetRotation(context, out var currentRotation, out var targetRotation))
 				return;
 
-			runtimeContext.LunyObject.Transform.Rotation =
+			context.LunyObject.Transform.Rotation =
 				LunyQuaternion.RotateTowards(currentRotation, targetRotation, ComputeStep());
 		}
 
@@ -225,13 +225,13 @@ namespace LunyScript.Blocks
 			Double responsiveness, Boolean spherical)
 			: base(target, speed, deadZone, axisLock, responsiveness) => _spherical = spherical;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			if (!TryGetTargetRotation(runtimeContext, out var currentRotation, out var targetRotation))
+			if (!TryGetTargetRotation(context, out var currentRotation, out var targetRotation))
 				return;
 
 			var t = ComputeStep();
-			runtimeContext.LunyObject.Transform.Rotation = _spherical
+			context.LunyObject.Transform.Rotation = _spherical
 				? LunyQuaternion.Slerp(currentRotation, targetRotation, t)
 				: LunyQuaternion.Lerp(currentRotation, targetRotation, t);
 		}

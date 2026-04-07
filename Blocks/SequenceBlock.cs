@@ -21,13 +21,13 @@ namespace LunyScript.Blocks
 			Blocks = blocks;
 		}
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			if (runtimeContext == null)
+			if (context == null)
 				return;
 
 			foreach (var block in Blocks)
-				block?.Execute(runtimeContext);
+				block?.Execute(context);
 		}
 	}
 }

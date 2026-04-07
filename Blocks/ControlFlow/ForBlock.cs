@@ -33,7 +33,7 @@ namespace LunyScript.Blocks
 		String IBlockContainer.GetActionSequenceName(Int32 index) => "Do";
 		IEnumerable<IScriptBlock> IBlockContainer.GetActionSequence(Int32 index) => _actions;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
 #if DEBUG || UNITY_EDITOR
 			var iterations = 0;
@@ -50,11 +50,11 @@ namespace LunyScript.Blocks
 				if (++iterations > maxLimit)
 				{
 					_didHitMaxLoopIterationLimit = true;
-					throw new LunyScriptMaxIterationException(runtimeContext, nameof(ForBlock), maxLimit);
+					throw new LunyScriptMaxIterationException(context, nameof(ForBlock), maxLimit);
 				}
 #endif
 
-				ControlFlow.ExecuteAll(runtimeContext, _actions);
+				ControlFlow.ExecuteAll(context, _actions);
 			}
 		}
 

@@ -43,19 +43,19 @@ namespace LunyScript.Blocks
 
 		// ── Execute ───────────────────────────────────────────────────────
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
 			foreach (var (conditions, actions) in _branches)
 			{
-				if (ControlFlow.EvaluateAll(runtimeContext, conditions))
+				if (ControlFlow.EvaluateAll(context, conditions))
 				{
-					ControlFlow.ExecuteAll(runtimeContext, actions);
+					ControlFlow.ExecuteAll(context, actions);
 					return;
 				}
 			}
 
 			if (_elseBranch != null)
-				ControlFlow.ExecuteAll(runtimeContext, _elseBranch);
+				ControlFlow.ExecuteAll(context, _elseBranch);
 		}
 
 		public override String ToString()

@@ -142,7 +142,7 @@ namespace LunyScript.Blocks
 		public ActionBlock Resume() => new CoroutineResumeBlock(_coroutine);
 
 		// ── Execute ───────────────────────────────────────────────────────
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
 			if (_time != null)
 			{
@@ -157,19 +157,19 @@ namespace LunyScript.Blocks
 			if (events == Coroutine.Events.None)
 				return;
 
-			var context = (ScriptRuntimeContext)runtimeContext;
+			var ctx = (ScriptRuntimeContext)context;
 			if (events.Has(Coroutine.Events.Started))
-				LunyScriptRunner.Run(_sequences[OnStartedIndex], context);
+				LunyScriptRunner.Run(_sequences[OnStartedIndex], ctx);
 			if (events.Has(Coroutine.Events.Resumed))
-				LunyScriptRunner.Run(_sequences[OnResumedIndex], context);
+				LunyScriptRunner.Run(_sequences[OnResumedIndex], ctx);
 			if (events.Has(Coroutine.Events.Process))
-				LunyScriptRunner.Run(_sequences[OnProcessIndex], context);
+				LunyScriptRunner.Run(_sequences[OnProcessIndex], ctx);
 			if (events.Has(Coroutine.Events.Elapsed))
-				LunyScriptRunner.Run(_sequences[OnElapsedIndex], context);
+				LunyScriptRunner.Run(_sequences[OnElapsedIndex], ctx);
 			if (events.Has(Coroutine.Events.Paused))
-				LunyScriptRunner.Run(_sequences[OnPausedIndex], context);
+				LunyScriptRunner.Run(_sequences[OnPausedIndex], ctx);
 			if (events.Has(Coroutine.Events.Stopped))
-				LunyScriptRunner.Run(_sequences[OnStoppedIndex], context);
+				LunyScriptRunner.Run(_sequences[OnStoppedIndex], ctx);
 		}
 	}
 

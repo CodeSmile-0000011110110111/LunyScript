@@ -122,7 +122,7 @@ namespace LunyScript.Blocks
 		public static VariableBlock operator !(VariableBlock operand) =>
 			NegationOperatorBlock.Create(operand, LunyScript.Trace.TryCreateStackTrace("!"));
 
-		internal Double Value => Variable.AsDouble();
+		public Double Value => Variable.AsDouble();
 
 		internal abstract Variable Variable { get; }
 

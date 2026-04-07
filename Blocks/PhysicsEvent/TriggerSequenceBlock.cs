@@ -19,9 +19,9 @@ namespace LunyScript.Blocks.PhysicsEvent
 		public TriggerSequenceBlock(IReadOnlyList<ActionBlock> blocks, EventGuard[] guards, Predicate<LunyCollider>[] predicates)
 			: base(blocks, guards) => _predicates = predicates;
 
-		protected internal override void Execute(IScriptRuntimeContext runtimeContext)
+		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			if (runtimeContext == null)
+			if (context == null)
 				return;
 
 			if (!PassesAllGuards())
@@ -29,7 +29,7 @@ namespace LunyScript.Blocks.PhysicsEvent
 
 			if (_predicates != null)
 			{
-				var collider = (LunyCollider)runtimeContext.EventArgs;
+				var collider = (LunyCollider)context.EventArgs;
 				foreach (var predicate in _predicates)
 				{
 					if (!predicate(collider))
@@ -38,7 +38,7 @@ namespace LunyScript.Blocks.PhysicsEvent
 			}
 
 			foreach (var block in Blocks)
-				block?.Execute(runtimeContext);
+				block?.Execute(context);
 		}
 	}
 }
