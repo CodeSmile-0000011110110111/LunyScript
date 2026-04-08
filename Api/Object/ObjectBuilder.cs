@@ -24,12 +24,19 @@ namespace LunyScript
 			_trace = trace;
 		}
 
-		public ActionBlock Enable(String name = null) =>
-			String.IsNullOrEmpty(name) ? ObjectEnableSelfBlock.Create() : ObjectEnableTargetBlock.Create(name);
+		[NeedsReview, NeedsSmokeTest]
+		public ActionBlock Enable(LunyObjectRef target = null) =>
+			target == null ? ObjectEnableSelfBlock.Create() : ObjectEnableTargetBlock.Create(target);
 
-		public ActionBlock Disable(String name = null) =>
-			String.IsNullOrEmpty(name) ? ObjectDisableSelfBlock.Create() : ObjectDisableTargetBlock.Create(name);
+		[NeedsReview, NeedsSmokeTest]
+		public ActionBlock Disable(LunyObjectRef target = null) =>
+			target == null ? ObjectDisableSelfBlock.Create() : ObjectDisableTargetBlock.Create(target);
 
+		[NeedsReview, NeedsSmokeTest]
+		public ActionBlock SetEnabled(LunyObjectRef target, VariableBlock enabled) =>
+			ObjectSetEnabledBlock.Create(target, enabled);
+
+		[NeedsReview, NeedsSmokeTest]
 		public ObjectCreateBuilder<ObjectBuilderNameSet> Create(String name)
 		{
 			var token = _script.CreateBuilderToken(name, "Object.Create");
@@ -38,8 +45,9 @@ namespace LunyScript
 			return new ObjectCreateBuilder<ObjectBuilderNameSet>(options);
 		}
 
-		public ActionBlock Destroy(String name = null) =>
-			String.IsNullOrEmpty(name) ? ObjectDestroySelfBlock.Create() : ObjectDestroyTargetBlock.Create(name);
+		[NeedsReview, NeedsSmokeTest]
+		public ActionBlock Destroy(LunyObjectRef target = null) =>
+			target == null ? ObjectDestroySelfBlock.Create() : ObjectDestroyTargetBlock.Create(target);
 	}
 
 	public readonly struct PrefabBuilder

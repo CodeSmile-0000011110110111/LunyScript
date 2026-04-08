@@ -1,32 +1,25 @@
-using Luny;
-using System;
+﻿using Luny;
+using Luny.Engine.Bridge;
 
 namespace LunyScript.Blocks
 {
 	internal sealed class ObjectDestroySelfBlock : ActionBlock
 	{
 		public static ActionBlock Create() => new ObjectDestroySelfBlock();
-
 		private ObjectDestroySelfBlock() {}
-
 		protected internal override void Execute(IScriptRuntimeContext context) => context.LunyObject.Destroy();
 	}
 
 	internal sealed class ObjectDestroyTargetBlock : ActionBlock
 	{
-		private readonly String _name;
-
-		public static ActionBlock Create(String name) => new ObjectDestroyTargetBlock(name);
-
-		private ObjectDestroyTargetBlock(String name) => _name = name;
-
+		private readonly LunyObjectRef _target;
+		public static ActionBlock Create(LunyObjectRef target) => new ObjectDestroyTargetBlock(target);
+		private ObjectDestroyTargetBlock(LunyObjectRef target) => _target = target;
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var target = LunyEngine.Instance.TryGetObject(_name);
+			var target = _target.Value;
 			if (target == null)
 				return;
-
-			//LunyLogger.LogInfo($"Destroy: {target.Transform.LocalPosition} {target}");
 			target.Destroy();
 		}
 	}
