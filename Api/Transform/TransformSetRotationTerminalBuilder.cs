@@ -1,7 +1,7 @@
 using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
-
+using System;
 namespace LunyScript
 {
 	public readonly struct TransformSetRotationTerminalBuilder
@@ -32,10 +32,25 @@ namespace LunyScript
 			token.AutoFinish = () => self.Finish();
 		}
 
+		/// <summary> Override only the X euler angle; other axes remain unchanged. </summary>
+		public TransformRotationSetAxisBlock X(Double value) => FinishAxis(LunyAxis.X, value);
+
+		/// <summary> Override only the Y euler angle; other axes remain unchanged. </summary>
+		public TransformRotationSetAxisBlock Y(Double value) => FinishAxis(LunyAxis.Y, value);
+
+		/// <summary> Override only the Z euler angle; other axes remain unchanged. </summary>
+		public TransformRotationSetAxisBlock Z(Double value) => FinishAxis(LunyAxis.Z, value);
+
 		/// <summary> Apply rotation set in world space instead of local space. </summary>
-		public TransformRotationSetBlock InWorldSpace() => Finish(LunyTransformSpace.World);
+		public TransformSetRotationTerminalBuilder InWorldSpace() => new(_script, _token, _rotation, LunyTransformSpace.World, _trace);
 
 		internal TransformRotationSetBlock Finish() => Finish(_space);
+
+		private TransformRotationSetAxisBlock FinishAxis(LunyAxis axis, Double value)
+		{
+			_script.MarkBuilderTokenFinished(_token);
+			return TransformRotationSetAxisBlock.Create(axis, value, _space, _trace);
+		}
 
 		private TransformRotationSetBlock Finish(LunyTransformSpace space)
 		{

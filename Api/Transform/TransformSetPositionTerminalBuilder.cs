@@ -1,7 +1,7 @@
 using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
-
+using System;
 namespace LunyScript
 {
 	public readonly struct TransformSetPositionTerminalBuilder
@@ -32,10 +32,25 @@ namespace LunyScript
 			token.AutoFinish = () => self.Finish();
 		}
 
+		/// <summary> Override only the X component of the position; other axes remain unchanged. </summary>
+		public TransformPositionSetAxisBlock X(Double value) => FinishAxis(LunyAxis.X, value);
+
+		/// <summary> Override only the Y component of the position; other axes remain unchanged. </summary>
+		public TransformPositionSetAxisBlock Y(Double value) => FinishAxis(LunyAxis.Y, value);
+
+		/// <summary> Override only the Z component of the position; other axes remain unchanged. </summary>
+		public TransformPositionSetAxisBlock Z(Double value) => FinishAxis(LunyAxis.Z, value);
+
 		/// <summary> Apply position set in world space instead of local space. </summary>
-		public TransformPositionSetBlock InWorldSpace() => Finish(LunyTransformSpace.World);
+		public TransformSetPositionTerminalBuilder InWorldSpace() => new(_script, _token, _position, LunyTransformSpace.World, _trace);
 
 		internal TransformPositionSetBlock Finish() => Finish(_space);
+
+		private TransformPositionSetAxisBlock FinishAxis(LunyAxis axis, Double value)
+		{
+			_script.MarkBuilderTokenFinished(_token);
+			return TransformPositionSetAxisBlock.Create(axis, value, _space, _trace);
+		}
 
 		private TransformPositionSetBlock Finish(LunyTransformSpace space)
 		{

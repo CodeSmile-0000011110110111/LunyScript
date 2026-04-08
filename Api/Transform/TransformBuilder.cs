@@ -22,10 +22,9 @@ namespace LunyScript
 		}
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Rotate by axis angle per frame. </summary>
-		public TransformRotationAddAngleBlock RotateByAxisAngle(VariableBlock deltaAngle, VariableBlock speed, LunyVector3 angleAxis,
-			Double minAngle = Double.NegativeInfinity, Double maxAngle = Double.PositiveInfinity) =>
-			TransformRotationAddAngleBlock.Create(deltaAngle, speed, angleAxis, LunyTransformSpace.Local, minAngle, maxAngle, _trace.Add(nameof(RotateByAxisAngle)));
+		/// <summary> Rotate around <paramref name="axis"/> by <paramref name="amount"/> degrees per second. Chain <c>.Clamp(min, max)</c> and/or <c>.InWorldSpace()</c>. </summary>
+		public TransformRotateBuilder<TransformBuilderReady> Rotate(VariableBlock amount, LunyAxis axis) =>
+			TransformRotateBuilder<TransformBuilderReady>.Create(_script, amount, axis, _trace.Add(nameof(Rotate)));
 
 		// --- Set (Absolute Snap) ---
 
