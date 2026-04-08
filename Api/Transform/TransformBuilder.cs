@@ -30,47 +30,32 @@ namespace LunyScript
 		// --- Set (Absolute Snap) ---
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Instantly set the World position. </summary>
-		public TransformPositionSetBlock SetPosition(VariableBlock<LunyVector3> position) =>
-			TransformPositionSetBlock.Create(position, LunyTransformSpace.World, _trace.Add(nameof(SetPosition)));
+		/// <summary> Instantly set the local position. Append <c>.InWorldSpace()</c> to set world position. </summary>
+		public TransformSetPositionTerminalBuilder SetPosition(VariableBlock<LunyVector3> position) =>
+			TransformSetPositionTerminalBuilder.Create(_script, position, LunyTransformSpace.Local, _trace.Add(nameof(SetPosition)));
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Instantly set the Local position. </summary>
-		public TransformPositionSetBlock SetLocalPosition(VariableBlock<LunyVector3> position) =>
-			TransformPositionSetBlock.Create(position, LunyTransformSpace.Local, _trace.Add(nameof(SetLocalPosition)));
+		/// <summary> Instantly set the local rotation. Append <c>.InWorldSpace()</c> to set world rotation. </summary>
+		public TransformSetRotationTerminalBuilder SetRotation(LunyVector3 eulerAngles) =>
+			TransformSetRotationTerminalBuilder.Create(_script, LunyQuaternion.Euler(eulerAngles), LunyTransformSpace.Local, _trace.Add(nameof(SetRotation)));
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary>Instantly set the World rotation.</summary>
-		public TransformRotationSetBlock SetRotation(LunyVector3 eulerAngles) =>
-			TransformRotationSetBlock.Create(LunyQuaternion.Euler(eulerAngles), LunyTransformSpace.World, _trace.Add(nameof(SetRotation)));
+		/// <summary> Instantly set the local rotation. Append <c>.InWorldSpace()</c> to set world rotation. </summary>
+		public TransformSetRotationTerminalBuilder SetRotation(VariableBlock<LunyQuaternion> rotation) =>
+			TransformSetRotationTerminalBuilder.Create(_script, rotation, LunyTransformSpace.Local, _trace.Add(nameof(SetRotation)));
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Instantly set the World rotation. </summary>
-		public TransformRotationSetBlock SetRotation(VariableBlock<LunyQuaternion> rotation) =>
-			TransformRotationSetBlock.Create(rotation, LunyTransformSpace.World, _trace.Add(nameof(SetRotation)));
-
-		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Instantly set the Local rotation. </summary>
-		public TransformRotationSetBlock SetLocalRotation(LunyVector3 eulerAngles) =>
-			TransformRotationSetBlock.Create(LunyQuaternion.Euler(eulerAngles), LunyTransformSpace.Local, _trace.Add(nameof(SetLocalRotation)));
-
-		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Instantly set the Local rotation. </summary>
-		public TransformRotationSetBlock SetLocalRotation(VariableBlock<LunyQuaternion> rotation) =>
-			TransformRotationSetBlock.Create(rotation, LunyTransformSpace.Local, _trace.Add(nameof(SetLocalRotation)));
-
-		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Instantly set the Local scale. </summary>
-		public TransformScaleSetLocalBlock SetLocalScale(Double uniformScale) =>
+		/// <summary> Instantly set the local scale. </summary>
+		public TransformScaleSetLocalBlock SetScale(Double uniformScale) =>
 			TransformScaleSetLocalBlock.Create(LunyVector3.Uniform(uniformScale));
 
 		[NeedsReview, NeedsSmokeTest]
-		public TransformScaleSetLocalUniformBlock SetLocalScale(VariableBlock uniformScale) =>
+		public TransformScaleSetLocalUniformBlock SetScale(VariableBlock uniformScale) =>
 			TransformScaleSetLocalUniformBlock.Create(uniformScale);
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Instantly set the Local scale. </summary>
-		public TransformScaleSetLocalBlock SetLocalScale(VariableBlock<LunyVector3> scale) => TransformScaleSetLocalBlock.Create(scale);
+		/// <summary> Instantly set the local scale. </summary>
+		public TransformScaleSetLocalBlock SetScale(VariableBlock<LunyVector3> scale) => TransformScaleSetLocalBlock.Create(scale);
 
 		// --- Look At ---
 
@@ -147,82 +132,44 @@ namespace LunyScript
 		-----------------------------------------------------
 		Vector			MoveBy(Vector2)		MoveTo(Vector2)
 		Directional		MoveForward(5)		MoveForwardTo(10)
-		Grid-based		ShiftRight(2)		ShiftRightTo(5)
 		*/
 
-		// --- Local Scalar Movement (Relative to "Nose") ---
+		// --- Local Movement (Relative to orientation) ---
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Forward/Backward based on orientation. </summary>
-		public TransformPositionMoveBlock MoveBy(VariableBlock<LunyVector2> direction, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateDirectional(direction, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveBy)));
+		/// <summary> Floor-plane movement based on a 2D direction vector. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveTerminalBuilder MoveBy(VariableBlock<LunyVector2> direction, VariableBlock speed = null) =>
+			TransformMoveTerminalBuilder.CreateDirectional(_script, direction, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveBy)));
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Forward/Backward based on orientation. </summary>
-		public TransformPositionMoveBlock MoveForward(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Forward, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveForward)));
+		/// <summary> Forward based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveTerminalBuilder MoveForward(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Forward, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveForward)));
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Sideways relative to orientation. </summary>
-		public TransformPositionMoveBlock MoveRight(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Right, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveRight)));
+		/// <summary> Backward based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveTerminalBuilder MoveBack(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Back, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveBack)));
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Up/Down relative to orientation. </summary>
-		public TransformPositionMoveBlock MoveUp(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Up, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveUp)));
+		/// <summary> Right based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveTerminalBuilder MoveRight(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Right, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveRight)));
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Forward/Backward based on orientation. </summary>
-		public TransformPositionMoveBlock MoveBack(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Back, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveBack)));
+		/// <summary> Left based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveTerminalBuilder MoveLeft(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Left, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveLeft)));
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Sideways relative to orientation. </summary>
-		public TransformPositionMoveBlock MoveLeft(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Left, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveLeft)));
+		/// <summary> Up based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveTerminalBuilder MoveUp(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Up, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveUp)));
 
 		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Up/Down relative to orientation. </summary>
-		public TransformPositionMoveBlock MoveDown(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Down, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveDown)));
-
-		// --- World Scalar Movement (Relative to "Map") ---
-
-		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Forward/Backward based on orientation. </summary>
-		public TransformPositionMoveBlock ShiftBy(VariableBlock<LunyVector2> direction, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateDirectional(direction, speed, LunyTransformSpace.World, _trace.Add(nameof(ShiftBy)));
-
-		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Forward/backward on the World forward axis. </summary>
-		public TransformPositionMoveBlock ShiftForward(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Forward, speed, LunyTransformSpace.World, _trace.Add(nameof(ShiftForward)));
-
-		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Left/Right on the World right axis. </summary>
-		public TransformPositionMoveBlock ShiftRight(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Right, speed, LunyTransformSpace.World, _trace.Add(nameof(ShiftRight)));
-
-		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Up/Down on the World up axis. </summary>
-		public TransformPositionMoveBlock ShiftUp(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Up, speed, LunyTransformSpace.World, _trace.Add(nameof(ShiftUp)));
-
-		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Forward/backward on the World forward axis. </summary>
-		public TransformPositionMoveBlock ShiftBack(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Back, speed, LunyTransformSpace.World, _trace.Add(nameof(ShiftBack)));
-
-		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Left/Right on the World right axis. </summary>
-		public TransformPositionMoveBlock ShiftLeft(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Left, speed, LunyTransformSpace.World, _trace.Add(nameof(ShiftLeft)));
-
-		[NeedsReview, NeedsSmokeTest]
-		/// <summary> Up/Down on the World up axis. </summary>
-		public TransformPositionMoveBlock ShiftDown(VariableBlock amount, VariableBlock speed = null) =>
-			TransformPositionMoveBlock.CreateAxisRelative(amount, LunyVector3.Down, speed, LunyTransformSpace.World, _trace.Add(nameof(ShiftDown)));
+		/// <summary> Down based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveTerminalBuilder MoveDown(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Down, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveDown)));
 
 		// --- Absolute Positioning (Targeting) ---
 

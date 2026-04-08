@@ -6,10 +6,10 @@ namespace LunyScript.SmokeTests
 	/// </summary>
 	public sealed class InputTransformShift_LunyScript : Script
 	{
-		public override void Build(ScriptBuildContext context) => On.FrameUpdate(
-			Transform.ShiftBy(Input.Direction("Move"), 4),
-			Transform.ShiftUp(Input.Button("Jump").Strength, 4),
-			Transform.ShiftDown(Input.Button("Crouch").Strength, 4)
-		);
+  public override void Build(ScriptBuildContext context) => On.FrameUpdate(
+                        Transform.MoveBy(Input.Direction("Move"), 4).InWorldSpace(),
+                        Transform.MoveUp(Input.Button("Jump").Strength, 4).InWorldSpace(),
+                        Transform.MoveDown(Input.Button("Crouch").Strength, 4).InWorldSpace()
+                );
 	}
 }
