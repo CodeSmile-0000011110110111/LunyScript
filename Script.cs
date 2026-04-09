@@ -64,7 +64,7 @@ namespace LunyScript
 
 		internal BuilderToken CreateBuilderToken(String name, String type)
 		{
-			var frame = new StackFrame(3, true);
+			var frame = new StackFrame(2, true);
 			var token = new BuilderToken(name, type, frame.GetFileName(), frame.GetFileLineNumber());
 
 			_pendingBuilders ??= new List<BuilderToken>();
