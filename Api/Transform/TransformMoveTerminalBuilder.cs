@@ -1,64 +1,70 @@
-using Luny;
+﻿using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
 
 namespace LunyScript
 {
+	internal record TransformMoveOptions
+	{
+		public Script Script;
+		public BuilderToken Token;
+		public StackTrace Trace;
+		public LunyTransformSpace Space;
+		public VariableBlock<LunyVector2> Direction;
+		public VariableBlock Amount;
+		public LunyVector3 Axis;
+		public VariableBlock Speed;
+		public Boolean UseDirection;
+	}
+
 	public readonly struct TransformMoveTerminalBuilder
 	{
-		private readonly Script _script;
-		private readonly BuilderToken _token;
-		private readonly VariableBlock<LunyVector2> _direction;
-		private readonly VariableBlock _amount;
-		private readonly LunyVector3 _axis;
-		private readonly VariableBlock _speed;
-		private readonly LunyTransformSpace _space;
-		private readonly Boolean _useDirection;
-		private readonly StackTrace _trace;
+		internal readonly TransformMoveOptions Options;
 
 		internal static TransformMoveTerminalBuilder CreateDirectional(Script script, VariableBlock<LunyVector2> direction,
 			VariableBlock speed, LunyTransformSpace space, StackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformMoveTerminalBuilder), "Transform.Move(direction)");
-			return new TransformMoveTerminalBuilder(script, token, direction, null, default, speed, space, useDirection: true, trace);
+			var options = new TransformMoveOptions
+			{
+				Script = script, Token = token, Trace = trace, Space = space,
+				Direction = direction, Speed = speed, UseDirection = true,
+			};
+			return new TransformMoveTerminalBuilder(options);
 		}
 
 		internal static TransformMoveTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyVector3 axis,
 			VariableBlock speed, LunyTransformSpace space, StackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformMoveTerminalBuilder), "Transform.Move(axis)");
-			return new TransformMoveTerminalBuilder(script, token, null, amount, axis, speed, space, useDirection: false, trace);
+			var options = new TransformMoveOptions
+			{
+				Script = script, Token = token, Trace = trace, Space = space,
+				Amount = amount, Axis = axis, Speed = speed, UseDirection = false,
+			};
+			return new TransformMoveTerminalBuilder(options);
 		}
 
-		private TransformMoveTerminalBuilder(Script script, BuilderToken token, VariableBlock<LunyVector2> direction,
-			VariableBlock amount, LunyVector3 axis, VariableBlock speed, LunyTransformSpace space, Boolean useDirection, StackTrace trace)
+		internal TransformMoveTerminalBuilder(in TransformMoveOptions options)
 		{
-			_script = script;
-			_token = token;
-			_direction = direction;
-			_amount = amount;
-			_axis = axis;
-			_speed = speed;
-			_space = space;
-			_useDirection = useDirection;
-			_trace = trace;
+			Options = options;
 
-			var self = this;
-			token.AutoFinish = () => self.Finish();
+			var capturedOptions = options;
+			options.Token.AutoFinish = () => Finish(capturedOptions);
 		}
 
 		/// <summary> Apply movement in world space instead of local space. </summary>
-		public TransformPositionMoveBlock InWorldSpace() => Finish(LunyTransformSpace.World);
+		public TransformPositionMoveBlock InWorldSpace() => Finish(Options with { Space = LunyTransformSpace.World });
 
-		internal TransformPositionMoveBlock Finish() => Finish(_space);
+		internal TransformPositionMoveBlock Finish() => Finish(Options);
 
-		private TransformPositionMoveBlock Finish(LunyTransformSpace space)
+		private static TransformPositionMoveBlock Finish(in TransformMoveOptions options)
 		{
-			_script.MarkBuilderTokenFinished(_token);
-			return _useDirection
-				? TransformPositionMoveBlock.CreateDirectional(_direction, _speed, space, _trace)
-				: TransformPositionMoveBlock.CreateAxisRelative(_amount, _axis, _speed, space, _trace);
+			options.Script.MarkBuilderTokenFinished(options.Token);
+			return options.UseDirection
+				? TransformPositionMoveBlock.CreateDirectional(options.Direction, options.Speed, options.Space, options.Trace)
+				: TransformPositionMoveBlock.CreateAxisRelative(options.Amount, options.Axis, options.Speed, options.Space, options.Trace);
 		}
 	}
 }

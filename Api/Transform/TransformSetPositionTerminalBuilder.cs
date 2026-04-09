@@ -1,35 +1,40 @@
-using Luny;
+﻿using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
+
 namespace LunyScript
 {
+	internal record TransformSetPositionOptions
+	{
+		public Script Script;
+		public BuilderToken Token;
+		public StackTrace Trace;
+		public VariableBlock<LunyVector3> Position;
+		public LunyTransformSpace Space;
+	}
+
 	public readonly struct TransformSetPositionTerminalBuilder
 	{
-		private readonly Script _script;
-		private readonly BuilderToken _token;
-		private readonly VariableBlock<LunyVector3> _position;
-		private readonly LunyTransformSpace _space;
-		private readonly StackTrace _trace;
+		internal readonly TransformSetPositionOptions Options;
 
 		internal static TransformSetPositionTerminalBuilder Create(Script script, VariableBlock<LunyVector3> position,
 			LunyTransformSpace space, StackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformSetPositionTerminalBuilder), "Transform.SetPosition()");
-			return new TransformSetPositionTerminalBuilder(script, token, position, space, trace);
+			var options = new TransformSetPositionOptions
+			{
+				Script = script, Token = token, Trace = trace, Position = position, Space = space,
+			};
+			return new TransformSetPositionTerminalBuilder(options);
 		}
 
-		private TransformSetPositionTerminalBuilder(Script script, BuilderToken token, VariableBlock<LunyVector3> position,
-			LunyTransformSpace space, StackTrace trace)
+		internal TransformSetPositionTerminalBuilder(in TransformSetPositionOptions options)
 		{
-			_script = script;
-			_token = token;
-			_position = position;
-			_space = space;
-			_trace = trace;
+			Options = options;
 
-			var self = this;
-			token.AutoFinish = () => self.Finish();
+			var capturedOptions = options;
+			options.Token.AutoFinish = () => Finish(capturedOptions);
 		}
 
 		/// <summary> Override only the X component of the position; other axes remain unchanged. </summary>
@@ -42,20 +47,20 @@ namespace LunyScript
 		public TransformPositionSetAxisBlock Z(Double value) => FinishAxis(LunyAxis.Z, value);
 
 		/// <summary> Apply position set in world space instead of local space. </summary>
-		public TransformSetPositionTerminalBuilder InWorldSpace() => new(_script, _token, _position, LunyTransformSpace.World, _trace);
+		public TransformSetPositionTerminalBuilder InWorldSpace() => new(Options with { Space = LunyTransformSpace.World });
 
-		internal TransformPositionSetBlock Finish() => Finish(_space);
+		internal TransformPositionSetBlock Finish() => Finish(Options);
 
 		private TransformPositionSetAxisBlock FinishAxis(LunyAxis axis, Double value)
 		{
-			_script.MarkBuilderTokenFinished(_token);
-			return TransformPositionSetAxisBlock.Create(axis, value, _space, _trace);
+			Options.Script.MarkBuilderTokenFinished(Options.Token);
+			return TransformPositionSetAxisBlock.Create(axis, value, Options.Space, Options.Trace);
 		}
 
-		private TransformPositionSetBlock Finish(LunyTransformSpace space)
+		private static TransformPositionSetBlock Finish(in TransformSetPositionOptions options)
 		{
-			_script.MarkBuilderTokenFinished(_token);
-			return TransformPositionSetBlock.Create(_position, space, _trace);
+			options.Script.MarkBuilderTokenFinished(options.Token);
+			return TransformPositionSetBlock.Create(options.Position, options.Space, options.Trace);
 		}
 	}
 }

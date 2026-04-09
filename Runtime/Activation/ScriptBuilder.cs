@@ -20,7 +20,7 @@ namespace LunyScript.Activation
 			var activatedCount = 0;
 			var buildContext = new ScriptBuildContext();
 			var runtimeContexts = CreateRuntimeContexts(lunyObjects, runner.Scripts, runner.Contexts);
-			foreach (var runtimeContext in runtimeContexts)
+			foreach (var runtimeContext in runtimeContexts.OrderBy(context => context.ScriptId))
 			{
 				BuildAndRegisterLunyScript(buildContext, runtimeContext, runner);
 				activatedCount++;
@@ -50,7 +50,7 @@ namespace LunyScript.Activation
 		private static void BuildAndRegisterLunyScript(ScriptBuildContext scriptContext, ScriptRuntimeContext runtimeContext,
 			LunyScriptRunner runner)
 		{
-			//LunyLogger.LogInfo($"Building {runtimeContext} ...", nameof(ScriptBuilder));
+			LunyLogger.LogInfo($"Build Script for {runtimeContext}", nameof(ScriptBuilder));
 
 			// Create script instance, initialize with context, and call Build()
 			var scriptInstance = (Script)Activator.CreateInstance(runtimeContext.ScriptType);

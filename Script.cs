@@ -93,7 +93,10 @@ namespace LunyScript
 					continue;
 
 				if (!token.FinishBuilder())
+				{
+					LunyLogger.LogWarning($"Can't auto-finish builder: {token}");
 					unfinishedBuilders.Add(token);
+				}
 			}
 
 			_pendingBuilders.Clear();

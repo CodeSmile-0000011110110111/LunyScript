@@ -1,6 +1,7 @@
 using Luny;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Stopwatch = System.Diagnostics.Stopwatch;
 
 namespace LunyScript.Activation
@@ -25,7 +26,6 @@ namespace LunyScript.Activation
 			var sw = Stopwatch.StartNew();
 
 			var scriptTypes = TypeDiscovery.FindAll<Script>();
-
 			foreach (var type in scriptTypes)
 				RegisterScript(type);
 

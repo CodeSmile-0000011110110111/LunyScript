@@ -1,35 +1,40 @@
-using Luny;
+﻿using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
+
 namespace LunyScript
 {
+	internal record TransformSetRotationOptions
+	{
+		public Script Script;
+		public BuilderToken Token;
+		public StackTrace Trace;
+		public VariableBlock<LunyQuaternion> Rotation;
+		public LunyTransformSpace Space;
+	}
+
 	public readonly struct TransformSetRotationTerminalBuilder
 	{
-		private readonly Script _script;
-		private readonly BuilderToken _token;
-		private readonly VariableBlock<LunyQuaternion> _rotation;
-		private readonly LunyTransformSpace _space;
-		private readonly StackTrace _trace;
+		internal readonly TransformSetRotationOptions Options;
 
 		internal static TransformSetRotationTerminalBuilder Create(Script script, VariableBlock<LunyQuaternion> rotation,
 			LunyTransformSpace space, StackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformSetRotationTerminalBuilder), "Transform.SetRotation()");
-			return new TransformSetRotationTerminalBuilder(script, token, rotation, space, trace);
+			var options = new TransformSetRotationOptions
+			{
+				Script = script, Token = token, Trace = trace, Rotation = rotation, Space = space,
+			};
+			return new TransformSetRotationTerminalBuilder(options);
 		}
 
-		private TransformSetRotationTerminalBuilder(Script script, BuilderToken token, VariableBlock<LunyQuaternion> rotation,
-			LunyTransformSpace space, StackTrace trace)
+		internal TransformSetRotationTerminalBuilder(in TransformSetRotationOptions options)
 		{
-			_script = script;
-			_token = token;
-			_rotation = rotation;
-			_space = space;
-			_trace = trace;
+			Options = options;
 
-			var self = this;
-			token.AutoFinish = () => self.Finish();
+			var capturedOptions = options;
+			options.Token.AutoFinish = () => Finish(capturedOptions);
 		}
 
 		/// <summary> Override only the X euler angle; other axes remain unchanged. </summary>
@@ -42,20 +47,20 @@ namespace LunyScript
 		public TransformRotationSetAxisBlock Z(Double value) => FinishAxis(LunyAxis.Z, value);
 
 		/// <summary> Apply rotation set in world space instead of local space. </summary>
-		public TransformSetRotationTerminalBuilder InWorldSpace() => new(_script, _token, _rotation, LunyTransformSpace.World, _trace);
+		public TransformSetRotationTerminalBuilder InWorldSpace() => new(Options with { Space = LunyTransformSpace.World });
 
-		internal TransformRotationSetBlock Finish() => Finish(_space);
+		internal TransformRotationSetBlock Finish() => Finish(Options);
 
 		private TransformRotationSetAxisBlock FinishAxis(LunyAxis axis, Double value)
 		{
-			_script.MarkBuilderTokenFinished(_token);
-			return TransformRotationSetAxisBlock.Create(axis, value, _space, _trace);
+			Options.Script.MarkBuilderTokenFinished(Options.Token);
+			return TransformRotationSetAxisBlock.Create(axis, value, Options.Space, Options.Trace);
 		}
 
-		private TransformRotationSetBlock Finish(LunyTransformSpace space)
+		private static TransformRotationSetBlock Finish(in TransformSetRotationOptions options)
 		{
-			_script.MarkBuilderTokenFinished(_token);
-			return TransformRotationSetBlock.Create(_rotation, space, _trace);
+			options.Script.MarkBuilderTokenFinished(options.Token);
+			return TransformRotationSetBlock.Create(options.Rotation, options.Space, options.Trace);
 		}
 	}
 }

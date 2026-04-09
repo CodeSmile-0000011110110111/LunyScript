@@ -38,7 +38,8 @@ namespace LunyScript
 		public PrefabBuilder Prefab => new(this, Trace.TryCreateStackTrace(nameof(Prefab)));
 		public SceneApi Scene => new(this, Trace.TryCreateStackTrace(nameof(Scene)));
 		public TimeApi Time => new(this, Trace.TryCreateStackTrace(nameof(Time)));
-		public TransformBuilder Transform => new(this, Trace.TryCreateStackTrace(nameof(Transform)));
+  public RigidbodyBuilder Rigidbody => new(this, Trace.TryCreateStackTrace(nameof(Rigidbody)));
+  public TransformBuilder Transform => new(this, Trace.TryCreateStackTrace(nameof(Transform)));
 		public WhenGlobalEventBuilder When => new(this, Trace.TryCreateStackTrace(nameof(When)));
 
 		/// <summary>

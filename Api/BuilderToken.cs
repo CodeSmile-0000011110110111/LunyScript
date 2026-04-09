@@ -33,8 +33,11 @@ namespace LunyScript
 		internal Action AutoFinish { set => _autoFinish = value; }
 
 		[DebuggerHidden]
-		internal static void LogUnfinishedBuilder(BuilderToken token) => LunyLogger.LogWarning(
-			$"{Path.GetFileName(token._file)}, line {token._line}: {token._name} ('{token._type}') is incomplete or unused.");
+		internal static void LogUnfinishedBuilder(BuilderToken token)
+		{
+			LunyLogger.LogWarning($"{Path.GetFileName(token._file)}, line {token._line}: {token._name} ('{token._type}') " +
+			                      $"is incomplete or unused. Auto-finish: {token._autoFinish}, isFinished: {token._isFinished}");
+		}
 
 		internal BuilderToken(String name, String type, [CallerFilePath] String file = "", [CallerLineNumber] Int32 lineNumber = -1)
 		{

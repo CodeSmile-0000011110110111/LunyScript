@@ -171,10 +171,12 @@ namespace LunyScript
 			}
 		}
 
+		private bool _isLoadingScene;
 		public void OnSceneLoaded(ILunyScene loadedScene)
 		{
 			_sceneEventHandler.OnSceneLoaded(loadedScene);
 
+			_isLoadingScene = true;
 			// Process current scene to bind scripts to objects
 			var lunyEngine = LunyEngine.Instance;
 			var scriptNames = _scripts.GetNames();
@@ -184,6 +186,7 @@ namespace LunyScript
 			var newScriptedObjects = scriptedObjects.Where(obj => _contexts.GetByNativeObjectID(obj.NativeObjectId) == null).ToList();
 
 			ScriptBuilder.BuildAndActivateLunyScripts(this, newScriptedObjects);
+			_isLoadingScene = false;
 		}
 
 		public void OnObjectRegistered(ILunyObject lunyObject)
@@ -198,7 +201,8 @@ namespace LunyScript
 			}
 
 			// Activate script on dynamically created object
-			ScriptBuilder.BuildAndActivateLunyScript(this, lunyObject);
+			if (!_isLoadingScene)
+				ScriptBuilder.BuildAndActivateLunyScript(this, lunyObject);
 		}
 
 		public void OnObjectUnregistered(ILunyObject lunyObject)

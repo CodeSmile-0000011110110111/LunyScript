@@ -199,6 +199,12 @@ namespace LunyScript
 		public LunyVector3 AxisLock;
 		public Boolean Lerp;
 		public Boolean SphericalLerp;
+		public StackTrace Trace;
+		public LunyTransformSpace Space;
+		public VariableBlock Amount;
+		public LunyAxis Axis;
+		public Double MinAngle;
+		public Double MaxAngle;
 		public void LockAxisX() => AxisLock = VectorUtil.LockAxisX(AxisLock);
 		public void LockAxisY() => AxisLock = VectorUtil.LockAxisY(AxisLock);
 		public void LockAxisZ() => AxisLock = VectorUtil.LockAxisZ(AxisLock);
