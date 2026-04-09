@@ -22,6 +22,6 @@ namespace LunyScript
 			_trace = trace;
 		}
 
-		public ActionBlock Do(params ActionBlock[] blocks) => ForBlock.Create(_limit, _step, blocks);
+		public ActionBlock Do(params ActionBlock[] blocks) => ForBlock.Create(_limit, _step, blocks, _trace);
 	}
 }

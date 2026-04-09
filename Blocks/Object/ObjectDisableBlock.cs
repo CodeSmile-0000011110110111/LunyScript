@@ -1,19 +1,22 @@
-﻿using Luny.Engine.Bridge;
+﻿using Luny;
+using Luny.Engine.Bridge;
 
 namespace LunyScript.Blocks
 {
 	internal sealed class ObjectDisableSelfBlock : ActionBlock
 	{
-		public static ActionBlock Create() => new ObjectDisableSelfBlock();
-		private ObjectDisableSelfBlock() {}
+		public static ActionBlock Create(StackTrace trace) => new ObjectDisableSelfBlock(trace);
+		private ObjectDisableSelfBlock(StackTrace trace)
+			: base(trace) {}
 		protected internal override void Execute(IScriptRuntimeContext context) => context.LunyObject.IsEnabled = false;
 	}
 
 	internal sealed class ObjectDisableTargetBlock : ActionBlock
 	{
 		private readonly LunyObjectRef _target;
-		public static ActionBlock Create(LunyObjectRef target) => new ObjectDisableTargetBlock(target);
-		private ObjectDisableTargetBlock(LunyObjectRef target) => _target = target;
+		public static ActionBlock Create(LunyObjectRef target, StackTrace trace) => new ObjectDisableTargetBlock(target, trace);
+		private ObjectDisableTargetBlock(LunyObjectRef target, StackTrace trace)
+			: base(trace) => _target = target;
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{

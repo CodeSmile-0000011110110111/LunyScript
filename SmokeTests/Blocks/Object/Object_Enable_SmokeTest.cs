@@ -6,7 +6,8 @@ public class Object_Enable_SmokeTest : Script
 	{
 		var blinkName = "will blink";
 		var alsoBlinkName = "will also blink";
-		On.Heartbeat(Object.Disable(blinkName), Object.SetEnabled(alsoBlinkName, false));
-		On.FrameUpdate(Object.Enable(blinkName), Object.SetEnabled(alsoBlinkName, true));
+
+		Coroutine("disable").Every(267).Milliseconds().WhenElapsed(Object.Disable(blinkName), Object.SetEnabled(alsoBlinkName, false));
+		Coroutine("enable").Every(200).Milliseconds().WhenElapsed(Object.Enable(blinkName), Object.SetEnabled(alsoBlinkName, true));
 	}
 }

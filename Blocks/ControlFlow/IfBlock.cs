@@ -70,11 +70,6 @@ namespace LunyScript.Blocks
 				var name = container.GetConditionSequenceName(i);
 				sb.Append(name);
 				sb.Append('/');
-				// sb.Append('(');
-				// sb.Append(_branches[i].conditions.Length);
-				// sb.Append(')');
-				// if (i < actionCount)
-				// 	sb.Append('.');
 			}
 
 			var hasElse = conditionCount < container.ActionSequenceCount;
@@ -82,10 +77,6 @@ namespace LunyScript.Blocks
 			{
 				var lastIndex = actionCount - 1;
 				sb.Append(container.GetActionSequenceName(lastIndex));
-				// sb.Append('/');
-				// sb.Append('(');
-				// sb.Append(_elseBranch?.Length);
-				// sb.Append(')');
 			}
 
 			return sb.ToString();

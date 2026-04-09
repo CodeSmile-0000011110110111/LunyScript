@@ -27,27 +27,27 @@ namespace LunyScript
 
 		[NeedsReview] [NeedsSmokeTest]
 		public ActionBlock Enable(LunyObjectRef target = null) =>
-			target == null ? ObjectEnableSelfBlock.Create() : ObjectEnableTargetBlock.Create(target);
+			target == null ? ObjectEnableSelfBlock.Create(_trace.Add(nameof(Enable))) : ObjectEnableTargetBlock.Create(target, _trace.Add(nameof(Enable)));
 
 		[NeedsReview] [NeedsSmokeTest]
 		public ActionBlock Disable(LunyObjectRef target = null) =>
-			target == null ? ObjectDisableSelfBlock.Create() : ObjectDisableTargetBlock.Create(target);
+			target == null ? ObjectDisableSelfBlock.Create(_trace.Add(nameof(Disable))) : ObjectDisableTargetBlock.Create(target, _trace.Add(nameof(Disable)));
 
 		[NeedsReview] [NeedsSmokeTest]
-		public ActionBlock SetEnabled(LunyObjectRef target, VariableBlock enabled) => ObjectSetEnabledBlock.Create(target, enabled);
+		public ActionBlock SetEnabled(LunyObjectRef target, VariableBlock enabled) => ObjectSetEnabledBlock.Create(target, enabled, _trace.Add(nameof(SetEnabled)));
 
 		[NeedsReview] [NeedsSmokeTest]
 		public ObjectCreateBuilder<ObjectBuilderNameSet> Create(String name)
 		{
 			var token = _script.CreateBuilderToken(name, "Object.Create");
 			var options = new ObjectCreateOptions
-				{ Script = _script, Token = token, Name = name, CreateMode = ObjectCreationMode.Empty };
+				{ Script = _script, Token = token, Trace = _trace.Add(nameof(Create)), Name = name, CreateMode = ObjectCreationMode.Empty };
 			return new ObjectCreateBuilder<ObjectBuilderNameSet>(options);
 		}
 
 		[NeedsReview] [NeedsSmokeTest]
 		public ActionBlock Destroy(LunyObjectRef target = null) =>
-			target == null ? ObjectDestroySelfBlock.Create() : ObjectDestroyTargetBlock.Create(target);
+			target == null ? ObjectDestroySelfBlock.Create(_trace.Add(nameof(Destroy))) : ObjectDestroyTargetBlock.Create(target, _trace.Add(nameof(Destroy)));
 	}
 
 	public readonly struct PrefabBuilder
@@ -165,6 +165,7 @@ namespace LunyScript
 	{
 		internal Script Script;
 		internal BuilderToken Token;
+		internal StackTrace Trace;
 
 		public String Name;
 		public ObjectCreationMode CreateMode;

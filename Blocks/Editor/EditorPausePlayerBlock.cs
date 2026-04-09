@@ -1,6 +1,7 @@
 using Luny;
 using System;
 using System.Diagnostics;
+using StackTrace = Luny.StackTrace;
 
 namespace LunyScript.Blocks
 {
@@ -12,11 +13,11 @@ namespace LunyScript.Blocks
 	{
 		private readonly String _message;
 
-		public static ActionBlock Create(String message) =>
-			LunyEngine.Instance.Application.IsEditor ? new EditorPausePlayerBlock(message) : null;
+		public static ActionBlock Create(String message, StackTrace trace) =>
+			LunyEngine.Instance.Application.IsEditor ? new EditorPausePlayerBlock(message, trace) : null;
 
-		private EditorPausePlayerBlock() {}
-		private EditorPausePlayerBlock(String message = null) => _message = message;
+		private EditorPausePlayerBlock(String message, StackTrace trace)
+			: base(trace) => _message = message;
 
 		protected internal override void Execute(IScriptRuntimeContext context) => DoPausePlayer(context);
 

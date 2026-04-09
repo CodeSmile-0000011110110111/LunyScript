@@ -1,4 +1,5 @@
-﻿using LunyScript.Blocks;
+﻿using Luny;
+using LunyScript.Blocks;
 using System;
 
 namespace LunyScript
@@ -11,6 +12,7 @@ namespace LunyScript
 	{
 		internal Script Script;
 		internal BuilderToken Token;
+		internal StackTrace Trace;
 
 		public ActionBlock[] StartedBlocks;
 		public ActionBlock[] ContinuingBlocks;

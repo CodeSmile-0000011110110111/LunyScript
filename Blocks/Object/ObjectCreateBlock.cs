@@ -25,6 +25,7 @@ namespace LunyScript.Blocks
 		protected static ILunyObjectService Object => LunyEngine.Instance.Object;
 
 		protected ObjectCreateBlock(ObjectCreateOptions options)
+			: base(options.Trace)
 		{
 			Name = String.IsNullOrEmpty(options.Name) ? $"(unnamed) created by {options.Script.Name}" : options.Name;
 			Parent = options.Parent;

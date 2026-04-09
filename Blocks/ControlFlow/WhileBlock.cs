@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using StackTrace = Luny.StackTrace;
 
 namespace LunyScript.Blocks
 {
@@ -22,9 +23,10 @@ namespace LunyScript.Blocks
 		Int32 IBlockContainer.ConditionSequenceCount => 1;
 		Int32 IBlockContainer.ActionSequenceCount => 1;
 
-		public static WhileBlock Create(ConditionBlock[] conditions, ActionBlock[] actions) => new(conditions, actions);
+		public static WhileBlock Create(ConditionBlock[] conditions, ActionBlock[] actions, StackTrace trace) => new(conditions, actions, trace);
 
-		private WhileBlock(ConditionBlock[] conditions, ActionBlock[] actions)
+		private WhileBlock(ConditionBlock[] conditions, ActionBlock[] actions, StackTrace trace)
+			: base(trace)
 		{
 			_conditions = conditions;
 			_actions = actions;

@@ -22,6 +22,6 @@ namespace LunyScript
 		/// <summary>
 		/// Pauses playmode.
 		/// </summary>
-		public ActionBlock PausePlayer(String message = null) => EditorPausePlayerBlock.Create(message);
+		public ActionBlock PausePlayer(String message = null) => EditorPausePlayerBlock.Create(message, _trace.Add(nameof(PausePlayer)));
 	}
 }

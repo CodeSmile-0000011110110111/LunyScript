@@ -1,4 +1,5 @@
-﻿using Luny.Engine.Bridge;
+﻿using Luny;
+using Luny.Engine.Bridge;
 using System;
 using System.Collections.Generic;
 
@@ -18,10 +19,11 @@ namespace LunyScript.Blocks
 		public String UserName { get; }
 		public LunyInputActionPhase Phase { get; }
 
-		public static InputEventSequenceBlock Create(String actionName, String userName, LunyInputActionPhase phase, ActionBlock[] blocks) =>
-			blocks == null || blocks.Length == 0 ? null : new InputEventSequenceBlock(actionName, userName, phase, blocks);
+		public static InputEventSequenceBlock Create(String actionName, String userName, LunyInputActionPhase phase, ActionBlock[] blocks, StackTrace trace) =>
+			blocks == null || blocks.Length == 0 ? null : new InputEventSequenceBlock(actionName, userName, phase, blocks, trace);
 
-		private InputEventSequenceBlock(String actionName, String userName, LunyInputActionPhase phase, IReadOnlyList<ActionBlock> blocks)
+		private InputEventSequenceBlock(String actionName, String userName, LunyInputActionPhase phase, IReadOnlyList<ActionBlock> blocks, StackTrace trace)
+			: base(trace)
 		{
 			Id = ScriptBlockId.Generate();
 			Blocks = blocks;

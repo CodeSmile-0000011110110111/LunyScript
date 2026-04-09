@@ -104,6 +104,10 @@ namespace LunyScript
 		/// Completely stripped in release builds.
 		/// Only breaks when DEBUG or LUNYSCRIPT_DEBUG is defined.
 		/// </summary>
-		public ActionBlock Break(String message = null) => DebugBreakBlock.Create(message);
+		public ActionBlock Break(String message = null)
+		{
+			_trace.Add(nameof(Break));
+			return DebugBreakBlock.Create(message, _trace);
+		}
 	}
 }

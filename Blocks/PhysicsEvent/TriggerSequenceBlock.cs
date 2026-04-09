@@ -1,3 +1,4 @@
+using Luny;
 using Luny.Engine.Bridge;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace LunyScript.Blocks
 	{
 		private readonly Predicate<LunyCollider>[] _predicates;
 
-		public TriggerSequenceBlock(IReadOnlyList<ActionBlock> blocks, EventGuard[] guards, Predicate<LunyCollider>[] predicates)
-			: base(blocks, guards) => _predicates = predicates;
+		public TriggerSequenceBlock(IReadOnlyList<ActionBlock> blocks, EventGuard[] guards, Predicate<LunyCollider>[] predicates, StackTrace trace)
+			: base(blocks, guards, trace) => _predicates = predicates;
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{

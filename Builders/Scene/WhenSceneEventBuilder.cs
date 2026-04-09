@@ -1,3 +1,4 @@
+using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
@@ -10,7 +11,12 @@ namespace LunyScript
 	public readonly struct WhenSceneEventBuilder
 	{
 		private readonly Script _script;
-		internal WhenSceneEventBuilder(Script script) => _script = script;
+		private readonly StackTrace _trace;
+		internal WhenSceneEventBuilder(Script script, StackTrace trace)
+		{
+			_script = script;
+			_trace = trace;
+		}
 		private ScriptEventScheduler Scheduler => _script.Scheduler;
 
 		/// <summary>
@@ -19,7 +25,7 @@ namespace LunyScript
 		/// <param name="blocks"></param>
 		/// <returns></returns>
 		public ISequenceBlock Loaded(params ActionBlock[] blocks) =>
-			Scheduler?.ScheduleSceneEventSequence(blocks, LunySceneEvent.OnSceneLoaded);
+			Scheduler?.ScheduleSceneEventSequence(blocks, LunySceneEvent.OnSceneLoaded, _trace.Add(nameof(Loaded)));
 
 		/// <summary>
 		/// Runs when a scene has loaded.
@@ -36,7 +42,7 @@ namespace LunyScript
 		/// <param name="blocks"></param>
 		/// <returns></returns>
 		public ISequenceBlock Unloaded(params ActionBlock[] blocks) =>
-			Scheduler?.ScheduleSceneEventSequence(blocks, LunySceneEvent.OnSceneUnloaded);
+			Scheduler?.ScheduleSceneEventSequence(blocks, LunySceneEvent.OnSceneUnloaded, _trace.Add(nameof(Unloaded)));
 
 		/// <summary>
 		/// Runs when a scene has unloaded.

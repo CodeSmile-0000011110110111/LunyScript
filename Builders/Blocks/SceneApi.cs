@@ -17,6 +17,6 @@ namespace LunyScript
 			_trace = trace;
 		}
 
-		public ActionBlock Reload() => SceneReloadBlock.Create();
+		public ActionBlock Reload() => SceneReloadBlock.Create(_trace.Add(nameof(Reload)));
 	}
 }

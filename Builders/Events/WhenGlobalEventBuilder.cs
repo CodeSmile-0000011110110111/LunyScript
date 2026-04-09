@@ -16,7 +16,7 @@ namespace LunyScript
 			_trace = trace;
 		}
 
-		public WhenInputEventBuilder Input => new(_script);
-		public WhenSceneEventBuilder Scene => new(_script);
+		public WhenInputEventBuilder Input => new(_script, _trace.Add(nameof(Input)));
+		public WhenSceneEventBuilder Scene => new(_script, _trace.Add(nameof(Scene)));
 	}
 }

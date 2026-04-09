@@ -1,3 +1,4 @@
+using Luny;
 using System;
 using System.Collections.Generic;
 
@@ -16,7 +17,8 @@ namespace LunyScript.Blocks
 		public ScriptBlockId Id { get; }
 		public IReadOnlyList<ActionBlock> Blocks { get; }
 
-		protected PhysicsEventSequenceBlock(IReadOnlyList<ActionBlock> blocks, EventGuard[] guards)
+		protected PhysicsEventSequenceBlock(IReadOnlyList<ActionBlock> blocks, EventGuard[] guards, StackTrace trace)
+			: base(trace)
 		{
 			if (blocks == null || blocks.Count == 0)
 				throw new ArgumentException("Sequence must contain at least one block", nameof(blocks));

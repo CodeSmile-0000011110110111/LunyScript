@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using StackTrace = Luny.StackTrace;
 
 namespace LunyScript.Blocks
 {
@@ -21,9 +22,10 @@ namespace LunyScript.Blocks
 
 		Int32 IBlockContainer.ActionSequenceCount => 1;
 
-		public static ForBlock Create(VariableBlock limit, VariableBlock step, ActionBlock[] actions) => new(limit, step, actions);
+		public static ForBlock Create(VariableBlock limit, VariableBlock step, ActionBlock[] actions, StackTrace trace) => new(limit, step, actions, trace);
 
-		private ForBlock(VariableBlock limit, VariableBlock step, ActionBlock[] actions)
+		private ForBlock(VariableBlock limit, VariableBlock step, ActionBlock[] actions, StackTrace trace)
+			: base(trace)
 		{
 			_limit = limit;
 			_step = step;

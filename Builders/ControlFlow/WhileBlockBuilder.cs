@@ -17,6 +17,6 @@ namespace LunyScript
 			_trace = trace;
 		}
 
-		public ActionBlock Do(params ActionBlock[] blocks) => WhileBlock.Create(_conditions, blocks);
+		public ActionBlock Do(params ActionBlock[] blocks) => WhileBlock.Create(_conditions, blocks, _trace);
 	}
 }

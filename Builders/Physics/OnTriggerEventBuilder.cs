@@ -1,3 +1,4 @@
+using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
@@ -28,10 +29,10 @@ namespace LunyScript
 	{
 		internal readonly PhysicsEventOptions Options;
 
-		internal TriggerEventBuilder(Script script)
+		internal TriggerEventBuilder(Script script, StackTrace trace)
 		{
 			var token = script.CreateBuilderToken("Physics Event", "Trigger");
-			Options = new PhysicsEventOptions { Script = script, Token = token };
+			Options = new PhysicsEventOptions { Script = script, Token = token, Trace = trace };
 		}
 
 		internal TriggerEventBuilder(in PhysicsEventOptions options) => Options = options;
@@ -160,19 +161,19 @@ namespace LunyScript
 
 			if (options.StartedBlocks != null)
 			{
-				var block = new TriggerSequenceBlock(options.StartedBlocks, guards, predicates);
+				var block = new TriggerSequenceBlock(options.StartedBlocks, guards, predicates, options.Trace);
 				script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerEntered);
 			}
 
 			if (options.ContinuingBlocks != null)
 			{
-				var block = new TriggerSequenceBlock(options.ContinuingBlocks, guards, predicates);
+				var block = new TriggerSequenceBlock(options.ContinuingBlocks, guards, predicates, options.Trace);
 				script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerOverlapping);
 			}
 
 			if (options.EndedBlocks != null)
 			{
-				var block = new TriggerSequenceBlock(options.EndedBlocks, guards, predicates);
+				var block = new TriggerSequenceBlock(options.EndedBlocks, guards, predicates, options.Trace);
 				script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerExited);
 			}
 

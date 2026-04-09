@@ -171,6 +171,8 @@ namespace LunyScript.Blocks
 			if (events.Has(Coroutine.Events.Stopped))
 				LunyScriptRunner.Run(_sequences[OnStoppedIndex], ctx);
 		}
+
+		public override String ToString() => $"Coroutine(\"{this}\": {base.ToString()})";
 	}
 
 	internal sealed class TimerCoroutineBlock : CoroutineBlock, ITimerCoroutineBlock

@@ -101,13 +101,13 @@ namespace LunyScript
 		/// Chain filter methods (Tagged, Named, Layered, Masked, Typed, Cooldown) then event handlers
 		/// (Begins, Updates, Ends) and finalize with Do().
 		/// </summary>
-		public CollisionEventBuilder<CollisionStart> Collision() => new(_script);
+		public CollisionEventBuilder<CollisionStart> Collision() => new(_script, _trace.Add(nameof(Collision)));
 
 		/// <summary>
 		/// Starts a filtered 3D trigger event builder.
 		/// Chain filter methods (Tagged, Named, Layered, Masked, Typed, Cooldown) then event handlers
 		/// (Begins, Updates, Ends) and finalize with Do().
 		/// </summary>
-		public TriggerEventBuilder<TriggerStart> Trigger() => new(_script);
+		public TriggerEventBuilder<TriggerStart> Trigger() => new(_script, _trace.Add(nameof(Trigger)));
 	}
 }

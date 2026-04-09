@@ -1,3 +1,4 @@
+using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
@@ -28,10 +29,10 @@ namespace LunyScript
 	{
 		internal readonly PhysicsEventOptions Options;
 
-		internal CollisionEventBuilder(Script script)
+		internal CollisionEventBuilder(Script script, StackTrace trace)
 		{
 			var token = script.CreateBuilderToken("Physics Event", "Collision");
-			Options = new PhysicsEventOptions { Script = script, Token = token };
+			Options = new PhysicsEventOptions { Script = script, Token = token, Trace = trace };
 		}
 
 		internal CollisionEventBuilder(in PhysicsEventOptions options) => Options = options;
@@ -160,19 +161,19 @@ namespace LunyScript
 
 			if (options.StartedBlocks != null)
 			{
-				var block = new CollisionSequenceBlock(options.StartedBlocks, guards, predicates);
+				var block = new CollisionSequenceBlock(options.StartedBlocks, guards, predicates, options.Trace);
 				script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionStarted);
 			}
 
 			if (options.ContinuingBlocks != null)
 			{
-				var block = new CollisionSequenceBlock(options.ContinuingBlocks, guards, predicates);
+				var block = new CollisionSequenceBlock(options.ContinuingBlocks, guards, predicates, options.Trace);
 				script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionTouching);
 			}
 
 			if (options.EndedBlocks != null)
 			{
-				var block = new CollisionSequenceBlock(options.EndedBlocks, guards, predicates);
+				var block = new CollisionSequenceBlock(options.EndedBlocks, guards, predicates, options.Trace);
 				script.Scheduler?.ScheduleCollisionEventSequence(block, LunyCollisionEvent.OnCollisionEnded);
 			}
 
