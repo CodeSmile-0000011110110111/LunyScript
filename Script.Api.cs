@@ -38,8 +38,8 @@ namespace LunyScript
 		public PrefabBuilder Prefab => new(this, Trace.TryCreateStackTrace(nameof(Prefab)));
 		public SceneApi Scene => new(this, Trace.TryCreateStackTrace(nameof(Scene)));
 		public TimeApi Time => new(this, Trace.TryCreateStackTrace(nameof(Time)));
-  public RigidbodyBuilder Rigidbody => new(this, Trace.TryCreateStackTrace(nameof(Rigidbody)));
-  public TransformBuilder Transform => new(this, Trace.TryCreateStackTrace(nameof(Transform)));
+		public RigidbodyBuilder Rigidbody => new(this, Trace.TryCreateStackTrace(nameof(Rigidbody)));
+		public TransformBuilder Transform => new(this, Trace.TryCreateStackTrace(nameof(Transform)));
 		public WhenGlobalEventBuilder When => new(this, Trace.TryCreateStackTrace(nameof(When)));
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace LunyScript
 		/// </summary>
 		public CoroutineBuilder Coroutine(String name) => new(this, name, Trace.TryCreateStackTrace(nameof(Coroutine)));
 
- 	/// <summary>
+		/// <summary>
 		/// Conditional execution: If(conditions).Then(blocks).ElseIf(conditions).Then(blocks).Else(blocks);
 		/// Multiple conditions are implicitly AND combined.
 		/// </summary>
@@ -71,7 +71,8 @@ namespace LunyScript
 		/// If step is positive: starts at 1 and increments by step until limit is reached.
 		/// If step is negative: starts at limit and decrements by step until 1 is reached.
 		/// </summary>
-		public ForBlockBuilder For(VariableBlock numberOfTimes, VariableBlock step) => new(numberOfTimes, step, Trace.TryCreateStackTrace(nameof(For)));
+		public ForBlockBuilder For(VariableBlock numberOfTimes, VariableBlock step) =>
+			new(numberOfTimes, step, Trace.TryCreateStackTrace(nameof(For)));
 
 		/// <summary>
 		/// Executes a `System.Func&lt;IScriptRuntimeContext, bool&gt;` (lambda) or method taking a IScriptRuntimeContext parameter and returns bool.
@@ -83,7 +84,8 @@ namespace LunyScript
 		/// </remarks>
 		/// <param name="func"></param>
 		/// <returns></returns>
-		public ConditionBlock Check(Func<IScriptRuntimeContext, Boolean> func) => CheckBlock.Create(func, Trace.TryCreateStackTrace(nameof(Check)));
+		public ConditionBlock Check(Func<IScriptRuntimeContext, Boolean> func) =>
+			CheckBlock.Create(func, Trace.TryCreateStackTrace(nameof(Check)));
 
 		/// <summary>
 		/// Executes a `System.Func&lt;bool&gt;` (lambda) or parameterless method returning bool.
@@ -141,12 +143,14 @@ namespace LunyScript
 		/// <summary>
 		/// Logical AND: Returns true if all conditions are true. Requires at least two conditions.
 		/// </summary>
-		public ConditionBlock AND(params ConditionBlock[] conditions) => AndOperatorBlock.Create(conditions, Trace.TryCreateStackTrace(nameof(AND)));
+		public ConditionBlock AND(params ConditionBlock[] conditions) =>
+			AndOperatorBlock.Create(conditions, Trace.TryCreateStackTrace(nameof(AND)));
 
 		/// <summary>
 		/// Logical OR: Returns true if at least one condition is true. Requires at least two conditions.
 		/// </summary>
-		public ConditionBlock OR(params ConditionBlock[] conditions) => OrOperatorBlock.Create(conditions, Trace.TryCreateStackTrace(nameof(OR)));
+		public ConditionBlock OR(params ConditionBlock[] conditions) =>
+			OrOperatorBlock.Create(conditions, Trace.TryCreateStackTrace(nameof(OR)));
 
 		/// <summary>
 		/// Logical NOT: Returns the inverse of the condition.

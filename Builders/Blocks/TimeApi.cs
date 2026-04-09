@@ -1,4 +1,5 @@
 using Luny;
+
 namespace LunyScript
 {
 	public readonly struct TimeApi

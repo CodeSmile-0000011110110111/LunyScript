@@ -1,4 +1,5 @@
 using Luny;
+
 namespace LunyScript
 {
 	/// <summary>
@@ -8,6 +9,7 @@ namespace LunyScript
 	{
 		private readonly Script _script;
 		private readonly StackTrace _trace;
+
 		internal WhenGlobalEventBuilder(Script script, StackTrace trace)
 		{
 			_script = script;

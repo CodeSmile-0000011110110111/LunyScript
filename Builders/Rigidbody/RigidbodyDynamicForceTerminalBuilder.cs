@@ -26,7 +26,8 @@ namespace LunyScript
 	{
 		internal readonly RigidbodyForceOptions Options;
 
-		internal static RigidbodyDynamicForceTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis, Boolean isImpulse, StackTrace trace)
+		internal static RigidbodyDynamicForceTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis,
+			Boolean isImpulse, StackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicForceTerminalBuilder), "Rigidbody.Dynamic.AddForce(axis)");
 			var options = new RigidbodyForceOptions
@@ -66,8 +67,10 @@ namespace LunyScript
 		public RigidbodyDynamicForceTerminalBuilder IgnoreMass() => new(Options with { IgnoreMass = true });
 
 		/// <summary> Apply force at a local-space offset position, generating torque. </summary>
-		public RigidbodyDynamicForceTerminalBuilder AtPosition(LunyVector3 localOffset) =>
-			new(Options with { HasAtPositionOffset = true, AtPositionOffset = localOffset, AtPositionChildRef = null });
+		public RigidbodyDynamicForceTerminalBuilder AtPosition(LunyVector3 localOffset) => new(Options with
+		{
+			HasAtPositionOffset = true, AtPositionOffset = localOffset, AtPositionChildRef = null,
+		});
 
 		/// <summary>
 		/// Apply force at the world position of a child object.
@@ -90,18 +93,25 @@ namespace LunyScript
 				var child = options.AtPositionChildRef.Value;
 				if (child == null || !child.IsValid)
 				{
-					LunyLogger.LogWarning($"{nameof(RigidbodyDynamicForceTerminalBuilder)}: {nameof(AtPosition)} child '{options.AtPositionChildRef}' not found or invalid — block will not be created");
+					LunyLogger.LogWarning(
+						$"{nameof(RigidbodyDynamicForceTerminalBuilder)}: {nameof(AtPosition)} child '{options.AtPositionChildRef}' not found or invalid — block will not be created");
 					return null;
 				}
 				var worldPosition = child.Transform.Position;
 				return options.UseVector
-					? RigidbodyDynamicAddForceAtPositionBlock.CreateVectorWithWorldPosition(options.Vector, forceMode, worldPosition, options.Trace)
-					: RigidbodyDynamicAddForceAtPositionBlock.CreateAxisWithWorldPosition(options.Amount, options.Axis, forceMode, worldPosition, options.Trace);
+					? RigidbodyDynamicAddForceAtPositionBlock.CreateVectorWithWorldPosition(options.Vector, forceMode, worldPosition,
+						options.Trace)
+					: RigidbodyDynamicAddForceAtPositionBlock.CreateAxisWithWorldPosition(options.Amount, options.Axis, forceMode,
+						worldPosition, options.Trace);
 			}
 			if (options.HasAtPositionOffset)
+			{
 				return options.UseVector
-					? RigidbodyDynamicAddForceAtPositionBlock.CreateVectorWithLocalOffset(options.Vector, forceMode, options.AtPositionOffset, options.Trace)
-					: RigidbodyDynamicAddForceAtPositionBlock.CreateAxisWithLocalOffset(options.Amount, options.Axis, forceMode, options.AtPositionOffset, options.Trace);
+					? RigidbodyDynamicAddForceAtPositionBlock.CreateVectorWithLocalOffset(options.Vector, forceMode, options.AtPositionOffset,
+						options.Trace)
+					: RigidbodyDynamicAddForceAtPositionBlock.CreateAxisWithLocalOffset(options.Amount, options.Axis, forceMode,
+						options.AtPositionOffset, options.Trace);
+			}
 			return options.UseVector
 				? RigidbodyDynamicAddForceBlock.CreateVector(options.Vector, forceMode, options.Space, options.Trace)
 				: RigidbodyDynamicAddForceBlock.CreateAxisRelative(options.Amount, options.Axis, forceMode, options.Space, options.Trace);
@@ -115,6 +125,7 @@ namespace LunyScript
 				return LunyForceMode.Acceleration;
 			if (isImpulse && !ignoreMass)
 				return LunyForceMode.Impulse;
+
 			return LunyForceMode.VelocityChange;
 		}
 	}

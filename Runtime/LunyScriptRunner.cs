@@ -30,6 +30,8 @@ namespace LunyScript
 		private Table.VarHandle gvar_Time_FrameCount;
 		private Table.VarHandle gvar_Time_ElapsedSeconds;
 
+		private Boolean _isLoadingScene;
+
 		internal ScriptDefinitionRegistry Scripts => _scripts;
 		internal ScriptRuntimeContextRegistry Contexts => _contexts;
 		internal ScriptObjectEventHandler ObjectEventHandler => _objectEventHandler;
@@ -169,7 +171,6 @@ namespace LunyScript
 			}
 		}
 
-		private bool _isLoadingScene;
 		public void OnSceneLoaded(ILunyScene loadedScene)
 		{
 			_sceneEventHandler.OnSceneLoaded(loadedScene);

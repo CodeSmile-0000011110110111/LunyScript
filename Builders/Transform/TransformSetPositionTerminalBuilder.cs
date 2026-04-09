@@ -16,6 +16,8 @@ namespace LunyScript
 
 	public readonly struct TransformSetPositionTerminalBuilder
 	{
+		public static implicit operator ActionBlock(TransformSetPositionTerminalBuilder b) => Finish(b.Options);
+
 		internal readonly TransformSetPositionOptions Options;
 
 		internal static TransformSetPositionTerminalBuilder Create(Script script, VariableBlock<LunyVector3> position,

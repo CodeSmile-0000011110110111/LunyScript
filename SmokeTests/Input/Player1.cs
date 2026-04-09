@@ -10,13 +10,13 @@ namespace LunyScript.SmokeTests
 
 			// input actions filtered by player name
 			s.When.Input.Action("Move").ForUser(playerName).Continuing(s.Transform.MoveBy(s.Input.Direction("Move")));
-			s.When.Input.Action("Look").ForUser(playerName).Continuing(s.Transform.SetLocalRotation(s.Input.Rotation("Look")));
-			s.When.Input.Action("Jump").ForUser(playerName).Started(s.Transform.ShiftUp(10));
-			s.When.Input.Action("Crouch").ForUser(playerName).Started(s.Transform.ShiftDown(10));
+			s.When.Input.Action("Look").ForUser(playerName).Continuing(s.Transform.SetRotation(s.Input.Rotation("Look")));
+			s.When.Input.Action("Jump").ForUser(playerName).Started(s.Transform.MoveUp(10).InWorldSpace());
+			s.When.Input.Action("Crouch").ForUser(playerName).Started(s.Transform.MoveDown(10).InWorldSpace());
 			s.When.Input.Action("Interact")
 				.ForUser(playerName)
-				.Started(s.Transform.SetLocalScale(upscale))
-				.Ended(s.Transform.SetLocalScale(1));
+				.Started(s.Transform.SetScale(upscale))
+				.Ended(s.Transform.SetScale(1));
 			s.When.Input.Action("Attack")
 				.ForUser(playerName)
 				.Started(s.Object.Enable("AttackButtonPressed"))

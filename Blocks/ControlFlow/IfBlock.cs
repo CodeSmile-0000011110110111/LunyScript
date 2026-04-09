@@ -13,6 +13,11 @@ namespace LunyScript.Blocks
 		private readonly (ConditionBlock[] conditions, ActionBlock[] actions)[] _branches;
 		private readonly ActionBlock[] _elseBranch;
 
+		// ── IBlockContainer ───────────────────────────────────────────────
+
+		Int32 IBlockContainer.ConditionSequenceCount => _branches.Length;
+		Int32 IBlockContainer.ActionSequenceCount => _branches.Length + (_elseBranch != null ? 1 : 0);
+
 		public static IfBlock Create(
 			(ConditionBlock[] conditions, ActionBlock[] actions)[] branches,
 			ActionBlock[] elseBlocks,
@@ -21,16 +26,12 @@ namespace LunyScript.Blocks
 		private IfBlock(
 			(ConditionBlock[] conditions, ActionBlock[] actions)[] branches,
 			ActionBlock[] elseBranch,
-			StackTrace trace) : base(trace)
+			StackTrace trace)
+			: base(trace)
 		{
 			_branches = branches;
 			_elseBranch = elseBranch;
 		}
-
-		// ── IBlockContainer ───────────────────────────────────────────────
-
-		Int32 IBlockContainer.ConditionSequenceCount => _branches.Length;
-		Int32 IBlockContainer.ActionSequenceCount => _branches.Length + (_elseBranch != null ? 1 : 0);
 
 		String IBlockContainer.GetConditionSequenceName(Int32 index) => index == 0 ? "If" : "ElseIf";
 		String IBlockContainer.GetActionSequenceName(Int32 index) => index < _branches.Length ? "Then" : "Else";

@@ -9,9 +9,11 @@ namespace LunyScript
 	{
 		internal readonly RigidbodyForceOptions Options;
 
-		internal static RigidbodyDynamicAngularForceTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis, Boolean isImpulse, StackTrace trace)
+		internal static RigidbodyDynamicAngularForceTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis,
+			Boolean isImpulse, StackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicAngularForceTerminalBuilder), "Rigidbody.Dynamic.AddAngularForce(axis)");
+			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicAngularForceTerminalBuilder),
+				"Rigidbody.Dynamic.AddAngularForce(axis)");
 			var options = new RigidbodyForceOptions
 			{
 				Script = script, Token = token, Trace = trace,
@@ -21,9 +23,11 @@ namespace LunyScript
 			return new RigidbodyDynamicAngularForceTerminalBuilder(options);
 		}
 
-		internal static RigidbodyDynamicAngularForceTerminalBuilder CreateVector(Script script, LunyVector3 torque, Boolean isImpulse, StackTrace trace)
+		internal static RigidbodyDynamicAngularForceTerminalBuilder CreateVector(Script script, LunyVector3 torque, Boolean isImpulse,
+			StackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicAngularForceTerminalBuilder), "Rigidbody.Dynamic.AddAngularForce(vector)");
+			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicAngularForceTerminalBuilder),
+				"Rigidbody.Dynamic.AddAngularForce(vector)");
 			var options = new RigidbodyForceOptions
 			{
 				Script = script, Token = token, Trace = trace,
@@ -57,7 +61,8 @@ namespace LunyScript
 			var forceMode = ToForceMode(options.IsImpulse, options.IgnoreMass);
 			return options.UseVector
 				? RigidbodyDynamicAddAngularForceBlock.CreateVector(options.Vector, forceMode, options.Space, options.Trace)
-				: RigidbodyDynamicAddAngularForceBlock.CreateAxisRelative(options.Amount, options.Axis, forceMode, options.Space, options.Trace);
+				: RigidbodyDynamicAddAngularForceBlock.CreateAxisRelative(options.Amount, options.Axis, forceMode, options.Space,
+					options.Trace);
 		}
 
 		private static LunyForceMode ToForceMode(Boolean isImpulse, Boolean ignoreMass)
@@ -68,6 +73,7 @@ namespace LunyScript
 				return LunyForceMode.Acceleration;
 			if (isImpulse && !ignoreMass)
 				return LunyForceMode.Impulse;
+
 			return LunyForceMode.VelocityChange;
 		}
 	}

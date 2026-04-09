@@ -1,7 +1,7 @@
 ﻿using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
-using System;
+
 namespace LunyScript
 {
 	public readonly struct RigidbodyKinematicBuilder
@@ -16,22 +16,22 @@ namespace LunyScript
 		}
 
 		/// <summary> Move the kinematic rigidbody by <paramref name="amount"/> along <paramref name="axis"/> per second. Append <c>.InWorldSpace()</c> for world space. </summary>
-		[NeedsReview, NeedsSmokeTest]
+		[NeedsReview] [NeedsSmokeTest]
 		public RigidbodyKinematicMoveTerminalBuilder Move(VariableBlock amount, LunyAxis axis) =>
 			RigidbodyKinematicMoveTerminalBuilder.CreateAxisRelative(_script, amount, axis, _trace.Add(nameof(Move)));
 
 		/// <summary> Move the kinematic rigidbody by <paramref name="delta"/> per second. Append <c>.InWorldSpace()</c> for world space. </summary>
-		[NeedsReview, NeedsSmokeTest]
+		[NeedsReview] [NeedsSmokeTest]
 		public RigidbodyKinematicMoveTerminalBuilder Move(LunyVector3 delta) =>
 			RigidbodyKinematicMoveTerminalBuilder.CreateVector(_script, delta, _trace.Add(nameof(Move)));
 
 		/// <summary> Rotate the kinematic rigidbody by <paramref name="amount"/> degrees around <paramref name="axis"/> per second. Append <c>.InWorldSpace()</c> for world space. </summary>
-		[NeedsReview, NeedsSmokeTest]
+		[NeedsReview] [NeedsSmokeTest]
 		public RigidbodyKinematicRotateTerminalBuilder Rotate(VariableBlock amount, LunyAxis axis) =>
 			RigidbodyKinematicRotateTerminalBuilder.CreateAxisRelative(_script, amount, axis, _trace.Add(nameof(Rotate)));
 
 		/// <summary> Rotate the kinematic rigidbody by <paramref name="eulerDelta"/> degrees per second. Append <c>.InWorldSpace()</c> for world space. </summary>
-		[NeedsReview, NeedsSmokeTest]
+		[NeedsReview] [NeedsSmokeTest]
 		public RigidbodyKinematicRotateTerminalBuilder Rotate(LunyVector3 eulerDelta) =>
 			RigidbodyKinematicRotateTerminalBuilder.CreateVector(_script, eulerDelta, _trace.Add(nameof(Rotate)));
 	}

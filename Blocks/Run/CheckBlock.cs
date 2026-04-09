@@ -12,10 +12,8 @@ namespace LunyScript.Blocks
 
 		public static ConditionBlock Create(Func<IScriptRuntimeContext, Boolean> func, StackTrace trace = null) => new CheckBlock(func, trace);
 
-		private CheckBlock(Func<IScriptRuntimeContext, Boolean> func, StackTrace trace) : base(trace)
-		{
-			_func = func ?? throw new ArgumentNullException(nameof(func));
-		}
+		private CheckBlock(Func<IScriptRuntimeContext, Boolean> func, StackTrace trace)
+			: base(trace) => _func = func ?? throw new ArgumentNullException(nameof(func));
 
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => _func(runtimeContext);
 	}

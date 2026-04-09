@@ -6,12 +6,15 @@ namespace LunyScript
 {
 	// ── Collision Builder States ─────────────────────────────────────────────
 	public interface ICollisionBuilderState {}
+
 	/// <summary>Marker: filter methods (Tagged, With, Layered, Masked, Typed, Cooldown) are still available.</summary>
 	public interface ICollisionFilterable : ICollisionBuilderState {}
-	public struct CollisionStart   : ICollisionFilterable {}
-	public struct CollisionReady   : ICollisionFilterable {}
+
+	public struct CollisionStart : ICollisionFilterable {}
+	public struct CollisionReady : ICollisionFilterable {}
 	public struct CollisionLayered : ICollisionFilterable {}
-	public struct CollisionMasked  : ICollisionFilterable {}
+	public struct CollisionMasked : ICollisionFilterable {}
+
 	/// <summary>State after at least one event handler is set — filters are no longer available.</summary>
 	public struct CollisionEventSet : ICollisionBuilderState {}
 

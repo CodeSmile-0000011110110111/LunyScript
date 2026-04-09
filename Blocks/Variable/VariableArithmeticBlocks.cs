@@ -20,13 +20,13 @@ namespace LunyScript.Blocks
 #if DEBUG || LUNYSCRIPT_DEBUG
 			var leftType = _left.Variable.Type;
 			// allow "string.Add(whatever)" for string concat, but everything else should fail
-			if (leftType != Luny.Variable.ValueType.String || GetType() != typeof(VariableAddBlock))
+			if (leftType != Variable.ValueType.String || GetType() != typeof(VariableAddBlock))
 			{
-				if (leftType != Luny.Variable.ValueType.Number)
+				if (leftType != Variable.ValueType.Number)
 					throw new LunyScriptException($"Attempt to perform {ToString()} with: {_left.Variable}");
 
 				var rightType = _right.Variable.Type;
-				if (rightType != Luny.Variable.ValueType.Number)
+				if (rightType != Variable.ValueType.Number)
 					throw new LunyScriptException($"Attempt to perform {ToString()} with: {_right.Variable}");
 			}
 #endif
@@ -35,13 +35,13 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableAddBlock : VariableArithmeticBlock
 	{
-		internal override Luny.Variable Variable
+		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get
 			{
 				var leftVar = _left.Variable;
-				if (leftVar.Type == Luny.Variable.ValueType.String)
+				if (leftVar.Type == Variable.ValueType.String)
 					return leftVar + _right.Variable.AsString();
 
 				return leftVar + _right.Variable.Value;
@@ -57,7 +57,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableSubtractBlock : VariableArithmeticBlock
 	{
-		internal override Luny.Variable Variable
+		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable - _right.Variable.Value;
@@ -72,7 +72,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableMultiplyBlock : VariableArithmeticBlock
 	{
-		internal override Luny.Variable Variable
+		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable * _right.Variable.Value;
@@ -87,7 +87,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableDivideBlock : VariableArithmeticBlock
 	{
-		internal override Luny.Variable Variable
+		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get

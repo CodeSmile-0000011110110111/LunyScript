@@ -10,6 +10,7 @@ namespace LunyScript
 	{
 		private readonly Script _script;
 		private readonly StackTrace _trace;
+
 		internal SceneApi(Script script, StackTrace trace)
 		{
 			_script = script;

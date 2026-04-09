@@ -16,19 +16,32 @@ namespace LunyScript.Blocks
 		private readonly Boolean _useLocalOffset;
 		private readonly LunyVector3 _offsetOrWorldPos;
 
-		internal static RigidbodyDynamicAddForceAtPositionBlock CreateAxisWithLocalOffset(VariableBlock amount, LunyAxis axis, LunyForceMode forceMode, LunyVector3 localOffset, StackTrace trace) =>
-			new(amount, axis, default, useForce: false, forceMode, localOffset, useLocalOffset: true, trace);
+		internal static RigidbodyDynamicAddForceAtPositionBlock CreateAxisWithLocalOffset(VariableBlock amount, LunyAxis axis,
+			LunyForceMode forceMode, LunyVector3 localOffset, StackTrace trace) =>
+			new(amount, axis, default, false, forceMode, localOffset, true, trace);
 
-		internal static RigidbodyDynamicAddForceAtPositionBlock CreateVectorWithLocalOffset(LunyVector3 force, LunyForceMode forceMode, LunyVector3 localOffset, StackTrace trace) =>
-			new(null, default, force, useForce: true, forceMode, localOffset, useLocalOffset: true, trace);
+		internal static RigidbodyDynamicAddForceAtPositionBlock CreateVectorWithLocalOffset(LunyVector3 force, LunyForceMode forceMode,
+			LunyVector3 localOffset, StackTrace trace) => new(null, default, force, true, forceMode, localOffset, true, trace);
 
-		internal static RigidbodyDynamicAddForceAtPositionBlock CreateAxisWithWorldPosition(VariableBlock amount, LunyAxis axis, LunyForceMode forceMode, LunyVector3 worldPosition, StackTrace trace) =>
-			new(amount, axis, default, useForce: false, forceMode, worldPosition, useLocalOffset: false, trace);
+		internal static RigidbodyDynamicAddForceAtPositionBlock CreateAxisWithWorldPosition(VariableBlock amount, LunyAxis axis,
+			LunyForceMode forceMode, LunyVector3 worldPosition, StackTrace trace) =>
+			new(amount, axis, default, false, forceMode, worldPosition, false, trace);
 
-		internal static RigidbodyDynamicAddForceAtPositionBlock CreateVectorWithWorldPosition(LunyVector3 force, LunyForceMode forceMode, LunyVector3 worldPosition, StackTrace trace) =>
-			new(null, default, force, useForce: true, forceMode, worldPosition, useLocalOffset: false, trace);
+		internal static RigidbodyDynamicAddForceAtPositionBlock CreateVectorWithWorldPosition(LunyVector3 force, LunyForceMode forceMode,
+			LunyVector3 worldPosition, StackTrace trace) => new(null, default, force, true, forceMode, worldPosition, false, trace);
 
-		private RigidbodyDynamicAddForceAtPositionBlock(VariableBlock amount, LunyAxis axis, LunyVector3 force, Boolean useForce, LunyForceMode forceMode, LunyVector3 offsetOrWorldPos, Boolean useLocalOffset, StackTrace trace)
+		private static LunyVector3 AxisToVector(LunyAxis axis)
+		{
+			if (axis == LunyAxis.X)
+				return LunyVector3.Right;
+			if (axis == LunyAxis.Y)
+				return LunyVector3.Up;
+
+			return LunyVector3.Forward;
+		}
+
+		private RigidbodyDynamicAddForceAtPositionBlock(VariableBlock amount, LunyAxis axis, LunyVector3 force, Boolean useForce,
+			LunyForceMode forceMode, LunyVector3 offsetOrWorldPos, Boolean useLocalOffset, StackTrace trace)
 			: base(trace)
 		{
 			_amount = amount;
@@ -45,7 +58,9 @@ namespace LunyScript.Blocks
 			var rigidbody = context.LunyObject.Rigidbody;
 			if (rigidbody == null)
 			{
-				LunyLogger.LogWarning($"{nameof(RigidbodyDynamicAddForceAtPositionBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyObject.Name}'", context.LunyObject);
+				LunyLogger.LogWarning(
+					$"{nameof(RigidbodyDynamicAddForceAtPositionBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyObject.Name}'",
+					context.LunyObject);
 				return;
 			}
 			var worldPosition = _useLocalOffset
@@ -55,15 +70,7 @@ namespace LunyScript.Blocks
 			rigidbody.AddForceAtPosition(force, worldPosition, _forceMode);
 		}
 
-		private static LunyVector3 AxisToVector(LunyAxis axis)
-		{
-			if (axis == LunyAxis.X)
-				return LunyVector3.Right;
-			if (axis == LunyAxis.Y)
-				return LunyVector3.Up;
-			return LunyVector3.Forward;
-		}
-
-		public override String ToString() => $"{GetType().Name}({(_useForce ? _force.ToString() : $"{_amount},{_axis}")}, {_forceMode}, {(_useLocalOffset ? $"localOffset={_offsetOrWorldPos}" : $"worldPos={_offsetOrWorldPos}")})";
+		public override String ToString() =>
+			$"{GetType().Name}({(_useForce ? _force.ToString() : $"{_amount},{_axis}")}, {_forceMode}, {(_useLocalOffset ? $"localOffset={_offsetOrWorldPos}" : $"worldPos={_offsetOrWorldPos}")})";
 	}
 }

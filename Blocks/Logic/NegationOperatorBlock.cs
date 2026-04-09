@@ -13,7 +13,7 @@ namespace LunyScript.Blocks
 
 		internal override Table.VarHandle VarHandle => (_condition as VariableBlock)?.VarHandle;
 
-		internal override Luny.Variable Variable
+		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => Evaluate(null);
@@ -21,7 +21,8 @@ namespace LunyScript.Blocks
 
 		public static NegationOperatorBlock Create(ConditionBlock condition, StackTrace trace = null) => new(condition, trace);
 
-		private NegationOperatorBlock(ConditionBlock condition, StackTrace trace) : base(trace)
+		private NegationOperatorBlock(ConditionBlock condition, StackTrace trace)
+			: base(trace)
 		{
 			if (condition == null)
 				throw new ArgumentNullException(nameof(condition), $"{nameof(NegationOperatorBlock)}: Condition cannot be null");

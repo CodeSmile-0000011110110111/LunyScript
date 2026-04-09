@@ -14,11 +14,13 @@ namespace LunyScript.Blocks
 		private readonly LunyObjectRef _target;
 		public static ActionBlock Create(LunyObjectRef target) => new ObjectDestroyTargetBlock(target);
 		private ObjectDestroyTargetBlock(LunyObjectRef target) => _target = target;
+
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
 			var target = _target.Value;
 			if (target == null)
 				return;
+
 			target.Destroy();
 		}
 	}

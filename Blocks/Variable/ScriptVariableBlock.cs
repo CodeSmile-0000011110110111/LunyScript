@@ -14,9 +14,9 @@ namespace LunyScript.Blocks
 		internal override Table.VarHandle VarHandle => _handle;
 
 		public String Name => _handle.Name;
-		public new Luny.Variable Value => _handle.Variable;
+		public new Variable Value => _handle.Variable;
 
-		internal override Luny.Variable Variable
+		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _handle.Variable;
@@ -31,6 +31,6 @@ namespace LunyScript.Blocks
 		/// Used to set a variable's value during Build() time.
 		/// </summary>
 		/// <param name="value"></param>
-		public void SetImmediate(Luny.Variable value) => _handle.Variable = value;
+		public void SetImmediate(Variable value) => _handle.Variable = value;
 	}
 }

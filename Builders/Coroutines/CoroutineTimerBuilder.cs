@@ -50,10 +50,13 @@ namespace LunyScript
 	{
 		/// <summary>Counts frame updates.</summary>
 		public static CoroutineCounterBuilder<CoroutineCounterBuilderUnitSet> Frames<T>(this CoroutineTimerBuilder<T> b)
-			where T : struct, ICoroutineTimerAmountSet => new(b.Options with { IsCounter = true, ProcessMode = Coroutine.UpdateMode.FrameUpdate });
+			where T : struct, ICoroutineTimerAmountSet =>
+			new(b.Options with { IsCounter = true, ProcessMode = Coroutine.UpdateMode.FrameUpdate });
+
 		/// <summary>Counts heartbeat (fixed step) updates.</summary>
 		public static CoroutineCounterBuilder<CoroutineCounterBuilderUnitSet> Heartbeats<T>(this CoroutineTimerBuilder<T> b)
-			where T : struct, ICoroutineTimerAmountSet => new(b.Options with { IsCounter = true, ProcessMode = Coroutine.UpdateMode.Heartbeat });
+			where T : struct, ICoroutineTimerAmountSet =>
+			new(b.Options with { IsCounter = true, ProcessMode = Coroutine.UpdateMode.Heartbeat });
 	}
 
 	public static class TimerBuilderWhenExtensions

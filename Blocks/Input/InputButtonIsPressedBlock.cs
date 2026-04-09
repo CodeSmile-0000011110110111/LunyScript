@@ -11,7 +11,7 @@ namespace LunyScript.Blocks
 	{
 		private readonly String _actionName;
 
-		internal override Luny.Variable Variable => Evaluate(null);
+		internal override Variable Variable => Evaluate(null);
 
 		internal static InputButtonIsPressedBlock Create(String actionName) => new(actionName);
 		private InputButtonIsPressedBlock(String actionName) => _actionName = actionName;

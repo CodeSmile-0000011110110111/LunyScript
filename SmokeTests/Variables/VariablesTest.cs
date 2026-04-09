@@ -96,7 +96,7 @@ namespace LunyScript.SmokeTests
 			// grow the object over time
 			var scale = Var.Define("scale", 0.01);
 			On.FrameUpdate(
-				Transform.SetLocalScale(scale),
+				Transform.SetScale(scale),
 				scale.Add(0.0004)
 			);
 			//On.Ready(Transform.SetLocalScale(scale / scale + scale / scale));

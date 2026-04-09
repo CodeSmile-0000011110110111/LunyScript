@@ -17,6 +17,7 @@ namespace LunyScript
 		private readonly Script _script;
 		private readonly String _name;
 		private readonly StackTrace _trace;
+
 		internal CoroutineBuilder(Script script, String name, StackTrace trace)
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
@@ -55,7 +56,7 @@ namespace LunyScript
 
 		private static void ThrowIfAllSequencesEmpty(Script script, BuilderToken token, in CoroutineOptions options)
 		{
- 		if (options.OnProcess == null && options.OnElapsed == null &&
+			if (options.OnProcess == null && options.OnElapsed == null &&
 			    options.OnStarted == null && options.OnStopped == null && options.OnPaused == null && options.OnResumed == null)
 				throw new LunyScriptException($"{token.Type} '{options.Name}' has no blocks. Add blocks or remove coroutine. Script: {script}");
 		}

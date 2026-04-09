@@ -16,6 +16,8 @@ namespace LunyScript
 
 	public readonly struct TransformSetRotationTerminalBuilder
 	{
+		public static implicit operator ActionBlock(TransformSetRotationTerminalBuilder b) => Finish(b.Options);
+
 		internal readonly TransformSetRotationOptions Options;
 
 		internal static TransformSetRotationTerminalBuilder Create(Script script, VariableBlock<LunyQuaternion> rotation,

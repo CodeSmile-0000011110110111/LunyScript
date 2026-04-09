@@ -49,7 +49,7 @@ namespace LunyScript
 			_scriptsById[definition.ScriptId] = definition;
 			_scriptsByName[definition.Name] = definition;
 
-			//LunyLogger.LogInfo($"{definition} registered", this);
+			LunyLogger.LogInfo($"{definition} registered", this);
 		}
 
 		/// <summary>

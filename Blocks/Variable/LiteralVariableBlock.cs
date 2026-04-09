@@ -8,17 +8,17 @@ namespace LunyScript.Blocks
 	/// </summary>
 	internal sealed class LiteralVariableBlock : VariableBlock
 	{
-		private readonly Luny.Variable _value;
+		private readonly Variable _value;
 
-		internal override Luny.Variable Variable
+		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _value;
 		}
 
-		public static LiteralVariableBlock Create(Luny.Variable value, StackTrace trace) => new(value, trace);
+		public static LiteralVariableBlock Create(Variable value, StackTrace trace) => new(value, trace);
 
-		private LiteralVariableBlock(Luny.Variable value, StackTrace trace)
+		private LiteralVariableBlock(Variable value, StackTrace trace)
 			: base(trace) => _value = value;
 	}
 }

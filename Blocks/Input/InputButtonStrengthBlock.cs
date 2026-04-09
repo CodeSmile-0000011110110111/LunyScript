@@ -11,7 +11,7 @@ namespace LunyScript.Blocks
 	{
 		private readonly String _actionName;
 
-		internal override Luny.Variable Variable => LunyEngine.Instance.Input.GetButtonStrength(_actionName);
+		internal override Variable Variable => LunyEngine.Instance.Input.GetButtonStrength(_actionName);
 
 		internal static InputButtonStrengthBlock Create(String actionName) => new(actionName);
 		private InputButtonStrengthBlock(String actionName) => _actionName = actionName;

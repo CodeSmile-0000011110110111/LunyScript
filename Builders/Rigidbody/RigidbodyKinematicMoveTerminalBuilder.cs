@@ -22,7 +22,8 @@ namespace LunyScript
 	{
 		internal readonly RigidbodyKinematicOptions Options;
 
-		internal static RigidbodyKinematicMoveTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis, StackTrace trace)
+		internal static RigidbodyKinematicMoveTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis,
+			StackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(RigidbodyKinematicMoveTerminalBuilder), "Rigidbody.Kinematic.Move(axis)");
 			var options = new RigidbodyKinematicOptions

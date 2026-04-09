@@ -23,9 +23,8 @@ namespace LunyScript
 	/// </summary>
 	public sealed class ScriptEngine : IScriptEngine, IScriptEngineInternal
 	{
-		private LunyScriptRunner _runner;
-
 		public static event Action<IScriptEngine> OnScriptEngineInitialized;
+		private LunyScriptRunner _runner;
 
 		public static IScriptEngine Instance { get; private set; }
 		public ITable GlobalVariables => ScriptRuntimeContext.GetGlobalVariables();

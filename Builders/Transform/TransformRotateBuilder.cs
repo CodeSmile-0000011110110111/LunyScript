@@ -43,7 +43,8 @@ namespace LunyScript
 		private static TransformRotationAddAngleBlock Finish(in TransformBuilderOptions options)
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
-			return TransformRotationAddAngleBlock.Create(options.Amount, options.Axis, options.Space, options.MinAngle, options.MaxAngle, options.Trace);
+			return TransformRotationAddAngleBlock.Create(options.Amount, options.Axis, options.Space, options.MinAngle, options.MaxAngle,
+				options.Trace);
 		}
 	}
 }

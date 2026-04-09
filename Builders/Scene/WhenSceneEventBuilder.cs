@@ -45,7 +45,6 @@ namespace LunyScript
 		/// <param name="blocks"></param>
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
-		public ISequenceBlock Unloaded(String sceneName, params ActionBlock[] blocks) =>
-			throw new NotImplementedException(nameof(Unloaded));
+		public ISequenceBlock Unloaded(String sceneName, params ActionBlock[] blocks) => throw new NotImplementedException(nameof(Unloaded));
 	}
 }

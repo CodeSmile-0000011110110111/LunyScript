@@ -12,13 +12,24 @@ namespace LunyScript.Blocks
 		private readonly Boolean _useVector;
 		private readonly LunyTransformSpace _space;
 
-		internal static RigidbodyKinematicMoveBlock CreateAxisRelative(VariableBlock amount, LunyAxis axis, LunyTransformSpace space, StackTrace trace) =>
-			new(amount, axis, default, useVector: false, space, trace);
+		internal static RigidbodyKinematicMoveBlock CreateAxisRelative(VariableBlock amount, LunyAxis axis, LunyTransformSpace space,
+			StackTrace trace) => new(amount, axis, default, false, space, trace);
 
 		internal static RigidbodyKinematicMoveBlock CreateVector(LunyVector3 delta, LunyTransformSpace space, StackTrace trace) =>
-			new(null, default, delta, useVector: true, space, trace);
+			new(null, default, delta, true, space, trace);
 
-		private RigidbodyKinematicMoveBlock(VariableBlock amount, LunyAxis axis, LunyVector3 vector, Boolean useVector, LunyTransformSpace space, StackTrace trace)
+		private static LunyVector3 AxisToVector(LunyAxis axis)
+		{
+			if (axis == LunyAxis.X)
+				return LunyVector3.Right;
+			if (axis == LunyAxis.Y)
+				return LunyVector3.Up;
+
+			return LunyVector3.Forward;
+		}
+
+		private RigidbodyKinematicMoveBlock(VariableBlock amount, LunyAxis axis, LunyVector3 vector, Boolean useVector,
+			LunyTransformSpace space, StackTrace trace)
 			: base(trace)
 		{
 			_amount = amount;
@@ -33,22 +44,14 @@ namespace LunyScript.Blocks
 			var rigidbody = context.LunyObject.Rigidbody;
 			if (rigidbody == null)
 			{
-				LunyLogger.LogWarning($"{nameof(RigidbodyKinematicMoveBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyObject.Name}'", context.LunyObject);
+				LunyLogger.LogWarning($"{nameof(RigidbodyKinematicMoveBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyObject.Name}'",
+					context.LunyObject);
 				return;
 			}
 			var delta = _useVector
 				? _vector * LunyTime.DeltaTime
 				: AxisToVector(_axis) * (_amount.Value * LunyTime.DeltaTime);
 			rigidbody.MovePosition(delta, _space);
-		}
-
-		private static LunyVector3 AxisToVector(LunyAxis axis)
-		{
-			if (axis == LunyAxis.X)
-				return LunyVector3.Right;
-			if (axis == LunyAxis.Y)
-				return LunyVector3.Up;
-			return LunyVector3.Forward;
 		}
 
 		public override String ToString() => $"{GetType().Name}({(_useVector ? _vector.ToString() : $"{_amount},{_axis}")}, {_space})";

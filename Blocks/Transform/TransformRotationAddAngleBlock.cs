@@ -17,6 +17,16 @@ namespace LunyScript.Blocks
 			LunyTransformSpace space, Double minAngle = Double.NegativeInfinity, Double maxAngle = Double.PositiveInfinity,
 			StackTrace trace = null) => new(amount, axis, space, minAngle, maxAngle, trace);
 
+		private static LunyVector3 AxisToVector(LunyAxis axis)
+		{
+			if (axis == LunyAxis.X)
+				return LunyVector3.Right;
+			if (axis == LunyAxis.Y)
+				return LunyVector3.Up;
+
+			return LunyVector3.Forward;
+		}
+
 		private TransformRotationAddAngleBlock(VariableBlock amount, LunyAxis axis,
 			LunyTransformSpace space, Double minAngle, Double maxAngle, StackTrace trace)
 			: base(trace)
@@ -27,15 +37,6 @@ namespace LunyScript.Blocks
 			_minAngle = minAngle;
 			_maxAngle = maxAngle;
 			_currentAngle = 0.0;
-		}
-
-		private static LunyVector3 AxisToVector(LunyAxis axis)
-		{
-			if (axis == LunyAxis.X)
-				return LunyVector3.Right;
-			if (axis == LunyAxis.Y)
-				return LunyVector3.Up;
-			return LunyVector3.Forward;
 		}
 
 		protected internal override void Execute(IScriptRuntimeContext context)

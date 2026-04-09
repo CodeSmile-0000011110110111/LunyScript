@@ -11,7 +11,7 @@ namespace LunyScript.Blocks
 	{
 		private readonly String _actionName;
 
-		internal override Luny.Variable Variable
+		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => (Double)LunyEngine.Instance.Input.GetDirection(_actionName).Y;

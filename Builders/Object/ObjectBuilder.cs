@@ -18,25 +18,25 @@ namespace LunyScript
 	{
 		private readonly Script _script;
 		private readonly StackTrace _trace;
+
 		internal ObjectBuilder(Script script, StackTrace trace)
 		{
 			_script = script;
 			_trace = trace;
 		}
 
-		[NeedsReview, NeedsSmokeTest]
+		[NeedsReview] [NeedsSmokeTest]
 		public ActionBlock Enable(LunyObjectRef target = null) =>
 			target == null ? ObjectEnableSelfBlock.Create() : ObjectEnableTargetBlock.Create(target);
 
-		[NeedsReview, NeedsSmokeTest]
+		[NeedsReview] [NeedsSmokeTest]
 		public ActionBlock Disable(LunyObjectRef target = null) =>
 			target == null ? ObjectDisableSelfBlock.Create() : ObjectDisableTargetBlock.Create(target);
 
-		[NeedsReview, NeedsSmokeTest]
-		public ActionBlock SetEnabled(LunyObjectRef target, VariableBlock enabled) =>
-			ObjectSetEnabledBlock.Create(target, enabled);
+		[NeedsReview] [NeedsSmokeTest]
+		public ActionBlock SetEnabled(LunyObjectRef target, VariableBlock enabled) => ObjectSetEnabledBlock.Create(target, enabled);
 
-		[NeedsReview, NeedsSmokeTest]
+		[NeedsReview] [NeedsSmokeTest]
 		public ObjectCreateBuilder<ObjectBuilderNameSet> Create(String name)
 		{
 			var token = _script.CreateBuilderToken(name, "Object.Create");
@@ -45,7 +45,7 @@ namespace LunyScript
 			return new ObjectCreateBuilder<ObjectBuilderNameSet>(options);
 		}
 
-		[NeedsReview, NeedsSmokeTest]
+		[NeedsReview] [NeedsSmokeTest]
 		public ActionBlock Destroy(LunyObjectRef target = null) =>
 			target == null ? ObjectDestroySelfBlock.Create() : ObjectDestroyTargetBlock.Create(target);
 	}
@@ -54,6 +54,7 @@ namespace LunyScript
 	{
 		private readonly Script _script;
 		private readonly StackTrace _trace;
+
 		internal PrefabBuilder(Script script, StackTrace trace)
 		{
 			_script = script;
@@ -113,26 +114,26 @@ namespace LunyScript
 		public ObjectCreateBuilder<T> Parent(LunyObjectRef parent) => new(Options with { Parent = parent });
 		public ObjectCreateBuilder<T> Parent(ILunyObject parent) => new(Options with { Parent = new LunyObjectRef(parent) });
 
-		public ObjectCreateBuilder<T> LocalPosition(Double x, Double y, Double z) =>
+		public ObjectCreateBuilder<T> Position(Double x, Double y, Double z) =>
 			new(Options with { LocalPosition = new LunyVector3(x, y, z) });
 
-		public ObjectCreateBuilder<T> LocalPosition(LunyVector3 localPosition) => new(Options with { LocalPosition = localPosition });
+		public ObjectCreateBuilder<T> Position(LunyVector3 localPosition) => new(Options with { LocalPosition = localPosition });
 
-		public ObjectCreateBuilder<T> LocalRotation(Double x, Double y, Double z) =>
+		public ObjectCreateBuilder<T> Rotation(Double x, Double y, Double z) =>
 			new(Options with { LocalRotation = LunyQuaternion.Euler(x, y, z) });
 
-		public ObjectCreateBuilder<T> LocalRotation(LunyVector3 localEulerAngles) =>
+		public ObjectCreateBuilder<T> Rotation(LunyVector3 localEulerAngles) =>
 			new(Options with { LocalRotation = LunyQuaternion.Euler(localEulerAngles) });
 
-		public ObjectCreateBuilder<T> LocalRotation(LunyQuaternion localRotation) => new(Options with { LocalRotation = localRotation });
+		public ObjectCreateBuilder<T> Rotation(LunyQuaternion localRotation) => new(Options with { LocalRotation = localRotation });
 
-		public ObjectCreateBuilder<T> LocalScale(Double uniformLocalScale) => new(Options with
+		public ObjectCreateBuilder<T> Scale(Double uniformLocalScale) => new(Options with
 		{
 			LocalScale = new LunyVector3(uniformLocalScale, uniformLocalScale, uniformLocalScale),
 		});
 
-		public ObjectCreateBuilder<T> LocalScale(Double x, Double y, Double z) => new(Options with { LocalScale = new LunyVector3(x, y, z) });
-		public ObjectCreateBuilder<T> LocalScale(LunyVector3 localScale) => new(Options with { LocalScale = localScale });
+		public ObjectCreateBuilder<T> Scale(Double x, Double y, Double z) => new(Options with { LocalScale = new LunyVector3(x, y, z) });
+		public ObjectCreateBuilder<T> Scale(LunyVector3 localScale) => new(Options with { LocalScale = localScale });
 
 		internal static ActionBlock Finish(Script script, BuilderToken token, in ObjectCreateOptions options)
 		{

@@ -6,12 +6,15 @@ namespace LunyScript
 {
 	// ── Trigger Builder States ───────────────────────────────────────────────
 	public interface ITriggerBuilderState {}
+
 	/// <summary>Marker: filter methods (Tagged, With, Layered, Masked, Typed, Cooldown) are still available.</summary>
 	public interface ITriggerFilterable : ITriggerBuilderState {}
-	public struct TriggerStart   : ITriggerFilterable {}
-	public struct TriggerReady   : ITriggerFilterable {}
+
+	public struct TriggerStart : ITriggerFilterable {}
+	public struct TriggerReady : ITriggerFilterable {}
 	public struct TriggerLayered : ITriggerFilterable {}
-	public struct TriggerMasked  : ITriggerFilterable {}
+	public struct TriggerMasked : ITriggerFilterable {}
+
 	/// <summary>State after at least one event handler is set — filters are no longer available.</summary>
 	public struct TriggerEventSet : ITriggerBuilderState {}
 

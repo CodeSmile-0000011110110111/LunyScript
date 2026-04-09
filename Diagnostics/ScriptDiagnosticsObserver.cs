@@ -10,8 +10,6 @@ namespace LunyScript.Diagnostics
 	/// </summary>
 	public sealed class ScriptDiagnosticsObserver : ILunyEngineObserver
 	{
-		public static ScriptDiagnosticsObserver Instance { get; private set; }
-
 		/// <summary>
 		/// Fired when the engine starts up and the singleton Instance becomes valid.
 		/// Subscribe to this event when Instance is null to be notified when diagnostics become available.
@@ -22,6 +20,14 @@ namespace LunyScript.Diagnostics
 		/// Fired just before the engine shuts down. Instance is still valid when this fires.
 		/// </summary>
 		public static event Action<ScriptDiagnosticsObserver> OnDiagnosticsShutdown;
+		public static ScriptDiagnosticsObserver Instance { get; private set; }
+
+		internal static void ResetStaticFields()
+		{
+			Instance = null;
+			OnDiagnosticsStartup = null;
+			OnDiagnosticsShutdown = null;
+		}
 
 		void ILunyEngineObserver.OnEngineStartup()
 		{
@@ -37,13 +43,6 @@ namespace LunyScript.Diagnostics
 		{
 			OnDiagnosticsShutdown?.Invoke(this);
 			ResetStaticFields();
-		}
-
-		internal static void ResetStaticFields()
-		{
-			Instance = null;
-			OnDiagnosticsStartup = null;
-			OnDiagnosticsShutdown = null;
 		}
 	}
 }

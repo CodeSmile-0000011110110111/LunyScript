@@ -19,10 +19,8 @@ namespace LunyScript.Blocks
 
 		public static ActionBlock Create(Action<IScriptRuntimeContext> action, StackTrace trace = null) => new RunBlock(action, trace);
 
-		private RunBlock(Action<IScriptRuntimeContext> action, StackTrace trace) : base(trace)
-		{
-			_action = action ?? throw new ArgumentNullException(nameof(action));
-		}
+		private RunBlock(Action<IScriptRuntimeContext> action, StackTrace trace)
+			: base(trace) => _action = action ?? throw new ArgumentNullException(nameof(action));
 
 		protected internal override void Execute(IScriptRuntimeContext context) => _action(context);
 	}

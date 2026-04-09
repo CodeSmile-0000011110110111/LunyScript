@@ -13,15 +13,20 @@ namespace LunyScript.Blocks
 	{
 		private readonly ConditionBlock[] _conditions;
 
-		internal override Luny.Variable Variable
+		internal override Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => Evaluate(null);
 		}
 
+		// ── IBlockContainer ───────────────────────────────────────────────
+
+		Int32 IBlockContainer.ConditionSequenceCount => 1;
+
 		public static OrOperatorBlock Create(ConditionBlock[] conditions, StackTrace trace = null) => new(conditions, trace);
 
-		private OrOperatorBlock(ConditionBlock[] conditions, StackTrace trace) : base(trace)
+		private OrOperatorBlock(ConditionBlock[] conditions, StackTrace trace)
+			: base(trace)
 		{
 			_conditions = conditions ?? throw new ArgumentNullException(nameof(conditions));
 
@@ -33,9 +38,6 @@ namespace LunyScript.Blocks
 #endif
 		}
 
-		// ── IBlockContainer ───────────────────────────────────────────────
-
-		Int32 IBlockContainer.ConditionSequenceCount => 1;
 		String IBlockContainer.GetConditionSequenceName(Int32 index) => "OR";
 		IEnumerable<IScriptBlock> IBlockContainer.GetConditionSequence(Int32 index) => _conditions;
 

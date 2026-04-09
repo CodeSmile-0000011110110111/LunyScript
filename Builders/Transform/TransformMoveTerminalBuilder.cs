@@ -20,6 +20,8 @@ namespace LunyScript
 
 	public readonly struct TransformMoveTerminalBuilder
 	{
+		public static implicit operator ActionBlock(TransformMoveTerminalBuilder b) => Finish(b.Options);
+
 		internal readonly TransformMoveOptions Options;
 
 		internal static TransformMoveTerminalBuilder CreateDirectional(Script script, VariableBlock<LunyVector2> direction,
