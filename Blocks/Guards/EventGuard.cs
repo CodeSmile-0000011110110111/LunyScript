@@ -1,6 +1,6 @@
 using System;
 
-namespace LunyScript.Blocks.Guards
+namespace LunyScript.Blocks
 {
 	internal abstract class EventGuard
 	{

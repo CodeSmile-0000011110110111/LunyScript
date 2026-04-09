@@ -1,9 +1,8 @@
 using Luny.Engine.Bridge;
-using LunyScript.Blocks.Guards;
 using System;
 using System.Collections.Generic;
 
-namespace LunyScript.Blocks.PhysicsEvent
+namespace LunyScript.Blocks
 {
 	/// <summary>
 	/// Physics event sequence block for 3D trigger events.

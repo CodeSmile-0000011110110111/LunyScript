@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Stopwatch = System.Diagnostics.Stopwatch;
 
-namespace LunyScript.Activation
+namespace LunyScript
 {
 	/// <summary>
 	/// Scans scenes at runtime to discover objects that should run LunyScripts.

@@ -1,7 +1,6 @@
 using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
-using LunyScript.Events;
 
 namespace LunyScript
 {

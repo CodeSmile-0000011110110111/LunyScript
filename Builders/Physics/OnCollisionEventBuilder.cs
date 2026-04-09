@@ -1,6 +1,5 @@
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
-using LunyScript.Blocks.PhysicsEvent;
 using System;
 
 namespace LunyScript

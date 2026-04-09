@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace LunyScript.Events
+namespace LunyScript
 {
 	/// <summary>
 	/// Handles scene events.

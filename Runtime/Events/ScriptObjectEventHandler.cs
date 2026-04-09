@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace LunyScript.Events
+namespace LunyScript
 {
 	/// <summary>
 	/// Manages object lifecycle events by attaching hooks to LunyObjects and handling event dispatch.

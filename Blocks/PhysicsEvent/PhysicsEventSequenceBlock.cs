@@ -1,8 +1,7 @@
-using LunyScript.Blocks.Guards;
 using System;
 using System.Collections.Generic;
 
-namespace LunyScript.Blocks.PhysicsEvent
+namespace LunyScript.Blocks
 {
 	/// <summary>
 	/// Abstract base for physics event sequence blocks (collision and trigger).

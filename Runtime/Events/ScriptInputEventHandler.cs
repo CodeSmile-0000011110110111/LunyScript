@@ -1,12 +1,10 @@
 ﻿using Luny;
 using Luny.Engine.Bridge;
-using LunyScript.Blocks.PhysicsEvent;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
-namespace LunyScript.Events
+namespace LunyScript
 {
 	/// <summary>
 	/// Handles Input Action events.

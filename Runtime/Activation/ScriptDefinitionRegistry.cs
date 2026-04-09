@@ -1,10 +1,9 @@
 using Luny;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Stopwatch = System.Diagnostics.Stopwatch;
 
-namespace LunyScript.Activation
+namespace LunyScript
 {
 	/// <summary>
 	/// Discovers and manages LunyScript definitions.

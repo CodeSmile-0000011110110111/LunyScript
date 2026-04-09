@@ -25,9 +25,9 @@ namespace LunyScript.Blocks
 			// only equality/inequality allowed for string and boolean types
 			if (block != typeof(VariableIsEqualToBlock) && block != typeof(VariableIsNotEqualToBlock))
 			{
-				if (leftType == Variable.ValueType.String || leftType == Variable.ValueType.Boolean)
+				if (leftType == Luny.Variable.ValueType.String || leftType == Luny.Variable.ValueType.Boolean)
 					throw new LunyScriptException($"Attempt to compare {ToString()} with: {_left.Variable}");
-				if (rightType == Variable.ValueType.String || rightType == Variable.ValueType.Boolean)
+				if (rightType == Luny.Variable.ValueType.String || rightType == Luny.Variable.ValueType.Boolean)
 					throw new LunyScriptException($"Attempt to compare {ToString()} with: {_right.Variable}");
 			}
 #endif
@@ -36,7 +36,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsEqualToBlock : VariableComparisonBlock
 	{
-		internal override Variable Variable
+		internal override Luny.Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable == _right.Variable;
@@ -54,7 +54,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsNotEqualToBlock : VariableComparisonBlock
 	{
-		internal override Variable Variable
+		internal override Luny.Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable != _right.Variable;
@@ -73,7 +73,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsGreaterThanBlock : VariableComparisonBlock
 	{
-		internal override Variable Variable
+		internal override Luny.Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable > (Double)_right.Variable;
@@ -92,7 +92,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsAtLeastBlock : VariableComparisonBlock
 	{
-		internal override Variable Variable
+		internal override Luny.Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable >= (Double)_right.Variable;
@@ -111,7 +111,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsLessThanBlock : VariableComparisonBlock
 	{
-		internal override Variable Variable
+		internal override Luny.Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable < (Double)_right.Variable;
@@ -130,7 +130,7 @@ namespace LunyScript.Blocks
 
 	internal sealed class VariableIsAtMostBlock : VariableComparisonBlock
 	{
-		internal override Variable Variable
+		internal override Luny.Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => _left.Variable <= (Double)_right.Variable;

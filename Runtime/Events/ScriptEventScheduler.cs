@@ -1,11 +1,10 @@
 ﻿using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
-using LunyScript.Blocks.PhysicsEvent;
 using System;
 using System.Collections.Generic;
 
-namespace LunyScript.Events
+namespace LunyScript
 {
 	/// <summary>
 	/// Schedules and manages sequences for various event types.

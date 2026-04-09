@@ -1,5 +1,4 @@
-﻿using Luny;
-using Luny.Engine.Bridge;
+﻿using Luny.Engine.Bridge;
 
 namespace LunyScript.Blocks
 {

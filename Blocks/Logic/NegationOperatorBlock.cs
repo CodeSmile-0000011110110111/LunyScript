@@ -13,7 +13,7 @@ namespace LunyScript.Blocks
 
 		internal override Table.VarHandle VarHandle => (_condition as VariableBlock)?.VarHandle;
 
-		internal override Variable Variable
+		internal override Luny.Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => Evaluate(null);

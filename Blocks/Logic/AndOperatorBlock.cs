@@ -13,7 +13,7 @@ namespace LunyScript.Blocks
 	{
 		private readonly ConditionBlock[] _conditions;
 
-		internal override Variable Variable
+		internal override Luny.Variable Variable
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get => Evaluate(null);

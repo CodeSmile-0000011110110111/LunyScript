@@ -1,7 +1,7 @@
 using Luny.Engine.Services;
 using System;
 
-namespace LunyScript.Blocks.Guards
+namespace LunyScript.Blocks
 {
 	internal sealed class CooldownGuard : EventGuard
 	{
