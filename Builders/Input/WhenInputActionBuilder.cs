@@ -10,7 +10,7 @@ namespace LunyScript
 	{
 		internal readonly InputActionOptions Options;
 
-		internal WhenInputActionBuilder(Script script, BuilderToken token, String actionName, StackTrace trace, [CallerMemberName] String callerName = "")
+		internal WhenInputActionBuilder(Script script, BuilderToken token, String actionName, LunyStackTrace trace, [CallerMemberName] String callerName = "")
 		{
 			if (String.IsNullOrWhiteSpace(actionName))
 				throw new LunyScriptException($"{script.GetType().Name}: When.{callerName}({nameof(actionName)}) cannot be null or empty");
@@ -124,7 +124,7 @@ namespace LunyScript
 	{
 		public Script Script;
 		public BuilderToken Token;
-		public StackTrace Trace;
+		public LunyStackTrace Trace;
 		public String ActionName;
 		public String UserName;
 

@@ -16,7 +16,7 @@ namespace LunyScript.Blocks
 	{
 		private readonly Predicate<LunyCollider>[] _predicates;
 
-		public TriggerSequenceBlock(IReadOnlyList<ActionBlock> blocks, EventGuard[] guards, Predicate<LunyCollider>[] predicates, StackTrace trace)
+		public TriggerSequenceBlock(IReadOnlyList<ActionBlock> blocks, EventGuard[] guards, Predicate<LunyCollider>[] predicates, LunyStackTrace trace)
 			: base(blocks, guards, trace) => _predicates = predicates;
 
 		protected internal override void Execute(IScriptRuntimeContext context)

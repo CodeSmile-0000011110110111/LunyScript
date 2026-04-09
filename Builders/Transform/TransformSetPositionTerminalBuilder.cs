@@ -9,7 +9,7 @@ namespace LunyScript
 	{
 		public Script Script;
 		public BuilderToken Token;
-		public StackTrace Trace;
+		public LunyStackTrace Trace;
 		public VariableBlock<LunyVector3> Position;
 		public LunyTransformSpace Space;
 	}
@@ -21,7 +21,7 @@ namespace LunyScript
 		internal readonly TransformSetPositionOptions Options;
 
 		internal static TransformSetPositionTerminalBuilder Create(Script script, VariableBlock<LunyVector3> position,
-			LunyTransformSpace space, StackTrace trace)
+			LunyTransformSpace space, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformSetPositionTerminalBuilder), "Transform.SetPosition()");
 			var options = new TransformSetPositionOptions

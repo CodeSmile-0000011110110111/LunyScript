@@ -21,12 +21,12 @@ namespace LunyScript.Blocks
 		public static IfBlock Create(
 			(ConditionBlock[] conditions, ActionBlock[] actions)[] branches,
 			ActionBlock[] elseBlocks,
-			StackTrace trace) => new(branches, elseBlocks, trace);
+			LunyStackTrace trace) => new(branches, elseBlocks, trace);
 
 		private IfBlock(
 			(ConditionBlock[] conditions, ActionBlock[] actions)[] branches,
 			ActionBlock[] elseBranch,
-			StackTrace trace)
+			LunyStackTrace trace)
 			: base(trace)
 		{
 			_branches = branches;

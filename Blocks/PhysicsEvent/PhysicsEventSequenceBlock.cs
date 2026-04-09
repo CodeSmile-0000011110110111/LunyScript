@@ -17,7 +17,7 @@ namespace LunyScript.Blocks
 		public ScriptBlockId Id { get; }
 		public IReadOnlyList<ActionBlock> Blocks { get; }
 
-		protected PhysicsEventSequenceBlock(IReadOnlyList<ActionBlock> blocks, EventGuard[] guards, StackTrace trace)
+		protected PhysicsEventSequenceBlock(IReadOnlyList<ActionBlock> blocks, EventGuard[] guards, LunyStackTrace trace)
 			: base(trace)
 		{
 			if (blocks == null || blocks.Count == 0)

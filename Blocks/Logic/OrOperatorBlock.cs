@@ -23,9 +23,9 @@ namespace LunyScript.Blocks
 
 		Int32 IBlockContainer.ConditionSequenceCount => 1;
 
-		public static OrOperatorBlock Create(ConditionBlock[] conditions, StackTrace trace = null) => new(conditions, trace);
+		public static OrOperatorBlock Create(ConditionBlock[] conditions, LunyStackTrace trace = null) => new(conditions, trace);
 
-		private OrOperatorBlock(ConditionBlock[] conditions, StackTrace trace)
+		private OrOperatorBlock(ConditionBlock[] conditions, LunyStackTrace trace)
 			: base(trace)
 		{
 			_conditions = conditions ?? throw new ArgumentNullException(nameof(conditions));

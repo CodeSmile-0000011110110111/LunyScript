@@ -13,9 +13,9 @@ namespace LunyScript
 	public readonly struct TransformBuilder
 	{
 		private readonly Script _script;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal TransformBuilder(Script script, StackTrace trace)
+		internal TransformBuilder(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;
@@ -191,7 +191,7 @@ namespace LunyScript
 		public LunyVector3 AxisLock;
 		public Boolean Lerp;
 		public Boolean SphericalLerp;
-		public StackTrace Trace;
+		public LunyStackTrace Trace;
 		public LunyTransformSpace Space;
 		public VariableBlock Amount;
 		public LunyAxis Axis;

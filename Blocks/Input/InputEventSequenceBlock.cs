@@ -19,10 +19,10 @@ namespace LunyScript.Blocks
 		public String UserName { get; }
 		public LunyInputActionPhase Phase { get; }
 
-		public static InputEventSequenceBlock Create(String actionName, String userName, LunyInputActionPhase phase, ActionBlock[] blocks, StackTrace trace) =>
+		public static InputEventSequenceBlock Create(String actionName, String userName, LunyInputActionPhase phase, ActionBlock[] blocks, LunyStackTrace trace) =>
 			blocks == null || blocks.Length == 0 ? null : new InputEventSequenceBlock(actionName, userName, phase, blocks, trace);
 
-		private InputEventSequenceBlock(String actionName, String userName, LunyInputActionPhase phase, IReadOnlyList<ActionBlock> blocks, StackTrace trace)
+		private InputEventSequenceBlock(String actionName, String userName, LunyInputActionPhase phase, IReadOnlyList<ActionBlock> blocks, LunyStackTrace trace)
 			: base(trace)
 		{
 			Id = ScriptBlockId.Generate();

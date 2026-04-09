@@ -29,42 +29,42 @@ namespace LunyScript
 		/// </summary>
 		[NotNull] public ScriptVariables Var => _instanceVariableses;
 
-		public ComponentApi Component => new(this, Trace.TryCreateStackTrace(nameof(Component)));
-		public DebugApi Debug => new(this, Trace.TryCreateStackTrace(nameof(Debug)));
-		public EditorApi Editor => new(this, Trace.TryCreateStackTrace(nameof(Editor)));
-		public InputBuilder Input => new(this, Trace.TryCreateStackTrace(nameof(Input)));
-		public ObjectBuilder Object => new(this, Trace.TryCreateStackTrace(nameof(Object)));
-		public OnObjectEventBuilder On => new(this, Trace.TryCreateStackTrace(nameof(On)));
-		public PrefabBuilder Prefab => new(this, Trace.TryCreateStackTrace(nameof(Prefab)));
-		public SceneApi Scene => new(this, Trace.TryCreateStackTrace(nameof(Scene)));
-		public TimeApi Time => new(this, Trace.TryCreateStackTrace(nameof(Time)));
-		public RigidbodyBuilder Rigidbody => new(this, Trace.TryCreateStackTrace(nameof(Rigidbody)));
-		public TransformBuilder Transform => new(this, Trace.TryCreateStackTrace(nameof(Transform)));
-		public WhenGlobalEventBuilder When => new(this, Trace.TryCreateStackTrace(nameof(When)));
+		public ComponentApi Component => new(this, ScriptTrace.TryCreateStackTrace(nameof(Component)));
+		public DebugApi Debug => new(this, ScriptTrace.TryCreateStackTrace(nameof(Debug)));
+		public EditorApi Editor => new(this, ScriptTrace.TryCreateStackTrace(nameof(Editor)));
+		public InputBuilder Input => new(this, ScriptTrace.TryCreateStackTrace(nameof(Input)));
+		public ObjectBuilder Object => new(this, ScriptTrace.TryCreateStackTrace(nameof(Object)));
+		public OnObjectEventBuilder On => new(this, ScriptTrace.TryCreateStackTrace(nameof(On)));
+		public PrefabBuilder Prefab => new(this, ScriptTrace.TryCreateStackTrace(nameof(Prefab)));
+		public SceneApi Scene => new(this, ScriptTrace.TryCreateStackTrace(nameof(Scene)));
+		public TimeApi Time => new(this, ScriptTrace.TryCreateStackTrace(nameof(Time)));
+		public RigidbodyBuilder Rigidbody => new(this, ScriptTrace.TryCreateStackTrace(nameof(Rigidbody)));
+		public TransformBuilder Transform => new(this, ScriptTrace.TryCreateStackTrace(nameof(Transform)));
+		public WhenGlobalEventBuilder When => new(this, ScriptTrace.TryCreateStackTrace(nameof(When)));
 
 		/// <summary>
 		/// Creates a named coroutine.
 		/// Usage: Coroutine("name").Duration(3).Seconds().OnUpdate(blocks).Elapsed(blocks);
 		/// </summary>
-		public CoroutineBuilder Coroutine(String name) => new(this, name, Trace.TryCreateStackTrace(nameof(Coroutine)));
+		public CoroutineBuilder Coroutine(String name) => new(this, name, ScriptTrace.TryCreateStackTrace(nameof(Coroutine)));
 
 		/// <summary>
 		/// Conditional execution: If(conditions).Then(blocks).ElseIf(conditions).Then(blocks).Else(blocks);
 		/// Multiple conditions are implicitly AND combined.
 		/// </summary>
-		public IfBlockBuilder If(params ConditionBlock[] conditions) => new(this, conditions, Trace.TryCreateStackTrace(nameof(If)));
+		public IfBlockBuilder If(params ConditionBlock[] conditions) => new(this, conditions, ScriptTrace.TryCreateStackTrace(nameof(If)));
 
 		/// <summary>
 		/// Loop execution: While(conditions).Do(blocks);
 		/// Multiple conditions are implicitly AND combined.
 		/// </summary>
-		public WhileBlockBuilder While(params ConditionBlock[] conditions) => new(conditions, Trace.TryCreateStackTrace(nameof(While)));
+		public WhileBlockBuilder While(params ConditionBlock[] conditions) => new(conditions, ScriptTrace.TryCreateStackTrace(nameof(While)));
 
 		/// <summary>
 		/// For loop (1-based index): For(numberOfTimes).Do(blocks);
 		/// Starts at 1 and increments by 1 until limit is reached (inclusive).
 		/// </summary>
-		public ForBlockBuilder For(VariableBlock numberOfTimes) => new(numberOfTimes, Trace.TryCreateStackTrace(nameof(For)));
+		public ForBlockBuilder For(VariableBlock numberOfTimes) => new(numberOfTimes, ScriptTrace.TryCreateStackTrace(nameof(For)));
 
 		/// <summary>
 		/// For loop (1-based index): For(limit, step).Do(blocks);
@@ -72,7 +72,7 @@ namespace LunyScript
 		/// If step is negative: starts at limit and decrements by step until 1 is reached.
 		/// </summary>
 		public ForBlockBuilder For(VariableBlock numberOfTimes, VariableBlock step) =>
-			new(numberOfTimes, step, Trace.TryCreateStackTrace(nameof(For)));
+			new(numberOfTimes, step, ScriptTrace.TryCreateStackTrace(nameof(For)));
 
 		/// <summary>
 		/// Executes a `System.Func&lt;IScriptRuntimeContext, bool&gt;` (lambda) or method taking a IScriptRuntimeContext parameter and returns bool.
@@ -85,7 +85,7 @@ namespace LunyScript
 		/// <param name="func"></param>
 		/// <returns></returns>
 		public ConditionBlock Check(Func<IScriptRuntimeContext, Boolean> func) =>
-			CheckBlock.Create(func, Trace.TryCreateStackTrace(nameof(Check)));
+			CheckBlock.Create(func, ScriptTrace.TryCreateStackTrace(nameof(Check)));
 
 		/// <summary>
 		/// Executes a `System.Func&lt;bool&gt;` (lambda) or parameterless method returning bool.
@@ -97,7 +97,7 @@ namespace LunyScript
 		/// </remarks>
 		/// <param name="func"></param>
 		/// <returns></returns>
-		public ConditionBlock Check(Func<Boolean> func) => CheckBlock.Create(_ => func(), Trace.TryCreateStackTrace(nameof(Check)));
+		public ConditionBlock Check(Func<Boolean> func) => CheckBlock.Create(_ => func(), ScriptTrace.TryCreateStackTrace(nameof(Check)));
 
 		/// <summary>
 		/// Executes a `System.Action` (lambda) or parameterless method returning void.
@@ -126,7 +126,7 @@ namespace LunyScript
 		/// </remarks>
 		/// <param name="action"></param>
 		/// <returns></returns>
-		public ActionBlock Run(Action action) => RunBlock.Create(_ => action(), Trace.TryCreateStackTrace(nameof(Run)));
+		public ActionBlock Run(Action action) => RunBlock.Create(_ => action(), ScriptTrace.TryCreateStackTrace(nameof(Run)));
 
 		/// <summary>
 		/// Executes a `System.Action` (lambda) or a method that takes a IScriptRuntimeContext parameter and returns void.
@@ -138,23 +138,23 @@ namespace LunyScript
 		/// </remarks>
 		/// <param name="action"></param>
 		/// <returns></returns>
-		public ActionBlock Run(Action<IScriptRuntimeContext> action) => RunBlock.Create(action, Trace.TryCreateStackTrace(nameof(Run)));
+		public ActionBlock Run(Action<IScriptRuntimeContext> action) => RunBlock.Create(action, ScriptTrace.TryCreateStackTrace(nameof(Run)));
 
 		/// <summary>
 		/// Logical AND: Returns true if all conditions are true. Requires at least two conditions.
 		/// </summary>
 		public ConditionBlock AND(params ConditionBlock[] conditions) =>
-			AndOperatorBlock.Create(conditions, Trace.TryCreateStackTrace(nameof(AND)));
+			AndOperatorBlock.Create(conditions, ScriptTrace.TryCreateStackTrace(nameof(AND)));
 
 		/// <summary>
 		/// Logical OR: Returns true if at least one condition is true. Requires at least two conditions.
 		/// </summary>
 		public ConditionBlock OR(params ConditionBlock[] conditions) =>
-			OrOperatorBlock.Create(conditions, Trace.TryCreateStackTrace(nameof(OR)));
+			OrOperatorBlock.Create(conditions, ScriptTrace.TryCreateStackTrace(nameof(OR)));
 
 		/// <summary>
 		/// Logical NOT: Returns the inverse of the condition.
 		/// </summary>
-		public ConditionBlock NOT(ConditionBlock condition) => NegationOperatorBlock.Create(condition, Trace.TryCreateStackTrace(nameof(NOT)));
+		public ConditionBlock NOT(ConditionBlock condition) => NegationOperatorBlock.Create(condition, ScriptTrace.TryCreateStackTrace(nameof(NOT)));
 	}
 }

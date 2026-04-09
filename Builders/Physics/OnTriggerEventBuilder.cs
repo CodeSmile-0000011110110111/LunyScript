@@ -29,7 +29,7 @@ namespace LunyScript
 	{
 		internal readonly PhysicsEventOptions Options;
 
-		internal TriggerEventBuilder(Script script, StackTrace trace)
+		internal TriggerEventBuilder(Script script, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken("Physics Event", "Trigger");
 			Options = new PhysicsEventOptions { Script = script, Token = token, Trace = trace };

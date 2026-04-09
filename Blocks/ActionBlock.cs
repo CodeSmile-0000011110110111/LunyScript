@@ -1,5 +1,5 @@
+using Luny;
 using System;
-using StackTrace = Luny.StackTrace;
 
 namespace LunyScript.Blocks
 {
@@ -10,7 +10,7 @@ namespace LunyScript.Blocks
 	{
 		public static Boolean IsNullOrEmpty(ActionBlock[] blocks) => blocks == null || blocks.Length == 0;
 
-		protected ActionBlock(StackTrace trace = null)
+		protected ActionBlock(LunyStackTrace trace = null)
 			: base(trace) {}
 
 		protected internal abstract void Execute(IScriptRuntimeContext context);

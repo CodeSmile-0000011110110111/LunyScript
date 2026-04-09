@@ -14,13 +14,13 @@ namespace LunyScript.Blocks
 		private readonly Boolean _useDirection;
 
 		public static TransformPositionMoveBlock CreateDirectional(VariableBlock<LunyVector2> direction, VariableBlock speed,
-			LunyTransformSpace space, StackTrace trace) => new(direction, null, default, speed, space, trace);
+			LunyTransformSpace space, LunyStackTrace trace) => new(direction, null, default, speed, space, trace);
 
 		public static TransformPositionMoveBlock CreateAxisRelative(VariableBlock amount, LunyVector3 axis, VariableBlock speed,
-			LunyTransformSpace space, StackTrace trace) => new(null, amount, axis, speed, space, trace);
+			LunyTransformSpace space, LunyStackTrace trace) => new(null, amount, axis, speed, space, trace);
 
 		private TransformPositionMoveBlock(VariableBlock<LunyVector2> direction, VariableBlock amount, LunyVector3 axis,
-			VariableBlock speed, LunyTransformSpace space, StackTrace trace)
+			VariableBlock speed, LunyTransformSpace space, LunyStackTrace trace)
 			: base(trace)
 		{
 			_useDirection = direction != null;

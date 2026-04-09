@@ -9,9 +9,9 @@ namespace LunyScript
 	public readonly struct WhileBlockBuilder
 	{
 		private readonly ConditionBlock[] _conditions;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal WhileBlockBuilder(ConditionBlock[] conditions, StackTrace trace)
+		internal WhileBlockBuilder(ConditionBlock[] conditions, LunyStackTrace trace)
 		{
 			_conditions = conditions;
 			_trace = trace;

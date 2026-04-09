@@ -9,7 +9,7 @@ namespace LunyScript
 	{
 		public Script Script;
 		public BuilderToken Token;
-		public StackTrace Trace;
+		public LunyStackTrace Trace;
 		public VariableBlock<LunyQuaternion> Rotation;
 		public LunyTransformSpace Space;
 	}
@@ -21,7 +21,7 @@ namespace LunyScript
 		internal readonly TransformSetRotationOptions Options;
 
 		internal static TransformSetRotationTerminalBuilder Create(Script script, VariableBlock<LunyQuaternion> rotation,
-			LunyTransformSpace space, StackTrace trace)
+			LunyTransformSpace space, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformSetRotationTerminalBuilder), "Transform.SetRotation()");
 			var options = new TransformSetRotationOptions

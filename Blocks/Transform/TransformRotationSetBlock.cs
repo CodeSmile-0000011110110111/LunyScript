@@ -9,10 +9,10 @@ namespace LunyScript.Blocks
 		private readonly VariableBlock<LunyQuaternion> _rotation;
 		private readonly LunyTransformSpace _space;
 
-		public static TransformRotationSetBlock Create(VariableBlock<LunyQuaternion> rotation, LunyTransformSpace space, StackTrace trace) =>
+		public static TransformRotationSetBlock Create(VariableBlock<LunyQuaternion> rotation, LunyTransformSpace space, LunyStackTrace trace) =>
 			new(rotation, space, trace);
 
-		private TransformRotationSetBlock(VariableBlock<LunyQuaternion> rotation, LunyTransformSpace space, StackTrace trace)
+		private TransformRotationSetBlock(VariableBlock<LunyQuaternion> rotation, LunyTransformSpace space, LunyStackTrace trace)
 			: base(trace)
 		{
 			_rotation = rotation;

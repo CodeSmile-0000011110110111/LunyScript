@@ -11,8 +11,8 @@ namespace LunyScript
 	public readonly struct WhenSceneEventBuilder
 	{
 		private readonly Script _script;
-		private readonly StackTrace _trace;
-		internal WhenSceneEventBuilder(Script script, StackTrace trace)
+		private readonly LunyStackTrace _trace;
+		internal WhenSceneEventBuilder(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;

@@ -11,10 +11,10 @@ namespace LunyScript.Blocks
 		public ScriptBlockId Id { get; }
 		public IReadOnlyList<ActionBlock> Blocks { get; }
 
-		public static SequenceBlock TryCreate(IReadOnlyList<ActionBlock> blocks, StackTrace trace = null) =>
+		public static SequenceBlock TryCreate(IReadOnlyList<ActionBlock> blocks, LunyStackTrace trace = null) =>
 			blocks?.Count > 0 ? new SequenceBlock(blocks, trace) : null;
 
-		private SequenceBlock(IReadOnlyList<ActionBlock> blocks, StackTrace trace)
+		private SequenceBlock(IReadOnlyList<ActionBlock> blocks, LunyStackTrace trace)
 			: base(trace)
 		{
 			Id = ScriptBlockId.Generate();

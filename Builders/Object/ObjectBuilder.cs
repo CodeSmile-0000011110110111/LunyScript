@@ -17,9 +17,9 @@ namespace LunyScript
 	public readonly struct ObjectBuilder
 	{
 		private readonly Script _script;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal ObjectBuilder(Script script, StackTrace trace)
+		internal ObjectBuilder(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;
@@ -53,9 +53,9 @@ namespace LunyScript
 	public readonly struct PrefabBuilder
 	{
 		private readonly Script _script;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal PrefabBuilder(Script script, StackTrace trace)
+		internal PrefabBuilder(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;
@@ -165,7 +165,7 @@ namespace LunyScript
 	{
 		internal Script Script;
 		internal BuilderToken Token;
-		internal StackTrace Trace;
+		internal LunyStackTrace Trace;
 
 		public String Name;
 		public ObjectCreationMode CreateMode;

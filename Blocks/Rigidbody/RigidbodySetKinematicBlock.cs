@@ -7,9 +7,9 @@ namespace LunyScript.Blocks
 	internal sealed class RigidbodySetKinematicBlock : ActionBlock
 	{
 		private readonly Boolean _enabled;
-		internal static RigidbodySetKinematicBlock Create(Boolean enabled, StackTrace trace) => new(enabled, trace);
+		internal static RigidbodySetKinematicBlock Create(Boolean enabled, LunyStackTrace trace) => new(enabled, trace);
 
-		private RigidbodySetKinematicBlock(Boolean enabled, StackTrace trace)
+		private RigidbodySetKinematicBlock(Boolean enabled, LunyStackTrace trace)
 			: base(trace) => _enabled = enabled;
 
 		protected internal override void Execute(IScriptRuntimeContext context)

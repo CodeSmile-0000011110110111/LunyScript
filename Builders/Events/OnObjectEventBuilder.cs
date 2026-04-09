@@ -10,9 +10,9 @@ namespace LunyScript
 	public readonly struct OnObjectEventBuilder
 	{
 		private readonly Script _script;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal OnObjectEventBuilder(Script script, StackTrace trace)
+		internal OnObjectEventBuilder(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;

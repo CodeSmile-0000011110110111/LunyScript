@@ -10,7 +10,7 @@ namespace LunyScript
 		internal readonly RigidbodyForceOptions Options;
 
 		internal static RigidbodyDynamicAngularForceTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis,
-			Boolean isImpulse, StackTrace trace)
+			Boolean isImpulse, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicAngularForceTerminalBuilder),
 				"Rigidbody.Dynamic.AddAngularForce(axis)");
@@ -24,7 +24,7 @@ namespace LunyScript
 		}
 
 		internal static RigidbodyDynamicAngularForceTerminalBuilder CreateVector(Script script, LunyVector3 torque, Boolean isImpulse,
-			StackTrace trace)
+			LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicAngularForceTerminalBuilder),
 				"Rigidbody.Dynamic.AddAngularForce(vector)");

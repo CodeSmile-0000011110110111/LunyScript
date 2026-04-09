@@ -16,9 +16,9 @@ namespace LunyScript
 	{
 		private readonly Script _script;
 		private readonly String _name;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal CoroutineBuilder(Script script, String name, StackTrace trace)
+		internal CoroutineBuilder(Script script, String name, LunyStackTrace trace)
 		{
 			_script = script ?? throw new ArgumentNullException(nameof(script));
 			_name = !String.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException("Coroutine name is null or empty", nameof(name));

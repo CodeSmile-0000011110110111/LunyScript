@@ -12,7 +12,7 @@ namespace LunyScript
 	{
 		private readonly IfBlockOptions _options;
 
-		internal IfBlockBuilder(Script script, ConditionBlock[] conditions, StackTrace trace)
+		internal IfBlockBuilder(Script script, ConditionBlock[] conditions, LunyStackTrace trace)
 		{
 			if (conditions == null || conditions.Length == 0)
 				throw new LunyScriptException("If() conditions cannot be null or empty");
@@ -86,7 +86,7 @@ namespace LunyScript
 	{
 		internal Script Script;
 		internal BuilderToken Token;
-		internal StackTrace Trace;
+		internal LunyStackTrace Trace;
 		internal IfBlock Block;
 		internal List<(ConditionBlock[] conditions, ActionBlock[] actions)> BranchesBuilder = new();
 		internal ActionBlock[] ElseBlocks;

@@ -1,7 +1,6 @@
 using Luny;
 using System;
 using System.Diagnostics;
-using StackTrace = Luny.StackTrace;
 
 namespace LunyScript.Blocks
 {
@@ -12,7 +11,7 @@ namespace LunyScript.Blocks
 	{
 		private DebugLogBlock() {}
 
-		protected DebugLogBlock(String message, LogLevel logLevel, StackTrace trace)
+		protected DebugLogBlock(String message, LogLevel logLevel, LunyStackTrace trace)
 			: base(trace)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
@@ -21,7 +20,7 @@ namespace LunyScript.Blocks
 #endif
 		}
 
-		protected DebugLogBlock(VariableBlock variableBlock, LogLevel logLevel, StackTrace trace)
+		protected DebugLogBlock(VariableBlock variableBlock, LogLevel logLevel, LunyStackTrace trace)
 			: base(trace)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
@@ -71,7 +70,7 @@ namespace LunyScript.Blocks
 	/// </summary>
 	internal sealed class DebugLogInfoBlock : DebugLogBlock
 	{
-		public static ActionBlock Create(String message, StackTrace trace)
+		public static ActionBlock Create(String message, LunyStackTrace trace)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
 			return new DebugLogInfoBlock(message, trace);
@@ -80,7 +79,7 @@ namespace LunyScript.Blocks
 #endif
 		}
 
-		public static ActionBlock Create(String[] messages, StackTrace trace)
+		public static ActionBlock Create(String[] messages, LunyStackTrace trace)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
 			return new DebugLogInfoBlock(String.Join(", ", messages), trace);
@@ -89,7 +88,7 @@ namespace LunyScript.Blocks
 #endif
 		}
 
-		public static ActionBlock Create(VariableBlock variable, StackTrace trace)
+		public static ActionBlock Create(VariableBlock variable, LunyStackTrace trace)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
 			return new DebugLogInfoBlock(variable, trace);
@@ -98,10 +97,10 @@ namespace LunyScript.Blocks
 #endif
 		}
 
-		private DebugLogInfoBlock(String message, StackTrace trace)
+		private DebugLogInfoBlock(String message, LunyStackTrace trace)
 			: base(message, LogLevel.Info, trace) {}
 
-		private DebugLogInfoBlock(VariableBlock variableBlock, StackTrace trace)
+		private DebugLogInfoBlock(VariableBlock variableBlock, LunyStackTrace trace)
 			: base(variableBlock, LogLevel.Info, trace) {}
 	}
 
@@ -111,7 +110,7 @@ namespace LunyScript.Blocks
 	/// </summary>
 	internal sealed class DebugLogWarningBlock : DebugLogBlock
 	{
-		public static ActionBlock Create(String message, StackTrace trace)
+		public static ActionBlock Create(String message, LunyStackTrace trace)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
 			return new DebugLogWarningBlock(message, trace);
@@ -120,7 +119,7 @@ namespace LunyScript.Blocks
 #endif
 		}
 
-		private DebugLogWarningBlock(String message, StackTrace trace)
+		private DebugLogWarningBlock(String message, LunyStackTrace trace)
 			: base(message, LogLevel.Warning, trace) {}
 	}
 
@@ -130,7 +129,7 @@ namespace LunyScript.Blocks
 	/// </summary>
 	internal sealed class DebugLogErrorBlock : DebugLogBlock
 	{
-		public static ActionBlock Create(String message, StackTrace trace)
+		public static ActionBlock Create(String message, LunyStackTrace trace)
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
 			return new DebugLogErrorBlock(message, trace);
@@ -139,7 +138,7 @@ namespace LunyScript.Blocks
 #endif
 		}
 
-		private DebugLogErrorBlock(String message, StackTrace trace)
+		private DebugLogErrorBlock(String message, LunyStackTrace trace)
 			: base(message, LogLevel.Error, trace) {}
 	}
 }

@@ -13,9 +13,9 @@ namespace LunyScript.Blocks
 		private readonly LunyTransformSpace _space;
 
 		internal static RigidbodyKinematicMoveBlock CreateAxisRelative(VariableBlock amount, LunyAxis axis, LunyTransformSpace space,
-			StackTrace trace) => new(amount, axis, default, false, space, trace);
+			LunyStackTrace trace) => new(amount, axis, default, false, space, trace);
 
-		internal static RigidbodyKinematicMoveBlock CreateVector(LunyVector3 delta, LunyTransformSpace space, StackTrace trace) =>
+		internal static RigidbodyKinematicMoveBlock CreateVector(LunyVector3 delta, LunyTransformSpace space, LunyStackTrace trace) =>
 			new(null, default, delta, true, space, trace);
 
 		private static LunyVector3 AxisToVector(LunyAxis axis)
@@ -29,7 +29,7 @@ namespace LunyScript.Blocks
 		}
 
 		private RigidbodyKinematicMoveBlock(VariableBlock amount, LunyAxis axis, LunyVector3 vector, Boolean useVector,
-			LunyTransformSpace space, StackTrace trace)
+			LunyTransformSpace space, LunyStackTrace trace)
 			: base(trace)
 		{
 			_amount = amount;

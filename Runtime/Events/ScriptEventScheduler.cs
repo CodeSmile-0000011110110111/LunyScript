@@ -108,7 +108,7 @@ namespace LunyScript
 
 		// ── Scheduling ────────────────────────────────────────────────────
 
-		internal ISequenceBlock ScheduleObjectEventSequence(ActionBlock[] blocks, LunyObjectEvent objectEvent, StackTrace trace = null)
+		internal ISequenceBlock ScheduleObjectEventSequence(ActionBlock[] blocks, LunyObjectEvent objectEvent, LunyStackTrace trace = null)
 		{
 			var sequence = SequenceBlock.TryCreate(blocks, trace);
 			if (sequence == null)
@@ -121,7 +121,7 @@ namespace LunyScript
 		internal void ScheduleObjectEventSequence(ISequenceBlock sequence, LunyObjectEvent objectEvent) =>
 			AddToFlatStore(s_ObjectEventOffset + (Int32)objectEvent, sequence);
 
-		internal ISequenceBlock ScheduleSceneEventSequence(ActionBlock[] blocks, LunySceneEvent sceneEvent, StackTrace trace = null)
+		internal ISequenceBlock ScheduleSceneEventSequence(ActionBlock[] blocks, LunySceneEvent sceneEvent, LunyStackTrace trace = null)
 		{
 			var sequence = SequenceBlock.TryCreate(blocks, trace);
 			if (sequence == null)

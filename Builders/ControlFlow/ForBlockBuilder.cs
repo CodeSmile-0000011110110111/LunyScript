@@ -10,12 +10,12 @@ namespace LunyScript
 	{
 		private readonly VariableBlock _limit;
 		private readonly VariableBlock _step;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal ForBlockBuilder(VariableBlock limit, StackTrace trace)
+		internal ForBlockBuilder(VariableBlock limit, LunyStackTrace trace)
 			: this(limit, 1, trace) {}
 
-		internal ForBlockBuilder(VariableBlock limit, VariableBlock step, StackTrace trace)
+		internal ForBlockBuilder(VariableBlock limit, VariableBlock step, LunyStackTrace trace)
 		{
 			_limit = limit;
 			_step = step;

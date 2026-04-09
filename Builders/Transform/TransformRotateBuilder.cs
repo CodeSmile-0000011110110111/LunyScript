@@ -9,7 +9,7 @@ namespace LunyScript
 	{
 		internal readonly TransformBuilderOptions Options;
 
-		internal static TransformRotateBuilder<T> Create(Script script, VariableBlock amount, LunyAxis axis, StackTrace trace)
+		internal static TransformRotateBuilder<T> Create(Script script, VariableBlock amount, LunyAxis axis, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformRotateBuilder<T>), "Transform.Rotate()");
 			var options = new TransformBuilderOptions

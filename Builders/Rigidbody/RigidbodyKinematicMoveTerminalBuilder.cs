@@ -9,7 +9,7 @@ namespace LunyScript
 	{
 		public Script Script;
 		public BuilderToken Token;
-		public StackTrace Trace;
+		public LunyStackTrace Trace;
 		public VariableBlock Amount;
 		public LunyAxis Axis;
 		public LunyVector3 Vector;
@@ -23,7 +23,7 @@ namespace LunyScript
 		internal readonly RigidbodyKinematicOptions Options;
 
 		internal static RigidbodyKinematicMoveTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis,
-			StackTrace trace)
+			LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(RigidbodyKinematicMoveTerminalBuilder), "Rigidbody.Kinematic.Move(axis)");
 			var options = new RigidbodyKinematicOptions
@@ -34,7 +34,7 @@ namespace LunyScript
 			return new RigidbodyKinematicMoveTerminalBuilder(options);
 		}
 
-		internal static RigidbodyKinematicMoveTerminalBuilder CreateVector(Script script, LunyVector3 delta, StackTrace trace)
+		internal static RigidbodyKinematicMoveTerminalBuilder CreateVector(Script script, LunyVector3 delta, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(RigidbodyKinematicMoveTerminalBuilder), "Rigidbody.Kinematic.Move(vector)");
 			var options = new RigidbodyKinematicOptions

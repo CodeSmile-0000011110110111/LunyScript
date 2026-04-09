@@ -9,9 +9,9 @@ namespace LunyScript.Blocks
 		private readonly Table.VarHandle _handle;
 		private readonly VariableBlock _value;
 
-		public static VariableSetValueBlock Create(Table.VarHandle handle, VariableBlock value, StackTrace trace) => new(handle, value, trace);
+		public static VariableSetValueBlock Create(Table.VarHandle handle, VariableBlock value, LunyStackTrace trace) => new(handle, value, trace);
 
-		private VariableSetValueBlock(Table.VarHandle handle, VariableBlock value, StackTrace trace)
+		private VariableSetValueBlock(Table.VarHandle handle, VariableBlock value, LunyStackTrace trace)
 			: base(trace)
 		{
 			_handle = handle ?? throw new ArgumentNullException(nameof(handle));

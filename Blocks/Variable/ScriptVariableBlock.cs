@@ -22,9 +22,9 @@ namespace LunyScript.Blocks
 			get => _handle.Variable;
 		}
 
-		internal static ScriptVariableBlock Create(Table.VarHandle handle, StackTrace trace) => new(handle, trace);
+		internal static ScriptVariableBlock Create(Table.VarHandle handle, LunyStackTrace trace) => new(handle, trace);
 
-		private ScriptVariableBlock(Table.VarHandle handle, StackTrace trace)
+		private ScriptVariableBlock(Table.VarHandle handle, LunyStackTrace trace)
 			: base(trace) => _handle = handle;
 
 		/// <summary>

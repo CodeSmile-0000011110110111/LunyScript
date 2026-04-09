@@ -9,10 +9,10 @@ namespace LunyScript.Blocks
 		private readonly VariableBlock<LunyVector3> _position;
 		private readonly LunyTransformSpace _space;
 
-		public static TransformPositionSetBlock Create(VariableBlock<LunyVector3> position, LunyTransformSpace space, StackTrace trace) =>
+		public static TransformPositionSetBlock Create(VariableBlock<LunyVector3> position, LunyTransformSpace space, LunyStackTrace trace) =>
 			new(position, space, trace);
 
-		private TransformPositionSetBlock(VariableBlock<LunyVector3> position, LunyTransformSpace space, StackTrace trace)
+		private TransformPositionSetBlock(VariableBlock<LunyVector3> position, LunyTransformSpace space, LunyStackTrace trace)
 			: base(trace)
 		{
 			_position = position;

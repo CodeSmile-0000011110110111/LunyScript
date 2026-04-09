@@ -9,7 +9,7 @@ namespace LunyScript
 	{
 		public Script Script;
 		public BuilderToken Token;
-		public StackTrace Trace;
+		public LunyStackTrace Trace;
 		public LunyTransformSpace Space;
 		public VariableBlock<LunyVector2> Direction;
 		public VariableBlock Amount;
@@ -25,7 +25,7 @@ namespace LunyScript
 		internal readonly TransformMoveOptions Options;
 
 		internal static TransformMoveTerminalBuilder CreateDirectional(Script script, VariableBlock<LunyVector2> direction,
-			VariableBlock speed, LunyTransformSpace space, StackTrace trace)
+			VariableBlock speed, LunyTransformSpace space, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformMoveTerminalBuilder), "Transform.Move(direction)");
 			var options = new TransformMoveOptions
@@ -37,7 +37,7 @@ namespace LunyScript
 		}
 
 		internal static TransformMoveTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyVector3 axis,
-			VariableBlock speed, LunyTransformSpace space, StackTrace trace)
+			VariableBlock speed, LunyTransformSpace space, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformMoveTerminalBuilder), "Transform.Move(axis)");
 			var options = new TransformMoveOptions

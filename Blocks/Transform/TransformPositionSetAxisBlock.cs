@@ -10,10 +10,10 @@ namespace LunyScript.Blocks
 		private readonly Double _value;
 		private readonly LunyTransformSpace _space;
 
-		public static TransformPositionSetAxisBlock Create(LunyAxis axis, Double value, LunyTransformSpace space, StackTrace trace) =>
+		public static TransformPositionSetAxisBlock Create(LunyAxis axis, Double value, LunyTransformSpace space, LunyStackTrace trace) =>
 			new(axis, value, space, trace);
 
-		private TransformPositionSetAxisBlock(LunyAxis axis, Double value, LunyTransformSpace space, StackTrace trace)
+		private TransformPositionSetAxisBlock(LunyAxis axis, Double value, LunyTransformSpace space, LunyStackTrace trace)
 			: base(trace)
 		{
 			_axis = axis;

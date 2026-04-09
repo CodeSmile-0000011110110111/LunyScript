@@ -14,10 +14,10 @@ namespace LunyScript.Blocks
 		private readonly LunyTransformSpace _space;
 
 		internal static RigidbodyDynamicAddForceBlock CreateAxisRelative(VariableBlock amount, LunyAxis axis, LunyForceMode forceMode,
-			LunyTransformSpace space, StackTrace trace) => new(amount, axis, default, false, forceMode, space, trace);
+			LunyTransformSpace space, LunyStackTrace trace) => new(amount, axis, default, false, forceMode, space, trace);
 
 		internal static RigidbodyDynamicAddForceBlock CreateVector(LunyVector3 force, LunyForceMode forceMode, LunyTransformSpace space,
-			StackTrace trace) => new(null, default, force, true, forceMode, space, trace);
+			LunyStackTrace trace) => new(null, default, force, true, forceMode, space, trace);
 
 		private static LunyVector3 AxisToVector(LunyAxis axis)
 		{
@@ -30,7 +30,7 @@ namespace LunyScript.Blocks
 		}
 
 		private RigidbodyDynamicAddForceBlock(VariableBlock amount, LunyAxis axis, LunyVector3 vector, Boolean useVector,
-			LunyForceMode forceMode, LunyTransformSpace space, StackTrace trace)
+			LunyForceMode forceMode, LunyTransformSpace space, LunyStackTrace trace)
 			: base(trace)
 		{
 			_amount = amount;

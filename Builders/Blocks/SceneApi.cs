@@ -9,9 +9,9 @@ namespace LunyScript
 	public readonly struct SceneApi
 	{
 		private readonly Script _script;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal SceneApi(Script script, StackTrace trace)
+		internal SceneApi(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;

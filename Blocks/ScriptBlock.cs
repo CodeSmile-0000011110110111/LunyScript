@@ -13,10 +13,10 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class ScriptBlock : IScriptBlock
 	{
-		private readonly StackTrace _trace;
-		public StackTrace Trace => _trace;
+		private readonly LunyStackTrace _trace;
+		public LunyStackTrace Trace => _trace;
 
-		public ScriptBlock(StackTrace trace) => _trace = trace;
+		public ScriptBlock(LunyStackTrace trace) => _trace = trace;
 
 		public override String ToString() => GetType().Name;
 	}

@@ -17,18 +17,18 @@ namespace LunyScript.Blocks
 		private readonly LunyVector3 _offsetOrWorldPos;
 
 		internal static RigidbodyDynamicAddForceAtPositionBlock CreateAxisWithLocalOffset(VariableBlock amount, LunyAxis axis,
-			LunyForceMode forceMode, LunyVector3 localOffset, StackTrace trace) =>
+			LunyForceMode forceMode, LunyVector3 localOffset, LunyStackTrace trace) =>
 			new(amount, axis, default, false, forceMode, localOffset, true, trace);
 
 		internal static RigidbodyDynamicAddForceAtPositionBlock CreateVectorWithLocalOffset(LunyVector3 force, LunyForceMode forceMode,
-			LunyVector3 localOffset, StackTrace trace) => new(null, default, force, true, forceMode, localOffset, true, trace);
+			LunyVector3 localOffset, LunyStackTrace trace) => new(null, default, force, true, forceMode, localOffset, true, trace);
 
 		internal static RigidbodyDynamicAddForceAtPositionBlock CreateAxisWithWorldPosition(VariableBlock amount, LunyAxis axis,
-			LunyForceMode forceMode, LunyVector3 worldPosition, StackTrace trace) =>
+			LunyForceMode forceMode, LunyVector3 worldPosition, LunyStackTrace trace) =>
 			new(amount, axis, default, false, forceMode, worldPosition, false, trace);
 
 		internal static RigidbodyDynamicAddForceAtPositionBlock CreateVectorWithWorldPosition(LunyVector3 force, LunyForceMode forceMode,
-			LunyVector3 worldPosition, StackTrace trace) => new(null, default, force, true, forceMode, worldPosition, false, trace);
+			LunyVector3 worldPosition, LunyStackTrace trace) => new(null, default, force, true, forceMode, worldPosition, false, trace);
 
 		private static LunyVector3 AxisToVector(LunyAxis axis)
 		{
@@ -41,7 +41,7 @@ namespace LunyScript.Blocks
 		}
 
 		private RigidbodyDynamicAddForceAtPositionBlock(VariableBlock amount, LunyAxis axis, LunyVector3 force, Boolean useForce,
-			LunyForceMode forceMode, LunyVector3 offsetOrWorldPos, Boolean useLocalOffset, StackTrace trace)
+			LunyForceMode forceMode, LunyVector3 offsetOrWorldPos, Boolean useLocalOffset, LunyStackTrace trace)
 			: base(trace)
 		{
 			_amount = amount;

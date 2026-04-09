@@ -7,9 +7,9 @@ namespace LunyScript
 	public readonly struct RigidbodyKinematicBuilder
 	{
 		private readonly Script _script;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal RigidbodyKinematicBuilder(Script script, StackTrace trace)
+		internal RigidbodyKinematicBuilder(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;

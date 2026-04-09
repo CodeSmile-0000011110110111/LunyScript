@@ -19,9 +19,9 @@ namespace LunyScript.Blocks
 			get => Evaluate(null);
 		}
 
-		public static NegationOperatorBlock Create(ConditionBlock condition, StackTrace trace = null) => new(condition, trace);
+		public static NegationOperatorBlock Create(ConditionBlock condition, LunyStackTrace trace = null) => new(condition, trace);
 
-		private NegationOperatorBlock(ConditionBlock condition, StackTrace trace)
+		private NegationOperatorBlock(ConditionBlock condition, LunyStackTrace trace)
 			: base(trace)
 		{
 			if (condition == null)

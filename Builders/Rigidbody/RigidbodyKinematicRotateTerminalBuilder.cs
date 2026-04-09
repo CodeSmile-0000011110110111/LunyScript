@@ -9,7 +9,7 @@ namespace LunyScript
 		internal readonly RigidbodyKinematicOptions Options;
 
 		internal static RigidbodyKinematicRotateTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis,
-			StackTrace trace)
+			LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(RigidbodyKinematicRotateTerminalBuilder), "Rigidbody.Kinematic.Rotate(axis)");
 			var options = new RigidbodyKinematicOptions
@@ -20,7 +20,7 @@ namespace LunyScript
 			return new RigidbodyKinematicRotateTerminalBuilder(options);
 		}
 
-		internal static RigidbodyKinematicRotateTerminalBuilder CreateVector(Script script, LunyVector3 eulerDelta, StackTrace trace)
+		internal static RigidbodyKinematicRotateTerminalBuilder CreateVector(Script script, LunyVector3 eulerDelta, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(RigidbodyKinematicRotateTerminalBuilder), "Rigidbody.Kinematic.Rotate(vector)");
 			var options = new RigidbodyKinematicOptions

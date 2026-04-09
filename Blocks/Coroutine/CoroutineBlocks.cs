@@ -85,13 +85,11 @@ namespace LunyScript.Blocks
 		}
 		Boolean ISequenceBlock.IsEmpty => false;
 
-		// ── IBlockContainer ───────────────────────────────────────────────
-		Int32 IBlockContainer.ActionSequenceCount => 6;
-
-		// ── Internal accessors ────────────────────────────────────────────
 		internal Coroutine Coroutine => _coroutine;
 
-		// ── Factory ───────────────────────────────────────────────────────
+		// ── IBlockContainer ───────────────────────────────────────────────
+		Int32 IBlockContainer.ActionSequenceCount => _sequences?.Length ?? 0;
+
 		internal static CoroutineBlock Create(in CoroutineOptions options)
 		{
 			var coroutine = Coroutine.Create(options);
@@ -121,6 +119,7 @@ namespace LunyScript.Blocks
 			_sequences[OnElapsedIndex] = SequenceBlock.TryCreate(options.OnElapsed);
 		}
 
+		// ── IBlockContainer ───────────────────────────────────────────────
 		String IBlockContainer.GetActionSequenceName(Int32 index) => index switch
 		{
 			OnStartedIndex => Coroutine.Events.Started.ToString(),
@@ -136,10 +135,10 @@ namespace LunyScript.Blocks
 			index >= 0 && index < _sequences.Length ? _sequences[index]?.Blocks : null;
 
 		// ── ICoroutineBlock ───────────────────────────────────────────────
-		public ActionBlock Start() => new CoroutineStartBlock(_coroutine);
-		public ActionBlock Stop() => new CoroutineStopBlock(_coroutine);
-		public ActionBlock Pause() => new CoroutinePauseBlock(_coroutine);
-		public ActionBlock Resume() => new CoroutineResumeBlock(_coroutine);
+		public ActionBlock Start() => new CoroutineStartBlock(_coroutine, ScriptTrace.TryCreateStackTrace("Coroutine.Start"));
+		public ActionBlock Stop() => new CoroutineStopBlock(_coroutine, ScriptTrace.TryCreateStackTrace("Coroutine.Stop"));
+		public ActionBlock Pause() => new CoroutinePauseBlock(_coroutine, ScriptTrace.TryCreateStackTrace("Coroutine.Pause"));
+		public ActionBlock Resume() => new CoroutineResumeBlock(_coroutine, ScriptTrace.TryCreateStackTrace("Coroutine.Resume"));
 
 		// ── Execute ───────────────────────────────────────────────────────
 		protected internal override void Execute(IScriptRuntimeContext context)
@@ -172,7 +171,7 @@ namespace LunyScript.Blocks
 				LunyScriptRunner.Run(_sequences[OnStoppedIndex], ctx);
 		}
 
-		public override String ToString() => $"Coroutine(\"{this}\": {base.ToString()})";
+		public override String ToString() => $"Coroutine(\"{_coroutine.Name}\": {_coroutine.State})";
 	}
 
 	internal sealed class TimerCoroutineBlock : CoroutineBlock, ITimerCoroutineBlock
@@ -180,7 +179,8 @@ namespace LunyScript.Blocks
 		internal TimerCoroutineBlock(TimerCoroutine coroutine, in CoroutineOptions options)
 			: base(coroutine, options) {}
 
-		public ActionBlock TimeScale(Double scale) => new TimerCoroutineSetTimeScaleBlock((TimerCoroutine)_coroutine, scale);
+		public ActionBlock TimeScale(Double scale) => new TimerCoroutineSetTimeScaleBlock((TimerCoroutine)_coroutine, scale,
+			ScriptTrace.TryCreateStackTrace($"Coroutine.{nameof(TimeScale)}"));
 	}
 
 	internal sealed class CounterCoroutineBlock : CoroutineBlock, ICounterCoroutineBlock

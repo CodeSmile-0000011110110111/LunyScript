@@ -11,9 +11,9 @@ namespace LunyScript
 	public readonly struct DebugApi
 	{
 		private readonly Script _script;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal DebugApi(Script script, StackTrace trace)
+		internal DebugApi(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;

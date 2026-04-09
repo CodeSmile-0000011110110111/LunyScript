@@ -5,8 +5,8 @@ namespace LunyScript
 	public readonly struct WhenInputEventBuilder
 	{
 		private readonly Script _script;
-		private readonly StackTrace _trace;
-		internal WhenInputEventBuilder(Script script, StackTrace trace)
+		private readonly LunyStackTrace _trace;
+		internal WhenInputEventBuilder(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;

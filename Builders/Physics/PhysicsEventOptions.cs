@@ -12,7 +12,7 @@ namespace LunyScript
 	{
 		internal Script Script;
 		internal BuilderToken Token;
-		internal StackTrace Trace;
+		internal LunyStackTrace Trace;
 
 		public ActionBlock[] StartedBlocks;
 		public ActionBlock[] ContinuingBlocks;

@@ -7,9 +7,9 @@ namespace LunyScript.Blocks
 	internal sealed class RigidbodySetGravityEnabledBlock : ActionBlock
 	{
 		private readonly Boolean _enabled;
-		internal static RigidbodySetGravityEnabledBlock Create(Boolean enabled, StackTrace trace) => new(enabled, trace);
+		internal static RigidbodySetGravityEnabledBlock Create(Boolean enabled, LunyStackTrace trace) => new(enabled, trace);
 
-		private RigidbodySetGravityEnabledBlock(Boolean enabled, StackTrace trace)
+		private RigidbodySetGravityEnabledBlock(Boolean enabled, LunyStackTrace trace)
 			: base(trace) => _enabled = enabled;
 
 		protected internal override void Execute(IScriptRuntimeContext context)

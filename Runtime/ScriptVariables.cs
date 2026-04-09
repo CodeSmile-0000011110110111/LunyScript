@@ -15,7 +15,7 @@ namespace LunyScript
 
 		public ScriptVariableBlock this[String name]
 		{
-			get => ScriptVariableBlock.Create(_table.GetHandle(name), Trace.TryCreateStackTrace($"[{name}]"));
+			get => ScriptVariableBlock.Create(_table.GetHandle(name), ScriptTrace.TryCreateStackTrace($"[{name}]"));
 			set => _table.GetHandle(name).Variable = value.Variable;
 		}
 
@@ -27,7 +27,7 @@ namespace LunyScript
 		/// <param name="name"></param>
 		/// <returns></returns>
 		public ScriptVariableBlock Define(String name) =>
-			ScriptVariableBlock.Create(_table.DefineVariable(name, 0.0), Trace.TryCreateStackTrace(nameof(Define)));
+			ScriptVariableBlock.Create(_table.DefineVariable(name, 0.0), ScriptTrace.TryCreateStackTrace(nameof(Define)));
 
 		/// <summary>
 		/// Defines (or gets) a variable with the given name and assigns the provided Variable.
@@ -36,9 +36,9 @@ namespace LunyScript
 		/// <param name="variable"></param>
 		/// <returns></returns>
 		public ScriptVariableBlock Define(String name, Variable variable) =>
-			ScriptVariableBlock.Create(_table.DefineVariable(name, variable), Trace.TryCreateStackTrace(nameof(Define)));
+			ScriptVariableBlock.Create(_table.DefineVariable(name, variable), ScriptTrace.TryCreateStackTrace(nameof(Define)));
 
 		public ScriptVariableBlock Constant(String name, Variable variable) =>
-			ScriptVariableBlock.Create(_table.DefineConstant(name, variable), Trace.TryCreateStackTrace(nameof(Constant)));
+			ScriptVariableBlock.Create(_table.DefineConstant(name, variable), ScriptTrace.TryCreateStackTrace(nameof(Constant)));
 	}
 }

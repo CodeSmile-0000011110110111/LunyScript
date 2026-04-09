@@ -36,18 +36,22 @@ namespace LunyScript.Blocks
 
 		public override String ToString()
 		{
-			var sb = new StringBuilder("(");
+			var sb = new StringBuilder();
 			sb.Append('\"');
 			sb.Append(Name);
 			sb.Append('\"');
 			if (Parent != null && Parent.Value != null)
 			{
-				sb.Append(", parent:");
-				sb.Append(Parent.Value);
+				sb.Append(",");
+				sb.Append(Emoji.Folder);
+				sb.Append("\"");
+				sb.Append(Parent.Value?.Name);
+				sb.Append("\"");
 			}
 			if (LocalPosition.HasValue && LocalPosition.Value != LunyVector3.Zero)
 			{
-				sb.Append(", position:");
+				sb.Append(",");
+				sb.Append(Emoji.Position);
 				sb.Append(LocalPosition.Value);
 			}
 			if (LocalRotation.HasValue)
@@ -55,16 +59,17 @@ namespace LunyScript.Blocks
 				var eulerAngles = LocalRotation.Value.EulerAngles;
 				if (eulerAngles != LunyVector3.Zero)
 				{
-					sb.Append(", rotation:");
+					sb.Append(",");
+					sb.Append(Emoji.Rotation);
 					sb.Append(eulerAngles);
 				}
 			}
 			if (LocalScale.HasValue && LocalScale.Value != LunyVector3.One)
 			{
-				sb.Append(", scale:");
+				sb.Append(",");
+				sb.Append(Emoji.Scale);
 				sb.Append(LocalScale.Value);
 			}
-			sb.Append(")");
 			return sb.ToString();
 		}
 	}
@@ -78,8 +83,6 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context) => Object.CreateEmpty(Name, Parent?.Value, LocalPosition,
 			LocalRotation, LocalScale.HasValue ? LocalScale.Value : LunyVector3.One);
-
-		public override String ToString() => $"Object.CreateEmpty{base.ToString()}";
 	}
 
 	internal sealed class ObjectCreateCubeBlock : ObjectCreateBlock

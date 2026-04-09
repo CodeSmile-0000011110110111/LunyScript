@@ -18,7 +18,7 @@ namespace LunyScript.Blocks
 		public static Boolean operator true(ConditionBlock _) => false;
 		public static Boolean operator false(ConditionBlock _) => false;
 
-		protected ConditionBlock(StackTrace trace = null)
+		protected ConditionBlock(LunyStackTrace trace = null)
 			: base(trace) {}
 
 		protected internal abstract Boolean Evaluate(IScriptRuntimeContext runtimeContext);

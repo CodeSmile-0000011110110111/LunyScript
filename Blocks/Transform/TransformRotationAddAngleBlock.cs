@@ -15,7 +15,7 @@ namespace LunyScript.Blocks
 
 		public static TransformRotationAddAngleBlock Create(VariableBlock amount, LunyAxis axis,
 			LunyTransformSpace space, Double minAngle = Double.NegativeInfinity, Double maxAngle = Double.PositiveInfinity,
-			StackTrace trace = null) => new(amount, axis, space, minAngle, maxAngle, trace);
+			LunyStackTrace trace = null) => new(amount, axis, space, minAngle, maxAngle, trace);
 
 		private static LunyVector3 AxisToVector(LunyAxis axis)
 		{
@@ -28,7 +28,7 @@ namespace LunyScript.Blocks
 		}
 
 		private TransformRotationAddAngleBlock(VariableBlock amount, LunyAxis axis,
-			LunyTransformSpace space, Double minAngle, Double maxAngle, StackTrace trace)
+			LunyTransformSpace space, Double minAngle, Double maxAngle, LunyStackTrace trace)
 			: base(trace)
 		{
 			_amount = amount;

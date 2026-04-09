@@ -16,9 +16,9 @@ namespace LunyScript.Blocks
 			get => _value;
 		}
 
-		public static LiteralVariableBlock Create(Variable value, StackTrace trace) => new(value, trace);
+		public static LiteralVariableBlock Create(Variable value, LunyStackTrace trace) => new(value, trace);
 
-		private LiteralVariableBlock(Variable value, StackTrace trace)
+		private LiteralVariableBlock(Variable value, LunyStackTrace trace)
 			: base(trace) => _value = value;
 	}
 }

@@ -8,9 +8,9 @@ namespace LunyScript
 	public readonly struct WhenGlobalEventBuilder
 	{
 		private readonly Script _script;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal WhenGlobalEventBuilder(Script script, StackTrace trace)
+		internal WhenGlobalEventBuilder(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;

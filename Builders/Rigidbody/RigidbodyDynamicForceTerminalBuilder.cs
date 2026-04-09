@@ -9,7 +9,7 @@ namespace LunyScript
 	{
 		public Script Script;
 		public BuilderToken Token;
-		public StackTrace Trace;
+		public LunyStackTrace Trace;
 		public VariableBlock Amount;
 		public LunyAxis Axis;
 		public LunyVector3 Vector;
@@ -27,7 +27,7 @@ namespace LunyScript
 		internal readonly RigidbodyForceOptions Options;
 
 		internal static RigidbodyDynamicForceTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis,
-			Boolean isImpulse, StackTrace trace)
+			Boolean isImpulse, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicForceTerminalBuilder), "Rigidbody.Dynamic.AddForce(axis)");
 			var options = new RigidbodyForceOptions
@@ -40,7 +40,7 @@ namespace LunyScript
 			return new RigidbodyDynamicForceTerminalBuilder(options);
 		}
 
-		internal static RigidbodyDynamicForceTerminalBuilder CreateVector(Script script, LunyVector3 force, Boolean isImpulse, StackTrace trace)
+		internal static RigidbodyDynamicForceTerminalBuilder CreateVector(Script script, LunyVector3 force, Boolean isImpulse, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicForceTerminalBuilder), "Rigidbody.Dynamic.AddForce(vector)");
 			var options = new RigidbodyForceOptions

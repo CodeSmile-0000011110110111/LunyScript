@@ -1,7 +1,6 @@
 using Luny;
 using System;
 using System.Diagnostics;
-using StackTrace = Luny.StackTrace;
 
 namespace LunyScript.Blocks
 {
@@ -13,9 +12,9 @@ namespace LunyScript.Blocks
 	{
 		private readonly String _message;
 
-		public static ActionBlock Create(String message, StackTrace trace) => new DebugBreakBlock(message, trace);
+		public static ActionBlock Create(String message, LunyStackTrace trace) => new DebugBreakBlock(message, trace);
 
-		private DebugBreakBlock(String message, StackTrace trace)
+		private DebugBreakBlock(String message, LunyStackTrace trace)
 			: base(trace) => _message = message;
 
 		protected internal override void Execute(IScriptRuntimeContext context) => DoBreak(context);

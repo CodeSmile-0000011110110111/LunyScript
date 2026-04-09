@@ -11,9 +11,9 @@ namespace LunyScript
 	public readonly struct InputBuilder
 	{
 		private readonly Script _script;
-		private readonly StackTrace _trace;
+		private readonly LunyStackTrace _trace;
 
-		internal InputBuilder(Script script, StackTrace trace)
+		internal InputBuilder(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;
