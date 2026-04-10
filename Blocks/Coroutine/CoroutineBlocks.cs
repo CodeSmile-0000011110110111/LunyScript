@@ -124,7 +124,7 @@ namespace LunyScript.Blocks
 		{
 			OnStartedIndex => Coroutine.Events.Started.ToString(),
 			OnResumedIndex => Coroutine.Events.Resumed.ToString(),
-			OnProcessIndex => Coroutine.Events.Process.ToString(),
+			OnProcessIndex => Coroutine.Events.Processing.ToString(),
 			OnPausedIndex => Coroutine.Events.Paused.ToString(),
 			OnStoppedIndex => Coroutine.Events.Stopped.ToString(),
 			OnElapsedIndex => Coroutine.Events.Elapsed.ToString(),
@@ -161,7 +161,7 @@ namespace LunyScript.Blocks
 				LunyScriptRunner.Run(_sequences[OnStartedIndex], ctx);
 			if (events.Has(Coroutine.Events.Resumed))
 				LunyScriptRunner.Run(_sequences[OnResumedIndex], ctx);
-			if (events.Has(Coroutine.Events.Process))
+			if (events.Has(Coroutine.Events.Processing))
 				LunyScriptRunner.Run(_sequences[OnProcessIndex], ctx);
 			if (events.Has(Coroutine.Events.Elapsed))
 				LunyScriptRunner.Run(_sequences[OnElapsedIndex], ctx);

@@ -94,7 +94,7 @@ namespace LunyScript
 		}
 
 		/// <summary>Blocks to run when the coroutine is resumed.</summary>
-		public static CoroutineTimerBuilder<T> WhenProcessed<T>(this CoroutineTimerBuilder<T> b, params ActionBlock[] processBlocks)
+		public static CoroutineTimerBuilder<T> WhenProcessing<T>(this CoroutineTimerBuilder<T> b, params ActionBlock[] processBlocks)
 			where T : struct, ICoroutineTimerWhen
 		{
 			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.OnProcess);

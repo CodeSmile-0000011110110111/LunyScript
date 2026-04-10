@@ -10,9 +10,13 @@ public class Object_Destroy_SmokeTest : Script
 		var createDestroyRoutine = Coroutine("create/destroy")
 			.In(500)
 			.Milliseconds()
-			.WhenStarted(Object.Create(destroyName), Object.Create(destroyName))
-			.WhenElapsed(Object.Destroy(destroyName), Object.Destroy(destroyName),
-				Object.Create(nameof(Object_DestroySelf_SmokeTest)));
+			.WhenStarted(Object.Create(destroyName))
+			.WhenProcessing(
+				Object.Destroy(destroyName), Object.Create(destroyName), // destroy first (may not exist), then create
+				Object.Create(destroyName), Object.Destroy(destroyName), // create and immediately destroy again
+				Object.Create(nameof(Object_DestroySelf_SmokeTest)) // created object builds script, then destroys itself immediately
+			)
+			.WhenElapsed(Object.Destroy(destroyName));
 
 		Coroutine("lifecyle").Every(1000).Milliseconds().WhenElapsed(createDestroyRoutine.Start());
 	}

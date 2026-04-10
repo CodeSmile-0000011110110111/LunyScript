@@ -136,7 +136,7 @@ namespace LunyScript.Coroutines
 			StartIfNew();
 			if (IsRunning && !IsElapsed)
 			{
-				_pendingEvents |= Events.Process;
+				_pendingEvents |= Events.Processing;
 				if (ConsumeProcess())
 					SetElapsedOrRestart();
 			}
@@ -206,7 +206,7 @@ namespace LunyScript.Coroutines
 			None = 0,
 			Started = 1 << 0,
 			Resumed = 1 << 1,
-			Process = 1 << 2,
+			Processing = 1 << 2,
 			Paused = 1 << 4,
 			Stopped = 1 << 5,
 			Elapsed = 1 << 6,

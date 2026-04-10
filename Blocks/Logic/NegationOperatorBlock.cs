@@ -34,6 +34,6 @@ namespace LunyScript.Blocks
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) =>
 			_condition == null || !_condition.Evaluate(runtimeContext);
 
-		public override String ToString() => $"NOT({_condition})";
+		public override String ToString() => $"{Emoji.Negation}{_condition}";
 	}
 }

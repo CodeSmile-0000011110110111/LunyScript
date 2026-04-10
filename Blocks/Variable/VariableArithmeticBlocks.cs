@@ -11,6 +11,11 @@ namespace LunyScript.Blocks
 
 		internal override Table.VarHandle VarHandle => _left?.VarHandle ?? _right?.VarHandle;
 
+		// enables implicit conversion of variable arithmetics (eg "variable + 123") within "params ActionBlock[]" argument list
+		// this avoids having to write "variable.Set(variable + 123)"
+		public static implicit operator VariableSetValueBlock(VariableArithmeticBlock value) => VariableSetValueBlock.Create(value.VarHandle,
+			value, value.Trace);
+
 		protected VariableArithmeticBlock(VariableBlock left, VariableBlock right, LunyStackTrace trace)
 			: base(trace)
 		{
@@ -19,7 +24,7 @@ namespace LunyScript.Blocks
 
 #if DEBUG || LUNYSCRIPT_DEBUG
 			var leftType = _left.Variable.Type;
-			// allow "string.Add(whatever)" for string concat, but everything else should fail
+			// allow string.Add("whatever") for string concat, but everything else should fail
 			if (leftType != Variable.ValueType.String || GetType() != typeof(VariableAddBlock))
 			{
 				if (leftType != Variable.ValueType.Number)

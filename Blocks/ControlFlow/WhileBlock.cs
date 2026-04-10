@@ -33,7 +33,7 @@ namespace LunyScript.Blocks
 			_actions = actions;
 		}
 
-		String IBlockContainer.GetConditionSequenceName(Int32 index) => "While";
+		String IBlockContainer.GetConditionSequenceName(Int32 index) => ToString();
 		String IBlockContainer.GetActionSequenceName(Int32 index) => "Do";
 		IEnumerable<IScriptBlock> IBlockContainer.GetConditionSequence(Int32 index) => _conditions;
 		IEnumerable<IScriptBlock> IBlockContainer.GetActionSequence(Int32 index) => _actions;

@@ -85,7 +85,20 @@ namespace LunyScript
 		/// <param name="func"></param>
 		/// <returns></returns>
 		public ConditionBlock Check(Func<IScriptRuntimeContext, Boolean> func) =>
-			CheckBlock.Create(func, ScriptTrace.TryCreateStackTrace(nameof(Check)));
+			CheckBlock.Create(nameof(Check), func, ScriptTrace.TryCreateStackTrace(nameof(Check)));
+
+		/// <summary>
+		/// Executes a `System.Func&lt;IScriptRuntimeContext, bool&gt;` (lambda) or method taking a IScriptRuntimeContext parameter and returns bool.
+		/// </summary>
+		/// <remarks>
+		/// - Intended for quick prototyping and testing.
+		/// - Prefer to convert "Check" code into a custom IBlock class after its initial development and testing,
+		/// - Prefer named methods over lambdas to ensure the block-based code continues to read like intent.
+		/// </remarks>
+		/// <param name="func"></param>
+		/// <returns></returns>
+		public ConditionBlock Check(String blockName, Func<IScriptRuntimeContext, Boolean> func) =>
+			CheckBlock.Create(blockName, func, ScriptTrace.TryCreateStackTrace(nameof(Check)));
 
 		/// <summary>
 		/// Executes a `System.Func&lt;bool&gt;` (lambda) or parameterless method returning bool.
@@ -97,7 +110,21 @@ namespace LunyScript
 		/// </remarks>
 		/// <param name="func"></param>
 		/// <returns></returns>
-		public ConditionBlock Check(Func<Boolean> func) => CheckBlock.Create(_ => func(), ScriptTrace.TryCreateStackTrace(nameof(Check)));
+		public ConditionBlock Check(Func<Boolean> func) =>
+			CheckBlock.Create(nameof(Check), _ => func(), ScriptTrace.TryCreateStackTrace(nameof(Check)));
+
+		/// <summary>
+		/// Executes a `System.Func&lt;bool&gt;` (lambda) or parameterless method returning bool.
+		/// </summary>
+		/// <remarks>
+		/// - Intended for quick prototyping and testing.
+		/// - Prefer to convert "Check" code into a custom IBlock class after its initial development and testing,
+		/// - Prefer named methods over lambdas to ensure the block-based code continues to read like intent.
+		/// </remarks>
+		/// <param name="func"></param>
+		/// <returns></returns>
+		public ConditionBlock Check(String blockName, Func<Boolean> func) =>
+			CheckBlock.Create(blockName, _ => func(), ScriptTrace.TryCreateStackTrace(nameof(Check)));
 
 		/// <summary>
 		/// Executes a `System.Action` (lambda) or parameterless method returning void.
@@ -126,7 +153,37 @@ namespace LunyScript
 		/// </remarks>
 		/// <param name="action"></param>
 		/// <returns></returns>
-		public ActionBlock Run(Action action) => RunBlock.Create(_ => action(), ScriptTrace.TryCreateStackTrace(nameof(Run)));
+		public ActionBlock Run(Action action) => RunBlock.Create(nameof(Run), _ => action(), ScriptTrace.TryCreateStackTrace(nameof(Run)));
+
+		/// <summary>
+		/// Executes a `System.Action` (lambda) or parameterless method returning void.
+		/// </summary>
+		/// <remarks>
+		/// - Intended for quick prototyping and testing.
+		/// - Prefer to convert "Run" code into a custom IBlock class after its initial development and testing,
+		/// - Prefer named methods over lambdas to ensure the block-based code continues to read like intent.
+		///
+		/// ```
+		///	// A lambda adds notable 'syntax noise':
+		/// On.Ready(Run(() => LunyLogger.LogInfo("custom log inline")));
+		///
+		///	// Multi-line lambdas are even worse:
+		///	On.Ready(Run(() => {
+		///	    LunyLogger.LogInfo("custom log inline");
+		///	}));
+		///
+		///	// A named method is much cleaner, and re-usable:
+		///	On.Ready(Run(MyCustomLog));
+		///
+		///	internal static void MyCustomLog() {
+		///	    LunyLogger.LogInfo("custom log");
+		///	}
+		/// ```
+		/// </remarks>
+		/// <param name="action"></param>
+		/// <returns></returns>
+		public ActionBlock Run(String blockName, Action action) =>
+			RunBlock.Create(blockName, _ => action(), ScriptTrace.TryCreateStackTrace(nameof(Run)));
 
 		/// <summary>
 		/// Executes a `System.Action` (lambda) or a method that takes a IScriptRuntimeContext parameter and returns void.
@@ -138,7 +195,21 @@ namespace LunyScript
 		/// </remarks>
 		/// <param name="action"></param>
 		/// <returns></returns>
-		public ActionBlock Run(Action<IScriptRuntimeContext> action) => RunBlock.Create(action, ScriptTrace.TryCreateStackTrace(nameof(Run)));
+		public ActionBlock Run(Action<IScriptRuntimeContext> action) =>
+			RunBlock.Create(nameof(Run), action, ScriptTrace.TryCreateStackTrace(nameof(Run)));
+
+		/// <summary>
+		/// Executes a `System.Action` (lambda) or a method that takes a IScriptRuntimeContext parameter and returns void.
+		/// </summary>
+		/// <remarks>
+		/// - Intended for quick prototyping and testing.
+		/// - Prefer to convert "Run" code into a custom IBlock class after its initial development and testing,
+		/// - Prefer named methods over lambdas to ensure the block-based code continues to read like intent.
+		/// </remarks>
+		/// <param name="action"></param>
+		/// <returns></returns>
+		public ActionBlock Run(String blockName, Action<IScriptRuntimeContext> action) =>
+			RunBlock.Create(blockName, action, ScriptTrace.TryCreateStackTrace(nameof(Run)));
 
 		/// <summary>
 		/// Logical AND: Returns true if all conditions are true. Requires at least two conditions.
@@ -155,6 +226,7 @@ namespace LunyScript
 		/// <summary>
 		/// Logical NOT: Returns the inverse of the condition.
 		/// </summary>
-		public ConditionBlock NOT(ConditionBlock condition) => NegationOperatorBlock.Create(condition, ScriptTrace.TryCreateStackTrace(nameof(NOT)));
+		public ConditionBlock NOT(ConditionBlock condition) =>
+			NegationOperatorBlock.Create(condition, ScriptTrace.TryCreateStackTrace(nameof(NOT)));
 	}
 }

@@ -8,13 +8,21 @@ namespace LunyScript.Blocks
 	/// </summary>
 	internal sealed class CheckBlock : ConditionBlock
 	{
+		private readonly String _name;
 		private readonly Func<IScriptRuntimeContext, Boolean> _func;
 
-		public static ConditionBlock Create(Func<IScriptRuntimeContext, Boolean> func, LunyStackTrace trace = null) => new CheckBlock(func, trace);
+		public static ConditionBlock Create(String name, Func<IScriptRuntimeContext, Boolean> func, LunyStackTrace trace = null) =>
+			new CheckBlock(name, func, trace);
 
-		private CheckBlock(Func<IScriptRuntimeContext, Boolean> func, LunyStackTrace trace)
-			: base(trace) => _func = func ?? throw new ArgumentNullException(nameof(func));
+		private CheckBlock(String name, Func<IScriptRuntimeContext, Boolean> func, LunyStackTrace trace)
+			: base(trace)
+		{
+			_name = name;
+			_func = func ?? throw new ArgumentNullException(nameof(func));
+		}
 
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => _func(runtimeContext);
+
+		public override String ToString() => _name;
 	}
 }

@@ -1,15 +1,15 @@
 using Luny;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace LunyScript.Blocks
 {
 	/// <summary>
 	/// Logical OR condition block.
 	/// </summary>
-	internal sealed class OrOperatorBlock : VariableBlock, ILogicalOperator, IBlockContainer
+	internal sealed class OrOperatorBlock : VariableBlock, ILogicalOperator //, IBlockContainer
 	{
 		private readonly ConditionBlock[] _conditions;
 
@@ -21,7 +21,7 @@ namespace LunyScript.Blocks
 
 		// ── IBlockContainer ───────────────────────────────────────────────
 
-		Int32 IBlockContainer.ConditionSequenceCount => 1;
+		//Int32 IBlockContainer.ConditionSequenceCount => 1;
 
 		public static OrOperatorBlock Create(ConditionBlock[] conditions, LunyStackTrace trace = null) => new(conditions, trace);
 
@@ -38,8 +38,8 @@ namespace LunyScript.Blocks
 #endif
 		}
 
-		String IBlockContainer.GetConditionSequenceName(Int32 index) => "OR";
-		IEnumerable<IScriptBlock> IBlockContainer.GetConditionSequence(Int32 index) => _conditions;
+		//String IBlockContainer.GetConditionSequenceName(Int32 index) => "OR";
+		//IEnumerable<IScriptBlock> IBlockContainer.GetConditionSequence(Int32 index) => _conditions;
 
 		// ── Evaluate ──────────────────────────────────────────────────────
 
@@ -55,6 +55,21 @@ namespace LunyScript.Blocks
 			return false;
 		}
 
-		public override String ToString() => $"OR({base.ToString()})";
+		public override String ToString()
+		{
+			if (_conditions == null || _conditions.Length == 0)
+				return $"OR({Emoji.NullReference})";
+
+			var sb = new StringBuilder("("); // brackets are required to correctly represent order of operations
+			var conditionCount = _conditions.Length;
+			for (var i = 0; i < conditionCount; i++)
+			{
+				if (i != 0)
+					sb.Append(Emoji.LogicalOr);
+				sb.Append(_conditions[i]);
+			}
+			sb.Append(")");
+			return sb.ToString();
+		}
 	}
 }
