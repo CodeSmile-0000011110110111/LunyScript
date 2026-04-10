@@ -14,7 +14,7 @@ namespace LunyScript.Blocks
 
 		public static ConditionBlock operator |(ConditionBlock left, ConditionBlock right) => OrOperatorBlock.Create(new[] { left, right });
 
-		// this may be confusing
+		// TODO: support this may be confusing
 		//public static implicit operator ConditionBlock(Boolean value) => LiteralVariableBlock.Create(value, ScriptTrace.TryCreateStackTrace());
 
 		// Return false to force always calling operators & | which then return a new block instance

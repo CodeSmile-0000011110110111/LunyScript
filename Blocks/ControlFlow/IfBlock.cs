@@ -67,17 +67,21 @@ namespace LunyScript.Blocks
 			var actionCount = container.ActionSequenceCount;
 			for (var i = 0; i < conditionCount; i++)
 			{
-				var name = container.GetConditionSequenceName(i);
-				sb.Append(name);
-				sb.Append('/');
+				if (i != 0)
+					sb.Append('/');
+				sb.Append(container.GetConditionSequenceName(i));
 			}
 
 			var hasElse = conditionCount < container.ActionSequenceCount;
 			if (hasElse)
 			{
+				sb.Append('/');
+
 				var lastIndex = actionCount - 1;
 				sb.Append(container.GetActionSequenceName(lastIndex));
 			}
+			else if (conditionCount == 1)
+				sb.Append("/Then");
 
 			return sb.ToString();
 		}
