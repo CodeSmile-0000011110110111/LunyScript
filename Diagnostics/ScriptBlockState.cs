@@ -16,11 +16,12 @@ namespace LunyScript.Diagnostics
 
 		public String FileName => _block.Trace?.Count > 0 ? _block.Trace[0].FileName : null;
 		public Int32 Line => _block.Trace?.Count > 0 ? _block.Trace[0].Line : 0;
+		public ScriptBlock Block => _block;
+
 		// public Boolean IsAction => _block is ActionBlock;
 		// public Boolean IsCondition => _block is ConditionBlock;
 		// public ActionBlock Action => _block as ActionBlock;
 		// public ConditionBlock Condition => _block as ConditionBlock;
-		public ScriptBlock Block => _block;
 
 		public static String GetTruthSymbol(ScriptRuntimeContext context, ConditionBlock condition) =>
 			context != null ? Emoji.IsSatisfied(condition.Evaluate(context)) : Emoji.IsKnown(false);
@@ -30,7 +31,7 @@ namespace LunyScript.Diagnostics
 		public String GetDisplayString(ScriptRuntimeContext context)
 		{
 			if (_block is VariableBlock variableBlock)
-				return $"{GetTruthSymbol(context, variableBlock)} {_block}";
+				return $"{GetTruthSymbol(context, variableBlock)}{_block}";
 
 			if (_block is IBlockContainer blockContainer)
 				return blockContainer.ToString();
@@ -39,19 +40,21 @@ namespace LunyScript.Diagnostics
 			if (trace != null && trace.Count > 0)
 			{
 				var sb = new StringBuilder();
-				for (var i = 0; i < trace.Count; i++)
-				{
-					if (i > 0)
-						sb.Append('.');
-
-					sb.Append(trace[i].Name);
-				}
 
 				if (_block is ConditionBlock conditionBlock)
-				{
 					sb.Append(GetTruthSymbol(context, conditionBlock));
-					sb.Append(' ');
+
+				if (_block is not CheckBlock checkBlock || checkBlock.ToString() == Emoji.NotFound)
+				{
+					for (var i = 0; i < trace.Count; i++)
+					{
+						if (i > 0)
+							sb.Append('.');
+
+						sb.Append(trace[i].Name);
+					}
 				}
+
 				sb.Append('(');
 				sb.Append(_block);
 				sb.Append(')');
@@ -89,7 +92,38 @@ namespace LunyScript.Diagnostics
 			}
 
 			var branchName = container.GetConditionSequenceName(branchIndex);
-			return $"{Emoji.IsSatisfied(truthValue)} {branchName}";
+			return $"{Emoji.IsSatisfied(truthValue)}{branchName}";
+		}
+
+		public String GetIfBlockElseLabel(ScriptRuntimeContext scriptContext)
+		{
+			if (_block is not IfBlock ifBlock)
+				return null;
+
+			var allConditionsNotSatisfied = true;
+			var container = (IBlockContainer)ifBlock;
+			var condCount = container.ConditionSequenceCount;
+			for (var i = 0; i < condCount; i++)
+			{
+				var sequence = container.GetConditionSequence(i);
+				var branchSatisfied = true;
+				foreach (var block in sequence)
+				{
+					if (block is ConditionBlock condition && !condition.Evaluate(scriptContext))
+					{
+						branchSatisfied = false;
+						break;
+					}
+				}
+
+				if (branchSatisfied)
+				{
+					allConditionsNotSatisfied = false;
+					break;
+				}
+			}
+
+			return $"{Emoji.IsSatisfied(allConditionsNotSatisfied)}Else";
 		}
 	}
 }

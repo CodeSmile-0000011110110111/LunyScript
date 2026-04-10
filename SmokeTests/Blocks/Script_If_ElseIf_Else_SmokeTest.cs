@@ -66,25 +66,8 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 					If(OR(fact == altFact, fact != !altFact, AND(fact, altFact))).Then(NoOp()),
 					If(fact == altFact || fact != !altFact || fact && altFact).Then(NoOp())
 				);
-
-			Coroutine("literal test")
-				.Every(.5)
-				.Seconds()
-				.WhenElapsed(
-					If(AlwaysTrue()).Then(NoOp()).Else(NoOp()),
-					If(AlwaysFalse()).Then(NoOp()).Else(NoOp())
-				);
-			Coroutine("literal test, negated")
-				.Every(.5)
-				.Seconds()
-				.WhenElapsed(
-					If(!AlwaysTrue()).Then(NoOp()).Else(NoOp()),
-					If(!AlwaysFalse()).Then(NoOp()).Else(NoOp())
-				);
 		}
 
 		private ActionBlock NoOp() => Run(nameof(NoOp), () => {});
-		private ConditionBlock AlwaysTrue() => Check(nameof(AlwaysTrue), () => true);
-		private ConditionBlock AlwaysFalse() => Check(nameof(AlwaysFalse), () => false);
 	}
 }

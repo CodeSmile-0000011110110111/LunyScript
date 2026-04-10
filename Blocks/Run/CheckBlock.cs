@@ -17,7 +17,7 @@ namespace LunyScript.Blocks
 		private CheckBlock(String name, Func<IScriptRuntimeContext, Boolean> func, LunyStackTrace trace)
 			: base(trace)
 		{
-			_name = name;
+			_name = !String.IsNullOrEmpty(name) ? $"<i>{name}</i>" : Emoji.NotFound;
 			_func = func ?? throw new ArgumentNullException(nameof(func));
 		}
 

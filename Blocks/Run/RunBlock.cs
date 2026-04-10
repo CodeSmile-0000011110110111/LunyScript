@@ -24,7 +24,7 @@ namespace LunyScript.Blocks
 		private RunBlock(String name, Action<IScriptRuntimeContext> action, LunyStackTrace trace)
 			: base(trace)
 		{
-			_name = name;
+			_name = !String.IsNullOrEmpty(name) ? $"<i>{name}</i>" : Emoji.NotFound;
 			_action = action ?? throw new ArgumentNullException(nameof(action));
 		}
 

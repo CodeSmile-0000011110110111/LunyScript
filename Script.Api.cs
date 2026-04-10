@@ -85,7 +85,7 @@ namespace LunyScript
 		/// <param name="func"></param>
 		/// <returns></returns>
 		public ConditionBlock Check(Func<IScriptRuntimeContext, Boolean> func) =>
-			CheckBlock.Create(nameof(Check), func, ScriptTrace.TryCreateStackTrace(nameof(Check)));
+			CheckBlock.Create(null, func, ScriptTrace.TryCreateStackTrace(nameof(Check)));
 
 		/// <summary>
 		/// Executes a `System.Func&lt;IScriptRuntimeContext, bool&gt;` (lambda) or method taking a IScriptRuntimeContext parameter and returns bool.
@@ -111,7 +111,7 @@ namespace LunyScript
 		/// <param name="func"></param>
 		/// <returns></returns>
 		public ConditionBlock Check(Func<Boolean> func) =>
-			CheckBlock.Create(nameof(Check), _ => func(), ScriptTrace.TryCreateStackTrace(nameof(Check)));
+			CheckBlock.Create(null, _ => func(), ScriptTrace.TryCreateStackTrace(nameof(Check)));
 
 		/// <summary>
 		/// Executes a `System.Func&lt;bool&gt;` (lambda) or parameterless method returning bool.
@@ -153,7 +153,7 @@ namespace LunyScript
 		/// </remarks>
 		/// <param name="action"></param>
 		/// <returns></returns>
-		public ActionBlock Run(Action action) => RunBlock.Create(nameof(Run), _ => action(), ScriptTrace.TryCreateStackTrace(nameof(Run)));
+		public ActionBlock Run(Action action) => RunBlock.Create(null, _ => action(), ScriptTrace.TryCreateStackTrace(nameof(Run)));
 
 		/// <summary>
 		/// Executes a `System.Action` (lambda) or parameterless method returning void.
@@ -196,7 +196,7 @@ namespace LunyScript
 		/// <param name="action"></param>
 		/// <returns></returns>
 		public ActionBlock Run(Action<IScriptRuntimeContext> action) =>
-			RunBlock.Create(nameof(Run), action, ScriptTrace.TryCreateStackTrace(nameof(Run)));
+			RunBlock.Create(null, action, ScriptTrace.TryCreateStackTrace(nameof(Run)));
 
 		/// <summary>
 		/// Executes a `System.Action` (lambda) or a method that takes a IScriptRuntimeContext parameter and returns void.
