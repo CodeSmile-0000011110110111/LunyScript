@@ -60,7 +60,7 @@ namespace LunyScript.Blocks
 			if (_conditions == null || _conditions.Length == 0)
 				return $"OR({Emoji.NullReference})";
 
-			var sb = new StringBuilder("("); // brackets are required to correctly represent order of operations
+			var sb = new StringBuilder();
 			var conditionCount = _conditions.Length;
 			for (var i = 0; i < conditionCount; i++)
 			{
@@ -68,7 +68,6 @@ namespace LunyScript.Blocks
 					sb.Append(Emoji.LogicalOr);
 				sb.Append(_conditions[i]);
 			}
-			sb.Append(")");
 			return sb.ToString();
 		}
 	}

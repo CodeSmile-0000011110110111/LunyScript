@@ -110,8 +110,7 @@ namespace LunyScript
 		/// </remarks>
 		/// <param name="func"></param>
 		/// <returns></returns>
-		public ConditionBlock Check(Func<Boolean> func) =>
-			CheckBlock.Create(null, _ => func(), ScriptTrace.TryCreateStackTrace(nameof(Check)));
+		public ConditionBlock Check(Func<Boolean> func) => CheckBlock.Create(null, _ => func(), ScriptTrace.TryCreateStackTrace(nameof(Check)));
 
 		/// <summary>
 		/// Executes a `System.Func&lt;bool&gt;` (lambda) or parameterless method returning bool.
@@ -211,6 +210,7 @@ namespace LunyScript
 		public ActionBlock Run(String blockName, Action<IScriptRuntimeContext> action) =>
 			RunBlock.Create(blockName, action, ScriptTrace.TryCreateStackTrace(nameof(Run)));
 
+		/*
 		/// <summary>
 		/// Logical AND: Returns true if all conditions are true. Requires at least two conditions.
 		/// </summary>
@@ -222,11 +222,13 @@ namespace LunyScript
 		/// </summary>
 		public ConditionBlock OR(params ConditionBlock[] conditions) =>
 			OrOperatorBlock.Create(conditions, ScriptTrace.TryCreateStackTrace(nameof(OR)));
+			*/
 
 		/// <summary>
-		/// Logical NOT: Returns the inverse of the condition.
+		/// Does nothing, just prints a 'note' (comment, hint, etc) in the Block Inspector.
 		/// </summary>
-		public ConditionBlock NOT(ConditionBlock condition) =>
-			NegationOperatorBlock.Create(condition, ScriptTrace.TryCreateStackTrace(nameof(NOT)));
+		/// <param name="message"></param>
+		/// <returns></returns>
+		public ActionBlock Note(String message) => RunBlock.Create(message, _ => {}, ScriptTrace.TryCreateStackTrace("// "));
 	}
 }

@@ -1,0 +1,108 @@
+﻿using LunyScript.Blocks;
+
+namespace LunyScript.SmokeTests.Blocks.Variables
+{
+	public class Script_LogicalOperators_SmokeTest : Script
+	{
+		public override void Build(ScriptBuildContext context)
+		{
+			var fact = Var.Define("fact", true);
+			var altFact = Var.Define("alt. fact", false);
+			var isDisabled = Var.Define("disabled", true);
+
+			Coroutine("negated variable / condition")
+				.Every(.5)
+				.Seconds()
+				.WhenElapsed(
+					If(!altFact).Then(NoOp()),
+					If(!AlwaysFalse()).Then(NoOp())
+				);
+
+			// Double negations => avoid at all costs! Those are awful mindbenders.
+			// Including semantically: "is not disabled". The positive form is ALWAYS easier: "is enabled". Oh, right! :)
+			Coroutine("🤦 variable double negation 🫨 mindbenders 😧")
+				.Every(.5)
+				.Seconds()
+				.WhenElapsed(
+					If(!!fact).Then(NoOp()), // double negation
+					If(!!!altFact).Then(NoOp()), // triple negation
+					If(!!!!fact).Then(NoOp()), // quadruple negation
+					Note("Following is a triple-negation too! Same as If(isEnabled).. !!"),
+					If(!isDisabled == false).Then(NoOp())
+				);
+
+			Coroutine("🤦 condition double negation 🫨 mindbenders 😧")
+				.Every(.5)
+				.Seconds()
+				.WhenElapsed(
+					If(!!AlwaysTrue()).Then(NoOp()), // double negation
+					If(!!!AlwaysFalse()).Then(NoOp()), // triple negation
+					If(!!!!AlwaysTrue()).Then(NoOp()) // quadruple negation
+				);
+
+			// Logical AND()/OR() blocks and C# logical && and || operators
+			Coroutine("logical operators: AND OR && ||")
+				.Every(.5)
+				.Seconds()
+				.WhenElapsed(
+					If(!fact || altFact || fact && !altFact).Then(NoOp()),
+					If(fact || !altFact || !(!fact && altFact)).Then(NoOp()),
+					If(!AlwaysTrue() || AlwaysFalse() || AlwaysTrue() && !AlwaysFalse()).Then(NoOp()),
+					If(AlwaysTrue() || !AlwaysFalse() || !(!AlwaysTrue() && AlwaysFalse())).Then(NoOp())
+				);
+			Coroutine("simple equality test, nested")
+				.Every(.5)
+				.Seconds()
+				.WhenElapsed(
+					If(fact)
+						.Then(If(!altFact).Then(NoOp()))
+						.ElseIf(altFact)
+						.Then(If(!fact).Then(NoOp()))
+				);
+
+			Coroutine("simple equality test, multiple conditions (implicit AND combined)")
+				.Every(.5)
+				.Seconds()
+				.WhenElapsed(
+					If(fact, !altFact).Then(NoOp()).ElseIf(!fact, altFact).Then(NoOp())
+				);
+
+			Coroutine("negated equality tests")
+				.Every(.5)
+				.Seconds()
+				.WhenElapsed(
+					If(!fact).Then(NoOp()).ElseIf(!altFact).Then(NoOp()),
+					If(!fact).Then(NoOp()).ElseIf(!altFact).Then(NoOp())
+				);
+
+			Coroutine("using equality operators")
+				.Every(.5)
+				.Seconds()
+				.WhenElapsed(
+					If(fact == altFact).Then(NoOp()).ElseIf(fact != altFact).Then(NoOp()),
+					If(!fact == !altFact).Then(NoOp()).ElseIf(!fact != !altFact).Then(NoOp())
+				);
+
+			// Double negations => avoid at all costs! Those are awful mindbenders.
+			// Including semantically: "is not disabled". The positive form is ALWAYS easier: "is enabled". Oh, right! :)
+			Coroutine("double negation: mindbenders")
+				.Every(.5)
+				.Seconds()
+				.WhenElapsed(
+					If(!!fact == !!altFact).Then(NoOp()).ElseIf(!fact != !altFact).Then(NoOp())
+				);
+
+			// Logical AND()/OR() blocks and C# logical && and || operators
+			Coroutine("logical operators: AND OR && ||")
+				.Every(.5)
+				.Seconds()
+				.WhenElapsed(
+					If(fact == altFact || fact != !altFact || fact && altFact).Then(NoOp())
+				);
+		}
+
+		private ActionBlock NoOp() => Run(nameof(NoOp), () => {});
+		private ConditionBlock AlwaysTrue() => Check(nameof(AlwaysTrue), () => true);
+		private ConditionBlock AlwaysFalse() => Check(nameof(AlwaysFalse), () => false);
+	}
+}

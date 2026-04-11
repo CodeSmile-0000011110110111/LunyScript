@@ -16,7 +16,7 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 				If(!fact == !altFact).Then(NoOp()).ElseIf(!fact != !altFact).Then(NoOp())
 			);
 
-			On.AfterFrameUpdate(If(OR(fact == altFact, fact != !altFact, AND(fact, altFact))).Then(NoOp()));
+			On.AfterFrameUpdate(If(fact == altFact || fact != !altFact || fact && altFact).Then(NoOp()));
 
 			var counter = Var.Define("counter");
 			Coroutine("counter routine")

@@ -37,17 +37,17 @@
 					.ElseIf(!boolean != true)
 					.Then(Debug.Log(text))
 					.Else(Debug.Log(text)),
-				If(OR(boolean, AND(boolean, boolean, !OR(NOT(boolean == false), !boolean), NOT(!boolean))))
+				If(boolean || (boolean && boolean && !(!(boolean == false) || !boolean) || !!boolean))
 					.Then(Debug.Log("testing nested logical operators")),
-				If(OR(boolean, !boolean))
+				If(boolean || !boolean)
 					.Then(Debug.Log("OR must be true always"))
-					.ElseIf(OR(boolean, boolean))
+					.ElseIf(boolean || boolean)
 					.Then(Debug.Log("OR must be true or false"))
-					.ElseIf(OR(!boolean, !boolean))
+					.ElseIf(!boolean || !boolean)
 					.Then(Debug.Log("OR must be true or false"))
-					.ElseIf(!OR(boolean, boolean))
+					.ElseIf(!(boolean || boolean))
 					.Then(Debug.Log("OR must be true or false"))
-					.ElseIf(!OR(!boolean, !boolean))
+					.ElseIf(!(!boolean || !boolean))
 					.Then(Debug.Log("OR must be true or false"))
 			);
 

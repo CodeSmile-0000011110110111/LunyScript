@@ -13,9 +13,6 @@ namespace LunyScript.Blocks
 		private readonly String _name;
 		private readonly Action<IScriptRuntimeContext> _action;
 
-		/// <summary>
-		/// Usage: `var block = (Action&lt;IScriptRuntimeContext&gt;)(ctx => { /* code here */ });`
-		/// </summary>
 		public static implicit operator RunBlock(Action<IScriptRuntimeContext> action) => new(nameof(Script.Run), action, null);
 
 		public static ActionBlock Create(String name, Action<IScriptRuntimeContext> action, LunyStackTrace trace = null) =>
