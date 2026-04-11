@@ -49,7 +49,7 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 					subLiteralVar - factor,
 					mulLiteralVar * factor,
 					divLiteralVar / factor,
-					(complexMathVar + 1 * 10 / 5 - 3) - (complexMathVar - 1) * (10 / (5 - 3)),
+					complexMathVar + 1 * 10 / 5 - 3 - (complexMathVar - 1) * (10 / (5 - 3)) / 1234.56789,
 					toggleLiteralVar.Set(!toggleLiteralVar)
 
 					// C# design may prevent supporting these as auto-converting action blocks, but may be supportable by wrapping in Set()
@@ -73,13 +73,13 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 			var counter = Var.Define("🦆 type counter");
 			var changeType = Var.Define("🦆 changes type");
 			Coroutine("🦆🦆🦆")
-				.Every(500)
-				.Milliseconds()
+				.Every(1)
+				.Seconds()
 				.WhenElapsed(
 					If(counter == 1)
 						.Then(changeType.Set("A 🦆 is not a 🪿 but both are 🍽️🍗😋"))
 						.ElseIf(counter == 2)
-						.Then(changeType.Set(800815))
+						.Then(changeType.Set(8008.15))
 						.Else(changeType.Set(true), counter.Set(0)),
 					counter.Inc()
 				);

@@ -34,21 +34,13 @@ namespace LunyScript.Blocks
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
 			var transform = context.LunyObject.Transform;
-			var speed = _speed.Value;
-			if (_useDirection)
-			{
-				var translation = _direction.Value * (speed * LunyTime.DeltaTime);
-				transform.Translate(translation, _space);
-			}
-			else
-			{
-				var translation = _amount.Value * _axis * (speed * LunyTime.DeltaTime);
-				transform.Translate(translation, _space);
-			}
+			var speed = _speed.Value * LunyTime.DeltaTime;
+			var translation = _useDirection ? _direction.Value * speed : _amount.Value * _axis * speed;
+			transform.Translate(translation, _space);
 		}
 
 		public override String ToString() => _useDirection
-			? $"{GetType().Name}({_direction}, {_speed}, {_space})"
-			: $"{GetType().Name}({_amount}, {_axis}, {_speed}, {_space})";
+			? $"By{_direction}, Speed{_speed}, {_space}"
+			: $"By{_amount}, Speed{_speed}, Axis{_axis}, {_space}";
 	}
 }

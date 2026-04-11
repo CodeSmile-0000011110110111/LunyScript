@@ -30,7 +30,7 @@ namespace LunyScript.Blocks
 		public override String ToString()
 		{
 			if (_variable is LiteralVariableBlock)
-				return $"\"{_handle.Name}\" = {_variable}";
+				return $"({_handle}){Emoji.Equality}{_variable}";
 
 			return _variable.ToString();
 		}

@@ -50,38 +50,6 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 					If(!AlwaysTrue() || AlwaysFalse() || AlwaysTrue() && !AlwaysFalse()).Then(NoOp()),
 					If(AlwaysTrue() || !AlwaysFalse() || !(!AlwaysTrue() && AlwaysFalse())).Then(NoOp())
 				);
-			Coroutine("simple equality test, nested")
-				.Every(.5)
-				.Seconds()
-				.WhenElapsed(
-					If(fact)
-						.Then(If(!altFact).Then(NoOp()))
-						.ElseIf(altFact)
-						.Then(If(!fact).Then(NoOp()))
-				);
-
-			Coroutine("simple equality test, multiple conditions (implicit AND combined)")
-				.Every(.5)
-				.Seconds()
-				.WhenElapsed(
-					If(fact, !altFact).Then(NoOp()).ElseIf(!fact, altFact).Then(NoOp())
-				);
-
-			Coroutine("negated equality tests")
-				.Every(.5)
-				.Seconds()
-				.WhenElapsed(
-					If(!fact).Then(NoOp()).ElseIf(!altFact).Then(NoOp()),
-					If(!fact).Then(NoOp()).ElseIf(!altFact).Then(NoOp())
-				);
-
-			Coroutine("using equality operators")
-				.Every(.5)
-				.Seconds()
-				.WhenElapsed(
-					If(fact == altFact).Then(NoOp()).ElseIf(fact != altFact).Then(NoOp()),
-					If(!fact == !altFact).Then(NoOp()).ElseIf(!fact != !altFact).Then(NoOp())
-				);
 
 			// Double negations => avoid at all costs! Those are awful mindbenders.
 			// Including semantically: "is not disabled". The positive form is ALWAYS easier: "is enabled". Oh, right! :)
@@ -89,15 +57,15 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 				.Every(.5)
 				.Seconds()
 				.WhenElapsed(
-					If(!!fact == !!altFact).Then(NoOp()).ElseIf(!fact != !altFact).Then(NoOp())
+					If(!!fact == (!!altFact == false)).Then(NoOp()).ElseIf(!fact != !altFact).Then(NoOp())
 				);
 
 			// Logical AND()/OR() blocks and C# logical && and || operators
-			Coroutine("logical operators: AND OR && ||")
+			Coroutine("equality combined with && ||")
 				.Every(.5)
 				.Seconds()
 				.WhenElapsed(
-					If(fact == altFact || fact != !altFact || fact && altFact).Then(NoOp())
+					If(fact == !altFact && fact != altFact && (fact == false || altFact == false)).Then(NoOp())
 				);
 		}
 

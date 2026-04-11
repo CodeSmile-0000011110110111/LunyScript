@@ -49,7 +49,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => $"{_left} == {_right}";
+		public override String ToString() => $"{_left}{Emoji.Equality}{_right}";
 	}
 
 	internal sealed class VariableIsNotEqualToBlock : VariableComparisonBlock
@@ -68,7 +68,7 @@ namespace LunyScript.Blocks
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override Boolean Evaluate(IScriptRuntimeContext runtimeContext) => Variable;
 
-		public override String ToString() => $"{_left} != {_right}";
+		public override String ToString() => $"{_left}{Emoji.Inequality}{_right}";
 	}
 
 	internal sealed class VariableIsGreaterThanBlock : VariableComparisonBlock

@@ -26,7 +26,7 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 						.Then(If(!fact).Then(NoOp()))
 				);
 
-			Coroutine("simple equality test, multiple conditions (implicit AND combined)")
+			Coroutine("simple equality test, multiple conditions")
 				.Every(.5)
 				.Seconds()
 				.WhenElapsed(

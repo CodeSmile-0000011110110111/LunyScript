@@ -22,12 +22,13 @@ namespace LunyScript.Blocks
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
 			var transform = context.LunyObject.Transform;
+
 			if (_space == LunyTransformSpace.World)
 				transform.Position = _position.Value;
 			else
 				transform.LocalPosition = _position.Value;
 		}
 
-		public override String ToString() => $"{GetType().Name}({_position}, {_space})";
+		public override String ToString() => $"{_position}, {_space}";
 	}
 }

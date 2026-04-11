@@ -40,23 +40,23 @@ namespace LunyScript
 		}
 
 		/// <summary> Override only the X component of the position; other axes remain unchanged. </summary>
-		public TransformPositionSetAxisBlock X(Double value) => FinishAxis(LunyAxis.X, value);
+		public TransformPositionSetSingleAxisBlock X(Double value) => FinishAxis(LunyAxis.X, value);
 
 		/// <summary> Override only the Y component of the position; other axes remain unchanged. </summary>
-		public TransformPositionSetAxisBlock Y(Double value) => FinishAxis(LunyAxis.Y, value);
+		public TransformPositionSetSingleAxisBlock Y(Double value) => FinishAxis(LunyAxis.Y, value);
 
 		/// <summary> Override only the Z component of the position; other axes remain unchanged. </summary>
-		public TransformPositionSetAxisBlock Z(Double value) => FinishAxis(LunyAxis.Z, value);
+		public TransformPositionSetSingleAxisBlock Z(Double value) => FinishAxis(LunyAxis.Z, value);
 
 		/// <summary> Apply position set in world space instead of local space. </summary>
 		public TransformSetPositionTerminalBuilder InWorldSpace() => new(Options with { Space = LunyTransformSpace.World });
 
 		internal TransformPositionSetBlock Finish() => Finish(Options);
 
-		private TransformPositionSetAxisBlock FinishAxis(LunyAxis axis, Double value)
+		private TransformPositionSetSingleAxisBlock FinishAxis(LunyAxis axis, Double value)
 		{
 			Options.Script.MarkBuilderTokenFinished(Options.Token);
-			return TransformPositionSetAxisBlock.Create(axis, value, Options.Space, Options.Trace);
+			return TransformPositionSetSingleAxisBlock.Create(axis, value, Options.Space, Options.Trace);
 		}
 
 		private static TransformPositionSetBlock Finish(in TransformSetPositionOptions options)
