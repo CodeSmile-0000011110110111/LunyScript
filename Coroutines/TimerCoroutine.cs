@@ -1,4 +1,5 @@
 using Luny;
+using Luny.Engine.Bridge;
 using System;
 
 namespace LunyScript.Coroutines
@@ -39,7 +40,7 @@ namespace LunyScript.Coroutines
 		protected override Boolean ConsumeProcess()
 		{
 			_elapsedThisTick = false;
-			_timer.Tick(LunyEngine.Instance.Time.DeltaTime);
+			_timer.Tick(LunyTime.DeltaTime);
 			return _elapsedThisTick;
 		}
 

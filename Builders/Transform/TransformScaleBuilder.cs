@@ -25,16 +25,16 @@ namespace LunyScript
 
 		internal static ActionBlock Finish(in TransformBuilderOptions options)
 		{
-			var block = TransformScaleTowardsBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.AxisLock,
-				options.Responsiveness);
+			var block = TransformScaleTowardsVariableBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.AxisLock,
+				options.Responsiveness, options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}
 
-		internal static TransformScaleTowardsLerpBlock FinishLerpBuilder(in TransformBuilderOptions options)
+		internal static TransformScaleTowardsVariableLerpBlock FinishLerpBuilder(in TransformBuilderOptions options)
 		{
-			var block = TransformScaleTowardsLerpBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.AxisLock,
-				options.Responsiveness, options.SphericalLerp);
+			var block = TransformScaleTowardsVariableLerpBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.AxisLock,
+				options.Responsiveness, options.SphericalLerp, options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}
@@ -82,11 +82,11 @@ namespace LunyScript
 		}
 
 		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
-		public static TransformScaleTowardsLerpBlock Lerp<T>(this TransformScaleBuilder<T> b)
+		public static TransformScaleTowardsVariableLerpBlock Lerp<T>(this TransformScaleBuilder<T> b)
 			where T : struct, ITransformBuilderReady => TransformScaleBuilder<T>.FinishLerpBuilder(b.Options with { Lerp = true });
 
 		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
-		public static TransformScaleTowardsLerpBlock Slerp<T>(this TransformScaleBuilder<T> b)
+		public static TransformScaleTowardsVariableLerpBlock Slerp<T>(this TransformScaleBuilder<T> b)
 			where T : struct, ITransformBuilderReady =>
 			TransformScaleBuilder<T>.FinishLerpBuilder(b.Options with { Lerp = true, SphericalLerp = true });
 	}

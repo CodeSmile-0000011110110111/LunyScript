@@ -18,16 +18,6 @@ namespace LunyScript.Blocks
 		internal static RigidbodyKinematicRotateBlock CreateVector(LunyVector3 eulerDelta, LunyTransformSpace space, LunyStackTrace trace) =>
 			new(null, default, eulerDelta, true, space, trace);
 
-		private static LunyVector3 AxisToVector(LunyAxis axis)
-		{
-			if (axis == LunyAxis.X)
-				return LunyVector3.Right;
-			if (axis == LunyAxis.Y)
-				return LunyVector3.Up;
-
-			return LunyVector3.Forward;
-		}
-
 		private RigidbodyKinematicRotateBlock(VariableBlock amount, LunyAxis axis, LunyVector3 eulerDelta, Boolean useVector,
 			LunyTransformSpace space, LunyStackTrace trace)
 			: base(trace)
@@ -50,7 +40,7 @@ namespace LunyScript.Blocks
 			}
 			var euler = _useVector
 				? _eulerDelta * LunyTime.DeltaTime
-				: AxisToVector(_axis) * (_amount.Value * LunyTime.DeltaTime);
+				: _axis.ToVector3() * (_amount.Value * LunyTime.DeltaTime);
 			rigidbody.MoveRotation(euler, _space);
 		}
 

@@ -40,23 +40,23 @@ namespace LunyScript
 		}
 
 		/// <summary> Override only the X euler angle; other axes remain unchanged. </summary>
-		public TransformRotationSetAxisBlock X(Double value) => FinishAxis(LunyAxis.X, value);
+		public TransformRotationSetAngleBlock X(Double value) => FinishAxis(LunyAxis.X, value);
 
 		/// <summary> Override only the Y euler angle; other axes remain unchanged. </summary>
-		public TransformRotationSetAxisBlock Y(Double value) => FinishAxis(LunyAxis.Y, value);
+		public TransformRotationSetAngleBlock Y(Double value) => FinishAxis(LunyAxis.Y, value);
 
 		/// <summary> Override only the Z euler angle; other axes remain unchanged. </summary>
-		public TransformRotationSetAxisBlock Z(Double value) => FinishAxis(LunyAxis.Z, value);
+		public TransformRotationSetAngleBlock Z(Double value) => FinishAxis(LunyAxis.Z, value);
 
 		/// <summary> Apply rotation set in world space instead of local space. </summary>
 		public TransformSetRotationTerminalBuilder InWorldSpace() => new(Options with { Space = LunyTransformSpace.World });
 
 		internal TransformRotationSetBlock Finish() => Finish(Options);
 
-		private TransformRotationSetAxisBlock FinishAxis(LunyAxis axis, Double value)
+		private TransformRotationSetAngleBlock FinishAxis(LunyAxis axis, Double value)
 		{
 			Options.Script.MarkBuilderTokenFinished(Options.Token);
-			return TransformRotationSetAxisBlock.Create(axis, value, Options.Space, Options.Trace);
+			return TransformRotationSetAngleBlock.Create(axis, value, Options.Space, Options.Trace);
 		}
 
 		private static TransformRotationSetBlock Finish(in TransformSetRotationOptions options)

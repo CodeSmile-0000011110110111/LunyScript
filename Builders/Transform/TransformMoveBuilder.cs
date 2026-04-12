@@ -18,37 +18,37 @@ namespace LunyScript
 		public Boolean UseDirection;
 	}
 
-	public readonly struct TransformMoveTerminalBuilder
+	public readonly struct TransformMoveBuilder
 	{
-		public static implicit operator ActionBlock(TransformMoveTerminalBuilder b) => Finish(b.Options);
+		public static implicit operator ActionBlock(TransformMoveBuilder b) => Finish(b.Options);
 
 		internal readonly TransformMoveOptions Options;
 
-		internal static TransformMoveTerminalBuilder CreateDirectional(Script script, VariableBlock<LunyVector2> direction,
+		internal static TransformMoveBuilder CreateDirectional(Script script, VariableBlock<LunyVector2> direction,
 			VariableBlock speed, LunyTransformSpace space, LunyStackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(TransformMoveTerminalBuilder), "Transform.Move(direction)");
+			var token = script.CreateBuilderToken(nameof(TransformMoveBuilder), "Transform.Move(direction)");
 			var options = new TransformMoveOptions
 			{
 				Script = script, Token = token, Trace = trace, Space = space,
 				Direction = direction, Speed = speed, UseDirection = true,
 			};
-			return new TransformMoveTerminalBuilder(options);
+			return new TransformMoveBuilder(options);
 		}
 
-		internal static TransformMoveTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyVector3 axis,
+		internal static TransformMoveBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyVector3 axis,
 			VariableBlock speed, LunyTransformSpace space, LunyStackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(TransformMoveTerminalBuilder), "Transform.Move(axis)");
+			var token = script.CreateBuilderToken(nameof(TransformMoveBuilder), "Transform.Move(axis)");
 			var options = new TransformMoveOptions
 			{
 				Script = script, Token = token, Trace = trace, Space = space,
 				Amount = amount, Axis = axis, Speed = speed, UseDirection = false,
 			};
-			return new TransformMoveTerminalBuilder(options);
+			return new TransformMoveBuilder(options);
 		}
 
-		internal TransformMoveTerminalBuilder(in TransformMoveOptions options)
+		internal TransformMoveBuilder(in TransformMoveOptions options)
 		{
 			Options = options;
 
@@ -57,16 +57,16 @@ namespace LunyScript
 		}
 
 		/// <summary> Apply movement in world space instead of local space. </summary>
-		public TransformPositionMoveBlock InWorldSpace() => Finish(Options with { Space = LunyTransformSpace.World });
+		public TransformMoveBlock InWorldSpace() => Finish(Options with { Space = LunyTransformSpace.World });
 
-		internal TransformPositionMoveBlock Finish() => Finish(Options);
+		internal TransformMoveBlock Finish() => Finish(Options);
 
-		private static TransformPositionMoveBlock Finish(in TransformMoveOptions options)
+		private static TransformMoveBlock Finish(in TransformMoveOptions options)
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return options.UseDirection
-				? TransformPositionMoveBlock.CreateDirectional(options.Direction, options.Speed, options.Space, options.Trace)
-				: TransformPositionMoveBlock.CreateAxisRelative(options.Amount, options.Axis, options.Speed, options.Space, options.Trace);
+				? TransformMoveBlock.CreatePlaneMove(options.Direction, options.Speed, options.Space, options.Trace)
+				: TransformMoveBlock.CreateAxisMove(options.Amount, options.Axis, options.Speed, options.Space, options.Trace);
 		}
 	}
 }

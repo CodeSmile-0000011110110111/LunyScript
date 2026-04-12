@@ -23,7 +23,7 @@ namespace LunyScript
 
 		internal static ActionBlock Finish(in TransformBuilderOptions options)
 		{
-			var block = TransformRotationLookAtBlock.Create(options.Target, options.WorldUp, options.AxisLock);
+			var block = TransformRotationLookAtBlock.Create(options.Target, options.WorldUp, options.AxisLock, options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}

@@ -18,6 +18,6 @@ namespace LunyScript.Blocks
 
 		public ScriptBlock(LunyStackTrace trace) => _trace = trace;
 
-		public override String ToString() => GetType().Name;
+		public override String ToString() => $"[FIXME] {GetType().Name}";
 	}
 }

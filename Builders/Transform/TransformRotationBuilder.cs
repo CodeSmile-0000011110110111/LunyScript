@@ -25,16 +25,16 @@ namespace LunyScript
 
 		internal static ActionBlock Finish(in TransformBuilderOptions options)
 		{
-			var block = TransformRotationLinearTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
-				options.Responsiveness);
+			var block = TransformRotateTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
+				options.Responsiveness, options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}
 
-		internal static TransformRotationLerpTowardsObjectBlock FinishLerpBuilder(in TransformBuilderOptions options)
+		internal static TransformRotateTowardsObjectLerpBlock FinishLerpBuilder(in TransformBuilderOptions options)
 		{
-			var block = TransformRotationLerpTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
-				options.Responsiveness, options.SphericalLerp);
+			var block = TransformRotateTowardsObjectLerpBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
+				options.Responsiveness, options.SphericalLerp, options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}
@@ -83,11 +83,11 @@ namespace LunyScript
 		}
 
 		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
-		public static TransformRotationLerpTowardsObjectBlock Lerp<T>(this TransformRotationBuilder<T> b)
+		public static TransformRotateTowardsObjectLerpBlock Lerp<T>(this TransformRotationBuilder<T> b)
 			where T : struct, ITransformBuilderReady => TransformRotationBuilder<T>.FinishLerpBuilder(b.Options with { Lerp = true });
 
 		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
-		public static TransformRotationLerpTowardsObjectBlock Slerp<T>(this TransformRotationBuilder<T> b)
+		public static TransformRotateTowardsObjectLerpBlock Slerp<T>(this TransformRotationBuilder<T> b)
 			where T : struct, ITransformBuilderReady =>
 			TransformRotationBuilder<T>.FinishLerpBuilder(b.Options with { Lerp = true, SphericalLerp = true });
 	}

@@ -10,8 +10,8 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 				.Every(2)
 				.Seconds()
 				.WhenElapsed(
-					Note("This is a note or comment or any other kind of message ..."),
-					Note("If helpful, more kind of notes with custom formatting/styling could be added."),
+					Note("This is a comment or any other kind of message ..."),
+					Note("More kind of notes with custom formatting/styling could be added."),
 					Note("----------------------------------------------------------"),
 					Note("A 'NoOp' is a no-operation which does nothing:"),
 					NoOp()

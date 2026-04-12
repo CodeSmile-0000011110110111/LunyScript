@@ -9,7 +9,7 @@ namespace LunyScript.SmokeTests
 			var upscale = s.Var.Constant("Upscale", 1.2);
 
 			// input actions filtered by player name
-			s.When.Input.Action("Move").ForUser(playerName).Continuing(s.Transform.MoveBy(s.Input.Direction("Move")));
+			s.When.Input.Action("Move").ForUser(playerName).Continuing(s.Transform.MoveOnPlane(s.Input.Direction("Move")));
 			s.When.Input.Action("Look").ForUser(playerName).Continuing(s.Transform.SetRotation(s.Input.Rotation("Look")));
 			s.When.Input.Action("Jump").ForUser(playerName).Started(s.Transform.MoveUp(10).InWorldSpace());
 			s.When.Input.Action("Crouch").ForUser(playerName).Started(s.Transform.MoveDown(10).InWorldSpace());

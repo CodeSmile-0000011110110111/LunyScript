@@ -9,7 +9,7 @@
 		public override void Build(ScriptBuildContext context)
 		{
 			On.FrameUpdate(
-				Transform.MoveBy(Input.Direction("Move"), 4),
+				Transform.MoveOnPlane(Input.Direction("Move"), 4),
 				Transform.MoveUp(Input.Button("Jump").Strength, 4),
 				Transform.MoveDown(Input.Button("Crouch").Strength, 4)
 			);

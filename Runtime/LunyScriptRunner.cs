@@ -38,15 +38,6 @@ namespace LunyScript
 		internal ScriptSceneEventHandler SceneEventHandler => _sceneEventHandler;
 		internal ScriptInputEventHandler InputEventHandler => _inputEventHandler;
 
-		internal static void Run(IEnumerable<SequenceBlock> sequences, ScriptRuntimeContext runtimeContext)
-		{
-			if (sequences == null)
-				return;
-
-			foreach (var sequence in sequences)
-				Run(sequence, runtimeContext);
-		}
-
 		internal static void Run(IEnumerable<ISequenceBlock> sequences, ScriptRuntimeContext runtimeContext)
 		{
 			if (sequences == null)
@@ -70,7 +61,7 @@ namespace LunyScript
 				ElapsedSeconds = timeService?.ElapsedSeconds ?? -1.0,
 				ScriptSequenceId = sequence.Id,
 				BlockType = blockType,
-				BlockDescription = sequence.ToString(),
+				//BlockDescription = sequence.ToString(),
 			};
 
 			// Note: explicit local vars because a script may destroy the object during OnCreate

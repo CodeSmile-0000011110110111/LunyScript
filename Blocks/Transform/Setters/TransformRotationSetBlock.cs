@@ -28,6 +28,6 @@ namespace LunyScript.Blocks
 				transform.LocalRotation = _rotation.Value;
 		}
 
-		public override String ToString() => $"{GetType().Name}({_rotation}, {_space})";
+		public override String ToString() => $"{_rotation.Value.EulerAngles}, {_space}";
 	}
 }

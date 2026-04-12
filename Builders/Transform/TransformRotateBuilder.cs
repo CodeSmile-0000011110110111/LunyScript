@@ -36,14 +36,14 @@ namespace LunyScript
 			new(Options with { MinAngle = min, MaxAngle = max });
 
 		/// <summary> Apply rotation in world space instead of local space. </summary>
-		public TransformRotationAddAngleBlock InWorldSpace() => Finish(Options with { Space = LunyTransformSpace.World });
+		public TransformAddRotationAngleBlock InWorldSpace() => Finish(Options with { Space = LunyTransformSpace.World });
 
-		internal TransformRotationAddAngleBlock Finish() => Finish(Options);
+		internal TransformAddRotationAngleBlock Finish() => Finish(Options);
 
-		private static TransformRotationAddAngleBlock Finish(in TransformBuilderOptions options)
+		private static TransformAddRotationAngleBlock Finish(in TransformBuilderOptions options)
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
-			return TransformRotationAddAngleBlock.Create(options.Amount, options.Axis, options.Space, options.MinAngle, options.MaxAngle,
+			return TransformAddRotationAngleBlock.Create(options.Amount, options.Axis, options.Space, options.MinAngle, options.MaxAngle,
 				options.Trace);
 		}
 	}

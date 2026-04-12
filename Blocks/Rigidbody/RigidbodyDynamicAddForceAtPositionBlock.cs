@@ -30,16 +30,6 @@ namespace LunyScript.Blocks
 		internal static RigidbodyDynamicAddForceAtPositionBlock CreateVectorWithWorldPosition(LunyVector3 force, LunyForceMode forceMode,
 			LunyVector3 worldPosition, LunyStackTrace trace) => new(null, default, force, true, forceMode, worldPosition, false, trace);
 
-		private static LunyVector3 AxisToVector(LunyAxis axis)
-		{
-			if (axis == LunyAxis.X)
-				return LunyVector3.Right;
-			if (axis == LunyAxis.Y)
-				return LunyVector3.Up;
-
-			return LunyVector3.Forward;
-		}
-
 		private RigidbodyDynamicAddForceAtPositionBlock(VariableBlock amount, LunyAxis axis, LunyVector3 force, Boolean useForce,
 			LunyForceMode forceMode, LunyVector3 offsetOrWorldPos, Boolean useLocalOffset, LunyStackTrace trace)
 			: base(trace)
@@ -66,7 +56,7 @@ namespace LunyScript.Blocks
 			var worldPosition = _useLocalOffset
 				? context.LunyObject.Transform.TransformPoint(_offsetOrWorldPos)
 				: _offsetOrWorldPos;
-			var force = _useForce ? _force : AxisToVector(_axis) * _amount.Value;
+			var force = _useForce ? _force : _axis.ToVector3() * _amount.Value;
 			rigidbody.AddForceAtPosition(force, worldPosition, _forceMode);
 		}
 

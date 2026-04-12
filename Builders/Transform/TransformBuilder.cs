@@ -10,7 +10,7 @@ namespace LunyScript
 
 	public struct TransformBuilderReady : ITransformBuilderReady {}
 
-	public readonly struct TransformBuilder
+	public readonly partial struct TransformBuilder
 	{
 		private readonly Script _script;
 		private readonly LunyStackTrace _trace;
@@ -22,71 +22,100 @@ namespace LunyScript
 		}
 
 		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Rotate around <paramref name="axis"/> by <paramref name="amount"/> degrees per second. Chain <c>.Clamp(min, max)</c> and/or <c>.InWorldSpace()</c>. </summary>
-		public TransformRotateBuilder<TransformBuilderReady> Rotate(VariableBlock amount, LunyAxis axis) =>
-			TransformRotateBuilder<TransformBuilderReady>.Create(_script, amount, axis, _trace.Add(nameof(Rotate)));
+		/// <summary>
+		/// Move toward the target position each frame.
+		/// Chain <c>.Speed(n)</c>, <c>.Responsiveness(n)</c>, <c>.DeadZone(n)</c>, <c>.LockX/Y/Z()</c>
+		/// then call <c>.Do()</c> (linear), <c>.Lerp()</c> or <c>.Slerp()</c>.
+		/// </summary>
+		public TransformMoveTowardsBuilder<TransformBuilderReady> MoveTowards(LunyObjectRef target)
+		{
+			var options = new TransformBuilderOptions
+			{
+				Script = _script,
+				Token = _script.CreateBuilderToken(nameof(MoveTowards), "Transform.MoveTowards()"),
+				Trace = _trace.Add(nameof(MoveTowards)),
+				Target = target,
+				Speed = 3.0,
+				DeadZone = 0.1,
+				Responsiveness = 1.0,
+				AxisLock = LunyVector3.One,
+			};
+			return new TransformMoveTowardsBuilder<TransformBuilderReady>(options);
+		}
 
-		// --- Set (Absolute Snap) ---
+		// --- Movement relative to orientation ---
+
+		/*
+		Category		Relative (Delta)	Absolute (Target)
+		-----------------------------------------------------
+		Vector			MoveBy(Vector2)		MoveTo(Vector2)
+		Directional		MoveForward(5)		MoveForwardTo(10)
+		*/
 
 		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Instantly set the local position. Append <c>.InWorldSpace()</c> to set world position. </summary>
-		public TransformSetPositionTerminalBuilder SetPosition(VariableBlock<LunyVector3> position) =>
-			TransformSetPositionTerminalBuilder.Create(_script, position, LunyTransformSpace.Local, _trace.Add(nameof(SetPosition)));
+		/// <summary> Movement based on a 2D direction vector. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveBuilder MoveOnPlane(VariableBlock<LunyVector2> direction, VariableBlock speed = null) =>
+			TransformMoveBuilder.CreateDirectional(_script, direction, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveOnPlane)));
 
 		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Instantly set the local rotation. Append <c>.InWorldSpace()</c> to set world rotation. </summary>
-		public TransformSetRotationTerminalBuilder SetRotation(LunyVector3 eulerAngles) => TransformSetRotationTerminalBuilder.Create(_script,
-			LunyQuaternion.Euler(eulerAngles), LunyTransformSpace.Local, _trace.Add(nameof(SetRotation)));
+		/// <summary> Forward based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveBuilder MoveForward(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveBuilder.CreateAxisRelative(_script, amount, LunyVector3.Forward, speed, LunyTransformSpace.Local,
+				_trace.Add(nameof(MoveForward)));
 
 		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Instantly set the local rotation. Append <c>.InWorldSpace()</c> to set world rotation. </summary>
-		public TransformSetRotationTerminalBuilder SetRotation(VariableBlock<LunyQuaternion> rotation) =>
-			TransformSetRotationTerminalBuilder.Create(_script, rotation, LunyTransformSpace.Local, _trace.Add(nameof(SetRotation)));
+		/// <summary> Backward based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveBuilder MoveBack(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveBuilder.CreateAxisRelative(_script, amount, LunyVector3.Back, speed, LunyTransformSpace.Local,
+				_trace.Add(nameof(MoveBack)));
 
 		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Instantly set the local scale. </summary>
-		public TransformScaleSetLocalBlock SetScale(Double uniformScale) =>
-			TransformScaleSetLocalBlock.Create(LunyVector3.Uniform(uniformScale));
+		/// <summary> Right based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveBuilder MoveRight(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveBuilder.CreateAxisRelative(_script, amount, LunyVector3.Right, speed, LunyTransformSpace.Local,
+				_trace.Add(nameof(MoveRight)));
 
 		[NeedsReview] [NeedsSmokeTest]
-		public TransformScaleSetLocalUniformBlock SetScale(VariableBlock uniformScale) =>
-			TransformScaleSetLocalUniformBlock.Create(uniformScale);
+		/// <summary> Left based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveBuilder MoveLeft(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveBuilder.CreateAxisRelative(_script, amount, LunyVector3.Left, speed, LunyTransformSpace.Local,
+				_trace.Add(nameof(MoveLeft)));
 
 		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Instantly set the local scale. </summary>
-		public TransformScaleSetLocalBlock SetScale(VariableBlock<LunyVector3> scale) => TransformScaleSetLocalBlock.Create(scale);
+		/// <summary> Up based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveBuilder MoveUp(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveBuilder.CreateAxisRelative(_script, amount, LunyVector3.Up, speed, LunyTransformSpace.Local,
+				_trace.Add(nameof(MoveUp)));
 
-		// --- Look At ---
+		[NeedsReview] [NeedsSmokeTest]
+		/// <summary> Down based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
+		public TransformMoveBuilder MoveDown(VariableBlock amount, VariableBlock speed = null) =>
+			TransformMoveBuilder.CreateAxisRelative(_script, amount, LunyVector3.Down, speed, LunyTransformSpace.Local,
+				_trace.Add(nameof(MoveDown)));
 
 		[NeedsReview] [NeedsSmokeTest]
 		/// <summary>
 		/// Instantly orient to face the target.
 		/// Chain <c>.WorldUp(v)</c>, <c>.LockX()</c>, <c>.LockY()</c>, <c>.LockZ()</c> then call <c>.Do()</c>.
 		/// </summary>
-		public TransformLookAtBuilder<TransformBuilderReady> LookAt(ILunyObject target)
+		public TransformLookAtBuilder<TransformBuilderReady> LookAt(LunyObjectRef target)
 		{
-			var options = new TransformBuilderOptions { Target = target, WorldUp = LunyVector3.Up, AxisLock = LunyVector3.One };
 			var token = _script.CreateBuilderToken(nameof(LookAt), "Transform.LookAt()");
+			var options = new TransformBuilderOptions
+			{
+				Script = _script,
+				Token = token,
+				Trace = _trace.Add(nameof(LookAt)),
+				Target = target,
+				WorldUp = LunyVector3.Up,
+				AxisLock = LunyVector3.One,
+			};
 			return new TransformLookAtBuilder<TransformBuilderReady>(options);
 		}
 
-		// --- Move Towards ---
-
-		[NeedsReview] [NeedsSmokeTest]
-		/// <summary>
-		/// Move toward the target position each frame.
-		/// Chain <c>.Speed(n)</c>, <c>.Responsiveness(n)</c>, <c>.DeadZone(n)</c>, <c>.LockX/Y/Z()</c>
-		/// then call <c>.Do()</c> (linear), <c>.Lerp()</c> or <c>.Slerp()</c>.
-		/// </summary>
-		public TransformPositionBuilder<TransformBuilderReady> MoveTowards(ILunyObject target)
-		{
-			var token = _script.CreateBuilderToken(nameof(MoveTowards), "Transform.Move()");
-			var options = new TransformBuilderOptions
-			{
-				Script = _script, Token = token, Target = target, Speed = 3.0, DeadZone = 0.1, Responsiveness = 1.0, AxisLock = LunyVector3.One,
-			};
-			return new TransformPositionBuilder<TransformBuilderReady>(options);
-		}
+		/// <summary> Rotate around <paramref name="axis"/> by <paramref name="degreesPerSecond"/> degrees per second. Chain <c>.Clamp(min, max)</c> and/or <c>.InWorldSpace()</c>. </summary>
+		public TransformRotateBuilder<TransformBuilderReady> RotateBy(VariableBlock degreesPerSecond, LunyAxis axis) =>
+			TransformRotateBuilder<TransformBuilderReady>.Create(_script, degreesPerSecond, axis, _trace.Add(nameof(RotateBy)));
 
 		// --- Rotate Towards ---
 
@@ -96,12 +125,18 @@ namespace LunyScript
 		/// Chain <c>.Speed(n)</c>, <c>.Responsiveness(n)</c>, <c>.DeadZone(n)</c>, <c>.LockX/Y/Z()</c>
 		/// then call <c>.Do()</c> (degrees/sec), <c>.Lerp()</c> or <c>.Slerp()</c>.
 		/// </summary>
-		public TransformRotationBuilder<TransformBuilderReady> RotateTowards(ILunyObject target)
+		public TransformRotationBuilder<TransformBuilderReady> RotateTowards(LunyObjectRef target)
 		{
 			var token = _script.CreateBuilderToken(nameof(RotateTowards), "Transform.Rotate()");
 			var options = new TransformBuilderOptions
 			{
-				Script = _script, Token = token, Target = target, Speed = 90.0, DeadZone = 0.1, Responsiveness = 1.0,
+				Script = _script,
+				Token = token,
+				Trace = _trace.Add(nameof(RotateTowards)),
+				Target = target,
+				Speed = 90.0,
+				DeadZone = 0.1,
+				Responsiveness = 1.0,
 				AxisLock = LunyVector3.One,
 			};
 			return new TransformRotationBuilder<TransformBuilderReady>(options);
@@ -120,69 +155,26 @@ namespace LunyScript
 			var token = _script.CreateBuilderToken(nameof(ScaleTowards), "Transform.Scale()");
 			var options = new TransformBuilderOptions
 			{
-				Script = _script, Token = token, TargetScale = targetScale, Speed = 1.0, DeadZone = 0.1, Responsiveness = 1.0,
+				Script = _script,
+				Token = token,
+				Trace = _trace.Add(nameof(ScaleTowards)),
+				TargetScale = targetScale,
+				Speed = 1.0,
+				DeadZone = 0.1,
+				Responsiveness = 1.0,
 				AxisLock = LunyVector3.One,
 			};
 			return new TransformScaleBuilder<TransformBuilderReady>(options);
 		}
-
-		/*
-		Category		Relative (Delta)	Absolute (Target)
-		-----------------------------------------------------
-		Vector			MoveBy(Vector2)		MoveTo(Vector2)
-		Directional		MoveForward(5)		MoveForwardTo(10)
-		*/
-
-		// --- Local Movement (Relative to orientation) ---
-
-		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Floor-plane movement based on a 2D direction vector. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveTerminalBuilder MoveBy(VariableBlock<LunyVector2> direction, VariableBlock speed = null) =>
-			TransformMoveTerminalBuilder.CreateDirectional(_script, direction, speed, LunyTransformSpace.Local, _trace.Add(nameof(MoveBy)));
-
-		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Forward based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveTerminalBuilder MoveForward(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Forward, speed, LunyTransformSpace.Local,
-				_trace.Add(nameof(MoveForward)));
-
-		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Backward based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveTerminalBuilder MoveBack(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Back, speed, LunyTransformSpace.Local,
-				_trace.Add(nameof(MoveBack)));
-
-		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Right based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveTerminalBuilder MoveRight(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Right, speed, LunyTransformSpace.Local,
-				_trace.Add(nameof(MoveRight)));
-
-		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Left based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveTerminalBuilder MoveLeft(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Left, speed, LunyTransformSpace.Local,
-				_trace.Add(nameof(MoveLeft)));
-
-		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Up based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveTerminalBuilder MoveUp(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Up, speed, LunyTransformSpace.Local,
-				_trace.Add(nameof(MoveUp)));
-
-		[NeedsReview] [NeedsSmokeTest]
-		/// <summary> Down based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveTerminalBuilder MoveDown(VariableBlock amount, VariableBlock speed = null) =>
-			TransformMoveTerminalBuilder.CreateAxisRelative(_script, amount, LunyVector3.Down, speed, LunyTransformSpace.Local,
-				_trace.Add(nameof(MoveDown)));
 	}
 
 	internal record TransformBuilderOptions
 	{
 		public Script Script;
 		public BuilderToken Token;
+		public LunyStackTrace Trace;
 
-		public ILunyObject Target;
+		public LunyObjectRef Target;
 		public VariableBlock<LunyVector3> TargetScale;
 		public Double Speed;
 		public Double DeadZone;
@@ -191,7 +183,6 @@ namespace LunyScript
 		public LunyVector3 AxisLock;
 		public Boolean Lerp;
 		public Boolean SphericalLerp;
-		public LunyStackTrace Trace;
 		public LunyTransformSpace Space;
 		public VariableBlock Amount;
 		public LunyAxis Axis;

@@ -4,34 +4,24 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformRotationAddAngleBlock : ActionBlock
+	public sealed class TransformAddRotationAngleBlock : ActionBlock
 	{
-		private readonly VariableBlock _amount;
+		private readonly VariableBlock _deltaAngle;
 		private readonly LunyAxis _axis;
 		private readonly Double _minAngle;
 		private readonly Double _maxAngle;
 		private readonly LunyTransformSpace _space;
 		private Double _currentAngle;
 
-		public static TransformRotationAddAngleBlock Create(VariableBlock amount, LunyAxis axis,
+		public static TransformAddRotationAngleBlock Create(VariableBlock amount, LunyAxis axis,
 			LunyTransformSpace space, Double minAngle = Double.NegativeInfinity, Double maxAngle = Double.PositiveInfinity,
 			LunyStackTrace trace = null) => new(amount, axis, space, minAngle, maxAngle, trace);
 
-		private static LunyVector3 AxisToVector(LunyAxis axis)
-		{
-			if (axis == LunyAxis.X)
-				return LunyVector3.Right;
-			if (axis == LunyAxis.Y)
-				return LunyVector3.Up;
-
-			return LunyVector3.Forward;
-		}
-
-		private TransformRotationAddAngleBlock(VariableBlock amount, LunyAxis axis,
+		private TransformAddRotationAngleBlock(VariableBlock deltaAngle, LunyAxis axis,
 			LunyTransformSpace space, Double minAngle, Double maxAngle, LunyStackTrace trace)
 			: base(trace)
 		{
-			_amount = amount;
+			_deltaAngle = deltaAngle;
 			_axis = axis;
 			_space = space;
 			_minAngle = minAngle;
@@ -42,16 +32,27 @@ namespace LunyScript.Blocks
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
 			var time = LunyEngine.Instance.Time;
-			var deltaAngle = _amount.Value * time.DeltaTime;
-			_currentAngle = Math.Clamp(_currentAngle + deltaAngle, _minAngle, _maxAngle);
-			var axisVec = AxisToVector(_axis);
 			var transform = context.LunyObject.Transform;
+
+			var deltaAngle = _deltaAngle.Value * time.DeltaTime;
+			_currentAngle = Math.Clamp(_currentAngle + deltaAngle, _minAngle, _maxAngle);
+
 			if (_space == LunyTransformSpace.World)
-				transform.Rotation = LunyQuaternion.AngleAxis(_currentAngle, axisVec);
+				transform.Rotation = LunyQuaternion.AngleAxis(_currentAngle, _axis.ToVector3());
 			else
-				transform.LocalRotation = LunyQuaternion.AngleAxis(_currentAngle, axisVec);
+				transform.LocalRotation = LunyQuaternion.AngleAxis(_currentAngle, _axis.ToVector3());
 		}
 
-		public override String ToString() => $"{GetType().Name}({_amount}, {_axis}, {_space})";
+		public override String ToString()
+		{
+			var axis = _axis switch
+			{
+				LunyAxis.X => "X",
+				LunyAxis.Y => "Y",
+				LunyAxis.Z => "Z",
+			};
+
+			return $"{axis}={_deltaAngle}, {_space}";
+		}
 	}
 }
