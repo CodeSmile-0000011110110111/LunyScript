@@ -2,11 +2,11 @@ using Luny;
 using System;
 namespace LunyScript
 {
-	public readonly struct WhenInputEventBuilder
+	public readonly struct WhenInputBuilder
 	{
 		private readonly Script _script;
 		private readonly LunyStackTrace _trace;
-		internal WhenInputEventBuilder(Script script, LunyStackTrace trace)
+		internal WhenInputBuilder(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;

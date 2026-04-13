@@ -26,46 +26,45 @@ namespace LunyScript
 		}
 
 		[NeedsReview] [NeedsSmokeTest]
-		public ActionBlock Enable(LunyObjectRef target = null) =>
-			target == null ? ObjectEnableSelfBlock.Create(_trace.Add(nameof(Enable))) : ObjectEnableTargetBlock.Create(target, _trace.Add(nameof(Enable)));
+		public ActionBlock Enable(LunyObjectRef target = null) => target == null
+			? ObjectEnableSelfBlock.Create(_trace.Add(nameof(Enable)))
+			: ObjectEnableTargetBlock.Create(target, _trace.Add(nameof(Enable)));
 
 		[NeedsReview] [NeedsSmokeTest]
-		public ActionBlock Disable(LunyObjectRef target = null) =>
-			target == null ? ObjectDisableSelfBlock.Create(_trace.Add(nameof(Disable))) : ObjectDisableTargetBlock.Create(target, _trace.Add(nameof(Disable)));
+		public ActionBlock Disable(LunyObjectRef target = null) => target == null
+			? ObjectDisableSelfBlock.Create(_trace.Add(nameof(Disable)))
+			: ObjectDisableTargetBlock.Create(target, _trace.Add(nameof(Disable)));
 
 		[NeedsReview] [NeedsSmokeTest]
-		public ActionBlock SetEnabled(LunyObjectRef target, VariableBlock enabled) => ObjectSetEnabledBlock.Create(target, enabled, _trace.Add(nameof(SetEnabled)));
+		public ActionBlock SetEnabled(LunyObjectRef target, VariableBlock enabled) =>
+			ObjectSetEnabledBlock.Create(target, enabled, _trace.Add(nameof(SetEnabled)));
 
 		[NeedsReview] [NeedsSmokeTest]
 		public ObjectCreateBuilder<ObjectBuilderNameSet> Create(String name)
 		{
-			var token = _script.CreateBuilderToken(name, "Object.Create");
+			var token = _script.CreateBuilderToken(name, "Object." + nameof(Create));
 			var options = new ObjectCreateOptions
 				{ Script = _script, Token = token, Trace = _trace.Add(nameof(Create)), Name = name, CreateMode = ObjectCreationMode.Empty };
 			return new ObjectCreateBuilder<ObjectBuilderNameSet>(options);
 		}
 
 		[NeedsReview] [NeedsSmokeTest]
-		public ActionBlock Destroy(LunyObjectRef target = null) =>
-			target == null ? ObjectDestroySelfBlock.Create(_trace.Add(nameof(Destroy))) : ObjectDestroyTargetBlock.Create(target, _trace.Add(nameof(Destroy)));
+		public ActionBlock Destroy(LunyObjectRef target = null) => target == null
+			? ObjectDestroySelfBlock.Create(_trace.Add(nameof(Destroy)))
+			: ObjectDestroyTargetBlock.Create(target, _trace.Add(nameof(Destroy)));
 	}
 
-	public readonly struct PrefabBuilder
+	public static class ObjectBuilderInstantiateExtensions
 	{
-		private readonly Script _script;
-		private readonly LunyStackTrace _trace;
+		public static ObjectCreateBuilder<ObjectBuilderNameSet> From<T>(this ObjectCreateBuilder<T> b, String prefabName)
+			where T : struct, IObjectBuilderNameSet => new(b.Options with { CreateMode = ObjectCreationMode.Prefab, AssetName = prefabName });
 
-		internal PrefabBuilder(Script script, LunyStackTrace trace)
-		{
-			_script = script;
-			_trace = trace;
-		}
-
-		public ObjectCreateBuilder<ObjectBuilderNameSet> Instantiate(String prefabName) =>
-			new ObjectBuilder(_script, _trace).Create(prefabName).From(prefabName);
+		public static ObjectCreateBuilder<ObjectBuilderNameSet> Clone<T>(this ObjectCreateBuilder<T> b, String existingName)
+			where T : struct, IObjectBuilderNameSet =>
+			new(b.Options with { CreateMode = ObjectCreationMode.Clone, TemplateName = existingName });
 	}
 
-	public static class ObjectBuilderExtensions
+	public static class ObjectBuilderPrimitiveExtensions
 	{
 		public static ObjectCreateBuilder<ObjectBuilderNameSet> AsCube<T>(this ObjectCreateBuilder<T> b)
 			where T : struct, IObjectBuilderNameSet => b.WithPrimitive(LunyPrimitiveType.Cube);
@@ -85,13 +84,6 @@ namespace LunyScript
 		public static ObjectCreateBuilder<ObjectBuilderNameSet> AsQuad<T>(this ObjectCreateBuilder<T> b)
 			where T : struct, IObjectBuilderNameSet => b.WithPrimitive(LunyPrimitiveType.Quad);
 
-		public static ObjectCreateBuilder<ObjectBuilderNameSet> From<T>(this ObjectCreateBuilder<T> b, String prefabName)
-			where T : struct, IObjectBuilderNameSet => new(b.Options with { CreateMode = ObjectCreationMode.Prefab, AssetName = prefabName });
-
-		public static ObjectCreateBuilder<ObjectBuilderNameSet> Clone<T>(this ObjectCreateBuilder<T> b, String existingName)
-			where T : struct, IObjectBuilderNameSet =>
-			new(b.Options with { CreateMode = ObjectCreationMode.Clone, TemplateName = existingName });
-
 		private static ObjectCreateBuilder<ObjectBuilderNameSet> WithPrimitive<T>(this ObjectCreateBuilder<T> b, LunyPrimitiveType type)
 			where T : struct, IObjectBuilderNameSet => new(b.Options with { CreateMode = ObjectCreationMode.Primitive, PrimitiveType = type });
 	}
@@ -103,7 +95,6 @@ namespace LunyScript
 		internal ObjectCreateBuilder(in ObjectCreateOptions options)
 		{
 			Options = options;
-
 			var capturedOptions = options;
 			options.Token.AutoFinish = () => Finish(capturedOptions.Script, capturedOptions.Token, capturedOptions);
 		}
@@ -112,11 +103,7 @@ namespace LunyScript
 			Finish(builder.Options.Script, builder.Options.Token, builder.Options);
 
 		public ObjectCreateBuilder<T> Parent(LunyObjectRef parent) => new(Options with { Parent = parent });
-		public ObjectCreateBuilder<T> Parent(ILunyObject parent) => new(Options with { Parent = new LunyObjectRef(parent) });
-
-		public ObjectCreateBuilder<T> Position(Double x, Double y, Double z) =>
-			new(Options with { LocalPosition = new LunyVector3(x, y, z) });
-
+		public ObjectCreateBuilder<T> Position(Double x, Double y, Double z) => new(Options with { LocalPosition = new LunyVector3(x, y, z) });
 		public ObjectCreateBuilder<T> Position(LunyVector3 localPosition) => new(Options with { LocalPosition = localPosition });
 
 		public ObjectCreateBuilder<T> Rotation(Double x, Double y, Double z) =>
@@ -127,13 +114,11 @@ namespace LunyScript
 
 		public ObjectCreateBuilder<T> Rotation(LunyQuaternion localRotation) => new(Options with { LocalRotation = localRotation });
 
-		public ObjectCreateBuilder<T> Scale(Double uniformLocalScale) => new(Options with
-		{
-			LocalScale = new LunyVector3(uniformLocalScale, uniformLocalScale, uniformLocalScale),
-		});
+		public ObjectCreateBuilder<T> Scale(Double uniformScale) =>
+			new(Options with { Scale = new LunyVector3(uniformScale, uniformScale, uniformScale) });
 
-		public ObjectCreateBuilder<T> Scale(Double x, Double y, Double z) => new(Options with { LocalScale = new LunyVector3(x, y, z) });
-		public ObjectCreateBuilder<T> Scale(LunyVector3 localScale) => new(Options with { LocalScale = localScale });
+		public ObjectCreateBuilder<T> Scale(Double x, Double y, Double z) => new(Options with { Scale = new LunyVector3(x, y, z) });
+		public ObjectCreateBuilder<T> Scale(LunyVector3 scale) => new(Options with { Scale = scale });
 
 		internal static ActionBlock Finish(Script script, BuilderToken token, in ObjectCreateOptions options)
 		{
@@ -175,6 +160,6 @@ namespace LunyScript
 		public String TemplateName;
 		public LunyVector3 LocalPosition;
 		public LunyQuaternion LocalRotation;
-		public LunyVector3? LocalScale;
+		public LunyVector3? Scale;
 	}
 }

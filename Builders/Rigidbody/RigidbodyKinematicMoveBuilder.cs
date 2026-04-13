@@ -1,51 +1,37 @@
 ﻿using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
-using System;
 
 namespace LunyScript
 {
-	internal record RigidbodyKinematicOptions
-	{
-		public Script Script;
-		public BuilderToken Token;
-		public LunyStackTrace Trace;
-		public VariableBlock Amount;
-		public LunyAxis Axis;
-		public LunyVector3 Vector;
-		public LunyVector3 EulerDelta;
-		public Boolean UseVector;
-		public LunyTransformSpace Space;
-	}
-
-	public readonly struct RigidbodyKinematicMoveTerminalBuilder
+	public readonly struct RigidbodyKinematicMoveBuilder
 	{
 		internal readonly RigidbodyKinematicOptions Options;
 
-		internal static RigidbodyKinematicMoveTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis,
+		internal static RigidbodyKinematicMoveBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis,
 			LunyStackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(RigidbodyKinematicMoveTerminalBuilder), "Rigidbody.Kinematic.Move(axis)");
+			var token = script.CreateBuilderToken(nameof(RigidbodyKinematicMoveBuilder), "Rigidbody.Kinematic.Move(axis)");
 			var options = new RigidbodyKinematicOptions
 			{
 				Script = script, Token = token, Trace = trace,
 				Amount = amount, Axis = axis, UseVector = false, Space = LunyTransformSpace.Local,
 			};
-			return new RigidbodyKinematicMoveTerminalBuilder(options);
+			return new RigidbodyKinematicMoveBuilder(options);
 		}
 
-		internal static RigidbodyKinematicMoveTerminalBuilder CreateVector(Script script, LunyVector3 delta, LunyStackTrace trace)
+		internal static RigidbodyKinematicMoveBuilder CreateVector(Script script, LunyVector3 delta, LunyStackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(RigidbodyKinematicMoveTerminalBuilder), "Rigidbody.Kinematic.Move(vector)");
+			var token = script.CreateBuilderToken(nameof(RigidbodyKinematicMoveBuilder), "Rigidbody.Kinematic.Move(vector)");
 			var options = new RigidbodyKinematicOptions
 			{
 				Script = script, Token = token, Trace = trace,
 				Vector = delta, UseVector = true, Space = LunyTransformSpace.Local,
 			};
-			return new RigidbodyKinematicMoveTerminalBuilder(options);
+			return new RigidbodyKinematicMoveBuilder(options);
 		}
 
-		internal RigidbodyKinematicMoveTerminalBuilder(in RigidbodyKinematicOptions options)
+		internal RigidbodyKinematicMoveBuilder(in RigidbodyKinematicOptions options)
 		{
 			Options = options;
 
@@ -53,7 +39,7 @@ namespace LunyScript
 			options.Token.AutoFinish = () => Finish(capturedOptions);
 		}
 
-		public static implicit operator ActionBlock(RigidbodyKinematicMoveTerminalBuilder b) => Finish(b.Options);
+		public static implicit operator ActionBlock(RigidbodyKinematicMoveBuilder b) => Finish(b.Options);
 
 		/// <summary> Apply movement in world space instead of local space. </summary>
 		public ActionBlock InWorldSpace() => Finish(Options with { Space = LunyTransformSpace.World });

@@ -5,57 +5,54 @@ using System;
 
 namespace LunyScript
 {
-	public readonly struct RigidbodyDynamicAngularForceTerminalBuilder
+	public readonly struct RigidbodyAddAngularForceBuilder
 	{
-		internal readonly RigidbodyForceOptions Options;
+		internal readonly RigidbodyAddForceOptions Options;
 
-		internal static RigidbodyDynamicAngularForceTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis,
+		internal static RigidbodyAddAngularForceBuilder CreateLocalForce(Script script, VariableBlock amount, LunyAxis axis,
 			Boolean isImpulse, LunyStackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicAngularForceTerminalBuilder),
+			var token = script.CreateBuilderToken(nameof(RigidbodyAddAngularForceBuilder),
 				"Rigidbody.Dynamic.AddAngularForce(axis)");
-			var options = new RigidbodyForceOptions
+			var options = new RigidbodyAddForceOptions
 			{
 				Script = script, Token = token, Trace = trace,
 				Amount = amount, Axis = axis, UseVector = false,
 				IsImpulse = isImpulse, IgnoreMass = false, Space = LunyTransformSpace.Local,
 			};
-			return new RigidbodyDynamicAngularForceTerminalBuilder(options);
+			return new RigidbodyAddAngularForceBuilder(options);
 		}
 
-		internal static RigidbodyDynamicAngularForceTerminalBuilder CreateVector(Script script, LunyVector3 torque, Boolean isImpulse,
+		internal static RigidbodyAddAngularForceBuilder CreateWorldForce(Script script, LunyVector3 torque, Boolean isImpulse,
 			LunyStackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicAngularForceTerminalBuilder),
+			var token = script.CreateBuilderToken(nameof(RigidbodyAddAngularForceBuilder),
 				"Rigidbody.Dynamic.AddAngularForce(vector)");
-			var options = new RigidbodyForceOptions
+			var options = new RigidbodyAddForceOptions
 			{
 				Script = script, Token = token, Trace = trace,
 				Vector = torque, UseVector = true,
 				IsImpulse = isImpulse, IgnoreMass = false, Space = LunyTransformSpace.Local,
 			};
-			return new RigidbodyDynamicAngularForceTerminalBuilder(options);
+			return new RigidbodyAddAngularForceBuilder(options);
 		}
 
-		internal RigidbodyDynamicAngularForceTerminalBuilder(in RigidbodyForceOptions options)
+		internal RigidbodyAddAngularForceBuilder(in RigidbodyAddForceOptions options)
 		{
 			Options = options;
-
 			var capturedOptions = options;
 			options.Token.AutoFinish = () => Finish(capturedOptions);
 		}
 
-		public static implicit operator ActionBlock(RigidbodyDynamicAngularForceTerminalBuilder b) => Finish(b.Options);
+		public static implicit operator ActionBlock(RigidbodyAddAngularForceBuilder b) => Finish(b.Options);
 
 		/// <summary> Ignore moment of inertia when applying the torque. </summary>
-		public RigidbodyDynamicAngularForceTerminalBuilder IgnoreMass() => new(Options with { IgnoreMass = true });
+		public RigidbodyAddAngularForceBuilder IgnoreMass() => new(Options with { IgnoreMass = true });
 
 		/// <summary> Apply torque in world space instead of local space. </summary>
 		public ActionBlock InWorldSpace() => Finish(Options with { Space = LunyTransformSpace.World });
 
-		internal ActionBlock Finish() => Finish(Options);
-
-		private static ActionBlock Finish(in RigidbodyForceOptions options)
+		private static ActionBlock Finish(in RigidbodyAddForceOptions options)
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			var forceMode = ToForceMode(options.IsImpulse, options.IgnoreMass);

@@ -5,55 +5,38 @@ using System;
 
 namespace LunyScript
 {
-	internal record RigidbodyForceOptions
+	public readonly struct RigidbodyAddLinearForceBuilder
 	{
-		public Script Script;
-		public BuilderToken Token;
-		public LunyStackTrace Trace;
-		public VariableBlock Amount;
-		public LunyAxis Axis;
-		public LunyVector3 Vector;
-		public Boolean UseVector;
-		public Boolean IsImpulse;
-		public Boolean IgnoreMass;
-		public Boolean HasAtPositionOffset;
-		public LunyVector3 AtPositionOffset;
-		public LunyObjectRef AtPositionChildRef;
-		public LunyTransformSpace Space;
-	}
+		internal readonly RigidbodyAddForceOptions Options;
 
-	public readonly struct RigidbodyDynamicForceTerminalBuilder
-	{
-		internal readonly RigidbodyForceOptions Options;
-
-		internal static RigidbodyDynamicForceTerminalBuilder CreateAxisRelative(Script script, VariableBlock amount, LunyAxis axis,
+		internal static RigidbodyAddLinearForceBuilder CreateLocalForce(Script script, VariableBlock amount, LunyAxis axis,
 			Boolean isImpulse, LunyStackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicForceTerminalBuilder), "Rigidbody.Dynamic.AddForce(axis)");
-			var options = new RigidbodyForceOptions
+			var token = script.CreateBuilderToken(nameof(RigidbodyAddLinearForceBuilder), "Rigidbody.Dynamic.AddForce(axis)");
+			var options = new RigidbodyAddForceOptions
 			{
 				Script = script, Token = token, Trace = trace,
 				Amount = amount, Axis = axis, UseVector = false,
 				IsImpulse = isImpulse, IgnoreMass = false,
 				HasAtPositionOffset = false, Space = LunyTransformSpace.Local,
 			};
-			return new RigidbodyDynamicForceTerminalBuilder(options);
+			return new RigidbodyAddLinearForceBuilder(options);
 		}
 
-		internal static RigidbodyDynamicForceTerminalBuilder CreateVector(Script script, LunyVector3 force, Boolean isImpulse, LunyStackTrace trace)
+		internal static RigidbodyAddLinearForceBuilder CreateWorldForce(Script script, LunyVector3 force, Boolean isImpulse, LunyStackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(RigidbodyDynamicForceTerminalBuilder), "Rigidbody.Dynamic.AddForce(vector)");
-			var options = new RigidbodyForceOptions
+			var token = script.CreateBuilderToken(nameof(RigidbodyAddLinearForceBuilder), "Rigidbody.Dynamic.AddForce(vector)");
+			var options = new RigidbodyAddForceOptions
 			{
 				Script = script, Token = token, Trace = trace,
 				Vector = force, UseVector = true,
 				IsImpulse = isImpulse, IgnoreMass = false,
 				HasAtPositionOffset = false, Space = LunyTransformSpace.Local,
 			};
-			return new RigidbodyDynamicForceTerminalBuilder(options);
+			return new RigidbodyAddLinearForceBuilder(options);
 		}
 
-		internal RigidbodyDynamicForceTerminalBuilder(in RigidbodyForceOptions options)
+		internal RigidbodyAddLinearForceBuilder(in RigidbodyAddForceOptions options)
 		{
 			Options = options;
 
@@ -61,13 +44,13 @@ namespace LunyScript
 			options.Token.AutoFinish = () => Finish(capturedOptions);
 		}
 
-		public static implicit operator ActionBlock(RigidbodyDynamicForceTerminalBuilder b) => Finish(b.Options);
+		public static implicit operator ActionBlock(RigidbodyAddLinearForceBuilder b) => Finish(b.Options);
 
 		/// <summary> Ignore mass when applying the force (pure acceleration). </summary>
-		public RigidbodyDynamicForceTerminalBuilder IgnoreMass() => new(Options with { IgnoreMass = true });
+		public RigidbodyAddLinearForceBuilder IgnoreMass() => new(Options with { IgnoreMass = true });
 
 		/// <summary> Apply force at a local-space offset position, generating torque. </summary>
-		public RigidbodyDynamicForceTerminalBuilder AtPosition(LunyVector3 localOffset) => new(Options with
+		public RigidbodyAddLinearForceBuilder AtPosition(LunyVector3 localOffset) => new(Options with
 		{
 			HasAtPositionOffset = true, AtPositionOffset = localOffset, AtPositionChildRef = null,
 		});
@@ -76,7 +59,7 @@ namespace LunyScript
 		/// Apply force at the world position of a child object.
 		/// The child must exist at build time — its world position is captured immediately and stored in the block.
 		/// </summary>
-		public RigidbodyDynamicForceTerminalBuilder AtPosition(LunyObjectRef childRef) =>
+		public RigidbodyAddLinearForceBuilder AtPosition(LunyObjectRef childRef) =>
 			new(Options with { HasAtPositionOffset = false, AtPositionChildRef = childRef });
 
 		/// <summary> Apply force in world space instead of local space. </summary>
@@ -84,7 +67,7 @@ namespace LunyScript
 
 		internal ActionBlock Finish() => Finish(Options);
 
-		private static ActionBlock Finish(in RigidbodyForceOptions options)
+		private static ActionBlock Finish(in RigidbodyAddForceOptions options)
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			var forceMode = ToForceMode(options.IsImpulse, options.IgnoreMass);
@@ -94,7 +77,7 @@ namespace LunyScript
 				if (child == null || !child.IsValid)
 				{
 					LunyLogger.LogWarning(
-						$"{nameof(RigidbodyDynamicForceTerminalBuilder)}: {nameof(AtPosition)} child '{options.AtPositionChildRef}' not found or invalid — block will not be created");
+						$"{nameof(RigidbodyAddLinearForceBuilder)}: {nameof(AtPosition)} child '{options.AtPositionChildRef}' not found or invalid — block will not be created");
 					return null;
 				}
 				var worldPosition = child.Transform.Position;

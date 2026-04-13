@@ -14,9 +14,9 @@ namespace LunyScript
 		internal BuilderToken Token;
 		internal LunyStackTrace Trace;
 
-		public ActionBlock[] StartedBlocks;
-		public ActionBlock[] ContinuingBlocks;
-		public ActionBlock[] EndedBlocks;
+		public ActionBlock[] StartedOrEnteredBlocks;
+		public ActionBlock[] TouchingOrOverlappingBlocks;
+		public ActionBlock[] EndedOrExitedBlocks;
 
 		/// <summary>Minimum seconds between successive reactions. Zero means no cooldown.</summary>
 		public Double Cooldown;

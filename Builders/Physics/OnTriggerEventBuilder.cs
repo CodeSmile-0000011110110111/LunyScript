@@ -122,8 +122,8 @@ namespace LunyScript
 		public static TriggerEventBuilder<TriggerEventSet> Entered<T>(this TriggerEventBuilder<T> b, params ActionBlock[] blocks)
 			where T : struct, ITriggerBuilderState
 		{
-			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.StartedBlocks);
-			var options = b.Options with { StartedBlocks = blocks };
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.StartedOrEnteredBlocks);
+			var options = b.Options with { StartedOrEnteredBlocks = blocks };
 			options.Token.AutoFinish = () => TriggerEventBuilderHelper.Finish(options.Script, options.Token, options);
 			return new TriggerEventBuilder<TriggerEventSet>(options);
 		}
@@ -132,8 +132,8 @@ namespace LunyScript
 		public static TriggerEventBuilder<TriggerEventSet> Overlapping<T>(this TriggerEventBuilder<T> b, params ActionBlock[] blocks)
 			where T : struct, ITriggerBuilderState
 		{
-			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.ContinuingBlocks);
-			var options = b.Options with { ContinuingBlocks = blocks };
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.TouchingOrOverlappingBlocks);
+			var options = b.Options with { TouchingOrOverlappingBlocks = blocks };
 			options.Token.AutoFinish = () => TriggerEventBuilderHelper.Finish(options.Script, options.Token, options);
 			return new TriggerEventBuilder<TriggerEventSet>(options);
 		}
@@ -142,8 +142,8 @@ namespace LunyScript
 		public static TriggerEventBuilder<TriggerEventSet> Exited<T>(this TriggerEventBuilder<T> b, params ActionBlock[] blocks)
 			where T : struct, ITriggerBuilderState
 		{
-			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.EndedBlocks);
-			var options = b.Options with { EndedBlocks = blocks };
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.EndedOrExitedBlocks);
+			var options = b.Options with { EndedOrExitedBlocks = blocks };
 			options.Token.AutoFinish = () => TriggerEventBuilderHelper.Finish(options.Script, options.Token, options);
 			return new TriggerEventBuilder<TriggerEventSet>(options);
 		}
@@ -153,27 +153,27 @@ namespace LunyScript
 	{
 		internal static void Finish(Script script, BuilderToken token, in PhysicsEventOptions options)
 		{
-			if (options.StartedBlocks == null && options.ContinuingBlocks == null && options.EndedBlocks == null)
+			if (options.StartedOrEnteredBlocks == null && options.TouchingOrOverlappingBlocks == null && options.EndedOrExitedBlocks == null)
 				throw new LunyScriptException($"{script}: Trigger Event without any blocks");
 
-			var guards = PhysicsEventBuilderHelper.BuildGuards(options.Cooldown);
-			var predicates = PhysicsEventBuilderHelper.BuildPredicates(options);
+			var guards = PhysicsEventHelper.BuildGuards(options.Cooldown);
+			var predicates = PhysicsEventHelper.BuildPredicates(options);
 
-			if (options.StartedBlocks != null)
+			if (options.StartedOrEnteredBlocks != null)
 			{
-				var block = new TriggerSequenceBlock(options.StartedBlocks, guards, predicates, options.Trace);
+				var block = new TriggerSequenceBlock(options.StartedOrEnteredBlocks, guards, predicates, options.Trace);
 				script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerEntered);
 			}
 
-			if (options.ContinuingBlocks != null)
+			if (options.TouchingOrOverlappingBlocks != null)
 			{
-				var block = new TriggerSequenceBlock(options.ContinuingBlocks, guards, predicates, options.Trace);
+				var block = new TriggerSequenceBlock(options.TouchingOrOverlappingBlocks, guards, predicates, options.Trace);
 				script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerOverlapping);
 			}
 
-			if (options.EndedBlocks != null)
+			if (options.EndedOrExitedBlocks != null)
 			{
-				var block = new TriggerSequenceBlock(options.EndedBlocks, guards, predicates, options.Trace);
+				var block = new TriggerSequenceBlock(options.EndedOrExitedBlocks, guards, predicates, options.Trace);
 				script.Scheduler?.ScheduleTriggerEventSequence(block, LunyTriggerEvent.OnTriggerExited);
 			}
 

@@ -31,7 +31,7 @@ namespace LunyScript.Blocks
 			Parent = options.Parent;
 			LocalPosition = options.LocalPosition;
 			LocalRotation = options.LocalRotation;
-			LocalScale = options.LocalScale;
+			LocalScale = options.Scale;
 		}
 
 		public override String ToString()

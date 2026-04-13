@@ -30,9 +30,9 @@ namespace LunyScript
 			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Started, started);
 			var performed = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Performed, options.PerformedBlocks, options.Trace);
 			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Performed, performed);
-			var performing = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Performing, options.PerformingBlocks, options.Trace);
+			var performing = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Performing, options.ContinuingBlocks, options.Trace);
 			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Performing, performing);
-			var canceled = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Canceled, options.CanceledBlocks, options.Trace);
+			var canceled = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Canceled, options.EndedBlocks, options.Trace);
 			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Canceled, canceled);
 
 			options.Script.MarkBuilderTokenFinished(options.Token);
@@ -97,9 +97,9 @@ namespace LunyScript
 		/// <returns></returns>
 		public static WhenInputActionBuilder Continuing(this WhenInputActionBuilder b, params ActionBlock[] performingBlocks)
 		{
-			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.PerformingBlocks);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.ContinuingBlocks);
 
-			var options = b.Options with { PerformingBlocks = performingBlocks };
+			var options = b.Options with { ContinuingBlocks = performingBlocks };
 			b.Options.Token.AutoFinish = () => b.Finish(options);
 			return new WhenInputActionBuilder(options);
 		}
@@ -112,9 +112,9 @@ namespace LunyScript
 		/// <returns></returns>
 		public static WhenInputActionBuilder Ended(this WhenInputActionBuilder b, params ActionBlock[] canceledBlocks)
 		{
-			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.CanceledBlocks);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.EndedBlocks);
 
-			var options = b.Options with { CanceledBlocks = canceledBlocks };
+			var options = b.Options with { EndedBlocks = canceledBlocks };
 			b.Options.Token.AutoFinish = () => b.Finish(options);
 			return new WhenInputActionBuilder(options);
 		}
@@ -130,7 +130,7 @@ namespace LunyScript
 
 		public ActionBlock[] StartedBlocks;
 		public ActionBlock[] PerformedBlocks;
-		public ActionBlock[] PerformingBlocks;
-		public ActionBlock[] CanceledBlocks;
+		public ActionBlock[] ContinuingBlocks;
+		public ActionBlock[] EndedBlocks;
 	}
 }
