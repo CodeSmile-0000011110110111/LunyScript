@@ -19,15 +19,16 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 			On.AfterFrameUpdate(If(fact == altFact || fact != !altFact || fact && altFact).Then(NoOp()));
 
 			var counter = Var.Define("counter");
+			var other = Var.Define("other");
 			Coroutine("counter routine")
 				.Every(500)
 				.Milliseconds()
 				.WhenElapsed(
-					If(counter <= 1 && counter == counter)
+					If(counter <= 1 && counter == other)
 						.Then(NoOp())
-						.ElseIf(counter <= 2 && !(counter != counter))
+						.ElseIf(counter <= 2 && !(counter != other))
 						.Then(NoOp())
-						.ElseIf(counter <= 3 || counter != counter && !counter == !counter)
+						.ElseIf(counter <= 3 || counter != other && !counter == !other)
 						.Then(NoOp())
 						.Else(counter.Set(0)),
 					counter.Inc()

@@ -4,7 +4,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformMoveBlock : ActionBlock
+	public sealed class TransformMoveByBlock : ActionBlock
 	{
 		private readonly VariableBlock<LunyVector2> _direction;
 		private readonly VariableBlock _amount;
@@ -13,13 +13,13 @@ namespace LunyScript.Blocks
 		private readonly LunyTransformSpace _space;
 		private readonly Boolean _useDirection;
 
-		public static TransformMoveBlock CreatePlaneMove(VariableBlock<LunyVector2> direction, VariableBlock speed,
+		public static TransformMoveByBlock CreatePlaneMove(VariableBlock<LunyVector2> direction, VariableBlock speed,
 			LunyTransformSpace space, LunyStackTrace trace) => new(direction, null, default, speed, space, trace);
 
-		public static TransformMoveBlock CreateAxisMove(VariableBlock amount, LunyVector3 axis, VariableBlock speed,
+		public static TransformMoveByBlock CreateAxisMove(VariableBlock amount, LunyVector3 axis, VariableBlock speed,
 			LunyTransformSpace space, LunyStackTrace trace) => new(null, amount, axis, speed, space, trace);
 
-		private TransformMoveBlock(VariableBlock<LunyVector2> direction, VariableBlock amount, LunyVector3 axis,
+		private TransformMoveByBlock(VariableBlock<LunyVector2> direction, VariableBlock amount, LunyVector3 axis,
 			VariableBlock speed, LunyTransformSpace space, LunyStackTrace trace)
 			: base(trace)
 		{

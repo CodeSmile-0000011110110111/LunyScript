@@ -4,16 +4,16 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformRotationLookAtBlock : ActionBlock
+	public sealed class TransformLookAtBlock : ActionBlock
 	{
 		private readonly LunyObjectRef _target;
 		private readonly LunyVector3 _worldUp;
 		private readonly LunyVector3 _axisLock;
 
-		public static TransformRotationLookAtBlock Create(LunyObjectRef target, LunyVector3 worldUp, LunyVector3 axisLock,
+		public static TransformLookAtBlock Create(LunyObjectRef target, LunyVector3 worldUp, LunyVector3 axisLock,
 			LunyStackTrace trace) => new(target, worldUp, axisLock, trace);
 
-		private TransformRotationLookAtBlock(LunyObjectRef target, LunyVector3 worldUp, LunyVector3 axisLock, LunyStackTrace trace)
+		private TransformLookAtBlock(LunyObjectRef target, LunyVector3 worldUp, LunyVector3 axisLock, LunyStackTrace trace)
 			: base(trace)
 		{
 			_target = target;

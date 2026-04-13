@@ -6,7 +6,7 @@ namespace LunyScript.SmokeTests
 		{
 			var upscale = Var.Constant("Upscale", 1.2);
 
-			When.Input.Action("Move").Continuing(Transform.MoveOnPlane(Input.Direction("Move"), 25));
+			When.Input.Action("Move").Continuing(Transform.MoveBy(Input.Direction("Move")).Speed(25));
 			When.Input.Action("Look").Continuing(Transform.SetRotation(Input.Rotation("Look")));
 			When.Input.Action("Jump").Performed(Transform.MoveUp(30).InWorldSpace());
 			When.Input.Action("Crouch").Performed(Transform.MoveDown(30).InWorldSpace());

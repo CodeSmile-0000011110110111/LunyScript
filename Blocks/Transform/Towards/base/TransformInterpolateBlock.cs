@@ -10,10 +10,11 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class TransformInterpolateBlock : ActionBlock
 	{
-		protected readonly Double Speed;
+		private readonly Double Speed;
+		private readonly Double Responsiveness;
+
 		protected readonly Double DeadZone;
 		protected readonly LunyVector3 AxisLock;
-		protected readonly Double Responsiveness;
 
 		protected TransformInterpolateBlock(Double speed, Double deadZone, LunyVector3 axisLock, Double responsiveness, LunyStackTrace trace)
 			: base(trace)
@@ -25,7 +26,7 @@ namespace LunyScript.Blocks
 		}
 
 		/// <summary>Returns Speed * deltaTime * Responsiveness, ready to use as a step or lerp t value.</summary>
-		protected Double ComputeStep() => Speed * LunyTime.DeltaTime * Responsiveness;
+		protected Double ComputeStep() => Speed * Responsiveness * LunyTime.DeltaTime;
 
 		protected String ParametersToString() => $"Speed({Speed}), DeadZone({DeadZone}), Axis={AxisLock}, Responsiveness=({Responsiveness})";
 	}

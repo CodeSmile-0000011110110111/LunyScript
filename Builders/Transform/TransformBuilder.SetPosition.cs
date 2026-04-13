@@ -5,33 +5,35 @@ using System;
 
 namespace LunyScript
 {
-	internal record TransformSetPositionOptions
+	public readonly partial struct TransformBuilder
 	{
-		public Script Script;
-		public BuilderToken Token;
-		public LunyStackTrace Trace;
-		public VariableBlock<LunyVector3> Position;
-		public LunyTransformSpace Space;
+		/// <summary> Instantly set the local position. Append <c>.InWorldSpace()</c> to set world position. </summary>
+		public TransformSetPositionBuilder SetPosition(Double x, Double y, Double z) => TransformSetPositionBuilder.Create(
+			_script, new LunyVector3(x, y, z), LunyTransformSpace.Local, _trace.Add(nameof(SetPosition)));
+
+		/// <summary> Instantly set the local position. Append <c>.InWorldSpace()</c> to set world position. </summary>
+		public TransformSetPositionBuilder SetPosition(VariableBlock<LunyVector3> position) =>
+			TransformSetPositionBuilder.Create(_script, position, LunyTransformSpace.Local, _trace.Add(nameof(SetPosition)));
 	}
 
-	public readonly struct TransformSetPositionTerminalBuilder
+	public readonly struct TransformSetPositionBuilder
 	{
-		public static implicit operator ActionBlock(TransformSetPositionTerminalBuilder b) => Finish(b.Options);
+		public static implicit operator ActionBlock(TransformSetPositionBuilder b) => Finish(b.Options);
 
 		internal readonly TransformSetPositionOptions Options;
 
-		internal static TransformSetPositionTerminalBuilder Create(Script script, VariableBlock<LunyVector3> position,
+		internal static TransformSetPositionBuilder Create(Script script, VariableBlock<LunyVector3> position,
 			LunyTransformSpace space, LunyStackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(TransformSetPositionTerminalBuilder), "Transform.SetPosition()");
+			var token = script.CreateBuilderToken(nameof(TransformSetPositionBuilder), "Transform.SetPosition()");
 			var options = new TransformSetPositionOptions
 			{
 				Script = script, Token = token, Trace = trace, Position = position, Space = space,
 			};
-			return new TransformSetPositionTerminalBuilder(options);
+			return new TransformSetPositionBuilder(options);
 		}
 
-		internal TransformSetPositionTerminalBuilder(in TransformSetPositionOptions options)
+		internal TransformSetPositionBuilder(in TransformSetPositionOptions options)
 		{
 			Options = options;
 
@@ -49,7 +51,7 @@ namespace LunyScript
 		public TransformPositionSetSingleAxisBlock Z(Double value) => FinishAxis(LunyAxis.Z, value);
 
 		/// <summary> Apply position set in world space instead of local space. </summary>
-		public TransformSetPositionTerminalBuilder InWorldSpace() => new(Options with { Space = LunyTransformSpace.World });
+		public TransformSetPositionBuilder InWorldSpace() => new(Options with { Space = LunyTransformSpace.World });
 
 		internal TransformPositionSetBlock Finish() => Finish(Options);
 
@@ -64,5 +66,14 @@ namespace LunyScript
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return TransformPositionSetBlock.Create(options.Position, options.Space, options.Trace);
 		}
+	}
+
+	internal record TransformSetPositionOptions
+	{
+		public Script Script;
+		public BuilderToken Token;
+		public LunyStackTrace Trace;
+		public VariableBlock<LunyVector3> Position;
+		public LunyTransformSpace Space;
 	}
 }

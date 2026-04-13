@@ -4,7 +4,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformAddRotationAngleBlock : ActionBlock
+	public sealed class TransformRotateByBlock : ActionBlock
 	{
 		private readonly VariableBlock _deltaAngle;
 		private readonly LunyAxis _axis;
@@ -13,11 +13,11 @@ namespace LunyScript.Blocks
 		private readonly LunyTransformSpace _space;
 		private Double _currentAngle;
 
-		public static TransformAddRotationAngleBlock Create(VariableBlock amount, LunyAxis axis,
+		public static TransformRotateByBlock Create(VariableBlock amount, LunyAxis axis,
 			LunyTransformSpace space, Double minAngle = Double.NegativeInfinity, Double maxAngle = Double.PositiveInfinity,
 			LunyStackTrace trace = null) => new(amount, axis, space, minAngle, maxAngle, trace);
 
-		private TransformAddRotationAngleBlock(VariableBlock deltaAngle, LunyAxis axis,
+		private TransformRotateByBlock(VariableBlock deltaAngle, LunyAxis axis,
 			LunyTransformSpace space, Double minAngle, Double maxAngle, LunyStackTrace trace)
 			: base(trace)
 		{
