@@ -13,8 +13,8 @@ namespace LunyScript.Blocks
 		protected readonly LunyObjectRef Target;
 
 		protected TransformInterpolateTowardsObjectBlock(LunyObjectRef target, Double speed, Double deadZone, LunyVector3 axisLock,
-			Double responsiveness, LunyStackTrace trace)
-			: base(speed, deadZone, axisLock, responsiveness, trace) => Target = target;
+			LunyStackTrace trace)
+			: base(speed, deadZone, axisLock, trace) => Target = target;
 
 		/// <summary>
 		/// Computes the axis-masked position delta and masked target position.

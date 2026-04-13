@@ -9,12 +9,12 @@ namespace LunyScript.Blocks
 		private readonly Boolean _spherical;
 
 		public static TransformRotateTowardsObjectLerpBlock Create(LunyObjectRef target, Double speed, Double deadZone = 0.1,
-			LunyVector3 axisLock = default, Double responsiveness = 1.0, Boolean spherical = false, LunyStackTrace trace = null) =>
-			new(target, speed, deadZone, axisLock, responsiveness, spherical, trace);
+			LunyVector3 axisLock = default, Boolean spherical = false, LunyStackTrace trace = null) =>
+			new(target, speed, deadZone, axisLock, spherical, trace);
 
 		private TransformRotateTowardsObjectLerpBlock(LunyObjectRef target, Double speed, Double deadZone, LunyVector3 axisLock,
-			Double responsiveness, Boolean spherical, LunyStackTrace trace)
-			: base(target, speed, deadZone, axisLock, responsiveness, trace) => _spherical = spherical;
+			Boolean spherical, LunyStackTrace trace)
+			: base(target, speed, deadZone, axisLock, trace) => _spherical = spherical;
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{

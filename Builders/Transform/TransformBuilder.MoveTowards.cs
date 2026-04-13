@@ -23,7 +23,6 @@ namespace LunyScript
 				Target = target,
 				Speed = 3.0,
 				DeadZone = 0.1,
-				Responsiveness = 1.0,
 				AxisLock = LunyVector3.One,
 			};
 			return new TransformMoveTowardsBuilder<TransformBuilderReady>(options);
@@ -39,12 +38,6 @@ namespace LunyScript
 		/// <summary> Minimum distance threshold before movement begins (prevents micro-jitter). </summary>
 		public static TransformMoveTowardsBuilder<TransformBuilderReady> DeadZone<T>(this TransformMoveTowardsBuilder<T> b, Double deadZone)
 			where T : struct, ITransformBuilderReady => new(b.Options with { DeadZone = deadZone });
-
-		/// <summary> Multiplies delta time; larger values produce faster approach. </summary>
-		public static TransformMoveTowardsBuilder<TransformBuilderReady> Responsiveness<T>(this TransformMoveTowardsBuilder<T> b,
-			Double responsiveness)
-			where T : struct, ITransformBuilderReady => new(b.Options with { Responsiveness = responsiveness });
-
 
 		/// <summary> Linear interpolation — speed is the lerp factor. </summary>
 		public static TransformMoveTowardsBuilder<TransformBuilderReady> Lerp<T>(this TransformMoveTowardsBuilder<T> b)
@@ -106,7 +99,7 @@ namespace LunyScript
 		private static ActionBlock Finish(in TransformTowardsBuilderOptions options)
 		{
 			var block = TransformMoveTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
-				options.Responsiveness, options.Trace);
+				options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}
@@ -114,7 +107,7 @@ namespace LunyScript
 		internal static TransformMoveTowardsObjectLerpBlock FinishLerpBuilder(in TransformTowardsBuilderOptions options)
 		{
 			var block = TransformMoveTowardsObjectLerpBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
-				options.Responsiveness, options.SphericalLerp, options.Trace);
+				options.SphericalLerp, options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}

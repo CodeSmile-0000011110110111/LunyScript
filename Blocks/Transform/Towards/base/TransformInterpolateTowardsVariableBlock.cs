@@ -13,8 +13,8 @@ namespace LunyScript.Blocks
 		protected readonly VariableBlock<LunyVector3> TargetScale;
 
 		protected TransformInterpolateTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone,
-			LunyVector3 axisLock, Double responsiveness, LunyStackTrace trace)
-			: base(speed, deadZone, axisLock, responsiveness, trace) => TargetScale = targetScale;
+			LunyVector3 axisLock, LunyStackTrace trace)
+			: base(speed, deadZone, axisLock, trace) => TargetScale = targetScale;
 
 		/// <summary>
 		/// Computes the axis-masked scale delta and masked target.

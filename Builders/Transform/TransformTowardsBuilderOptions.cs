@@ -15,7 +15,6 @@ namespace LunyScript
 		public VariableBlock<LunyVector3> TargetScale;
 		public Double Speed;
 		public Double DeadZone;
-		public Double Responsiveness;
 		public LunyVector3 WorldUp;
 		public LunyVector3 AxisLock;
 		public Boolean Lerp;

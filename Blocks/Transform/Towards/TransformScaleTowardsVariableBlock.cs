@@ -7,12 +7,12 @@ namespace LunyScript.Blocks
 	public sealed class TransformScaleTowardsVariableBlock : TransformInterpolateTowardsVariableBlock
 	{
 		public static TransformScaleTowardsVariableBlock Create(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone = 0.1,
-			LunyVector3 axisLock = default, Double responsiveness = 1.0, LunyStackTrace trace = null) =>
-			new(targetScale, speed, deadZone, axisLock, responsiveness, trace);
+			LunyVector3 axisLock = default, LunyStackTrace trace = null) =>
+			new(targetScale, speed, deadZone, axisLock, trace);
 
 		private TransformScaleTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone, LunyVector3 axisLock,
-			Double responsiveness, LunyStackTrace trace)
-			: base(targetScale, speed, deadZone, axisLock, responsiveness, trace) {}
+			LunyStackTrace trace)
+			: base(targetScale, speed, deadZone, axisLock, trace) {}
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{

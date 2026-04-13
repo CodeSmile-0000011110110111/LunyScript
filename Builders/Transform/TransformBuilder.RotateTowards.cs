@@ -24,7 +24,6 @@ namespace LunyScript
 				Target = target,
 				Speed = 90.0,
 				DeadZone = 0.1,
-				Responsiveness = 1.0,
 				AxisLock = LunyVector3.One,
 			};
 			return new TransformRotateTowardsBuilder<TransformBuilderReady>(options);
@@ -39,11 +38,6 @@ namespace LunyScript
 		/// <summary> Minimum angle threshold in degrees before rotation begins (prevents micro-jitter). </summary>
 		public static TransformRotateTowardsBuilder<TransformBuilderReady> DeadZone<T>(this TransformRotateTowardsBuilder<T> b, Double deadZone)
 			where T : struct, ITransformBuilderReady => new(b.Options with { DeadZone = deadZone });
-
-		/// <summary> Multiplies delta time; larger values produce faster approach. </summary>
-		public static TransformRotateTowardsBuilder<TransformBuilderReady> Responsiveness<T>(this TransformRotateTowardsBuilder<T> b,
-			Double responsiveness)
-			where T : struct, ITransformBuilderReady => new(b.Options with { Responsiveness = responsiveness });
 
 		/// <summary> Prevents rotation around the X axis. </summary>
 		public static TransformRotateTowardsBuilder<TransformBuilderReady> LockX<T>(this TransformRotateTowardsBuilder<T> b)
@@ -104,7 +98,7 @@ namespace LunyScript
 		internal static ActionBlock Finish(in TransformTowardsBuilderOptions options)
 		{
 			var block = TransformRotateTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
-				options.Responsiveness, options.Trace);
+				options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}
@@ -112,7 +106,7 @@ namespace LunyScript
 		internal static TransformRotateTowardsObjectLerpBlock FinishLerpBuilder(in TransformTowardsBuilderOptions options)
 		{
 			var block = TransformRotateTowardsObjectLerpBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
-				options.Responsiveness, options.SphericalLerp, options.Trace);
+				options.SphericalLerp, options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}

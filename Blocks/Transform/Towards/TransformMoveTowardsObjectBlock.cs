@@ -7,12 +7,12 @@ namespace LunyScript.Blocks
 	public sealed class TransformMoveTowardsObjectBlock : TransformInterpolateTowardsObjectBlock
 	{
 		public static TransformMoveTowardsObjectBlock Create(LunyObjectRef target, Double speed, Double deadZone = 0.1,
-			LunyVector3 axisLock = default, Double responsiveness = 1.0, LunyStackTrace trace = null) =>
-			new(target, speed, deadZone, axisLock, responsiveness, trace);
+			LunyVector3 axisLock = default, LunyStackTrace trace = null) =>
+			new(target, speed, deadZone, axisLock, trace);
 
 		private TransformMoveTowardsObjectBlock(LunyObjectRef target, Double speed, Double deadZone, LunyVector3 axisLock,
-			Double responsiveness, LunyStackTrace trace)
-			: base(target, speed, deadZone, axisLock, responsiveness, trace) {}
+			LunyStackTrace trace)
+			: base(target, speed, deadZone, axisLock, trace) {}
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
