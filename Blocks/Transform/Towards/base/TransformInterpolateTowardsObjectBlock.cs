@@ -12,9 +12,9 @@ namespace LunyScript.Blocks
 	{
 		protected readonly LunyObjectRef Target;
 
-		protected TransformInterpolateTowardsObjectBlock(LunyObjectRef target, Double speed, Double deadZone, LunyVector3 axisLock,
+		protected TransformInterpolateTowardsObjectBlock(LunyObjectRef target, Double speed, Double deadZone, LunyVector3 lockAxis,
 			LunyStackTrace trace)
-			: base(speed, deadZone, axisLock, trace) => Target = target;
+			: base(speed, deadZone, lockAxis, trace) => Target = target;
 
 		/// <summary>
 		/// Computes the axis-masked position delta and masked target position.
@@ -29,7 +29,7 @@ namespace LunyScript.Blocks
 			if (targetTransform == null)
 				return false;
 
-			var maskedDelta = (targetTransform.Position - currentPos) * AxisLock;
+			var maskedDelta = (targetTransform.Position - currentPos) * LockAxis;
 			maskedTarget = currentPos + maskedDelta;
 			return maskedDelta.Magnitude >= DeadZone;
 		}
@@ -48,7 +48,7 @@ namespace LunyScript.Blocks
 			if (targetTransform == null)
 				return false;
 
-			if (!VectorUtil.TryGetMaskedDirection(transform.Position, targetTransform.Position, AxisLock, out var direction))
+			if (!VectorUtil.TryGetMaskedDirection(transform.Position, targetTransform.Position, LockAxis, out var direction))
 			{
 				targetRotation = default;
 				return false;

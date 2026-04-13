@@ -111,12 +111,12 @@ namespace LunyScript.Blocks
 			_time = options.TimeSliceInterval > 0 ? LunyEngine.Instance.Time : null;
 
 			_sequences = new SequenceBlock[6];
-			_sequences[OnStartedIndex] = SequenceBlock.TryCreate(options.OnStarted);
-			_sequences[OnResumedIndex] = SequenceBlock.TryCreate(options.OnResumed);
-			_sequences[OnProcessIndex] = SequenceBlock.TryCreate(options.OnProcess);
-			_sequences[OnPausedIndex] = SequenceBlock.TryCreate(options.OnPaused);
-			_sequences[OnStoppedIndex] = SequenceBlock.TryCreate(options.OnStopped);
-			_sequences[OnElapsedIndex] = SequenceBlock.TryCreate(options.OnElapsed);
+			_sequences[OnStartedIndex] = SequenceBlock.TryCreate(options.WhenStarted);
+			_sequences[OnResumedIndex] = SequenceBlock.TryCreate(options.WhenResumed);
+			_sequences[OnProcessIndex] = SequenceBlock.TryCreate(options.WhenProcessing);
+			_sequences[OnPausedIndex] = SequenceBlock.TryCreate(options.WhenPaused);
+			_sequences[OnStoppedIndex] = SequenceBlock.TryCreate(options.WhenStopped);
+			_sequences[OnElapsedIndex] = SequenceBlock.TryCreate(options.WhenElapsed);
 		}
 
 		// ── IBlockContainer ───────────────────────────────────────────────

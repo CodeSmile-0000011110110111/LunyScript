@@ -9,12 +9,12 @@ namespace LunyScript.Blocks
 		private readonly Boolean _spherical;
 
 		public static TransformScaleTowardsVariableLerpBlock Create(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone = 0.1,
-			LunyVector3 axisLock = default, Boolean spherical = false, LunyStackTrace trace = null) =>
-			new(targetScale, speed, deadZone, axisLock, spherical, trace);
+			LunyVector3 lockAxis = default, Boolean spherical = false, LunyStackTrace trace = null) =>
+			new(targetScale, speed, deadZone, lockAxis, spherical, trace);
 
 		private TransformScaleTowardsVariableLerpBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone,
-			LunyVector3 axisLock, Boolean spherical, LunyStackTrace trace)
-			: base(targetScale, speed, deadZone, axisLock, trace) => _spherical = spherical;
+			LunyVector3 lockAxis, Boolean spherical, LunyStackTrace trace)
+			: base(targetScale, speed, deadZone, lockAxis, trace) => _spherical = spherical;
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{

@@ -8,17 +8,17 @@ namespace LunyScript.Blocks
 	{
 		private readonly LunyObjectRef _target;
 		private readonly LunyVector3 _worldUp;
-		private readonly LunyVector3 _axisLock;
+		private readonly LunyVector3 _lockAxis;
 
-		public static TransformLookAtBlock Create(LunyObjectRef target, LunyVector3 worldUp, LunyVector3 axisLock,
-			LunyStackTrace trace) => new(target, worldUp, axisLock, trace);
+		public static TransformLookAtBlock Create(LunyObjectRef target, LunyVector3 worldUp, LunyVector3 lockAxis,
+			LunyStackTrace trace) => new(target, worldUp, lockAxis, trace);
 
-		private TransformLookAtBlock(LunyObjectRef target, LunyVector3 worldUp, LunyVector3 axisLock, LunyStackTrace trace)
+		private TransformLookAtBlock(LunyObjectRef target, LunyVector3 worldUp, LunyVector3 lockAxis, LunyStackTrace trace)
 			: base(trace)
 		{
 			_target = target;
 			_worldUp = worldUp;
-			_axisLock = axisLock;
+			_lockAxis = lockAxis;
 		}
 
 		protected internal override void Execute(IScriptRuntimeContext context)
@@ -28,13 +28,13 @@ namespace LunyScript.Blocks
 			if (targetTransform == null)
 				return;
 
-			if (!VectorUtil.TryGetMaskedDirection(transform.Position, targetTransform.Position, _axisLock, out var maskedDirection))
+			if (!VectorUtil.TryGetMaskedDirection(transform.Position, targetTransform.Position, _lockAxis, out var maskedDirection))
 				return;
 
 			var lookTarget = transform.Position + maskedDirection;
 			transform.LookAt(lookTarget, _worldUp);
 		}
 
-		public override String ToString() => $"{_target}, Up={_worldUp}, Lock={_axisLock}";
+		public override String ToString() => $"{_target}, Up={_worldUp}, Lock={_lockAxis}";
 	}
 }

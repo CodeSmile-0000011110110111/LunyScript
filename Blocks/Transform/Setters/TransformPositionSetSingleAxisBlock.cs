@@ -13,7 +13,7 @@ namespace LunyScript.Blocks
 		public static TransformPositionSetSingleAxisBlock Create(LunyAxis axis, Double value, LunyTransformSpace space, LunyStackTrace trace) =>
 			new(axis, value, space, trace);
 
-		private TransformPositionSetSingleAxisBlock(LunyAxis axis, Double value, LunyTransformSpace space, LunyStackTrace trace)
+		internal TransformPositionSetSingleAxisBlock(LunyAxis axis, Double value, LunyTransformSpace space, LunyStackTrace trace)
 			: base(trace)
 		{
 			_axis = axis;

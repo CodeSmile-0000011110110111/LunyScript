@@ -15,7 +15,7 @@ namespace LunyScript
 		/// </summary>
 		public TransformMoveTowardsBuilder<TransformBuilderReady> MoveTowards(LunyObjectRef target)
 		{
-			var options = new TransformTowardsBuilderOptions
+			var options = new TransformMoveTowardsOptions
 			{
 				Script = _script,
 				Token = _script.CreateBuilderToken(nameof(MoveTowards), "Transform." + nameof(MoveTowards)),
@@ -23,7 +23,7 @@ namespace LunyScript
 				Target = target,
 				Speed = 3.0,
 				DeadZone = 0.1,
-				AxisLock = LunyVector3.One,
+				LockAxis = LunyVector3.One,
 			};
 			return new TransformMoveTowardsBuilder<TransformBuilderReady>(options);
 		}
@@ -73,7 +73,6 @@ namespace LunyScript
 			options.LockAxisZ();
 			return new TransformMoveTowardsBuilder<TransformBuilderReady>(options);
 		}
-
 	}
 
 	/// <summary>
@@ -84,9 +83,9 @@ namespace LunyScript
 	/// </summary>
 	public readonly struct TransformMoveTowardsBuilder<T> where T : struct, ITransformBuilderState
 	{
-		internal readonly TransformTowardsBuilderOptions Options;
+		internal readonly TransformMoveTowardsOptions Options;
 
-		internal TransformMoveTowardsBuilder(in TransformTowardsBuilderOptions options)
+		internal TransformMoveTowardsBuilder(in TransformMoveTowardsOptions options)
 		{
 			Options = options;
 
@@ -96,20 +95,32 @@ namespace LunyScript
 
 		public static implicit operator ActionBlock(TransformMoveTowardsBuilder<T> b) => Finish(b.Options);
 
-		private static ActionBlock Finish(in TransformTowardsBuilderOptions options)
+		private static ActionBlock Finish(in TransformMoveTowardsOptions options)
 		{
-			var block = TransformMoveTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
-				options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
-			return block;
+			return options.Lerp
+				? TransformMoveTowardsObjectLerpBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockAxis,
+					options.SphericalLerp, options.Trace)
+				: TransformMoveTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockAxis,
+					options.Trace);
 		}
+	}
 
-		internal static TransformMoveTowardsObjectLerpBlock FinishLerpBuilder(in TransformTowardsBuilderOptions options)
-		{
-			var block = TransformMoveTowardsObjectLerpBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
-				options.SphericalLerp, options.Trace);
-			options.Script.MarkBuilderTokenFinished(options.Token);
-			return block;
-		}
+	internal record TransformMoveTowardsOptions
+	{
+		public Script Script;
+		public BuilderToken Token;
+		public LunyStackTrace Trace;
+
+		public LunyObjectRef Target;
+		public Double Speed;
+		public Double DeadZone;
+		public LunyVector3 LockAxis;
+		public Boolean Lerp;
+		public Boolean SphericalLerp;
+
+		public void LockAxisX() => LockAxis = VectorUtil.ClearX(LockAxis);
+		public void LockAxisY() => LockAxis = VectorUtil.ClearY(LockAxis);
+		public void LockAxisZ() => LockAxis = VectorUtil.ClearZ(LockAxis);
 	}
 }

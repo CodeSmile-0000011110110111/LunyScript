@@ -16,20 +16,21 @@ namespace LunyScript
 		public TransformScaleTowardsBuilder<TransformBuilderReady> ScaleTowards(VariableBlock<LunyVector3> targetScale)
 		{
 			var token = _script.CreateBuilderToken(nameof(ScaleTowards), "Transform." + nameof(ScaleTowards));
-			var options = new TransformTowardsBuilderOptions
+			var options = new TransformScaleTowardsOptions
 			{
 				Script = _script,
 				Token = token,
 				Trace = _trace.Add(nameof(ScaleTowards)),
-				TargetScale = targetScale,
+				Scale = targetScale,
 				Speed = 1.0,
 				DeadZone = 0.1,
-				AxisLock = LunyVector3.One,
+				LockAxis = LunyVector3.One,
 			};
 			return new TransformScaleTowardsBuilder<TransformBuilderReady>(options);
 		}
 	}
-		public static class TransformScaleBuilderExtensions
+
+	public static class TransformScaleBuilderExtensions
 	{
 		/// <summary> Scale speed in units per second (for linear) or lerp factor (for <c>Lerp()</c>/<c>Slerp()</c>). </summary>
 		public static TransformScaleTowardsBuilder<TransformBuilderReady> Speed<T>(this TransformScaleTowardsBuilder<T> b, Double speed)
@@ -38,6 +39,14 @@ namespace LunyScript
 		/// <summary> Minimum scale-distance threshold before scaling begins (prevents micro-jitter). </summary>
 		public static TransformScaleTowardsBuilder<TransformBuilderReady> DeadZone<T>(this TransformScaleTowardsBuilder<T> b, Double deadZone)
 			where T : struct, ITransformBuilderReady => new(b.Options with { DeadZone = deadZone });
+
+		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
+		public static TransformScaleTowardsBuilder<TransformBuilderReady> Lerp<T>(this TransformScaleTowardsBuilder<T> b)
+			where T : struct, ITransformBuilderReady => new(b.Options with { Lerp = true, SphericalLerp = false });
+
+		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
+		public static TransformScaleTowardsBuilder<TransformBuilderReady> Slerp<T>(this TransformScaleTowardsBuilder<T> b)
+			where T : struct, ITransformBuilderReady => new(b.Options with { Lerp = true, SphericalLerp = true });
 
 		/// <summary> Prevents scaling along the X axis. </summary>
 		public static TransformScaleTowardsBuilder<TransformBuilderReady> LockX<T>(this TransformScaleTowardsBuilder<T> b)
@@ -65,15 +74,6 @@ namespace LunyScript
 			options.LockAxisZ();
 			return new TransformScaleTowardsBuilder<TransformBuilderReady>(options);
 		}
-
-		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
-		public static TransformScaleTowardsVariableLerpBlock Lerp<T>(this TransformScaleTowardsBuilder<T> b)
-			where T : struct, ITransformBuilderReady => TransformScaleTowardsBuilder<T>.FinishLerpBuilder(b.Options with { Lerp = true });
-
-		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
-		public static TransformScaleTowardsVariableLerpBlock Slerp<T>(this TransformScaleTowardsBuilder<T> b)
-			where T : struct, ITransformBuilderReady =>
-			TransformScaleTowardsBuilder<T>.FinishLerpBuilder(b.Options with { Lerp = true, SphericalLerp = true });
 	}
 
 	/// <summary>
@@ -84,9 +84,9 @@ namespace LunyScript
 	/// </summary>
 	public readonly struct TransformScaleTowardsBuilder<T> where T : struct, ITransformBuilderState
 	{
-		internal readonly TransformTowardsBuilderOptions Options;
+		internal readonly TransformScaleTowardsOptions Options;
 
-		internal TransformScaleTowardsBuilder(in TransformTowardsBuilderOptions options)
+		internal TransformScaleTowardsBuilder(in TransformScaleTowardsOptions options)
 		{
 			Options = options;
 
@@ -96,21 +96,32 @@ namespace LunyScript
 
 		public static implicit operator ActionBlock(TransformScaleTowardsBuilder<T> b) => Finish(b.Options);
 
-		internal static ActionBlock Finish(in TransformTowardsBuilderOptions options)
+		private static ActionBlock Finish(in TransformScaleTowardsOptions options)
 		{
-			var block = TransformScaleTowardsVariableBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.AxisLock,
-				options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
-			return block;
-		}
-
-		internal static TransformScaleTowardsVariableLerpBlock FinishLerpBuilder(in TransformTowardsBuilderOptions options)
-		{
-			var block = TransformScaleTowardsVariableLerpBlock.Create(options.TargetScale, options.Speed, options.DeadZone, options.AxisLock,
-				options.SphericalLerp, options.Trace);
-			options.Script.MarkBuilderTokenFinished(options.Token);
-			return block;
+			return options.Lerp
+				? TransformScaleTowardsVariableLerpBlock.Create(options.Scale, options.Speed, options.DeadZone, options.LockAxis,
+					options.SphericalLerp, options.Trace)
+				: TransformScaleTowardsVariableBlock.Create(options.Scale, options.Speed, options.DeadZone, options.LockAxis,
+					options.Trace);
 		}
 	}
 
+	internal record TransformScaleTowardsOptions
+	{
+		public Script Script;
+		public BuilderToken Token;
+		public LunyStackTrace Trace;
+
+		public VariableBlock<LunyVector3> Scale;
+		public Double Speed;
+		public Double DeadZone;
+		public LunyVector3 LockAxis;
+		public Boolean Lerp;
+		public Boolean SphericalLerp;
+
+		public void LockAxisX() => LockAxis = VectorUtil.ClearX(LockAxis);
+		public void LockAxisY() => LockAxis = VectorUtil.ClearY(LockAxis);
+		public void LockAxisZ() => LockAxis = VectorUtil.ClearZ(LockAxis);
+	}
 }

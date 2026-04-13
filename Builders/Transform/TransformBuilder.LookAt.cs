@@ -21,7 +21,7 @@ namespace LunyScript
 				Trace = _trace.Add(nameof(LookAt)),
 				Target = target,
 				WorldUp = LunyVector3.Up,
-				AxisLock = LunyVector3.One,
+				LockAxis = LunyVector3.One,
 			};
 			return new TransformLookAtBuilder<TransformBuilderReady>(options);
 		}
@@ -80,7 +80,7 @@ namespace LunyScript
 
 		private static ActionBlock Finish(in TransformLookAtBuilderOptions options)
 		{
-			var block = TransformLookAtBlock.Create(options.Target, options.WorldUp, options.AxisLock, options.Trace);
+			var block = TransformLookAtBlock.Create(options.Target, options.WorldUp, options.LockAxis, options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return block;
 		}
@@ -91,12 +91,13 @@ namespace LunyScript
 		public Script Script;
 		public BuilderToken Token;
 		public LunyStackTrace Trace;
+
 		public LunyObjectRef Target;
 		public LunyVector3 WorldUp;
-		public LunyVector3 AxisLock;
+		public LunyVector3 LockAxis;
 
-		public void LockAxisX() => AxisLock = VectorUtil.LockAxisX(AxisLock);
-		public void LockAxisY() => AxisLock = VectorUtil.LockAxisY(AxisLock);
-		public void LockAxisZ() => AxisLock = VectorUtil.LockAxisZ(AxisLock);
+		public void LockAxisX() => LockAxis = VectorUtil.ClearX(LockAxis);
+		public void LockAxisY() => LockAxis = VectorUtil.ClearY(LockAxis);
+		public void LockAxisZ() => LockAxis = VectorUtil.ClearZ(LockAxis);
 	}
 }

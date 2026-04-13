@@ -16,7 +16,7 @@ namespace LunyScript
 		public TransformRotateTowardsBuilder<TransformBuilderReady> RotateTowards(LunyObjectRef target)
 		{
 			var token = _script.CreateBuilderToken(nameof(RotateTowards), "Transform." + nameof(RotateTowards));
-			var options = new TransformTowardsBuilderOptions
+			var options = new TransformRotateTowardsOptions
 			{
 				Script = _script,
 				Token = token,
@@ -24,12 +24,13 @@ namespace LunyScript
 				Target = target,
 				Speed = 90.0,
 				DeadZone = 0.1,
-				AxisLock = LunyVector3.One,
+				LockAxis = LunyVector3.One,
 			};
 			return new TransformRotateTowardsBuilder<TransformBuilderReady>(options);
 		}
 	}
-		public static class TransformRotateBuilderExtensions
+
+	public static class TransformRotateBuilderExtensions
 	{
 		/// <summary> Rotation speed in degrees per second (for linear) or lerp factor (for <c>Lerp()</c>/<c>Slerp()</c>). </summary>
 		public static TransformRotateTowardsBuilder<TransformBuilderReady> Speed<T>(this TransformRotateTowardsBuilder<T> b, Double speed)
@@ -38,6 +39,14 @@ namespace LunyScript
 		/// <summary> Minimum angle threshold in degrees before rotation begins (prevents micro-jitter). </summary>
 		public static TransformRotateTowardsBuilder<TransformBuilderReady> DeadZone<T>(this TransformRotateTowardsBuilder<T> b, Double deadZone)
 			where T : struct, ITransformBuilderReady => new(b.Options with { DeadZone = deadZone });
+
+		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
+		public static TransformRotateTowardsBuilder<TransformBuilderReady> Lerp<T>(this TransformRotateTowardsBuilder<T> b)
+			where T : struct, ITransformBuilderReady => new(b.Options with { Lerp = true, SphericalLerp = false });
+
+		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
+		public static TransformRotateTowardsBuilder<TransformBuilderReady> Slerp<T>(this TransformRotateTowardsBuilder<T> b)
+			where T : struct, ITransformBuilderReady => new(b.Options with { Lerp = true, SphericalLerp = true });
 
 		/// <summary> Prevents rotation around the X axis. </summary>
 		public static TransformRotateTowardsBuilder<TransformBuilderReady> LockX<T>(this TransformRotateTowardsBuilder<T> b)
@@ -65,16 +74,8 @@ namespace LunyScript
 			options.LockAxisZ();
 			return new TransformRotateTowardsBuilder<TransformBuilderReady>(options);
 		}
-
-		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
-		public static TransformRotateTowardsObjectLerpBlock Lerp<T>(this TransformRotateTowardsBuilder<T> b)
-			where T : struct, ITransformBuilderReady => TransformRotateTowardsBuilder<T>.FinishLerpBuilder(b.Options with { Lerp = true });
-
-		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
-		public static TransformRotateTowardsObjectLerpBlock Slerp<T>(this TransformRotateTowardsBuilder<T> b)
-			where T : struct, ITransformBuilderReady =>
-			TransformRotateTowardsBuilder<T>.FinishLerpBuilder(b.Options with { Lerp = true, SphericalLerp = true });
 	}
+
 	/// <summary>
 	/// Fluent builder for Rotate-Towards blocks.
 	/// Usage: Transform.RotateTowards(target).Speed(45).Responsiveness(2).LockY()
@@ -83,9 +84,9 @@ namespace LunyScript
 	/// </summary>
 	public readonly struct TransformRotateTowardsBuilder<T> where T : struct, ITransformBuilderState
 	{
-		internal readonly TransformTowardsBuilderOptions Options;
+		internal readonly TransformRotateTowardsOptions Options;
 
-		internal TransformRotateTowardsBuilder(in TransformTowardsBuilderOptions options)
+		internal TransformRotateTowardsBuilder(in TransformRotateTowardsOptions options)
 		{
 			Options = options;
 
@@ -95,21 +96,32 @@ namespace LunyScript
 
 		public static implicit operator ActionBlock(TransformRotateTowardsBuilder<T> b) => Finish(b.Options);
 
-		internal static ActionBlock Finish(in TransformTowardsBuilderOptions options)
+		private static ActionBlock Finish(in TransformRotateTowardsOptions options)
 		{
-			var block = TransformRotateTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
-				options.Trace);
 			options.Script.MarkBuilderTokenFinished(options.Token);
-			return block;
-		}
-
-		internal static TransformRotateTowardsObjectLerpBlock FinishLerpBuilder(in TransformTowardsBuilderOptions options)
-		{
-			var block = TransformRotateTowardsObjectLerpBlock.Create(options.Target, options.Speed, options.DeadZone, options.AxisLock,
-				options.SphericalLerp, options.Trace);
-			options.Script.MarkBuilderTokenFinished(options.Token);
-			return block;
+			return options.Lerp
+				? TransformRotateTowardsObjectLerpBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockAxis,
+					options.SphericalLerp, options.Trace)
+				: TransformRotateTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockAxis,
+					options.Trace);
 		}
 	}
 
+	internal record TransformRotateTowardsOptions
+	{
+		public Script Script;
+		public BuilderToken Token;
+		public LunyStackTrace Trace;
+
+		public LunyObjectRef Target;
+		public Double Speed;
+		public Double DeadZone;
+		public LunyVector3 LockAxis;
+		public Boolean Lerp;
+		public Boolean SphericalLerp;
+
+		public void LockAxisX() => LockAxis = VectorUtil.ClearX(LockAxis);
+		public void LockAxisY() => LockAxis = VectorUtil.ClearY(LockAxis);
+		public void LockAxisZ() => LockAxis = VectorUtil.ClearZ(LockAxis);
+	}
 }

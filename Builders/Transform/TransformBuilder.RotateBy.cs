@@ -25,12 +25,12 @@ namespace LunyScript
 
 	public readonly struct TransformRotateByBuilder<T> where T : struct, ITransformBuilderState
 	{
-		internal readonly TransformTowardsBuilderOptions Options;
+		internal readonly TransformRotateByOptions Options;
 
 		internal static TransformRotateByBuilder<T> Create(Script script, VariableBlock amount, LunyAxis axis, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformRotateByBuilder<T>), "Transform." + nameof(TransformBuilder.RotateBy));
-			var options = new TransformTowardsBuilderOptions
+			var options = new TransformRotateByOptions
 			{
 				Script = script, Token = token, Amount = amount, Axis = axis,
 				MinAngle = Double.NegativeInfinity, MaxAngle = Double.PositiveInfinity,
@@ -39,7 +39,7 @@ namespace LunyScript
 			return new TransformRotateByBuilder<T>(options);
 		}
 
-		internal TransformRotateByBuilder(in TransformTowardsBuilderOptions options)
+		internal TransformRotateByBuilder(in TransformRotateByOptions options)
 		{
 			Options = options;
 
@@ -49,11 +49,24 @@ namespace LunyScript
 
 		public static implicit operator ActionBlock(TransformRotateByBuilder<T> b) => Finish(b.Options);
 
-		private static TransformRotateByBlock Finish(in TransformTowardsBuilderOptions options)
+		private static TransformRotateByBlock Finish(in TransformRotateByOptions options)
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return TransformRotateByBlock.Create(options.Amount, options.Axis, options.Space, options.MinAngle, options.MaxAngle,
 				options.Trace);
 		}
+	}
+
+	internal record TransformRotateByOptions
+	{
+		public Script Script;
+		public BuilderToken Token;
+		public LunyStackTrace Trace;
+
+		public LunyTransformSpace Space;
+		public VariableBlock Amount;
+		public LunyAxis Axis;
+		public Double MinAngle;
+		public Double MaxAngle;
 	}
 }

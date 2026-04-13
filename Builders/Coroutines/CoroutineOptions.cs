@@ -1,4 +1,5 @@
-﻿using LunyScript.Blocks;
+﻿using Luny;
+using LunyScript.Blocks;
 using LunyScript.Coroutines;
 using System;
 
@@ -10,8 +11,11 @@ namespace LunyScript
 	internal record CoroutineOptions
 	{
 		private static Int32 s_UniqueNameID;
+
 		internal Script Script;
 		internal BuilderToken Token;
+		internal LunyStackTrace Trace;
+
 		public String Name { get; init; }
 		public Double Duration { get; init; } // Used only by TimerCoroutine
 		public Int32 CounterTarget => (Int32)Math.Round(Duration); // Used by CounterCoroutine
@@ -22,12 +26,12 @@ namespace LunyScript
 		internal Boolean IsTimer { get; set; }
 		internal Boolean IsCounter { get => !IsTimer; set => IsTimer = !value; }
 		// Handlers
-		public ActionBlock[] OnProcess { get; init; }
-		public ActionBlock[] OnElapsed { get; init; }
-		public ActionBlock[] OnStarted { get; init; }
-		public ActionBlock[] OnStopped { get; init; }
-		public ActionBlock[] OnPaused { get; init; }
-		public ActionBlock[] OnResumed { get; init; }
+		public ActionBlock[] WhenProcessing { get; init; }
+		public ActionBlock[] WhenElapsed { get; init; }
+		public ActionBlock[] WhenStarted { get; init; }
+		public ActionBlock[] WhenStopped { get; init; }
+		public ActionBlock[] WhenPaused { get; init; }
+		public ActionBlock[] WhenResumed { get; init; }
 
 		public static CoroutineOptions ForCoroutine(String name, Double duration, Boolean repeating) => new()
 		{
@@ -37,6 +41,7 @@ namespace LunyScript
 			ContinuationMode = repeating ? Coroutine.Continuation.Repeating : Coroutine.Continuation.Finite,
 		};
 
+		/*
 		public static CoroutineOptions ForTimerCoroutine(String name, Double duration, Coroutine.Continuation continuationMode,
 			ActionBlock[] processBlocks = null) => new()
 		{
@@ -44,7 +49,7 @@ namespace LunyScript
 			Duration = duration,
 			ContinuationMode = continuationMode,
 			ProcessMode = Coroutine.UpdateMode.FrameUpdate,
-			OnProcess = processBlocks,
+			WhenProcessing = processBlocks,
 		};
 
 		public static CoroutineOptions ForCounterCoroutine(String name, Int32 countTarget, Coroutine.Continuation continuationMode,
@@ -54,8 +59,8 @@ namespace LunyScript
 			Duration = countTarget,
 			ContinuationMode = continuationMode,
 			ProcessMode = processMode,
-			OnProcess = processBlocks,
-			OnElapsed = elapsedBlocks,
+			WhenProcessing = processBlocks,
+			WhenElapsed = elapsedBlocks,
 		};
 
 		public static CoroutineOptions ForIntervalCoroutine(String name, Int32 interval, Int32 offset, Coroutine.UpdateMode processMode,
@@ -66,10 +71,11 @@ namespace LunyScript
 			TimeSliceOffset = Math.Max(0, offset),
 			ContinuationMode = Coroutine.Continuation.Repeating,
 			ProcessMode = processMode,
-			OnProcess = processBlocks,
+			WhenProcessing = processBlocks,
 		};
 
 		private static String GenerateUniqueName(Int32 interval, Int32 delay, Coroutine.UpdateMode process) =>
 			$"[{++s_UniqueNameID}]__Every({interval}).{process}().DelayBy({delay})";
+		*/
 	}
 }

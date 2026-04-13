@@ -87,6 +87,7 @@ namespace LunyScript
 		internal Script Script;
 		internal BuilderToken Token;
 		internal LunyStackTrace Trace;
+
 		internal IfBlock Block;
 		internal List<(ConditionBlock[] conditions, ActionBlock[] actions)> BranchesBuilder = new();
 		internal ActionBlock[] ElseBlocks;

@@ -21,6 +21,25 @@ namespace LunyScript
 			TransformSetRotationBuilder.Create(_script, rotation, LunyTransformSpace.Local, _trace.Add(nameof(SetRotation)));
 	}
 
+	public static class TransformSetRotationBuilderExtensions
+	{
+		/// <summary> Apply rotation set in world space instead of local space. </summary>
+		public static TransformSetRotationBuilder InWorldSpace(this TransformSetRotationBuilder b) =>
+			new(b.Options with { Space = LunyTransformSpace.World });
+
+		/// <summary> Override only the X euler angle; other axes remain unchanged. </summary>
+		public static TransformSetRotationBuilder X(this TransformSetRotationBuilder b, Double value) =>
+			new(b.Options with { Axis = LunyAxis.X, AxisValue = value });
+
+		/// <summary> Override only the Y euler angle; other axes remain unchanged. </summary>
+		public static TransformSetRotationBuilder Y(this TransformSetRotationBuilder b, Double value) =>
+			new(b.Options with { Axis = LunyAxis.Y, AxisValue = value });
+
+		/// <summary> Override only the Z euler angle; other axes remain unchanged. </summary>
+		public static TransformSetRotationBuilder Z(this TransformSetRotationBuilder b, Double value) =>
+			new(b.Options with { Axis = LunyAxis.Z, AxisValue = value });
+	}
+
 	public readonly struct TransformSetRotationBuilder
 	{
 		public static implicit operator ActionBlock(TransformSetRotationBuilder b) => Finish(b.Options);
@@ -46,30 +65,12 @@ namespace LunyScript
 			options.Token.AutoFinish = () => Finish(capturedOptions);
 		}
 
-		/// <summary> Override only the X euler angle; other axes remain unchanged. </summary>
-		public TransformRotationSetAngleBlock X(Double value) => FinishAxis(LunyAxis.X, value);
-
-		/// <summary> Override only the Y euler angle; other axes remain unchanged. </summary>
-		public TransformRotationSetAngleBlock Y(Double value) => FinishAxis(LunyAxis.Y, value);
-
-		/// <summary> Override only the Z euler angle; other axes remain unchanged. </summary>
-		public TransformRotationSetAngleBlock Z(Double value) => FinishAxis(LunyAxis.Z, value);
-
-		/// <summary> Apply rotation set in world space instead of local space. </summary>
-		public TransformSetRotationBuilder InWorldSpace() => new(Options with { Space = LunyTransformSpace.World });
-
-		internal TransformRotationSetBlock Finish() => Finish(Options);
-
-		private TransformRotationSetAngleBlock FinishAxis(LunyAxis axis, Double value)
-		{
-			Options.Script.MarkBuilderTokenFinished(Options.Token);
-			return TransformRotationSetAngleBlock.Create(axis, value, Options.Space, Options.Trace);
-		}
-
-		private static TransformRotationSetBlock Finish(in TransformSetRotationOptions options)
+		private static ActionBlock Finish(in TransformSetRotationOptions options)
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
-			return TransformRotationSetBlock.Create(options.Rotation, options.Space, options.Trace);
+			return options.UseAxisValue
+				? TransformRotationSetAngleBlock.Create(options.Axis, options.AxisValue, options.Space, options.Trace)
+				: TransformRotationSetBlock.Create(options.Rotation, options.Space, options.Trace);
 		}
 	}
 
@@ -78,7 +79,11 @@ namespace LunyScript
 		public Script Script;
 		public BuilderToken Token;
 		public LunyStackTrace Trace;
+
 		public VariableBlock<LunyQuaternion> Rotation;
 		public LunyTransformSpace Space;
+		public LunyAxis Axis;
+		public Double AxisValue;
+		public Boolean UseAxisValue;
 	}
 }
