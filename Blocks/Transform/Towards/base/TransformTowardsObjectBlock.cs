@@ -10,9 +10,9 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class TransformTowardsObjectBlock : TransformTowardsBlock
 	{
-		protected readonly LunyObjectRef Target;
+		private readonly LunyObjectRef Target;
 
-		protected TransformTowardsObjectBlock(LunyObjectRef target, VariableBlock speed, Double deadZone, LunyVector3 lockAxis,
+		protected TransformTowardsObjectBlock(LunyObjectRef target, VariableBlock speed, VariableBlock deadZone, LunyVector3 lockAxis,
 			LunyStackTrace trace)
 			: base(speed, deadZone, lockAxis, trace) => Target = target;
 
@@ -30,7 +30,7 @@ namespace LunyScript.Blocks
 
 			var maskedDelta = (targetTransform.Position - currentPos) * LockAxis;
 			targetPos = currentPos + maskedDelta;
-			return maskedDelta.Magnitude >= DeadZone;
+			return maskedDelta.Magnitude >= DeadZone.Value;
 		}
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace LunyScript.Blocks
 				return false;
 			}
 			targetRot = LunyQuaternion.LookRotation(direction.Normalized);
-			return LunyQuaternion.Angle(currentRot, targetRot) >= DeadZone;
+			return LunyQuaternion.Angle(currentRot, targetRot) >= DeadZone.Value;
 		}
 
 		protected String TowardsObjectParametersToString() => $"{Target}, {ParametersToString()}";

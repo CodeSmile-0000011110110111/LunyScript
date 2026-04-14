@@ -8,12 +8,11 @@ namespace LunyScript.Blocks
 	{
 		private readonly LunyInterpolation _interpolation;
 
-		public static TransformScaleTowardsVariableBlock Create(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone = 0.1,
-			LunyVector3 lockAxis = default, LunyInterpolation interpolation = LunyInterpolation.ConstantSpeed,
-			LunyStackTrace trace = null) =>
-			new(targetScale, speed, deadZone, lockAxis, interpolation, trace);
+		public static TransformScaleTowardsVariableBlock Create(VariableBlock<LunyVector3> targetScale, VariableBlock speed,
+			VariableBlock deadZone, LunyVector3 lockAxis = default, LunyInterpolation interpolation = LunyInterpolation.ConstantSpeed,
+			LunyStackTrace trace = null) => new(targetScale, speed, deadZone, lockAxis, interpolation, trace);
 
-		private TransformScaleTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone,
+		private TransformScaleTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, VariableBlock speed, VariableBlock deadZone,
 			LunyVector3 lockAxis, LunyInterpolation interpolation, LunyStackTrace trace)
 			: base(targetScale, speed, deadZone, lockAxis, trace) => _interpolation = interpolation;
 
@@ -27,7 +26,7 @@ namespace LunyScript.Blocks
 			{
 				LunyInterpolation.Spherical => LunyVector3.Slerp(current, maskedTarget, t),
 				LunyInterpolation.Linear => LunyVector3.Lerp(current, maskedTarget, t),
-				_ => LunyVector3.MoveTowards(current, maskedTarget, t),
+				var _ => LunyVector3.MoveTowards(current, maskedTarget, t),
 			};
 		}
 

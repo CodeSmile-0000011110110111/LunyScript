@@ -1,3 +1,4 @@
+using Luny;
 using Luny.Engine.Bridge;
 using System;
 
@@ -7,9 +8,10 @@ namespace LunyScript.Blocks
 	{
 		private readonly VariableBlock<LunyVector3> _scale;
 
-		public static TransformScaleSetBlock Create(VariableBlock<LunyVector3> scale) => new(scale);
+		public static TransformScaleSetBlock Create(VariableBlock<LunyVector3> scale, LunyStackTrace trace) => new(scale, trace);
 
-		private TransformScaleSetBlock(VariableBlock<LunyVector3> scale) => _scale = scale;
+		private TransformScaleSetBlock(VariableBlock<LunyVector3> scale, LunyStackTrace trace)
+			: base(trace) => _scale = scale;
 
 		protected internal override void Execute(IScriptRuntimeContext context) => context.LunyObject.Transform.LocalScale = _scale.Value;
 

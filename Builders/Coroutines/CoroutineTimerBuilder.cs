@@ -136,7 +136,7 @@ namespace LunyScript
 		public static CoroutineTimerBuilder<T> WhenElapsed<T>(this CoroutineTimerBuilder<T> b, params ActionBlock[] elapsedBlocks)
 			where T : struct, ICoroutineTimerUnitSet
 		{
-			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.WhenProcessing);
+			BuilderUtility.ThrowIfUnaryMethodUsedAgain(b.Options.Script, b.Options.WhenElapsed);
 			return ActionBlock.IsNullOrEmpty(elapsedBlocks) ? b : NextBuilder(b, b.Options with { WhenElapsed = elapsedBlocks });
 		}
 

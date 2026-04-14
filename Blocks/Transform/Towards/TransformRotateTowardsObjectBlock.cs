@@ -8,12 +8,11 @@ namespace LunyScript.Blocks
 	{
 		private readonly LunyInterpolation _interpolation;
 
-		public static TransformRotateTowardsObjectBlock Create(LunyObjectRef target, Double speed, Double deadZone = 0.1,
+		public static TransformRotateTowardsObjectBlock Create(LunyObjectRef target, VariableBlock speed, VariableBlock deadZone,
 			LunyVector3 lockAxis = default, LunyInterpolation interpolation = LunyInterpolation.ConstantSpeed,
-			LunyStackTrace trace = null) =>
-			new(target, speed, deadZone, lockAxis, interpolation, trace);
+			LunyStackTrace trace = null) => new(target, speed, deadZone, lockAxis, interpolation, trace);
 
-		private TransformRotateTowardsObjectBlock(LunyObjectRef target, Double speed, Double deadZone, LunyVector3 lockAxis,
+		private TransformRotateTowardsObjectBlock(LunyObjectRef target, VariableBlock speed, VariableBlock deadZone, LunyVector3 lockAxis,
 			LunyInterpolation interpolation, LunyStackTrace trace)
 			: base(target, speed, deadZone, lockAxis, trace) => _interpolation = interpolation;
 
@@ -28,7 +27,7 @@ namespace LunyScript.Blocks
 			{
 				LunyInterpolation.Spherical => LunyQuaternion.Slerp(currentRotation, targetRotation, t),
 				LunyInterpolation.Linear => LunyQuaternion.Lerp(currentRotation, targetRotation, t),
-				_ => LunyQuaternion.RotateTowards(currentRotation, targetRotation, t),
+				var _ => LunyQuaternion.RotateTowards(currentRotation, targetRotation, t),
 			};
 		}
 

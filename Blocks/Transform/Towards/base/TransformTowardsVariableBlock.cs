@@ -10,9 +10,9 @@ namespace LunyScript.Blocks
 	/// </summary>
 	public abstract class TransformTowardsVariableBlock : TransformTowardsBlock
 	{
-		protected readonly VariableBlock<LunyVector3> TargetScale;
+		private readonly VariableBlock<LunyVector3> TargetScale;
 
-		protected TransformTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone,
+		protected TransformTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, VariableBlock speed, VariableBlock deadZone,
 			LunyVector3 lockAxis, LunyStackTrace trace)
 			: base(speed, deadZone, lockAxis, trace) => TargetScale = targetScale;
 
@@ -26,7 +26,7 @@ namespace LunyScript.Blocks
 			current = transform.LocalScale;
 			var delta = (TargetScale.Value - current) * LockAxis;
 			maskedTarget = current + delta;
-			return delta.Magnitude >= DeadZone;
+			return delta.Magnitude >= DeadZone.Value;
 		}
 
 		protected String TowardsVariableParametersToString() => $"{TargetScale}, {ParametersToString()}";

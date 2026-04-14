@@ -1,7 +1,6 @@
 ﻿using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
-using System;
 
 namespace LunyScript
 {
@@ -33,12 +32,12 @@ namespace LunyScript
 	public static class TransformRotateBuilderExtensions
 	{
 		/// <summary> Rotation speed in degrees per second (for linear) or lerp factor (for <c>Lerp()</c>/<c>Slerp()</c>). </summary>
-		public static TransformRotateTowardsBuilder<TransformBuilderReady> Speed<T>(this TransformRotateTowardsBuilder<T> b, Double speed)
-			where T : struct, ITransformBuilderReady => new(b.Options with { Speed = speed });
+		public static TransformRotateTowardsBuilder<TransformBuilderReady> Speed<T>(this TransformRotateTowardsBuilder<T> b,
+			VariableBlock speed) where T : struct, ITransformBuilderReady => new(b.Options with { Speed = speed });
 
 		/// <summary> Minimum angle threshold in degrees before rotation begins (prevents micro-jitter). </summary>
-		public static TransformRotateTowardsBuilder<TransformBuilderReady> DeadZone<T>(this TransformRotateTowardsBuilder<T> b, Double deadZone)
-			where T : struct, ITransformBuilderReady => new(b.Options with { DeadZone = deadZone });
+		public static TransformRotateTowardsBuilder<TransformBuilderReady> DeadZone<T>(this TransformRotateTowardsBuilder<T> b,
+			VariableBlock deadZone) where T : struct, ITransformBuilderReady => new(b.Options with { DeadZone = deadZone });
 
 		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
 		public static TransformRotateTowardsBuilder<TransformBuilderReady> Lerp<T>(this TransformRotateTowardsBuilder<T> b)
@@ -111,8 +110,8 @@ namespace LunyScript
 		public LunyStackTrace Trace;
 
 		public LunyObjectRef Target;
-		public Double Speed;
-		public Double DeadZone;
+		public VariableBlock Speed;
+		public VariableBlock DeadZone;
 		public LunyVector3 LockAxis;
 		public LunyInterpolation Interpolation;
 

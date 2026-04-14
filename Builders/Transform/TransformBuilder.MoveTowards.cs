@@ -36,7 +36,7 @@ namespace LunyScript
 			where T : struct, ITransformBuilderReady => new(b.Options with { Speed = speed });
 
 		/// <summary> Minimum distance threshold before movement begins (prevents micro-jitter). </summary>
-		public static TransformMoveTowardsBuilder<TransformBuilderReady> DeadZone<T>(this TransformMoveTowardsBuilder<T> b, Double deadZone)
+		public static TransformMoveTowardsBuilder<TransformBuilderReady> DeadZone<T>(this TransformMoveTowardsBuilder<T> b, VariableBlock deadZone)
 			where T : struct, ITransformBuilderReady => new(b.Options with { DeadZone = deadZone });
 
 		/// <summary> Linear interpolation — speed is the lerp factor. </summary>
@@ -111,7 +111,7 @@ namespace LunyScript
 
 		public LunyObjectRef Target;
 		public VariableBlock Speed;
-		public Double DeadZone;
+		public VariableBlock DeadZone;
 		public LunyVector3 LockAxis;
 		public LunyInterpolation Interpolation;
 

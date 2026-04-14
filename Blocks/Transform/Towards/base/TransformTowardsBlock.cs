@@ -12,10 +12,10 @@ namespace LunyScript.Blocks
 	{
 		private readonly VariableBlock Speed;
 
-		protected readonly Double DeadZone;
+		protected readonly VariableBlock DeadZone;
 		protected readonly LunyVector3 LockAxis;
 
-		protected TransformTowardsBlock(VariableBlock speed, Double deadZone, LunyVector3 lockAxis, LunyStackTrace trace)
+		protected TransformTowardsBlock(VariableBlock speed, VariableBlock deadZone, LunyVector3 lockAxis, LunyStackTrace trace)
 			: base(trace)
 		{
 			Speed = speed;
@@ -26,6 +26,6 @@ namespace LunyScript.Blocks
 		/// <summary>Returns Speed * deltaTime * Responsiveness, ready to use as a step or lerp t value.</summary>
 		protected Double ComputeStep() => Speed.Value * LunyTime.DeltaTime;
 
-		protected String ParametersToString() => $"Speed({Speed}), DeadZone({DeadZone}), Axis={LockAxis})";
+		protected String ParametersToString() => $"Speed{Speed}, DeadZone{DeadZone}, Axis={LockAxis})";
 	}
 }
