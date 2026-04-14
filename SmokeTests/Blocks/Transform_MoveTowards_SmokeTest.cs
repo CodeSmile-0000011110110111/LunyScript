@@ -21,6 +21,15 @@ public class Transform_MoveTowards_SmokeTest : Script
 	}
 }
 
+public class Transform_MoveTowards_DeadZone_SmokeTest : Script
+{
+	public override void Build(ScriptBuildContext context)
+	{
+		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["speed"]).DeadZone(1.5));
+	}
+}
+
+
 public class Transform_MoveTowards_Lerp_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context) =>

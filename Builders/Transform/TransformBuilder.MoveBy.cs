@@ -9,35 +9,35 @@ namespace LunyScript
 	{
 		/// <summary> Movement based on a 2D direction vector. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
 		public TransformMoveByBuilder MoveBy(VariableBlock<LunyVector2> direction) =>
-			TransformMoveByBuilder.CreateMoveBy(_script, direction, LunyTransformSpace.Local, _trace.Add(nameof(MoveBy)));
+			TransformMoveByBuilder.CreateMoveByBuilder(_script, direction, LunyTransformSpace.Local, _trace.Add(nameof(MoveBy)));
 
 		/// <summary> Forward based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveByBuilder MoveForward(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxis(_script, amount,
+		public TransformMoveByBuilder MoveForward(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxisBuilder(_script, amount,
 			LunyVector3.Forward, LunyTransformSpace.Local,
 			_trace.Add(nameof(MoveForward)));
 
 		/// <summary> Backward based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveByBuilder MoveBack(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxis(_script, amount,
+		public TransformMoveByBuilder MoveBack(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxisBuilder(_script, amount,
 			LunyVector3.Back, LunyTransformSpace.Local,
 			_trace.Add(nameof(MoveBack)));
 
 		/// <summary> Right based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveByBuilder MoveRight(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxis(_script, amount,
+		public TransformMoveByBuilder MoveRight(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxisBuilder(_script, amount,
 			LunyVector3.Right, LunyTransformSpace.Local,
 			_trace.Add(nameof(MoveRight)));
 
 		/// <summary> Left based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveByBuilder MoveLeft(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxis(_script, amount,
+		public TransformMoveByBuilder MoveLeft(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxisBuilder(_script, amount,
 			LunyVector3.Left, LunyTransformSpace.Local,
 			_trace.Add(nameof(MoveLeft)));
 
 		/// <summary> Up based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveByBuilder MoveUp(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxis(_script, amount, LunyVector3.Up,
+		public TransformMoveByBuilder MoveUp(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxisBuilder(_script, amount, LunyVector3.Up,
 			LunyTransformSpace.Local,
 			_trace.Add(nameof(MoveUp)));
 
 		/// <summary> Down based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveByBuilder MoveDown(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxis(_script, amount,
+		public TransformMoveByBuilder MoveDown(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxisBuilder(_script, amount,
 			LunyVector3.Down, LunyTransformSpace.Local,
 			_trace.Add(nameof(MoveDown)));
 	}
@@ -60,7 +60,7 @@ namespace LunyScript
 	{
 		internal readonly TransformMoveByOptions Options;
 
-		internal static TransformMoveByBuilder CreateMoveBy(Script script, VariableBlock<LunyVector2> direction,
+		internal static TransformMoveByBuilder CreateMoveByBuilder(Script script, VariableBlock<LunyVector2> direction,
 			LunyTransformSpace space, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformMoveByBuilder), "Transform." + nameof(TransformBuilder.MoveBy));
@@ -72,7 +72,7 @@ namespace LunyScript
 			return new TransformMoveByBuilder(options);
 		}
 
-		internal static TransformMoveByBuilder CreateMoveAxis(Script script, VariableBlock amount, LunyVector3 axis,
+		internal static TransformMoveByBuilder CreateMoveAxisBuilder(Script script, VariableBlock amount, LunyVector3 axis,
 			LunyTransformSpace space, LunyStackTrace trace)
 		{
 			var token = script.CreateBuilderToken(nameof(TransformMoveByBuilder), "Transform." + nameof(TransformBuilder.MoveBy) + "(Axis)");
@@ -98,8 +98,8 @@ namespace LunyScript
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return options.UseDirection
-				? TransformMoveByBlock.CreatePlaneMove(options.Direction, options.Speed, options.Space, options.Trace)
-				: TransformMoveByBlock.CreateAxisMove(options.Amount, options.Axis, options.Speed, options.Space, options.Trace);
+				? TransformMoveByBlock.CreatePlaneMoveBy(options.Direction, options.Speed, options.Space, options.Trace)
+				: TransformMoveByBlock.CreateAxisMoveBy(options.Amount, options.Axis, options.Speed, options.Space, options.Trace);
 		}
 	}
 
