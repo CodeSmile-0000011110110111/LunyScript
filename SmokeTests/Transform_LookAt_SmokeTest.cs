@@ -1,6 +1,4 @@
-﻿using Luny.Engine.Bridge;
-using LunyScript;
-
+﻿using LunyScript;
 
 public class Transform_LookAt_SmokeTest : Script
 {
@@ -8,7 +6,7 @@ public class Transform_LookAt_SmokeTest : Script
 	{
 		var startingSpeed = 2;
 		var speed = GVar.Define("speed", startingSpeed);
-		On.FrameUpdate(Transform.LookAt("follow target").WorldUp(LunyVector3.Left));
+		On.FrameUpdate(Transform.LookAt("follow target"));
 
 		Coroutine("toggle speed")
 			.Every(6)
@@ -25,8 +23,15 @@ public class Transform_LookAt_SmokeTest : Script
 
 public class Transform_LookAt_LockX_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
-	{
-		On.FrameUpdate(Transform.LookAt("follow target").LockX());
-	}
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.LookAt("follow target").LockX());
+}
+
+public class Transform_LookAt_LockY_SmokeTest : Script
+{
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.LookAt("follow target").LockY());
+}
+
+public class Transform_LookAt_LockZ_SmokeTest : Script
+{
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.LookAt("follow target").LockZ());
 }

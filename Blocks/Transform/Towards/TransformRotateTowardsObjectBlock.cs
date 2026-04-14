@@ -6,13 +6,16 @@ namespace LunyScript.Blocks
 {
 	public sealed class TransformRotateTowardsObjectBlock : TransformTowardsObjectBlock
 	{
+		private readonly LunyInterpolation _interpolation;
+
 		public static TransformRotateTowardsObjectBlock Create(LunyObjectRef target, Double speed, Double deadZone = 0.1,
-			LunyVector3 lockAxis = default, LunyStackTrace trace = null) =>
-			new(target, speed, deadZone, lockAxis, trace);
+			LunyVector3 lockAxis = default, LunyInterpolation interpolation = LunyInterpolation.ConstantSpeed,
+			LunyStackTrace trace = null) =>
+			new(target, speed, deadZone, lockAxis, interpolation, trace);
 
 		private TransformRotateTowardsObjectBlock(LunyObjectRef target, Double speed, Double deadZone, LunyVector3 lockAxis,
-			LunyStackTrace trace)
-			: base(target, speed, deadZone, lockAxis, trace) {}
+			LunyInterpolation interpolation, LunyStackTrace trace)
+			: base(target, speed, deadZone, lockAxis, trace) => _interpolation = interpolation;
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
@@ -20,9 +23,15 @@ namespace LunyScript.Blocks
 			if (!TryGetTargetRotation(context, currentRotation, out var targetRotation))
 				return;
 
-			context.LunyObject.Transform.Rotation = LunyQuaternion.RotateTowards(currentRotation, targetRotation, ComputeStep());
+			var t = ComputeStep();
+			context.LunyObject.Transform.Rotation = _interpolation switch
+			{
+				LunyInterpolation.Spherical => LunyQuaternion.Slerp(currentRotation, targetRotation, t),
+				LunyInterpolation.Linear => LunyQuaternion.Lerp(currentRotation, targetRotation, t),
+				_ => LunyQuaternion.RotateTowards(currentRotation, targetRotation, t),
+			};
 		}
 
-		public override String ToString() => TowardsObjectParametersToString();
+		public override String ToString() => $"{TowardsObjectParametersToString()}, Interpolation={_interpolation}";
 	}
 }

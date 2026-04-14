@@ -6,22 +6,31 @@ namespace LunyScript.Blocks
 {
 	public sealed class TransformScaleTowardsVariableBlock : TransformTowardsVariableBlock
 	{
-		public static TransformScaleTowardsVariableBlock Create(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone = 0.1,
-			LunyVector3 lockAxis = default, LunyStackTrace trace = null) =>
-			new(targetScale, speed, deadZone, lockAxis, trace);
+		private readonly LunyInterpolation _interpolation;
 
-		private TransformScaleTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone, LunyVector3 lockAxis,
-			LunyStackTrace trace)
-			: base(targetScale, speed, deadZone, lockAxis, trace) {}
+		public static TransformScaleTowardsVariableBlock Create(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone = 0.1,
+			LunyVector3 lockAxis = default, LunyInterpolation interpolation = LunyInterpolation.ConstantSpeed,
+			LunyStackTrace trace = null) =>
+			new(targetScale, speed, deadZone, lockAxis, interpolation, trace);
+
+		private TransformScaleTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone,
+			LunyVector3 lockAxis, LunyInterpolation interpolation, LunyStackTrace trace)
+			: base(targetScale, speed, deadZone, lockAxis, trace) => _interpolation = interpolation;
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
 			if (!TryGetScaleDelta(context, out var current, out var maskedTarget))
 				return;
 
-			context.LunyObject.Transform.LocalScale = LunyVector3.MoveTowards(current, maskedTarget, ComputeStep());
+			var t = ComputeStep();
+			context.LunyObject.Transform.LocalScale = _interpolation switch
+			{
+				LunyInterpolation.Spherical => LunyVector3.Slerp(current, maskedTarget, t),
+				LunyInterpolation.Linear => LunyVector3.Lerp(current, maskedTarget, t),
+				_ => LunyVector3.MoveTowards(current, maskedTarget, t),
+			};
 		}
 
-		public override String ToString() => TowardsVariableParametersToString();
+		public override String ToString() => $"{TowardsVariableParametersToString()}, Interpolation={_interpolation}";
 	}
 }

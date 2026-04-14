@@ -41,11 +41,11 @@ namespace LunyScript
 
 		/// <summary> Linear interpolation — speed is the lerp factor. </summary>
 		public static TransformMoveTowardsBuilder<TransformBuilderReady> Lerp<T>(this TransformMoveTowardsBuilder<T> b)
-			where T : struct, ITransformBuilderReady => new(b.Options with { Lerp = true, SphericalLerp = false });
+			where T : struct, ITransformBuilderReady => new(b.Options with { Interpolation = LunyInterpolation.Linear });
 
 		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
 		public static TransformMoveTowardsBuilder<TransformBuilderReady> Slerp<T>(this TransformMoveTowardsBuilder<T> b)
-			where T : struct, ITransformBuilderReady => new(b.Options with { Lerp = true, SphericalLerp = true });
+			where T : struct, ITransformBuilderReady => new(b.Options with { Interpolation = LunyInterpolation.Spherical });
 
 		/// <summary> Prevents movement along the X axis. </summary>
 		public static TransformMoveTowardsBuilder<TransformBuilderReady> LockX<T>(this TransformMoveTowardsBuilder<T> b)
@@ -98,11 +98,8 @@ namespace LunyScript
 		private static ActionBlock Finish(in TransformMoveTowardsOptions options)
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
-			return options.Lerp
-				? TransformMoveTowardsObjectLerpBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockAxis,
-					options.SphericalLerp, options.Trace)
-				: TransformMoveTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockAxis,
-					options.Trace);
+			return TransformMoveTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockAxis,
+				options.Interpolation, options.Trace);
 		}
 	}
 
@@ -116,8 +113,7 @@ namespace LunyScript
 		public VariableBlock Speed;
 		public Double DeadZone;
 		public LunyVector3 LockAxis;
-		public Boolean Lerp;
-		public Boolean SphericalLerp;
+		public LunyInterpolation Interpolation;
 
 		public void LockAxisX() => LockAxis = VectorUtil.ClearX(LockAxis);
 		public void LockAxisY() => LockAxis = VectorUtil.ClearY(LockAxis);

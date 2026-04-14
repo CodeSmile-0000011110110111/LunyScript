@@ -6,23 +6,35 @@ namespace LunyScript.Blocks
 {
 	public sealed class TransformMoveTowardsObjectBlock : TransformTowardsObjectBlock
 	{
+		private readonly LunyInterpolation _interpolation;
+
 		public static TransformMoveTowardsObjectBlock Create(LunyObjectRef target, VariableBlock speed, Double deadZone = 0.1,
-			LunyVector3 lockAxis = default, LunyStackTrace trace = null) =>
-			new(target, speed, deadZone, lockAxis, trace);
+			LunyVector3 lockAxis = default, LunyInterpolation interpolation = LunyInterpolation.ConstantSpeed,
+			LunyStackTrace trace = null) =>
+			new(target, speed, deadZone, lockAxis, interpolation, trace);
 
 		private TransformMoveTowardsObjectBlock(LunyObjectRef target, VariableBlock speed, Double deadZone, LunyVector3 lockAxis,
-			LunyStackTrace trace)
-			: base(target, speed, deadZone, lockAxis, trace) {}
+			LunyInterpolation interpolation, LunyStackTrace trace)
+			: base(target, speed, deadZone, lockAxis, trace) => _interpolation = interpolation;
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var currentPos = context.LunyObject.Transform.Position;
+			var transform = context.LunyObject.Transform;
+			var currentPos = transform.Position;
 			if (!TryGetPositionDelta(context, currentPos, out var targetPos))
 				return;
 
-			context.LunyObject.Transform.Position = LunyVector3.MoveTowards(currentPos, targetPos, ComputeStep());
+			var t = ComputeStep();
+			transform.Position = _interpolation switch
+			{
+				LunyInterpolation.Spherical when currentPos == LunyVector3.Zero =>
+					LunyVector3.Slerp(LunyVector3.Forward * 0.0001f, targetPos, t),
+				LunyInterpolation.Spherical => LunyVector3.Slerp(currentPos, targetPos, t),
+				LunyInterpolation.Linear => LunyVector3.Lerp(currentPos, targetPos, t),
+				_ => LunyVector3.MoveTowards(currentPos, targetPos, t),
+			};
 		}
 
-		public override String ToString() => TowardsObjectParametersToString();
+		public override String ToString() => $"{TowardsObjectParametersToString()}, Interpolation={_interpolation}";
 	}
 }
