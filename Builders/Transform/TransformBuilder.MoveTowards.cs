@@ -21,6 +21,7 @@ namespace LunyScript
 				Token = _script.CreateBuilderToken(nameof(MoveTowards), "Transform." + nameof(MoveTowards)),
 				Trace = _trace.Add(nameof(MoveTowards)),
 				Target = target,
+				Interpolation = LunyInterpolation.Towards,
 				Speed = 3.0,
 				DeadZone = 0.1,
 				LockAxis = LunyVector3.One,

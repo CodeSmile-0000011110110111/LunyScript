@@ -9,7 +9,7 @@ namespace LunyScript.Blocks
 		private readonly LunyInterpolation _interpolation;
 
 		public static TransformMoveTowardsObjectBlock Create(LunyObjectRef target, VariableBlock speed, VariableBlock deadZone,
-			LunyVector3 lockAxis = default, LunyInterpolation interpolation = LunyInterpolation.ConstantSpeed,
+			LunyVector3 lockAxis = default, LunyInterpolation interpolation = LunyInterpolation.Towards,
 			LunyStackTrace trace = null) =>
 			new(target, speed, deadZone, lockAxis, interpolation, trace);
 
@@ -31,7 +31,8 @@ namespace LunyScript.Blocks
 					LunyVector3.Slerp(LunyVector3.Forward * 0.0001f, targetPos, t),
 				LunyInterpolation.Spherical => LunyVector3.Slerp(currentPos, targetPos, t),
 				LunyInterpolation.Linear => LunyVector3.Lerp(currentPos, targetPos, t),
-				_ => LunyVector3.MoveTowards(currentPos, targetPos, t),
+				LunyInterpolation.Towards => LunyVector3.MoveTowards(currentPos, targetPos, t),
+				var _ => throw new ArgumentOutOfRangeException(nameof(_interpolation), $"unhandled interpolation: {_interpolation}")
 			};
 		}
 

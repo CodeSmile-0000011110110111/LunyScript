@@ -9,7 +9,7 @@ namespace LunyScript.Blocks
 		private readonly LunyInterpolation _interpolation;
 
 		public static TransformScaleTowardsVariableBlock Create(VariableBlock<LunyVector3> targetScale, VariableBlock speed,
-			VariableBlock deadZone, LunyVector3 lockAxis = default, LunyInterpolation interpolation = LunyInterpolation.ConstantSpeed,
+			VariableBlock deadZone, LunyVector3 lockAxis = default, LunyInterpolation interpolation = LunyInterpolation.Towards,
 			LunyStackTrace trace = null) => new(targetScale, speed, deadZone, lockAxis, interpolation, trace);
 
 		private TransformScaleTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, VariableBlock speed, VariableBlock deadZone,

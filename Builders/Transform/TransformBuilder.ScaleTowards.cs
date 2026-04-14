@@ -6,7 +6,6 @@ namespace LunyScript
 {
 	public readonly partial struct TransformBuilder
 	{
-		[NeedsReview] [NeedsSmokeTest]
 		/// <summary>
 		/// Scale toward the target scale each frame.
 		/// Chain <c>.Speed(n)</c>, <c>.Responsiveness(n)</c>, <c>.DeadZone(n)</c>, <c>.LockX/Y/Z()</c>
@@ -21,6 +20,7 @@ namespace LunyScript
 				Token = token,
 				Trace = _trace.Add(nameof(ScaleTowards)),
 				Scale = targetScale,
+				Interpolation = LunyInterpolation.Towards,
 				Speed = 1.0,
 				DeadZone = 0.1,
 				LockAxis = LunyVector3.One,

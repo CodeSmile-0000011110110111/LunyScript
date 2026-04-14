@@ -9,8 +9,8 @@ namespace LunyScript
 		[NeedsReview] [NeedsSmokeTest]
 		/// <summary>
 		/// Rotate toward the target orientation each frame.
-		/// Chain <c>.Speed(n)</c>, <c>.Responsiveness(n)</c>, <c>.DeadZone(n)</c>, <c>.LockX/Y/Z()</c>
-		/// then call <c>.Do()</c> (degrees/sec), <c>.Lerp()</c> or <c>.Slerp()</c>.
+		/// Chain <c>.Speed(n)</c>, <c>.DeadZone(n)</c>, <c>.WorldUp(v)</c>, <c>.LockX/Y/Z()</c>
+		/// then call <c>.Instant()</c>, <c>.Lerp()</c> or <c>.Slerp()</c>.
 		/// </summary>
 		public TransformRotateTowardsBuilder<TransformBuilderReady> RotateTowards(LunyObjectRef target)
 		{
@@ -21,9 +21,11 @@ namespace LunyScript
 				Token = token,
 				Trace = _trace.Add(nameof(RotateTowards)),
 				Target = target,
-				Speed = 90.0,
+				Interpolation = LunyInterpolation.Towards,
+				Speed = 45.0,
 				DeadZone = 0.1,
 				LockAxis = LunyVector3.One,
+				WorldUp = LunyVector3.Up,
 			};
 			return new TransformRotateTowardsBuilder<TransformBuilderReady>(options);
 		}
@@ -31,7 +33,7 @@ namespace LunyScript
 
 	public static class TransformRotateBuilderExtensions
 	{
-		/// <summary> Rotation speed in degrees per second (for linear) or lerp factor (for <c>Lerp()</c>/<c>Slerp()</c>). </summary>
+		/// <summary> Rotation speed in degrees per second (for constant speed) or lerp factor (for <c>Lerp()</c>/<c>Slerp()</c>). </summary>
 		public static TransformRotateTowardsBuilder<TransformBuilderReady> Speed<T>(this TransformRotateTowardsBuilder<T> b,
 			VariableBlock speed) where T : struct, ITransformBuilderReady => new(b.Options with { Speed = speed });
 
@@ -39,12 +41,20 @@ namespace LunyScript
 		public static TransformRotateTowardsBuilder<TransformBuilderReady> DeadZone<T>(this TransformRotateTowardsBuilder<T> b,
 			VariableBlock deadZone) where T : struct, ITransformBuilderReady => new(b.Options with { DeadZone = deadZone });
 
+		/// <summary> Overrides the world-up vector used when computing the look rotation. Defaults to <c>Vector3.Up</c>. </summary>
+		public static TransformRotateTowardsBuilder<TransformBuilderReady> WorldUp<T>(this TransformRotateTowardsBuilder<T> b, LunyVector3 worldUp)
+			where T : struct, ITransformBuilderReady => new(b.Options with { WorldUp = worldUp });
+
+		/// <summary> Instantly snaps to face the target in a single frame. </summary>
+		public static TransformRotateTowardsBuilder<TransformBuilderReady> Instant<T>(this TransformRotateTowardsBuilder<T> b)
+			where T : struct, ITransformBuilderReady => new(b.Options with { Interpolation = LunyInterpolation.Instant });
+
 		/// <summary> Lerp interpolation — speed is the lerp factor. </summary>
-		public static TransformRotateTowardsBuilder<TransformBuilderReady> Lerp<T>(this TransformRotateTowardsBuilder<T> b)
+		public static TransformRotateTowardsBuilder<TransformBuilderReady> Linear<T>(this TransformRotateTowardsBuilder<T> b)
 			where T : struct, ITransformBuilderReady => new(b.Options with { Interpolation = LunyInterpolation.Linear });
 
 		/// <summary> Spherical interpolation — speed is the slerp factor. </summary>
-		public static TransformRotateTowardsBuilder<TransformBuilderReady> Slerp<T>(this TransformRotateTowardsBuilder<T> b)
+		public static TransformRotateTowardsBuilder<TransformBuilderReady> Spherical<T>(this TransformRotateTowardsBuilder<T> b)
 			where T : struct, ITransformBuilderReady => new(b.Options with { Interpolation = LunyInterpolation.Spherical });
 
 		/// <summary> Prevents rotation around the X axis. </summary>
@@ -77,9 +87,11 @@ namespace LunyScript
 
 	/// <summary>
 	/// Fluent builder for Rotate-Towards blocks.
-	/// Usage: Transform.RotateTowards(target).Speed(45).Responsiveness(2).LockY()
+	/// Usage: Transform.RotateTowards(target).Speed(45).LockY()
+	///        Transform.RotateTowards(target).Instant()
 	///        Transform.RotateTowards(target).Speed(45).Lerp()
 	///        Transform.RotateTowards(target).Speed(45).Slerp()
+	///        Transform.RotateTowards(target).WorldUp(Vector3.Forward).Speed(45).Slerp()
 	/// </summary>
 	public readonly struct TransformRotateTowardsBuilder<T> where T : struct, ITransformBuilderState
 	{
@@ -99,7 +111,7 @@ namespace LunyScript
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return TransformRotateTowardsObjectBlock.Create(options.Target, options.Speed, options.DeadZone, options.LockAxis,
-				options.Interpolation, options.Trace);
+				options.Interpolation, options.WorldUp, options.Trace);
 		}
 	}
 
@@ -113,6 +125,7 @@ namespace LunyScript
 		public VariableBlock Speed;
 		public VariableBlock DeadZone;
 		public LunyVector3 LockAxis;
+		public LunyVector3 WorldUp;
 		public LunyInterpolation Interpolation;
 
 		public void LockAxisX() => LockAxis = VectorUtil.ClearX(LockAxis);

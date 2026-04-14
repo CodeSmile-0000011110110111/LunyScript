@@ -37,11 +37,12 @@ namespace LunyScript.Blocks
 		/// Computes the target rotation from the direction toward the target object.
 		/// Returns false (and skips) when the direction is zero or the angle is within the dead zone.
 		/// </summary>
-		protected Boolean TryGetTargetRotation(IScriptRuntimeContext ctx, LunyQuaternion currentRot, out LunyQuaternion targetRot)
+		protected Boolean TryGetTargetRotation(IScriptRuntimeContext ctx, LunyQuaternion currentRot, LunyVector3 worldUp, out LunyQuaternion targetRot, out double deltaAngle)
 		{
 			var transform = ctx.LunyObject.Transform;
 			currentRot = transform.Rotation;
 			targetRot = LunyQuaternion.Identity;
+			deltaAngle = 0f;
 
 			var targetTransform = Target?.Value?.Transform;
 			if (targetTransform == null)
@@ -52,8 +53,9 @@ namespace LunyScript.Blocks
 				targetRot = default;
 				return false;
 			}
-			targetRot = LunyQuaternion.LookRotation(direction.Normalized);
-			return LunyQuaternion.Angle(currentRot, targetRot) >= DeadZone.Value;
+			targetRot = LunyQuaternion.LookRotation(direction.Normalized, worldUp);
+			deltaAngle = LunyQuaternion.Angle(currentRot, targetRot);
+			return deltaAngle >= DeadZone.Value;
 		}
 
 		protected String TowardsObjectParametersToString() => $"{Target}, {ParametersToString()}";

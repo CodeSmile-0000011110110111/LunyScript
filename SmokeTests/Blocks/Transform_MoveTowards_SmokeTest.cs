@@ -5,7 +5,7 @@ public class Transform_MoveTowards_SmokeTest : Script
 	public override void Build(ScriptBuildContext context)
 	{
 		var startingSpeed = 2;
-		var speed = GVar.Define("speed", startingSpeed);
+		var speed = GVar.Define("move speed", startingSpeed);
 		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(speed));
 
 		Coroutine("toggle speed")
@@ -25,7 +25,7 @@ public class Transform_MoveTowards_DeadZone_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context)
 	{
-		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["speed"]).DeadZone(1.5));
+		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["move speed"]).DeadZone(1.5));
 	}
 }
 
@@ -33,47 +33,47 @@ public class Transform_MoveTowards_DeadZone_SmokeTest : Script
 public class Transform_MoveTowards_Lerp_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context) =>
-		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["speed"]).Lerp());
+		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["move speed"]).Lerp());
 }
 
 public class Transform_MoveTowards_Slerp_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context) =>
-		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["speed"]).Slerp());
+		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["move speed"]).Slerp());
 }
 
 public class Transform_MoveTowards_LockX_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context) =>
-		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["speed"]).LockX());
+		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["move speed"]).LockX());
 }
 
 public class Transform_MoveTowards_LockY_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context) =>
-		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["speed"]).LockY());
+		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["move speed"]).LockY());
 }
 
 public class Transform_MoveTowards_LockZ_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context) =>
-		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["speed"]).LockZ());
+		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["move speed"]).LockZ());
 }
 
 public class Transform_MoveTowards_LockYZ_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context) =>
-		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["speed"]).LockY().LockZ().Lerp());
+		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["move speed"]).LockY().LockZ().Lerp());
 }
 
 public class Transform_MoveTowards_LockXZ_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context) =>
-		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["speed"]).LockX().LockZ().Lerp());
+		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["move speed"]).LockX().LockZ().Lerp());
 }
 
 public class Transform_MoveTowards_LockXY_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context) =>
-		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["speed"]).LockX().LockY().Lerp());
+		On.FrameUpdate(Transform.MoveTowards("follow target").Speed(GVar["move speed"]).LockX().LockY().Lerp());
 }
