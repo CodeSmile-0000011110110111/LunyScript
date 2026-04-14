@@ -8,11 +8,11 @@ namespace LunyScript.Blocks
 	/// Abstract base for Towards blocks whose target is an <see cref="ILunyObject"/> in the scene
 	/// (Move and Rotate towards).
 	/// </summary>
-	public abstract class TransformInterpolateTowardsObjectBlock : TransformInterpolateBlock
+	public abstract class TransformTowardsObjectBlock : TransformTowardsBlock
 	{
 		protected readonly LunyObjectRef Target;
 
-		protected TransformInterpolateTowardsObjectBlock(LunyObjectRef target, VariableBlock speed, Double deadZone, LunyVector3 lockAxis,
+		protected TransformTowardsObjectBlock(LunyObjectRef target, VariableBlock speed, Double deadZone, LunyVector3 lockAxis,
 			LunyStackTrace trace)
 			: base(speed, deadZone, lockAxis, trace) => Target = target;
 

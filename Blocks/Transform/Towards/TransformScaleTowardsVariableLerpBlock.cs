@@ -4,7 +4,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformScaleTowardsVariableLerpBlock : TransformInterpolateTowardsVariableBlock
+	public sealed class TransformScaleTowardsVariableLerpBlock : TransformTowardsVariableBlock
 	{
 		private readonly Boolean _spherical;
 

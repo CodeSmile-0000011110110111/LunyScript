@@ -4,7 +4,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	public sealed class TransformMoveTowardsObjectBlock : TransformInterpolateTowardsObjectBlock
+	public sealed class TransformMoveTowardsObjectBlock : TransformTowardsObjectBlock
 	{
 		public static TransformMoveTowardsObjectBlock Create(LunyObjectRef target, VariableBlock speed, Double deadZone = 0.1,
 			LunyVector3 lockAxis = default, LunyStackTrace trace = null) =>

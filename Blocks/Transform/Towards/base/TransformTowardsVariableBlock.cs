@@ -8,11 +8,11 @@ namespace LunyScript.Blocks
 	/// Abstract base for Towards blocks whose target is a <see cref="VariableBlock"/> value
 	/// (Scale towards).
 	/// </summary>
-	public abstract class TransformInterpolateTowardsVariableBlock : TransformInterpolateBlock
+	public abstract class TransformTowardsVariableBlock : TransformTowardsBlock
 	{
 		protected readonly VariableBlock<LunyVector3> TargetScale;
 
-		protected TransformInterpolateTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone,
+		protected TransformTowardsVariableBlock(VariableBlock<LunyVector3> targetScale, Double speed, Double deadZone,
 			LunyVector3 lockAxis, LunyStackTrace trace)
 			: base(speed, deadZone, lockAxis, trace) => TargetScale = targetScale;
 
