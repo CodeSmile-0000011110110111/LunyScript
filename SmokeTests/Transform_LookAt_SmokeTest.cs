@@ -4,7 +4,7 @@ public class Transform_LookAt_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context)
 	{
-		var startingSpeed = 2;
+		var startingSpeed = 8;
 		var speed = GVar.Define("speed", startingSpeed);
 		On.FrameUpdate(Transform.LookAt("follow target"));
 
@@ -21,17 +21,26 @@ public class Transform_LookAt_SmokeTest : Script
 	}
 }
 
+public class Transform_LookAt_Lerp_SmokeTest : Script
+{
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.LookAt("follow target").Lerp().Speed(GVar["speed"]));
+}
+public class Transform_LookAt_Slerp_SmokeTest : Script
+{
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.LookAt("follow target").Slerp().Speed(GVar["speed"]));
+}
+
 public class Transform_LookAt_LockX_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.LookAt("follow target").LockX());
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.LookAt("follow target axislock").LockX());
 }
 
 public class Transform_LookAt_LockY_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.LookAt("follow target").LockY());
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.LookAt("follow target axislock").LockY());
 }
 
 public class Transform_LookAt_LockZ_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.LookAt("follow target").LockZ());
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.LookAt("follow target axislock").LockZ());
 }
