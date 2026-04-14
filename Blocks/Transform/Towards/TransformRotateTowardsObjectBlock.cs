@@ -16,11 +16,11 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			if (!TryGetTargetRotation(context, out var currentRotation, out var targetRotation))
+			var currentRotation = context.LunyObject.Transform.Rotation;
+			if (!TryGetTargetRotation(context, currentRotation, out var targetRotation))
 				return;
 
-			context.LunyObject.Transform.Rotation =
-				LunyQuaternion.RotateTowards(currentRotation, targetRotation, ComputeStep());
+			context.LunyObject.Transform.Rotation = LunyQuaternion.RotateTowards(currentRotation, targetRotation, ComputeStep());
 		}
 
 		public override String ToString() => TowardsObjectParametersToString();

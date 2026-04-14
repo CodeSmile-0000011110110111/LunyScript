@@ -12,7 +12,7 @@ namespace LunyScript.Blocks
 	{
 		protected readonly LunyObjectRef Target;
 
-		protected TransformInterpolateTowardsObjectBlock(LunyObjectRef target, Double speed, Double deadZone, LunyVector3 lockAxis,
+		protected TransformInterpolateTowardsObjectBlock(LunyObjectRef target, VariableBlock speed, Double deadZone, LunyVector3 lockAxis,
 			LunyStackTrace trace)
 			: base(speed, deadZone, lockAxis, trace) => Target = target;
 
@@ -20,17 +20,16 @@ namespace LunyScript.Blocks
 		/// Computes the axis-masked position delta and masked target position.
 		/// Returns false (and skips) when the distance is within the dead zone.
 		/// </summary>
-		protected Boolean TryGetPositionDelta(IScriptRuntimeContext ctx, out LunyVector3 currentPos, out LunyVector3 maskedTarget)
+		protected Boolean TryGetPositionDelta(IScriptRuntimeContext ctx, LunyVector3 currentPos, out LunyVector3 targetPos)
 		{
-			currentPos = ctx.LunyObject.Transform.Position;
-			maskedTarget = LunyVector3.Zero;
+			targetPos = LunyVector3.Zero;
 
 			var targetTransform = Target?.Value?.Transform;
 			if (targetTransform == null)
 				return false;
 
 			var maskedDelta = (targetTransform.Position - currentPos) * LockAxis;
-			maskedTarget = currentPos + maskedDelta;
+			targetPos = currentPos + maskedDelta;
 			return maskedDelta.Magnitude >= DeadZone;
 		}
 
@@ -38,11 +37,11 @@ namespace LunyScript.Blocks
 		/// Computes the target rotation from the direction toward the target object.
 		/// Returns false (and skips) when the direction is zero or the angle is within the dead zone.
 		/// </summary>
-		protected Boolean TryGetTargetRotation(IScriptRuntimeContext ctx, out LunyQuaternion currentRotation, out LunyQuaternion targetRotation)
+		protected Boolean TryGetTargetRotation(IScriptRuntimeContext ctx, LunyQuaternion currentRot, out LunyQuaternion targetRot)
 		{
 			var transform = ctx.LunyObject.Transform;
-			currentRotation = transform.Rotation;
-			targetRotation = LunyQuaternion.Identity;
+			currentRot = transform.Rotation;
+			targetRot = LunyQuaternion.Identity;
 
 			var targetTransform = Target?.Value?.Transform;
 			if (targetTransform == null)
@@ -50,11 +49,11 @@ namespace LunyScript.Blocks
 
 			if (!VectorUtil.TryGetMaskedDirection(transform.Position, targetTransform.Position, LockAxis, out var direction))
 			{
-				targetRotation = default;
+				targetRot = default;
 				return false;
 			}
-			targetRotation = LunyQuaternion.LookRotation(direction.Normalized);
-			return LunyQuaternion.Angle(currentRotation, targetRotation) >= DeadZone;
+			targetRot = LunyQuaternion.LookRotation(direction.Normalized);
+			return LunyQuaternion.Angle(currentRot, targetRot) >= DeadZone;
 		}
 
 		protected String TowardsObjectParametersToString() => $"{Target}, {ParametersToString()}";

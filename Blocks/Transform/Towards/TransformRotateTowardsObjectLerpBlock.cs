@@ -18,7 +18,8 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			if (!TryGetTargetRotation(context, out var currentRotation, out var targetRotation))
+			var currentRotation = context.LunyObject.Transform.Rotation;
+			if (!TryGetTargetRotation(context, currentRotation, out var targetRotation))
 				return;
 
 			var t = ComputeStep();

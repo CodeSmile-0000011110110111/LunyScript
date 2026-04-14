@@ -32,7 +32,7 @@ namespace LunyScript
 	public static class TransformMoveTowardsBuilderExtensions
 	{
 		/// <summary> Movement speed in units per second (for linear) or lerp factor (for <c>Lerp()</c>/<c>Slerp()</c>). </summary>
-		public static TransformMoveTowardsBuilder<TransformBuilderReady> Speed<T>(this TransformMoveTowardsBuilder<T> b, Double speed)
+		public static TransformMoveTowardsBuilder<TransformBuilderReady> Speed<T>(this TransformMoveTowardsBuilder<T> b, VariableBlock speed)
 			where T : struct, ITransformBuilderReady => new(b.Options with { Speed = speed });
 
 		/// <summary> Minimum distance threshold before movement begins (prevents micro-jitter). </summary>
@@ -113,7 +113,7 @@ namespace LunyScript
 		public LunyStackTrace Trace;
 
 		public LunyObjectRef Target;
-		public Double Speed;
+		public VariableBlock Speed;
 		public Double DeadZone;
 		public LunyVector3 LockAxis;
 		public Boolean Lerp;

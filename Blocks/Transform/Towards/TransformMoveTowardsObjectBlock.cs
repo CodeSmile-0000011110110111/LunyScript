@@ -6,20 +6,21 @@ namespace LunyScript.Blocks
 {
 	public sealed class TransformMoveTowardsObjectBlock : TransformInterpolateTowardsObjectBlock
 	{
-		public static TransformMoveTowardsObjectBlock Create(LunyObjectRef target, Double speed, Double deadZone = 0.1,
+		public static TransformMoveTowardsObjectBlock Create(LunyObjectRef target, VariableBlock speed, Double deadZone = 0.1,
 			LunyVector3 lockAxis = default, LunyStackTrace trace = null) =>
 			new(target, speed, deadZone, lockAxis, trace);
 
-		private TransformMoveTowardsObjectBlock(LunyObjectRef target, Double speed, Double deadZone, LunyVector3 lockAxis,
+		private TransformMoveTowardsObjectBlock(LunyObjectRef target, VariableBlock speed, Double deadZone, LunyVector3 lockAxis,
 			LunyStackTrace trace)
 			: base(target, speed, deadZone, lockAxis, trace) {}
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			if (!TryGetPositionDelta(context, out var current, out var maskedTarget))
+			var currentPos = context.LunyObject.Transform.Position;
+			if (!TryGetPositionDelta(context, currentPos, out var targetPos))
 				return;
 
-			context.LunyObject.Transform.Position = LunyVector3.MoveTowards(current, maskedTarget, ComputeStep());
+			context.LunyObject.Transform.Position = LunyVector3.MoveTowards(currentPos, targetPos, ComputeStep());
 		}
 
 		public override String ToString() => TowardsObjectParametersToString();
