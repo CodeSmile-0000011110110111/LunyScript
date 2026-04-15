@@ -44,7 +44,6 @@ namespace LunyScript.Blocks
 			rigidbody.AddForce(force, _forceMode, _space);
 		}
 
-		public override String ToString() =>
-			$"{(_useVector ? _vector.ToString() : $"{_amount},{_axis}")}, {_forceMode}, {_space}";
+		public override String ToString() => $"{(_useVector ? _vector.ToString() : $"{_amount},{_axis}")}, {_forceMode}, {_space}";
 	}
 }

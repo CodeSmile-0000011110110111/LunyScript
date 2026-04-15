@@ -12,11 +12,13 @@ namespace LunyScript
 	{
 		private readonly Script _script;
 		private readonly LunyStackTrace _trace;
+
 		internal WhenSceneEventBuilder(Script script, LunyStackTrace trace)
 		{
 			_script = script;
 			_trace = trace;
 		}
+
 		private ScriptEventScheduler Scheduler => _script.Scheduler;
 
 		/// <summary>

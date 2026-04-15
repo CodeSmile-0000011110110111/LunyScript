@@ -35,10 +35,10 @@ namespace LunyScript
 		/// <param name="name"></param>
 		/// <param name="variable"></param>
 		/// <returns></returns>
-		public ScriptVariableBlock Define(String name, Variable variable) =>
-			ScriptVariableBlock.Create(_table.DefineVariable(name, variable), ScriptTrace.TryCreateStackTrace(nameof(Define)));
+		public ScriptVariableBlock Define(String name, Variable variable) => ScriptVariableBlock.Create(_table.DefineVariable(name, variable),
+			ScriptTrace.TryCreateStackTrace(nameof(Define)));
 
-		public ScriptVariableBlock Constant(String name, Variable variable) =>
-			ScriptVariableBlock.Create(_table.DefineConstant(name, variable), ScriptTrace.TryCreateStackTrace(nameof(Constant)));
+		public ScriptVariableBlock Constant(String name, Variable variable) => ScriptVariableBlock.Create(_table.DefineConstant(name, variable),
+			ScriptTrace.TryCreateStackTrace(nameof(Constant)));
 	}
 }

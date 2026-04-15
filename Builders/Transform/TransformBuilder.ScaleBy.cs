@@ -76,9 +76,11 @@ namespace LunyScript
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			if (options.UseVector3)
+			{
 				return TransformScaleByBlock.CreateVector3(options.ScalePerSecond, options.Speed,
 					options.UseBoxClamp, options.BoxMin, options.BoxMax,
 					options.UseSphereClamp, options.SphereRadius, options.Trace);
+			}
 			return TransformScaleByBlock.CreateUniform(options.Amount, options.Speed,
 				options.UseBoxClamp, options.BoxMin, options.BoxMax,
 				options.UseSphereClamp, options.SphereRadius, options.Trace);

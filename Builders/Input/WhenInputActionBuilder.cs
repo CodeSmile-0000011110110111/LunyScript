@@ -10,7 +10,8 @@ namespace LunyScript
 	{
 		internal readonly InputActionOptions Options;
 
-		internal WhenInputActionBuilder(Script script, BuilderToken token, String actionName, LunyStackTrace trace, [CallerMemberName] String callerName = "")
+		internal WhenInputActionBuilder(Script script, BuilderToken token, String actionName, LunyStackTrace trace,
+			[CallerMemberName] String callerName = "")
 		{
 			if (String.IsNullOrWhiteSpace(actionName))
 				throw new LunyScriptException($"{script.GetType().Name}: When.{callerName}({nameof(actionName)}) cannot be null or empty");
@@ -26,13 +27,17 @@ namespace LunyScript
 			var userName = options.UserName;
 			var scheduler = options.Script.Scheduler;
 
-			var started = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Started, options.StartedBlocks, options.Trace);
+			var started = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Started, options.StartedBlocks,
+				options.Trace);
 			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Started, started);
-			var performed = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Performed, options.PerformedBlocks, options.Trace);
+			var performed = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Performed, options.PerformedBlocks,
+				options.Trace);
 			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Performed, performed);
-			var performing = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Performing, options.ContinuingBlocks, options.Trace);
+			var performing = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Performing, options.ContinuingBlocks,
+				options.Trace);
 			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Performing, performing);
-			var canceled = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Canceled, options.EndedBlocks, options.Trace);
+			var canceled = InputEventSequenceBlock.Create(actionName, userName, LunyInputActionPhase.Canceled, options.EndedBlocks,
+				options.Trace);
 			scheduler.ScheduleInputActionEventSequence(actionName, LunyInputActionPhase.Canceled, canceled);
 
 			options.Script.MarkBuilderTokenFinished(options.Token);

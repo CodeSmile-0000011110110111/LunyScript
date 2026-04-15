@@ -60,7 +60,8 @@ namespace LunyScript.Blocks
 			get => _left.Variable != _right.Variable;
 		}
 
-		public static VariableIsNotEqualToBlock Create(VariableBlock left, VariableBlock right, LunyStackTrace trace) => new(left, right, trace);
+		public static VariableIsNotEqualToBlock Create(VariableBlock left, VariableBlock right, LunyStackTrace trace) =>
+			new(left, right, trace);
 
 		private VariableIsNotEqualToBlock(VariableBlock left, VariableBlock right, LunyStackTrace trace)
 			: base(left, right, trace) {}
@@ -79,7 +80,8 @@ namespace LunyScript.Blocks
 			get => _left.Variable > (Double)_right.Variable;
 		}
 
-		public static VariableIsGreaterThanBlock Create(VariableBlock left, VariableBlock right, LunyStackTrace trace) => new(left, right, trace);
+		public static VariableIsGreaterThanBlock Create(VariableBlock left, VariableBlock right, LunyStackTrace trace) =>
+			new(left, right, trace);
 
 		private VariableIsGreaterThanBlock(VariableBlock left, VariableBlock right, LunyStackTrace trace)
 			: base(left, right, trace) {}

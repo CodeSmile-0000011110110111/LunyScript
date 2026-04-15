@@ -42,7 +42,8 @@ namespace LunyScript
 			VariableBlock deadZone) where T : struct, ITransformBuilderReady => new(b.Options with { DeadZone = deadZone });
 
 		/// <summary> Overrides the world-up vector used when computing the look rotation. Defaults to <c>Vector3.Up</c>. </summary>
-		public static TransformRotateTowardsBuilder<TransformBuilderReady> WorldUp<T>(this TransformRotateTowardsBuilder<T> b, LunyVector3 worldUp)
+		public static TransformRotateTowardsBuilder<TransformBuilderReady> WorldUp<T>(this TransformRotateTowardsBuilder<T> b,
+			LunyVector3 worldUp)
 			where T : struct, ITransformBuilderReady => new(b.Options with { WorldUp = worldUp });
 
 		/// <summary> Instantly snaps to face the target in a single frame. </summary>

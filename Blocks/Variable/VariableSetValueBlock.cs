@@ -19,7 +19,6 @@ namespace LunyScript.Blocks
 			_variable = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{

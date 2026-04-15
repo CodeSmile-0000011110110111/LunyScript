@@ -77,7 +77,8 @@ namespace LunyScript
 			if (options.AtPositionChildRef != null)
 			{
 				return options.UseVector
-					? RigidbodyDynamicAddForceAtPositionBlock.CreateVectorWithWorldPosition(options.Vector, forceMode, options.AtPositionChildRef,
+					? RigidbodyDynamicAddForceAtPositionBlock.CreateVectorWithWorldPosition(options.Vector, forceMode,
+						options.AtPositionChildRef,
 						options.Trace)
 					: RigidbodyDynamicAddForceAtPositionBlock.CreateAxisWithWorldPosition(options.Amount, options.Axis, forceMode,
 						options.AtPositionChildRef, options.Trace);

@@ -37,7 +37,8 @@ namespace LunyScript.Blocks
 		/// Computes the target rotation from the direction toward the target object.
 		/// Returns false (and skips) when the direction is zero or the angle is within the dead zone.
 		/// </summary>
-		protected Boolean TryGetTargetRotation(IScriptRuntimeContext ctx, LunyQuaternion currentRot, LunyVector3 worldUp, out LunyQuaternion targetRot, out double deltaAngle)
+		protected Boolean TryGetTargetRotation(IScriptRuntimeContext ctx, LunyQuaternion currentRot, LunyVector3 worldUp,
+			out LunyQuaternion targetRot, out Double deltaAngle)
 		{
 			var transform = ctx.LunyObject.Transform;
 			currentRot = transform.Rotation;

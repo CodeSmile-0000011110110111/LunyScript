@@ -37,7 +37,8 @@ namespace LunyScript
 			_trace.Add(nameof(MoveLeft)));
 
 		/// <summary> Up based on orientation. Append <c>.InWorldSpace()</c> for world-axis movement. </summary>
-		public TransformMoveByBuilder MoveUp(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxisBuilder(_script, amount, LunyVector3.Up,
+		public TransformMoveByBuilder MoveUp(VariableBlock amount) => TransformMoveByBuilder.CreateMoveAxisBuilder(_script, amount,
+			LunyVector3.Up,
 			LunyTransformSpace.Local,
 			_trace.Add(nameof(MoveUp)));
 
@@ -122,12 +123,17 @@ namespace LunyScript
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			if (options.UseDirection)
 				return TransformMoveByBlock.CreatePlaneMoveBy(options.Direction, options.Speed, options.Space, options.Trace);
+
 			if (options.UseVector3)
+			{
 				return TransformMoveByBlock.CreateVector3MoveBy(options.Vector3Direction, options.Speed, options.Space,
 					options.UseBoxClamp, options.BoxMin, options.BoxMax, options.UseSphereClamp, options.SphereRadius, options.Trace);
+			}
 			if (options.UseBoxClamp || options.UseSphereClamp)
+			{
 				return TransformMoveByBlock.CreateAxisMoveByWithClamp(options.Amount, options.Axis, options.Speed, options.Space,
 					options.UseBoxClamp, options.BoxMin, options.BoxMax, options.UseSphereClamp, options.SphereRadius, options.Trace);
+			}
 			return TransformMoveByBlock.CreateAxisMoveBy(options.Amount, options.Axis, options.Speed, options.Space, options.Trace);
 		}
 	}

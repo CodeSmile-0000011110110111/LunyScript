@@ -38,7 +38,7 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 				.Seconds()
 				.WhenElapsed(
 					If(!fact).Then(NoOp()).ElseIf(!altFact).Then(NoOp()),
-					If(!(fact)).Then(NoOp()).ElseIf(!(altFact)).Then(NoOp())
+					If(!fact).Then(NoOp()).ElseIf(!altFact).Then(NoOp())
 				);
 
 			Coroutine("using equality operators")

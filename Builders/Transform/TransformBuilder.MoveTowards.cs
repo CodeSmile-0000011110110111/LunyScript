@@ -1,7 +1,6 @@
 ﻿using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
-using System;
 
 namespace LunyScript
 {
@@ -37,7 +36,8 @@ namespace LunyScript
 			where T : struct, ITransformBuilderReady => new(b.Options with { Speed = speed });
 
 		/// <summary> Minimum distance threshold before movement begins (prevents micro-jitter). </summary>
-		public static TransformMoveTowardsBuilder<TransformBuilderReady> DeadZone<T>(this TransformMoveTowardsBuilder<T> b, VariableBlock deadZone)
+		public static TransformMoveTowardsBuilder<TransformBuilderReady> DeadZone<T>(this TransformMoveTowardsBuilder<T> b,
+			VariableBlock deadZone)
 			where T : struct, ITransformBuilderReady => new(b.Options with { DeadZone = deadZone });
 
 		/// <summary> Linear interpolation — speed is the lerp factor. </summary>

@@ -38,7 +38,12 @@ public class Object_Create_SmokeTest : Script
 		parentName = "prefabs";
 		On.Ready(Object.Create(parentName).Position(-1, 2, -1).Rotation(-3, -4, -5).Scale(0.5));
 		var prefabPath = "Packages/de.codesmile.lunyscript/LunyScript.Unity/SmokeTests/Prefabs/Cublet";
-		On.Ready(Object.Create("instance via Object.Create").From(prefabPath).Position(1, 3, -1).Rotation(45, 45, 45).Scale(.25, 4, 2).Parent(parentName));
+		On.Ready(Object.Create("instance via Object.Create")
+			.From(prefabPath)
+			.Position(1, 3, -1)
+			.Rotation(45, 45, 45)
+			.Scale(.25, 4, 2)
+			.Parent(parentName));
 		// alias:
 		On.Ready(Prefab.Instantiate("instance via Prefab.Instantiate")
 			.From(prefabPath)

@@ -22,7 +22,8 @@ namespace LunyScript.Blocks
 
 		Int32 IBlockContainer.ActionSequenceCount => 1;
 
-		public static ForBlock Create(VariableBlock limit, VariableBlock step, ActionBlock[] actions, LunyStackTrace trace) => new(limit, step, actions, trace);
+		public static ForBlock Create(VariableBlock limit, VariableBlock step, ActionBlock[] actions, LunyStackTrace trace) =>
+			new(limit, step, actions, trace);
 
 		private ForBlock(VariableBlock limit, VariableBlock step, ActionBlock[] actions, LunyStackTrace trace)
 			: base(trace)

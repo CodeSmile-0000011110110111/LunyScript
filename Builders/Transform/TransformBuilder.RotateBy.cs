@@ -68,7 +68,8 @@ namespace LunyScript
 		/// <summary> Lean left around the Z axis (positive roll). </summary>
 		[NeedsSmokeTest]
 		public TransformRotateByBuilder<TransformBuilderReady> LeanLeft(VariableBlock degreesPerSecond) =>
-			TransformRotateByBuilder<TransformBuilderReady>.Create(_script, degreesPerSecond, LunyVector3.Forward, _trace.Add(nameof(LeanLeft)));
+			TransformRotateByBuilder<TransformBuilderReady>.Create(_script, degreesPerSecond, LunyVector3.Forward,
+				_trace.Add(nameof(LeanLeft)));
 
 		/// <summary> Lean right around the Z axis (negative roll). </summary>
 		[NeedsSmokeTest]
@@ -128,9 +129,11 @@ namespace LunyScript
 			return new TransformRotateByBuilder<T>(options);
 		}
 
-		internal static TransformRotateByBuilder<T> CreateEuler(Script script, VariableBlock<LunyVector3> eulerAnglesPerSecond, LunyStackTrace trace)
+		internal static TransformRotateByBuilder<T> CreateEuler(Script script, VariableBlock<LunyVector3> eulerAnglesPerSecond,
+			LunyStackTrace trace)
 		{
-			var token = script.CreateBuilderToken(nameof(TransformRotateByBuilder<T>), "Transform." + nameof(TransformBuilder.RotateBy) + "(Euler)");
+			var token = script.CreateBuilderToken(nameof(TransformRotateByBuilder<T>),
+				"Transform." + nameof(TransformBuilder.RotateBy) + "(Euler)");
 			var options = new TransformRotateByOptions
 			{
 				Script = script, Token = token, EulerAngles = eulerAnglesPerSecond,
@@ -153,8 +156,9 @@ namespace LunyScript
 		private static TransformRotateByBlock Finish(in TransformRotateByOptions options)
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
- 		if (options.UseEuler)
+			if (options.UseEuler)
 				return TransformRotateByBlock.CreateEuler(options.EulerAngles, options.Speed, options.Space, options.Trace);
+
 			return TransformRotateByBlock.Create(options.Amount, options.Axis, options.Speed, options.Space, options.MinAngle, options.MaxAngle,
 				options.Trace);
 		}
@@ -166,7 +170,7 @@ namespace LunyScript
 		public BuilderToken Token;
 		public LunyStackTrace Trace;
 
- 	public LunyTransformSpace Space;
+		public LunyTransformSpace Space;
 		public VariableBlock Amount;
 		public LunyVector3 Axis;
 		public VariableBlock<LunyVector3> EulerAngles;
