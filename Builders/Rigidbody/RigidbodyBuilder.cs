@@ -18,12 +18,12 @@ namespace LunyScript
 
 		/// <summary> Sets whether the rigidbody is kinematic (not affected by physics forces). </summary>
 		[NeedsReview] [NeedsSmokeTest]
-		public ActionBlock SetKinematic(Boolean enabled) => RigidbodySetKinematicBlock.Create(enabled, _trace.Add(nameof(SetKinematic)));
+		public ActionBlock SetKinematic(VariableBlock enabled) => RigidbodySetKinematicBlock.Create(enabled, _trace.Add(nameof(SetKinematic)));
 
 		/// <summary> Sets whether gravity affects this rigidbody. </summary>
 		[NeedsReview] [NeedsSmokeTest]
-		public ActionBlock SetGravityEnabled(Boolean enabled) =>
-			RigidbodySetGravityEnabledBlock.Create(enabled, _trace.Add(nameof(SetGravityEnabled)));
+		public ActionBlock SetUsesGravity(VariableBlock enabled) =>
+			RigidbodySetGravityEnabledBlock.Create(enabled, _trace.Add(nameof(SetUsesGravity)));
 
 		/// <summary> Access kinematic movement and rotation operations. </summary>
 		[NeedsReview] [NeedsSmokeTest]

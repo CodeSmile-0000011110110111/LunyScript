@@ -6,10 +6,10 @@ namespace LunyScript.Blocks
 {
 	internal sealed class RigidbodySetGravityEnabledBlock : ActionBlock
 	{
-		private readonly Boolean _enabled;
-		internal static RigidbodySetGravityEnabledBlock Create(Boolean enabled, LunyStackTrace trace) => new(enabled, trace);
+		private readonly VariableBlock _enabled;
+		internal static RigidbodySetGravityEnabledBlock Create(VariableBlock enabled, LunyStackTrace trace) => new(enabled, trace);
 
-		private RigidbodySetGravityEnabledBlock(Boolean enabled, LunyStackTrace trace)
+		private RigidbodySetGravityEnabledBlock(VariableBlock enabled, LunyStackTrace trace)
 			: base(trace) => _enabled = enabled;
 
 		protected internal override void Execute(IScriptRuntimeContext context)
@@ -21,7 +21,7 @@ namespace LunyScript.Blocks
 					context.LunyObject);
 				return;
 			}
-			rigidbody.SetGravityEnabled(_enabled);
+			rigidbody.SetGravityEnabled(_enabled.Variable.IsTrue);
 		}
 
 		public override String ToString() => $"{GetType().Name}({_enabled})";

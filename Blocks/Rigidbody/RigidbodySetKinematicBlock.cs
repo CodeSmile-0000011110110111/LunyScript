@@ -6,10 +6,10 @@ namespace LunyScript.Blocks
 {
 	internal sealed class RigidbodySetKinematicBlock : ActionBlock
 	{
-		private readonly Boolean _enabled;
-		internal static RigidbodySetKinematicBlock Create(Boolean enabled, LunyStackTrace trace) => new(enabled, trace);
+		private readonly VariableBlock _enabled;
+		internal static RigidbodySetKinematicBlock Create(VariableBlock enabled, LunyStackTrace trace) => new(enabled, trace);
 
-		private RigidbodySetKinematicBlock(Boolean enabled, LunyStackTrace trace)
+		private RigidbodySetKinematicBlock(VariableBlock enabled, LunyStackTrace trace)
 			: base(trace) => _enabled = enabled;
 
 		protected internal override void Execute(IScriptRuntimeContext context)
@@ -21,7 +21,7 @@ namespace LunyScript.Blocks
 					context.LunyObject);
 				return;
 			}
-			rigidbody.SetKinematic(_enabled);
+			rigidbody.SetKinematic(_enabled.Variable.IsTrue);
 		}
 
 		public override String ToString() => $"{GetType().Name}({_enabled})";
