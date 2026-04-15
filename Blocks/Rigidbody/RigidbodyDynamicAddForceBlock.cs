@@ -45,6 +45,6 @@ namespace LunyScript.Blocks
 		}
 
 		public override String ToString() =>
-			$"{GetType().Name}({(_useVector ? _vector.ToString() : $"{_amount},{_axis}")}, {_forceMode}, {_space})";
+			$"{(_useVector ? _vector.ToString() : $"{_amount},{_axis}")}, {_forceMode}, {_space}";
 	}
 }

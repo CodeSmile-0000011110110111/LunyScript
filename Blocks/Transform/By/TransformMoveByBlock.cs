@@ -22,20 +22,22 @@ namespace LunyScript.Blocks
 		private LunyVector3 _offset;
 
 		public static TransformMoveByBlock CreatePlaneMoveBy(VariableBlock<LunyVector2> direction, VariableBlock speed,
-			LunyTransformSpace space, LunyStackTrace trace) => new(direction, null, null, default, speed, space, false, false, default, default, 0f, trace);
+			LunyTransformSpace space, LunyStackTrace trace) =>
+			new(direction, null, null, default, speed, space, false, false, default, default, 0f, trace);
 
 		public static TransformMoveByBlock CreateAxisMoveBy(VariableBlock amount, LunyVector3 axis, VariableBlock speed,
-			LunyTransformSpace space, LunyStackTrace trace) => new(null, null, amount, axis, speed, space, false, false, default, default, 0f, trace);
-
-		public static TransformMoveByBlock CreateVector3MoveBy(VariableBlock<LunyVector3> direction, VariableBlock speed,
-			LunyTransformSpace space, Boolean useBoxClamp, LunyVector3 boxMin, LunyVector3 boxMax,
-			Boolean useSphereClamp, Single sphereRadius, LunyStackTrace trace) =>
-			new(null, direction, null, default, speed, space, useBoxClamp, useSphereClamp, boxMin, boxMax, sphereRadius, trace);
+			LunyTransformSpace space, LunyStackTrace trace) =>
+			new(null, null, amount, axis, speed, space, false, false, default, default, 0f, trace);
 
 		public static TransformMoveByBlock CreateAxisMoveByWithClamp(VariableBlock amount, LunyVector3 axis, VariableBlock speed,
 			LunyTransformSpace space, Boolean useBoxClamp, LunyVector3 boxMin, LunyVector3 boxMax,
-			Boolean useSphereClamp, Single sphereRadius, LunyStackTrace trace) =>
-			new(null, null, amount, axis, speed, space, useBoxClamp, useSphereClamp, boxMin, boxMax, sphereRadius, trace);
+			Boolean useSphereClamp, Single sphereRadius, LunyStackTrace trace) => new(null, null, amount, axis, speed, space, useBoxClamp,
+			useSphereClamp, boxMin, boxMax, sphereRadius, trace);
+
+		public static TransformMoveByBlock CreateVector3MoveBy(VariableBlock<LunyVector3> direction, VariableBlock speed,
+			LunyTransformSpace space, Boolean useBoxClamp, LunyVector3 boxMin, LunyVector3 boxMax,
+			Boolean useSphereClamp, Single sphereRadius, LunyStackTrace trace) => new(null, direction, null, default, speed, space, useBoxClamp,
+			useSphereClamp, boxMin, boxMax, sphereRadius, trace);
 
 		private TransformMoveByBlock(VariableBlock<LunyVector2> direction, VariableBlock<LunyVector3> vector3Direction,
 			VariableBlock amount, LunyVector3 axis, VariableBlock speed, LunyTransformSpace space,

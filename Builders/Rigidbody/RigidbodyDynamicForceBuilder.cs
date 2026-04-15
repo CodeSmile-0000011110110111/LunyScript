@@ -76,19 +76,11 @@ namespace LunyScript
 			var forceMode = RigidbodyBuilder.ToForceMode(options.IsImpulse, options.IgnoreMass);
 			if (options.AtPositionChildRef != null)
 			{
-				var child = options.AtPositionChildRef.Value;
-				if (child == null || !child.IsValid)
-				{
-					LunyLogger.LogError(
-						$"{nameof(RigidbodyDynamicForceBuilder)}: AtPosition child '{options.AtPositionChildRef}' not found or invalid — block will not be created");
-					return null;
-				}
-				var worldPosition = child.Transform.Position;
 				return options.UseVector
-					? RigidbodyDynamicAddForceAtPositionBlock.CreateVectorWithWorldPosition(options.Vector, forceMode, worldPosition,
+					? RigidbodyDynamicAddForceAtPositionBlock.CreateVectorWithWorldPosition(options.Vector, forceMode, options.AtPositionChildRef,
 						options.Trace)
 					: RigidbodyDynamicAddForceAtPositionBlock.CreateAxisWithWorldPosition(options.Amount, options.Axis, forceMode,
-						worldPosition, options.Trace);
+						options.AtPositionChildRef, options.Trace);
 			}
 			if (options.HasAtPositionOffset)
 			{

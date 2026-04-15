@@ -16,6 +16,7 @@ namespace LunyScript
 			_trace = trace;
 		}
 
+		/*
 		/// <summary> Apply a continuous force along <paramref name="axis"/>. Chain <c>.IgnoreMass()</c>, <c>.AtPosition()</c>, <c>.InWorldSpace()</c>. </summary>
 		[NeedsReview] [NeedsSmokeTest]
 		public RigidbodyDynamicForceBuilder AddForce(VariableBlock amount, LunyAxis axis) =>
@@ -35,6 +36,7 @@ namespace LunyScript
 		[NeedsReview] [NeedsSmokeTest]
 		public RigidbodyDynamicTorqueBuilder AddAngularImpulse(VariableBlock amount, LunyAxis axis) =>
 			RigidbodyDynamicTorqueBuilder.CreateLocalForce(_script, amount, axis, true, _trace.Add(nameof(AddAngularImpulse)));
+			*/
 
 		/// <summary> Apply a continuous force vector. Chain <c>.IgnoreMass()</c>, <c>.AtPosition()</c>, <c>.InWorldSpace()</c>. </summary>
 		[NeedsReview] [NeedsSmokeTest]
