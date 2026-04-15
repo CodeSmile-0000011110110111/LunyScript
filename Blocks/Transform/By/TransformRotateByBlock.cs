@@ -7,17 +7,23 @@ namespace LunyScript.Blocks
 	public sealed class TransformRotateByBlock : ActionBlock
 	{
 		private readonly VariableBlock _deltaAngle;
-		private readonly LunyAxis _axis;
+		private readonly VariableBlock<LunyVector3> _eulerAnglesPerSecond;
+		private readonly LunyVector3 _axis;
 		private readonly Double _minAngle;
 		private readonly Double _maxAngle;
 		private readonly LunyTransformSpace _space;
+		private readonly Boolean _useEuler;
 		private Double _currentAngle;
+		private Double _previousAngle;
 
-		public static TransformRotateByBlock Create(VariableBlock amount, LunyAxis axis,
+		public static TransformRotateByBlock Create(VariableBlock amount, LunyVector3 axis,
 			LunyTransformSpace space, Double minAngle = Double.NegativeInfinity, Double maxAngle = Double.PositiveInfinity,
 			LunyStackTrace trace = null) => new(amount, axis, space, minAngle, maxAngle, trace);
 
-		private TransformRotateByBlock(VariableBlock deltaAngle, LunyAxis axis,
+		public static TransformRotateByBlock CreateEuler(VariableBlock<LunyVector3> eulerAnglesPerSecond,
+			LunyTransformSpace space, LunyStackTrace trace = null) => new(eulerAnglesPerSecond, space, trace);
+
+		private TransformRotateByBlock(VariableBlock deltaAngle, LunyVector3 axis,
 			LunyTransformSpace space, Double minAngle, Double maxAngle, LunyStackTrace trace)
 			: base(trace)
 		{
@@ -26,33 +32,54 @@ namespace LunyScript.Blocks
 			_space = space;
 			_minAngle = minAngle;
 			_maxAngle = maxAngle;
-			_currentAngle = 0.0;
+			_useEuler = false;
+		}
+
+		private TransformRotateByBlock(VariableBlock<LunyVector3> eulerAnglesPerSecond,
+			LunyTransformSpace space, LunyStackTrace trace)
+			: base(trace)
+		{
+			_eulerAnglesPerSecond = eulerAnglesPerSecond;
+			_space = space;
+			_minAngle = Double.NegativeInfinity;
+			_maxAngle = Double.PositiveInfinity;
+			_useEuler = true;
 		}
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var time = LunyEngine.Instance.Time;
 			var transform = context.LunyObject.Transform;
 
-			var deltaAngle = _deltaAngle.Value * time.DeltaTime;
-			_currentAngle = Math.Clamp(_currentAngle + deltaAngle, _minAngle, _maxAngle);
-
-			if (_space == LunyTransformSpace.World)
-				transform.Rotation = LunyQuaternion.AngleAxis(_currentAngle, _axis.ToVector3());
-			else
-				transform.LocalRotation = LunyQuaternion.AngleAxis(_currentAngle, _axis.ToVector3());
-		}
-
-		public override String ToString()
-		{
-			var axis = _axis switch
+			if (_useEuler)
 			{
-				LunyAxis.X => "X",
-				LunyAxis.Y => "Y",
-				LunyAxis.Z => "Z",
-			};
+				var eulerDelta = _eulerAnglesPerSecond.Value * LunyTime.DeltaTime;
+				var deltaRotation = LunyQuaternion.Euler(eulerDelta);
+				if (_space == LunyTransformSpace.World)
+					transform.Rotation = deltaRotation * transform.Rotation; // delta intentionally is on the left-side, can't use *= !
+				else
+					transform.LocalRotation *= deltaRotation;
+				return;
+			}
 
-			return $"{axis}={_deltaAngle}, {_space}";
+			var deltaAngle = _deltaAngle.Value * LunyTime.DeltaTime;
+			var hasClamp = _minAngle != Double.NegativeInfinity || _maxAngle != Double.PositiveInfinity;
+			if (hasClamp)
+			{
+				_currentAngle = Math.Clamp(_currentAngle + deltaAngle, _minAngle, _maxAngle);
+				var actualDelta = _currentAngle - _previousAngle;
+				_previousAngle = _currentAngle;
+				deltaAngle = actualDelta;
+			}
+
+			var rotation = LunyQuaternion.AngleAxis(deltaAngle, _axis);
+			if (_space == LunyTransformSpace.World)
+				transform.Rotation = rotation * transform.Rotation;
+			else
+				transform.LocalRotation *= rotation;
 		}
+
+		public override String ToString() => _useEuler
+			? $"Euler={_eulerAnglesPerSecond}, {_space}"
+			: $"Axis={_axis}, Delta={_deltaAngle}, {_space}";
 	}
 }

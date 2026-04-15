@@ -1,34 +1,33 @@
-﻿using Luny.Engine.Bridge;
-using LunyScript;
+﻿using LunyScript;
 
 public class Transform_RotateX_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50, LunyAxis.X));
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50).AroundX());
 }
 
 public class Transform_RotateY_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50, LunyAxis.Y));
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50).AroundY());
 }
 
 public class Transform_RotateZ_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50, LunyAxis.Z));
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50).AroundZ());
 }
 
 public class Transform_RotateX_InWorldSpace_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50, LunyAxis.X).InWorldSpace());
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50).AroundX().InWorldSpace());
 }
 
 public class Transform_RotateY_InWorldSpace_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50, LunyAxis.Y).InWorldSpace());
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50).AroundY().InWorldSpace());
 }
 
 public class Transform_RotateZ_InWorldSpace_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50, LunyAxis.Z).InWorldSpace());
+	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateBy(50).AroundZ().InWorldSpace());
 }
 
 public class Transform_RotateX_Clamp_SmokeTest : Script
@@ -36,7 +35,7 @@ public class Transform_RotateX_Clamp_SmokeTest : Script
 	public override void Build(ScriptBuildContext context)
 	{
 		var direction = Var.Define("direction", 1);
-		On.FrameUpdate(Transform.RotateBy(300 * direction, LunyAxis.X).Clamp(-80, 80));
+		On.FrameUpdate(Transform.RotateBy(300 * direction).AroundX().Clamp(-80, 80));
 
 		Coroutine("flip direction")
 			.Every(2)
@@ -50,7 +49,7 @@ public class Transform_RotateX_Clamp_InWorldSpace_SmokeTest : Script
 	public override void Build(ScriptBuildContext context)
 	{
 		var direction = Var.Define("direction", 1);
-		On.FrameUpdate(Transform.RotateBy(300 * direction, LunyAxis.X).Clamp(-80, 80).InWorldSpace());
+		On.FrameUpdate(Transform.RotateBy(300 * direction).AroundX().Clamp(-80, 80).InWorldSpace());
 
 		Coroutine("flip direction")
 			.Every(2)
