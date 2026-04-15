@@ -4,6 +4,13 @@ using LunyScript.Blocks;
 
 namespace LunyScript
 {
+	public static class RigidbodyKinematicMoveBuilderExtensions
+	{
+		/// <summary> Apply movement in world space instead of local space. </summary>
+		public static RigidbodyKinematicMoveBuilder InWorldSpace(this RigidbodyKinematicMoveBuilder b) =>
+			new(b.Options with { Space = LunyTransformSpace.World });
+	}
+
 	public readonly struct RigidbodyKinematicMoveBuilder
 	{
 		internal readonly RigidbodyKinematicOptions Options;
@@ -40,11 +47,6 @@ namespace LunyScript
 		}
 
 		public static implicit operator ActionBlock(RigidbodyKinematicMoveBuilder b) => Finish(b.Options);
-
-		/// <summary> Apply movement in world space instead of local space. </summary>
-		public ActionBlock InWorldSpace() => Finish(Options with { Space = LunyTransformSpace.World });
-
-		internal ActionBlock Finish() => Finish(Options);
 
 		private static ActionBlock Finish(in RigidbodyKinematicOptions options)
 		{

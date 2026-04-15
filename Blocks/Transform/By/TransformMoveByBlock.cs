@@ -35,12 +35,12 @@ namespace LunyScript.Blocks
 		{
 			var transform = context.LunyObject.Transform;
 			var speed = _speed.Value * LunyTime.DeltaTime;
-			var translation = _useDirection ? _direction.Value * speed : _amount.Value * _axis * speed;
+			var translation = _useDirection ? _direction.Value * speed : _axis * (_amount.Value * speed);
 			transform.Translate(translation, _space);
 		}
 
 		public override String ToString() => _useDirection
 			? $"By{_direction}, Speed{_speed}, {_space}"
-			: $"By{_amount}, Speed{_speed}, Axis{_axis}, {_space}";
+			: $"{_axis}={_amount}, Speed{_speed}, {_space}";
 	}
 }
