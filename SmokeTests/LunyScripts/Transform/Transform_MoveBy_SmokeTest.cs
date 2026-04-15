@@ -32,9 +32,9 @@ public class Transform_MoveByX_InWorldSpace_SmokeTest : Script
 	{
 		var targetNum = Var.Define("current dir", 2);
 		On.FrameUpdate(If(targetNum == 1)
-			.Then(Transform.MoveBy(new LunyVector2(-1, 0)).InWorldSpace())
-			.ElseIf(targetNum == 2)
 			.Then(Transform.MoveBy(new LunyVector2(1, 0)).InWorldSpace())
+			.ElseIf(targetNum == 2)
+			.Then(Transform.MoveBy(new LunyVector2(-1, 0)).InWorldSpace())
 		);
 
 		Coroutine("cycle direction")
@@ -44,7 +44,7 @@ public class Transform_MoveByX_InWorldSpace_SmokeTest : Script
 	}
 }
 
-public class Transform_MoveByY_SmokeTest : Script
+public class Transform_MoveByZ_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context)
 	{
@@ -62,15 +62,15 @@ public class Transform_MoveByY_SmokeTest : Script
 	}
 }
 
-public class Transform_MoveByY_InWorldSpace_SmokeTest : Script
+public class Transform_MoveByZ_InWorldSpace_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context)
 	{
 		var targetNum = Var.Define("current dir", 2);
 		On.FrameUpdate(If(targetNum == 1)
-			.Then(Transform.MoveBy(new LunyVector2(0, -1)).Speed(2).InWorldSpace())
-			.ElseIf(targetNum == 2)
 			.Then(Transform.MoveBy(new LunyVector2(0, 1)).Speed(2).InWorldSpace())
+			.ElseIf(targetNum == 2)
+			.Then(Transform.MoveBy(new LunyVector2(0, -1)).Speed(2).InWorldSpace())
 		);
 
 		Coroutine("cycle direction")

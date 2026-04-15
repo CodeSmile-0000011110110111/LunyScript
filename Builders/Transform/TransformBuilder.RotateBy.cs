@@ -82,6 +82,11 @@ namespace LunyScript
 		public static TransformRotateByBuilder<TransformBuilderReady> InWorldSpace<T>(this TransformRotateByBuilder<T> b)
 			where T : struct, ITransformBuilderReady => new(b.Options with { Space = LunyTransformSpace.World });
 
+		/// <summary> Set speed multiplier for rotation. </summary>
+		[NeedsSmokeTest]
+		public static TransformRotateByBuilder<TransformBuilderReady> Speed<T>(this TransformRotateByBuilder<T> b, VariableBlock speed)
+			where T : struct, ITransformBuilderReady => new(b.Options with { Speed = speed });
+
 		/// <summary> Clamp the accumulated rotation angle between <paramref name="min"/> and <paramref name="max"/> degrees. </summary>
 		public static TransformRotateByBuilder<TransformBuilderReady> Clamp<T>(this TransformRotateByBuilder<T> b, Double min, Double max)
 			where T : struct, ITransformBuilderReady => new(b.Options with { MinAngle = min, MaxAngle = max });
@@ -148,9 +153,9 @@ namespace LunyScript
 		private static TransformRotateByBlock Finish(in TransformRotateByOptions options)
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
-			if (options.UseEuler)
-				return TransformRotateByBlock.CreateEuler(options.EulerAngles, options.Space, options.Trace);
-			return TransformRotateByBlock.Create(options.Amount, options.Axis, options.Space, options.MinAngle, options.MaxAngle,
+ 		if (options.UseEuler)
+				return TransformRotateByBlock.CreateEuler(options.EulerAngles, options.Speed, options.Space, options.Trace);
+			return TransformRotateByBlock.Create(options.Amount, options.Axis, options.Speed, options.Space, options.MinAngle, options.MaxAngle,
 				options.Trace);
 		}
 	}
@@ -161,10 +166,11 @@ namespace LunyScript
 		public BuilderToken Token;
 		public LunyStackTrace Trace;
 
-		public LunyTransformSpace Space;
+ 	public LunyTransformSpace Space;
 		public VariableBlock Amount;
 		public LunyVector3 Axis;
 		public VariableBlock<LunyVector3> EulerAngles;
+		public VariableBlock Speed;
 		public Boolean UseEuler;
 		public Double MinAngle;
 		public Double MaxAngle;

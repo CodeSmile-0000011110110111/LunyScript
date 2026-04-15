@@ -8,25 +8,25 @@ namespace LunyScript.Blocks
 	{
 		private readonly VariableBlock _amount;
 		private readonly VariableBlock<LunyVector3> _scalePerSecond;
+		private readonly VariableBlock _speed;
 		private readonly Boolean _useVector3;
 		private readonly Boolean _useBoxClamp;
 		private readonly Boolean _useSphereClamp;
 		private readonly LunyVector3 _boxMin;
 		private readonly LunyVector3 _boxMax;
 		private readonly Single _sphereRadius;
-		private LunyVector3 _accumulatedScale;
 
-		public static TransformScaleByBlock CreateUniform(VariableBlock amount,
+		public static TransformScaleByBlock CreateUniform(VariableBlock amount, VariableBlock speed,
 			Boolean useBoxClamp, LunyVector3 boxMin, LunyVector3 boxMax,
 			Boolean useSphereClamp, Single sphereRadius, LunyStackTrace trace) =>
-			new(amount, null, useBoxClamp, boxMin, boxMax, useSphereClamp, sphereRadius, trace);
+			new(amount, null, speed, useBoxClamp, boxMin, boxMax, useSphereClamp, sphereRadius, trace);
 
-		public static TransformScaleByBlock CreateVector3(VariableBlock<LunyVector3> scalePerSecond,
+		public static TransformScaleByBlock CreateVector3(VariableBlock<LunyVector3> scalePerSecond, VariableBlock speed,
 			Boolean useBoxClamp, LunyVector3 boxMin, LunyVector3 boxMax,
-			Boolean useSphereClamp, Single sphereRadius, LunyStackTrace trace) =>
-			new(null, scalePerSecond, useBoxClamp, boxMin, boxMax, useSphereClamp, sphereRadius, trace);
+			Boolean useSphereClamp, Single sphereRadius, LunyStackTrace trace) => new(null, scalePerSecond, speed, useBoxClamp, boxMin, boxMax,
+			useSphereClamp, sphereRadius, trace);
 
-		private TransformScaleByBlock(VariableBlock amount, VariableBlock<LunyVector3> scalePerSecond,
+		private TransformScaleByBlock(VariableBlock amount, VariableBlock<LunyVector3> scalePerSecond, VariableBlock speed,
 			Boolean useBoxClamp, LunyVector3 boxMin, LunyVector3 boxMax,
 			Boolean useSphereClamp, Single sphereRadius, LunyStackTrace trace)
 			: base(trace)
@@ -34,6 +34,7 @@ namespace LunyScript.Blocks
 			_useVector3 = scalePerSecond != null;
 			_amount = amount ?? LiteralVariableBlock.Create(1, trace);
 			_scalePerSecond = scalePerSecond;
+			_speed = speed ?? LiteralVariableBlock.Create(1, trace);
 			_useBoxClamp = useBoxClamp;
 			_useSphereClamp = useSphereClamp;
 			_boxMin = boxMin;
@@ -44,32 +45,31 @@ namespace LunyScript.Blocks
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
 			var transform = context.LunyObject.Transform;
-			var deltaTime = (Single)LunyTime.DeltaTime;
+			var deltaTime = LunyTime.DeltaTime;
 
 			LunyVector3 delta;
+			var speedDeltaTime = _speed.Value * deltaTime;
 			if (_useVector3)
-				delta = _scalePerSecond.Value * deltaTime;
+				delta = _scalePerSecond.Value * speedDeltaTime;
 			else
 			{
-				var uniformDelta = _amount.Value * deltaTime;
+				var uniformDelta = _amount.Value * speedDeltaTime;
 				delta = new LunyVector3(uniformDelta, uniformDelta, uniformDelta);
 			}
 
-			var previousScale = _accumulatedScale;
-			_accumulatedScale += delta;
+			var newScale = transform.LocalScale + delta;
 
 			if (_useSphereClamp)
-				_accumulatedScale = LunyVector3.ClampMagnitude(_accumulatedScale, _sphereRadius);
+				newScale = LunyVector3.ClampMagnitude(newScale, _sphereRadius);
 
 			if (_useBoxClamp)
-				_accumulatedScale = LunyVector3.Max(_boxMin, LunyVector3.Min(_boxMax, _accumulatedScale));
+				newScale = LunyVector3.Max(_boxMin, LunyVector3.Min(_boxMax, newScale));
 
-			var clampedDelta = _accumulatedScale - previousScale;
-			transform.LocalScale += clampedDelta;
+			transform.LocalScale = newScale;
 		}
 
 		public override String ToString() => _useVector3
-			? $"ScaleBy Vec3={_scalePerSecond}"
-			: $"ScaleBy Amount={_amount}";
+			? $"Vec3={_scalePerSecond}"
+			: $"Amount={_amount}";
 	}
 }
