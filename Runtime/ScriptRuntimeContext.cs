@@ -102,6 +102,15 @@ namespace LunyScript
 			//LunyLogger.LogInfo($"new {this} ({GetHashCode()})", this);
 		}
 
+		/// <summary>
+		/// Injects a pre-built Table as LocalVariables before Build() runs.
+		/// Called by LunyScriptVariables in play-mode.
+		/// </summary>
+		internal void SetLocalVariables(Table table)
+		{
+			_localVariables = table;
+		}
+
 		internal void SetEventArgs(Object eventArgs) => _eventArgs = eventArgs;
 
 		internal void Activate() => _lunyObject.Initialize();

@@ -1,31 +1,54 @@
 ﻿using Luny;
-using Luny.Engine.Bridge;
 using System;
 using System.Collections.Generic;
 
 namespace LunyScript
 {
 	/// <summary>
-	/// Contains design-time data for a script, mainly Inspector-assigned values and references.
+	/// Serializable representation of a single local variable for Inspector editing.
+	/// </summary>
+	[Serializable]
+	public sealed class InspectorVariable
+	{
+		public String Name;
+		public Variable.ValueType Type;
+		public Boolean BoolValue;
+		public Double NumberValue;
+		public String TextValue;
+
+		private WeakReference<Table.VarHandleBase> _varHandle;
+
+		public Variable ToVariable()
+		{
+			if (_varHandle != null && _varHandle.TryGetTarget(out var h) && h is Table.VarHandle handle)
+				return handle.Variable;
+
+			return Type switch
+			{
+				Variable.ValueType.Boolean => Variable.Named(BoolValue, Name),
+				Variable.ValueType.Number => Variable.Named(NumberValue, Name),
+				var _ => Variable.Named(TextValue, Name),
+			};
+		}
+
+		public void FromVariable(String name, Variable v)
+		{
+			Name = name;
+			Type = v.Type;
+			BoolValue = v.AsBoolean();
+			NumberValue = v.AsDouble();
+			TextValue = v.AsString();
+		}
+
+		internal void SetVarHandle(Table.VarHandleBase varHandle) => _varHandle = new WeakReference<Table.VarHandleBase>(varHandle);
+	}
+
+	/// <summary>
+	/// Contains design-time data for a script, mainly Inspector-assigned variable values.
 	/// </summary>
 	[Serializable]
 	public sealed class ScriptInspectorData
 	{
-		public Variable _variable;
-		public Variable<LunyVector3> _vectorVariable;
-
-		public List<String> _references;
-		public List<Double> _numbers;
-		public List<Boolean> _flags;
-		public List<String> _texts;
-
-		public InspectorScript _script;
-	}
-
-	[Serializable]
-	public sealed class InspectorScript : Script
-	{
-		public Double _inspectorScriptValue = 1.234;
-		public override void Build(ScriptBuildContext context) => throw new NotImplementedException();
+		public List<InspectorVariable> Variables = new();
 	}
 }

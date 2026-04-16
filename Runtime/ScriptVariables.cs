@@ -6,8 +6,6 @@ namespace LunyScript
 {
 	/// <summary>
 	/// Provides access to the script's Variable instances stored in a Table.
-	/// Getter returns a VariableBlock for use in script expressions and conditions.
-	/// Setter performs immediate variable assignment during Build().
 	/// </summary>
 	public sealed class ScriptVariables
 	{

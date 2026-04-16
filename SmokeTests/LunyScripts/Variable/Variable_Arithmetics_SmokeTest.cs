@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Luny;
+using System;
 
 namespace LunyScript.SmokeTests.Blocks.Variables
 {
@@ -6,7 +7,10 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 	{
 		public override void Build(ScriptBuildContext context)
 		{
-			const Double factor = 1.1111111111111111111111111111;
+			const Double factor = 1.111111111111111;
+
+			var inspectorTestVar = Var["InspectorValue"];
+			LunyLogger.LogInfo($"Inspector variable is: {inspectorTestVar}");
 
 			var setVar = Var.Define("set");
 			var incVar = Var.Define("inc");
