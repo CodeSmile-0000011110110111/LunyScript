@@ -11,6 +11,7 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 
 			var inspectorTestVar = Var["InspectorValue"];
 			LunyLogger.LogInfo($"Inspector variable is: {inspectorTestVar}");
+			On.Ready(inspectorTestVar.Sub(120000));
 
 			var setVar = Var.Define("set");
 			var incVar = Var.Define("inc");
