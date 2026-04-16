@@ -38,12 +38,17 @@ namespace LunyScript.Blocks
 					context.LunyObject);
 				return;
 			}
+
+			// ensure we are kinematic
+			if (!rigidbody.IsKinematic)
+				rigidbody.IsKinematic = true;
+
 			var euler = _useVector
 				? _eulerDelta * LunyTime.DeltaTime
 				: _axis.ToVector3() * (_amount.Value * LunyTime.DeltaTime);
 			rigidbody.MoveRotation(euler, _space);
 		}
 
-		public override String ToString() => $"{GetType().Name}({(_useVector ? _eulerDelta.ToString() : $"{_amount},{_axis}")}, {_space})";
+		public override String ToString() => $"{(_useVector ? _eulerDelta.ToString() : $"{_amount},{_axis}")}, {_space}";
 	}
 }

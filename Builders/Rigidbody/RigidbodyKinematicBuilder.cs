@@ -17,24 +17,22 @@ namespace LunyScript
 		}
 
 		/// <summary> Move the kinematic rigidbody by <paramref name="amount"/> along <paramref name="axis"/> per second. Append <c>.InWorldSpace()</c> for world space. </summary>
-		[NeedsReview] [NeedsSmokeTest]
-		public RigidbodyKinematicMoveBuilder Move(VariableBlock amount, LunyAxis axis) =>
-			RigidbodyKinematicMoveBuilder.CreateAxisRelative(_script, amount, axis, _trace.Add(nameof(Move)));
+		public RigidbodyKinematicMoveByBuilder MoveBy(VariableBlock amount, LunyAxis axis) =>
+			RigidbodyKinematicMoveByBuilder.CreateAxisRelative(_script, amount, axis, _trace.Add(nameof(MoveBy)));
 
 		/// <summary> Move the kinematic rigidbody by <paramref name="delta"/> per second. Append <c>.InWorldSpace()</c> for world space. </summary>
-		[NeedsReview] [NeedsSmokeTest]
-		public RigidbodyKinematicMoveBuilder Move(LunyVector3 delta) =>
-			RigidbodyKinematicMoveBuilder.CreateVector(_script, delta, _trace.Add(nameof(Move)));
+		public RigidbodyKinematicMoveByBuilder MoveBy(LunyVector3 delta) =>
+			RigidbodyKinematicMoveByBuilder.CreateVector(_script, delta, _trace.Add(nameof(MoveBy)));
 
 		/// <summary> Rotate the kinematic rigidbody by <paramref name="amount"/> degrees around <paramref name="axis"/> per second. Append <c>.InWorldSpace()</c> for world space. </summary>
 		[NeedsReview] [NeedsSmokeTest]
-		public RigidbodyKinematicRotateBuilder Rotate(VariableBlock amount, LunyAxis axis) =>
-			RigidbodyKinematicRotateBuilder.CreateAxisRelative(_script, amount, axis, _trace.Add(nameof(Rotate)));
+		public RigidbodyKinematicRotateByBuilder RotateBy(VariableBlock amount, LunyAxis axis) =>
+			RigidbodyKinematicRotateByBuilder.CreateAxisRelative(_script, amount, axis, _trace.Add(nameof(RotateBy)));
 
 		/// <summary> Rotate the kinematic rigidbody by <paramref name="eulerDelta"/> degrees per second. Append <c>.InWorldSpace()</c> for world space. </summary>
 		[NeedsReview] [NeedsSmokeTest]
-		public RigidbodyKinematicRotateBuilder Rotate(LunyVector3 eulerDelta) =>
-			RigidbodyKinematicRotateBuilder.CreateVector(_script, eulerDelta, _trace.Add(nameof(Rotate)));
+		public RigidbodyKinematicRotateByBuilder RotateBy(LunyVector3 eulerDelta) =>
+			RigidbodyKinematicRotateByBuilder.CreateVector(_script, eulerDelta, _trace.Add(nameof(RotateBy)));
 	}
 
 	internal record RigidbodyKinematicOptions

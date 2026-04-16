@@ -58,6 +58,10 @@ namespace LunyScript.Blocks
 				return;
 			}
 
+			// ensure we are not kinematic
+			if (rigidbody.IsKinematic)
+				rigidbody.IsKinematic = false;
+
 			var worldPosition = _useLocalOffset
 				? context.LunyObject.Transform.TransformPoint(_offsetOrWorldPos)
 				: _offsetOrWorldPos;
@@ -73,14 +77,12 @@ namespace LunyScript.Blocks
 		public override String ToString()
 		{
 			var force = _useForce ? _force.ToString() : $"{_amount},{_axis}";
-			var offset = "";
+			LunyVector3 offset;
 			var offsetChild = _offsetChild?.Value;
 			offset = offsetChild != null && offsetChild.IsValid
-				? $"ChildOffset={offsetChild.Transform.LocalPosition}"
-				: _useLocalOffset
-					? $"Offset={_offsetOrWorldPos}"
-					: $"Pos={_offsetOrWorldPos}";
-			return $"{force}, {_forceMode}, {offset}";
+				? offsetChild.Transform.LocalPosition
+				: _offsetOrWorldPos;
+			return $"{force}, {_forceMode}, Pos{offset}";
 		}
 	}
 }

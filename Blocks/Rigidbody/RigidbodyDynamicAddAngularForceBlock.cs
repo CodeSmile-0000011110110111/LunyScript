@@ -41,11 +41,16 @@ namespace LunyScript.Blocks
 					context.LunyObject);
 				return;
 			}
+
+			// ensure we are not kinematic
+			if (rigidbody.IsKinematic)
+				rigidbody.IsKinematic = false;
+
 			var torque = _useVector ? _vector : _axis.ToVector3() * _amount.Value;
 			rigidbody.AddTorque(torque, _forceMode, _space);
 		}
 
 		public override String ToString() =>
-			$"{GetType().Name}({(_useVector ? _vector.ToString() : $"{_amount},{_axis}")}, {_forceMode}, {_space})";
+			$"{(_useVector ? _vector.ToString() : $"{_amount},{_axis}")}, {_forceMode}, {_space}";
 	}
 }

@@ -40,6 +40,11 @@ namespace LunyScript.Blocks
 					context.LunyObject);
 				return;
 			}
+
+			// ensure we are not kinematic
+			if (rigidbody.IsKinematic)
+				rigidbody.IsKinematic = false;
+
 			var force = _useVector ? _vector : _axis.ToVector3() * _amount.Value;
 			rigidbody.AddForce(force, _forceMode, _space);
 		}

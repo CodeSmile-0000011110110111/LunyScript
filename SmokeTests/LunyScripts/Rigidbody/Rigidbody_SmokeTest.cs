@@ -7,9 +7,13 @@ public class Rigidbody_ToggleKinematic_SmokeTest : Script
 		var kinematic = Var.Define("is kinematic", false);
 
 		Coroutine("kinematic toggle")
-			.Every(.5)
+			.Every(.4)
 			.Seconds()
-			.WhenElapsed(kinematic.Toggle(), Rigidbody.SetKinematic(kinematic));
+			.WhenElapsed(kinematic.Toggle(), Rigidbody.SetKinematic(kinematic),
+				If(kinematic)
+					.Then(Object.Enable("On-On-On-On-And-On"), Object.Disable("Off"))
+					.Else(Object.Disable("On-On-On-On-And-On"), Object.Enable("Off"))
+			);
 	}
 }
 
@@ -20,7 +24,7 @@ public class Rigidbody_ToggleGravity_SmokeTest : Script
 		var useGravity = Var.Define("uses gravity", false);
 
 		Coroutine("gravity toggle")
-			.Every(.5)
+			.Every(.4)
 			.Seconds()
 			.WhenElapsed(useGravity.Toggle(), Rigidbody.SetUsesGravity(useGravity));
 	}

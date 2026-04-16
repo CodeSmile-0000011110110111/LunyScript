@@ -21,9 +21,9 @@ namespace LunyScript.Blocks
 					context.LunyObject);
 				return;
 			}
-			rigidbody.SetGravityEnabled(_enabled.Variable.IsTrue);
+			rigidbody.UseGravity = _enabled.Variable.IsTrue;
 		}
 
-		public override String ToString() => $"{GetType().Name}({_enabled})";
+		public override String ToString() => _enabled.ToString();
 	}
 }
