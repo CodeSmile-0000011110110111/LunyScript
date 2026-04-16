@@ -4,7 +4,7 @@ using System;
 
 namespace LunyScript.Blocks
 {
-	internal sealed class RigidbodyKinematicRotateBlock : ActionBlock
+	internal sealed class RigidbodyKinematicRotateByBlock : ActionBlock
 	{
 		private readonly VariableBlock _amount;
 		private readonly LunyAxis _axis;
@@ -12,13 +12,13 @@ namespace LunyScript.Blocks
 		private readonly Boolean _useVector;
 		private readonly LunyTransformSpace _space;
 
-		internal static RigidbodyKinematicRotateBlock CreateAxisRelative(VariableBlock amount, LunyAxis axis, LunyTransformSpace space,
+		internal static RigidbodyKinematicRotateByBlock CreateAxisRelative(VariableBlock amount, LunyAxis axis, LunyTransformSpace space,
 			LunyStackTrace trace) => new(amount, axis, default, false, space, trace);
 
-		internal static RigidbodyKinematicRotateBlock CreateVector(LunyVector3 eulerDelta, LunyTransformSpace space, LunyStackTrace trace) =>
+		internal static RigidbodyKinematicRotateByBlock CreateVector(LunyVector3 eulerDelta, LunyTransformSpace space, LunyStackTrace trace) =>
 			new(null, default, eulerDelta, true, space, trace);
 
-		private RigidbodyKinematicRotateBlock(VariableBlock amount, LunyAxis axis, LunyVector3 eulerDelta, Boolean useVector,
+		private RigidbodyKinematicRotateByBlock(VariableBlock amount, LunyAxis axis, LunyVector3 eulerDelta, Boolean useVector,
 			LunyTransformSpace space, LunyStackTrace trace)
 			: base(trace)
 		{
@@ -34,7 +34,7 @@ namespace LunyScript.Blocks
 			var rigidbody = context.LunyObject.Rigidbody;
 			if (rigidbody == null)
 			{
-				LunyLogger.LogWarning($"{nameof(RigidbodyKinematicRotateBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyObject.Name}'",
+				LunyLogger.LogWarning($"{nameof(RigidbodyKinematicRotateByBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyObject.Name}'",
 					context.LunyObject);
 				return;
 			}
@@ -43,12 +43,10 @@ namespace LunyScript.Blocks
 			if (!rigidbody.IsKinematic)
 				rigidbody.IsKinematic = true;
 
-			var euler = _useVector
-				? _eulerDelta * LunyTime.DeltaTime
-				: _axis.ToVector3() * (_amount.Value * LunyTime.DeltaTime);
+			var euler = _useVector ? _eulerDelta : _axis.ToVector3() * _amount.Value;
 			rigidbody.MoveRotation(euler, _space);
 		}
 
-		public override String ToString() => $"{(_useVector ? _eulerDelta.ToString() : $"{_amount},{_axis}")}, {_space}";
+		public override String ToString() => $"{(_useVector ? _eulerDelta.ToString() : $"{_axis}={_amount}")}, {_space}";
 	}
 }

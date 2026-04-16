@@ -52,8 +52,8 @@ namespace LunyScript
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			return options.UseVector
-				? RigidbodyKinematicRotateBlock.CreateVector(options.EulerDelta, options.Space, options.Trace)
-				: RigidbodyKinematicRotateBlock.CreateAxisRelative(options.Amount, options.Axis, options.Space, options.Trace);
+				? RigidbodyKinematicRotateByBlock.CreateVector(options.EulerDelta, options.Space, options.Trace)
+				: RigidbodyKinematicRotateByBlock.CreateAxisRelative(options.Amount, options.Axis, options.Space, options.Trace);
 		}
 	}
 }

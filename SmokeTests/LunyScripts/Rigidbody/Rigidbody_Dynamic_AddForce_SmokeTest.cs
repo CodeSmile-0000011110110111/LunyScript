@@ -1,59 +1,71 @@
 ﻿using Luny.Engine.Bridge;
 using LunyScript;
 
-public class Rigidbody_Move_DirectionToggle_SmokeTest : Script
+public class Rigidbody_AddForce_SmokeTest : Script
 {
 	public override void Build(ScriptBuildContext context)
 	{
-		var direction = GVar.Define("direction", 0);
+		var applyForce = GVar.Define("Fire!", false);
 
-		Coroutine("direction toggle")
-			.Every(100)
-			.Heartbeats()
-			.WhenElapsed(If(direction <= 0).Then(direction.Set(0.01)).Else(direction.Set(-0.01)));
+		On.Ready(Object.Enable("WarmUp"));
+
+		Coroutine("warmup timer")
+			.In(2)
+			.Seconds()
+			.WhenElapsed(applyForce.Set(true), Object.Disable("WarmUp"), Object.Enable("Fire"));
+
+		Coroutine("engines shutdown")
+			.In(3.5)
+			.Seconds()
+			.WhenElapsed(applyForce.Set(false), Object.Disable("Fire"), Object.Enable("Done"));
+
+		On.Heartbeat(
+			If(GVar["Fire!"]).Then(Rigidbody.Dynamic.AddForce(new LunyVector3(0.02, 1f, 0.1f) * 15))
+		);
 	}
 }
 
-public class Rigidbody_MoveAxisX_SmokeTest : Script
+public class Rigidbody_AddForce_IgnoreMass_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(Rigidbody.Kinematic.MoveBy(GVar["direction"] * 10, LunyAxis.X));
+	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+		If(GVar["Fire!"]).Then(Rigidbody.Dynamic.AddForce(new LunyVector3(0.02, 1f, 0.1f) * 15).IgnoreMass())
+	);
 }
 
-public class Rigidbody_MoveAxisY_SmokeTest : Script
+public class Rigidbody_AddForce_AtChildPosition_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(Rigidbody.Kinematic.MoveBy(GVar["direction"] * 10, LunyAxis.Y));
+	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+		If(GVar["Fire!"])
+			.Then(Rigidbody.Dynamic.AddForce(new LunyVector3(0.02, 1f, 0.1f) * 15)
+				.AtPosition("AddForce_AtPosition_Child"))
+	);
 }
 
-public class Rigidbody_MoveAxisZ_SmokeTest : Script
+public class Rigidbody_AddForce_IgnoreMass_AtChildPosition_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(Rigidbody.Kinematic.MoveBy(GVar["direction"] * -10, LunyAxis.Z));
+	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+		If(GVar["Fire!"])
+			.Then(Rigidbody.Dynamic.AddForce(new LunyVector3(0.02, 1f, 0.1f) * 15)
+				.IgnoreMass()
+				.AtPosition("AddForce_IgnoreMass_AtPosition_Child"))
+	);
 }
 
-public class Rigidbody_MoveAxisX_InWorldSpace_SmokeTest : Script
+public class Rigidbody_AddForce_AtPosition_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) =>
-		On.Heartbeat(Rigidbody.Kinematic.MoveBy(GVar["direction"] * 10, LunyAxis.X).InWorldSpace());
+	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+		If(GVar["Fire!"])
+			.Then(Rigidbody.Dynamic.AddForce(new LunyVector3(0.02, 1f, 0.1f) * 15)
+				.AtPosition(new LunyVector3(-0.45, -0.6, -0.45)))
+	);
 }
 
-public class Rigidbody_MoveAxisY_InWorldSpace_SmokeTest : Script
+public class Rigidbody_AddForce_IgnoreMass_AtPosition_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) =>
-		On.Heartbeat(Rigidbody.Kinematic.MoveBy(GVar["direction"] * 10, LunyAxis.Y).InWorldSpace());
-}
-
-public class Rigidbody_MoveAxisZ_InWorldSpace_SmokeTest : Script
-{
-	public override void Build(ScriptBuildContext context) =>
-		On.Heartbeat(Rigidbody.Kinematic.MoveBy(GVar["direction"] * -10, LunyAxis.Z).InWorldSpace());
-}
-
-public class Rigidbody_MovePosition_SmokeTest : Script
-{
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(Rigidbody.Kinematic.MoveBy(new LunyVector3(0.02, 0.01, 0.01)));
-}
-
-public class Rigidbody_MovePosition_InWorldSpace_SmokeTest : Script
-{
-	public override void Build(ScriptBuildContext context) =>
-		On.Heartbeat(Rigidbody.Kinematic.MoveBy(new LunyVector3(0.02, 0.01, 0.01)).InWorldSpace());
+	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+		If(GVar["Fire!"])
+			.Then(Rigidbody.Dynamic.AddForce(new LunyVector3(0.02, 1f, 0.1f) * 15)
+				.IgnoreMass()
+				.AtPosition(new LunyVector3(-0.45, -0.6, -0.45)))
+	);
 }
