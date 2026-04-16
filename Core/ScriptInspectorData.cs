@@ -16,11 +16,11 @@ namespace LunyScript
 		public Double NumberValue;
 		public String TextValue;
 
-		private WeakReference<Table.VarHandleBase> _varHandle;
+		private WeakReference<Table.VarHandleBase> _varHandleRef;
 
 		public Variable ToVariable()
 		{
-			if (_varHandle != null && _varHandle.TryGetTarget(out var h) && h is Table.VarHandle handle)
+			if (_varHandleRef != null && _varHandleRef.TryGetTarget(out var h) && h is Table.VarHandle handle)
 				return handle.Variable;
 
 			return Type switch
@@ -40,7 +40,7 @@ namespace LunyScript
 			TextValue = v.AsString();
 		}
 
-		internal void SetVarHandle(Table.VarHandleBase varHandle) => _varHandle = new WeakReference<Table.VarHandleBase>(varHandle);
+		internal void SetVarHandle(Table.VarHandleBase varHandle) => _varHandleRef = new WeakReference<Table.VarHandleBase>(varHandle);
 	}
 
 	/// <summary>
