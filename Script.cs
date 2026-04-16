@@ -25,22 +25,25 @@ namespace LunyScript
 	///	To run this script, create a GameObject in the scene and name it 'Example' - same as the script.
 	/// In the future alternative script assignment options will be provided.
 	/// </remarks>
+	[Serializable]
 	public abstract partial class Script
 	{
 		private IScriptRuntimeContext _runtimeContext;
 		private List<BuilderToken> _pendingBuilders;
 		private HashSet<BuilderToken> _finishedBuilders;
-		private ScriptVariables _globalVariableses;
-		private ScriptVariables _instanceVariableses;
+		private ScriptVariables _globalVariables;
+		private ScriptVariables _instanceVariables;
 
 		internal IScriptRuntimeContext RuntimeContext => _runtimeContext;
 		internal ScriptEventScheduler Scheduler => ((ScriptRuntimeContext)_runtimeContext).Scheduler;
 
+		public int _scriptDataTest;
+
 		internal void Initialize(IScriptRuntimeContext runtimeContext)
 		{
 			_runtimeContext = runtimeContext ?? throw new ArgumentNullException(nameof(runtimeContext));
-			_globalVariableses = new ScriptVariables(_runtimeContext.GlobalVariables);
-			_instanceVariableses = new ScriptVariables(_runtimeContext.LocalVariables);
+			_globalVariables = new ScriptVariables(_runtimeContext.GlobalVariables);
+			_instanceVariables = new ScriptVariables(_runtimeContext.LocalVariables);
 		}
 
 		~Script() => LunyTraceLogger.LogInfoFinalized(this);

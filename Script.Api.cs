@@ -23,11 +23,11 @@ namespace LunyScript
 		/// <summary>
 		/// Global variables
 		/// </summary>
-		[NotNull] public ScriptVariables GVar => _globalVariableses;
+		[NotNull] public ScriptVariables GVar => _globalVariables;
 		/// <summary>
 		/// Instance variables (unique per script/object)
 		/// </summary>
-		[NotNull] public ScriptVariables Var => _instanceVariableses;
+		[NotNull] public ScriptVariables Var => _instanceVariables;
 
 		public ComponentApi Component => new(this, ScriptTrace.TryCreateStackTrace(nameof(Component)));
 		public DebugApi Debug => new(this, ScriptTrace.TryCreateStackTrace(nameof(Debug)));
