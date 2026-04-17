@@ -50,7 +50,7 @@ namespace LunyScript
 		private static void BuildAndRegisterLunyScript(ScriptBuildContext scriptContext, ScriptRuntimeContext runtimeContext,
 			LunyScriptRunner runner)
 		{
-			//LunyLogger.LogInfo($"Build Script for {runtimeContext}", nameof(ScriptBuilder));
+			LunyLogger.LogInfo($"Building {runtimeContext.ScriptType.Name} for {runtimeContext}", nameof(ScriptBuilder));
 
 			// Create script instance, initialize with context, and call Build()
 			var scriptInstance = (Script)Activator.CreateInstance(runtimeContext.ScriptType);

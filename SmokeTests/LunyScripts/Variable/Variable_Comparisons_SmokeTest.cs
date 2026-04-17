@@ -1,4 +1,5 @@
-﻿using LunyScript.Blocks;
+﻿using Luny;
+using LunyScript.Blocks;
 
 namespace LunyScript.SmokeTests.Blocks.Variables
 {
@@ -6,6 +7,17 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 	{
 		public override void Build(ScriptBuildContext context)
 		{
+			var setVar = Var.Define("set");
+			var incVar = Var.Define("inc");
+			var decVar = Var.Define("dec");
+			var addVar = Var.Define("add");
+			var subVar = Var.Define("sub");
+
+			var inspectorTestVar = Var["InspectorValue"];
+			LunyLogger.LogInfo($"Comparisons' Inspector variable is: {inspectorTestVar}");
+			On.Ready(inspectorTestVar.Sub(1000));
+
+
 			var fact = Var.Define("fact", true);
 			var altFact = Var.Define("alt. fact", false);
 
@@ -24,9 +36,9 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 				.Every(500)
 				.Milliseconds()
 				.WhenElapsed(
-					If(counter <= 1 && counter == other)
+					If(counter <= 1 && counter != other)
 						.Then(NoOp())
-						.ElseIf(counter <= 2 && !(counter != other))
+						.ElseIf(counter <= 2 && !(counter == other))
 						.Then(NoOp())
 						.ElseIf(counter <= 3 || counter != other && !counter == !other)
 						.Then(NoOp())

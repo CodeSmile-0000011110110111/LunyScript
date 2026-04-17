@@ -1,6 +1,7 @@
 ﻿using Luny;
 using LunyScript.Blocks;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace LunyScript.Diagnostics
@@ -95,35 +96,39 @@ namespace LunyScript.Diagnostics
 			return $"{Emoji.IsSatisfied(truthValue)}{branchName}";
 		}
 
-		public String GetIfBlockElseLabel(ScriptRuntimeContext scriptContext)
+		public String GetIfBlockBranchLabel(ScriptRuntimeContext scriptContext, Int32 branchIndex)
 		{
 			if (_block is not IfBlock ifBlock)
 				return null;
 
-			var allConditionsNotSatisfied = true;
 			var container = (IBlockContainer)ifBlock;
-			var condCount = container.ConditionSequenceCount;
-			for (var i = 0; i < condCount; i++)
+			bool isThisBranchSatisfied = false;
+
+			// Iterate through branches up to and including the current one
+			for (var i = 0; i <= branchIndex; i++)
 			{
 				var sequence = container.GetConditionSequence(i);
-				var branchSatisfied = true;
+				var currentSequenceMet = true;
+
 				foreach (var block in sequence)
 				{
 					if (block is ConditionBlock condition && !condition.Evaluate(scriptContext))
 					{
-						branchSatisfied = false;
+						currentSequenceMet = false;
 						break;
 					}
 				}
 
-				if (branchSatisfied)
+				if (currentSequenceMet)
 				{
-					allConditionsNotSatisfied = false;
+					// If we found a satisfied branch, it's either this one or a previous one that "stole" the execution.
+					isThisBranchSatisfied = (i == branchIndex);
 					break;
 				}
 			}
 
-			return $"{Emoji.IsSatisfied(allConditionsNotSatisfied)}Else";
+			var branchName = container.GetConditionSequenceName(branchIndex);
+			return $"{Emoji.IsSatisfied(isThisBranchSatisfied)}{branchName}";
 		}
 	}
 }
