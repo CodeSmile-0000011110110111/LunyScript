@@ -9,6 +9,6 @@ namespace LunyScript
 	[Serializable]
 	public sealed class ScriptInspectorData
 	{
-		public List<InspectorVariable> Variables = new();
+		//public List<InspectorVariable> Variables = new();
 	}
 }

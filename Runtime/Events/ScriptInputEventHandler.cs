@@ -27,7 +27,7 @@ namespace LunyScript
 				if (_subscriberObjectIDs.Count == 0)
 					RegisterInputActionEvent();
 
-				_subscriberObjectIDs.Add(runtimeContext.LunyObject.LunyObjectId);
+				_subscriberObjectIDs.Add(runtimeContext.LunyGameObject.LunyObjectId);
 			}
 		}
 
@@ -49,7 +49,7 @@ namespace LunyScript
 		private void TryRunForEvent(LunyObjectId subscriberID, LunyInputActionEvent inputEvent)
 		{
 			var context = _contexts.GetByLunyObjectID(subscriberID);
-			if (context == null || !context.LunyObject.IsEnabled)
+			if (context == null || !context.LunyGameObject.IsEnabled)
 				return;
 
 			var sequences = context.Scheduler?.GetInputActionEventSequences(inputEvent.ActionName, inputEvent.Phase);

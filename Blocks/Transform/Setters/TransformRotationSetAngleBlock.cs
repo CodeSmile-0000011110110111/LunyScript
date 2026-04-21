@@ -23,7 +23,7 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var transform = context.LunyObject.Transform;
+			var transform = context.LunyGameObject.Transform;
 			if (_space == LunyTransformSpace.World)
 			{
 				var euler = transform.EulerAngles;

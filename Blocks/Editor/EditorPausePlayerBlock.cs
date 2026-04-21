@@ -25,7 +25,7 @@ namespace LunyScript.Blocks
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
 			if (_message != null)
-				LunyLogger.LogInfo($"{nameof(EditorPausePlayerBlock)}: {_message}", runtimeContext.LunyObject);
+				LunyLogger.LogInfo($"{nameof(EditorPausePlayerBlock)}: {_message}", runtimeContext.LunyGameObject);
 
 			LunyEngine.Instance.Editor.PausePlayer();
 #endif

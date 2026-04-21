@@ -33,12 +33,12 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var rigidbody = context.LunyObject.Rigidbody;
+			var rigidbody = context.LunyGameObject.Rigidbody;
 			if (rigidbody == null)
 			{
 				LunyLogger.LogWarning(
-					$"{nameof(RigidbodyDynamicAddAngularForceBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyObject.Name}'",
-					context.LunyObject);
+					$"{nameof(RigidbodyDynamicAddAngularForceBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyGameObject.Name}'",
+					context.LunyGameObject);
 				return;
 			}
 

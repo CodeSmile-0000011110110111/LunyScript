@@ -27,7 +27,7 @@ namespace LunyScript.Blocks
 			if (inputEvent == null)
 				throw new LunyScriptException($"{nameof(InputAssignUserBlock)} can only be used in Input event sequences.");
 
-			LunyEngine.Instance.Input.AssignUserToLastDevice(_userName, inputEvent.DeviceId, context.LunyObject);
+			LunyEngine.Instance.Input.AssignUserToLastDevice(_userName, inputEvent.DeviceId, context.LunyGameObject);
 		}
 	}
 

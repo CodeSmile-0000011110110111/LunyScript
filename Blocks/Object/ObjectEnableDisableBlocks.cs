@@ -11,7 +11,7 @@ namespace LunyScript.Blocks
 		private ObjectEnableSelfBlock(LunyStackTrace trace)
 			: base(trace) {}
 
-		protected internal override void Execute(IScriptRuntimeContext context) => context.LunyObject.IsEnabled = true;
+		protected internal override void Execute(IScriptRuntimeContext context) => context.LunyGameObject.IsEnabled = true;
 		public override String ToString() => "self";
 	}
 
@@ -22,7 +22,7 @@ namespace LunyScript.Blocks
 		private ObjectDisableSelfBlock(LunyStackTrace trace)
 			: base(trace) {}
 
-		protected internal override void Execute(IScriptRuntimeContext context) => context.LunyObject.IsEnabled = false;
+		protected internal override void Execute(IScriptRuntimeContext context) => context.LunyGameObject.IsEnabled = false;
 		public override String ToString() => "self";
 	}
 
@@ -83,7 +83,7 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var target = _target != null ? _target.Value : context.LunyObject;
+			var target = _target != null ? _target.Value : context.LunyGameObject;
 			if (target == null)
 				return;
 

@@ -41,13 +41,13 @@ namespace LunyScript.Blocks
 			switch (_logLevel)
 			{
 				case LogLevel.Info:
-					LunyLogger.LogInfo(_message, runtimeContext.LunyObject.Name);
+					LunyLogger.LogInfo(_message, runtimeContext.LunyGameObject.Name);
 					break;
 				case LogLevel.Warning:
-					LunyLogger.LogWarning(_message, runtimeContext.LunyObject.Name);
+					LunyLogger.LogWarning(_message, runtimeContext.LunyGameObject.Name);
 					break;
 				case LogLevel.Error:
-					LunyLogger.LogError(_message, runtimeContext.LunyObject.Name);
+					LunyLogger.LogError(_message, runtimeContext.LunyGameObject.Name);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(_logLevel), _logLevel, runtimeContext?.ToString());

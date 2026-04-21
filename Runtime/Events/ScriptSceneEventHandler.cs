@@ -23,7 +23,7 @@ namespace LunyScript
 		internal void Register(ScriptRuntimeContext runtimeContext)
 		{
 			if (runtimeContext.Scheduler.IsObservingAnyOf(typeof(LunySceneEvent)))
-				_subscriberObjectIDs.Add(runtimeContext.LunyObject.LunyObjectId);
+				_subscriberObjectIDs.Add(runtimeContext.LunyGameObject.LunyObjectId);
 		}
 
 		public void OnSceneUnloaded(ILunyScene scene)

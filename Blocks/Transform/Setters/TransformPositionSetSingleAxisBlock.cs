@@ -23,7 +23,7 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var transform = context.LunyObject.Transform;
+			var transform = context.LunyGameObject.Transform;
 			var pos = _space == LunyTransformSpace.World ? transform.Position : transform.LocalPosition;
 
 			pos = _axis switch

@@ -24,7 +24,7 @@ namespace LunyScript.Blocks
 		{
 #if DEBUG || LUNYSCRIPT_DEBUG
 			if (_message != null)
-				LunyLogger.LogInfo($"{nameof(DebugBreakBlock)}: {_message}", runtimeContext.LunyObject);
+				LunyLogger.LogInfo($"{nameof(DebugBreakBlock)}: {_message}", runtimeContext.LunyGameObject);
 
 			Debugger.Break();
 #endif

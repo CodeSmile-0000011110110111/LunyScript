@@ -137,7 +137,7 @@ namespace LunyScript
 
 				// ensure all objects run their OnDestroy
 				foreach (var context in _contexts.AllContexts)
-					context.LunyObject.Destroy();
+					context.LunyGameObject.Destroy();
 
 				// final cleanup of pending object destroy
 				_inputEventHandler.Shutdown();
@@ -179,26 +179,26 @@ namespace LunyScript
 			_isLoadingScene = false;
 		}
 
-		public void OnObjectRegistered(ILunyObject lunyObject)
+		public void OnObjectRegistered(ILunyGameObject lunyGameObject)
 		{
 			//LunyLogger.LogInfo($"{nameof(OnObjectRegistered)}: {lunyObject}", this);
 
 			// Check if object is already scripted to avoid double activation
-			if (_contexts.GetByNativeObjectID(lunyObject.NativeObjectId) != null)
+			if (_contexts.GetByNativeObjectID(lunyGameObject.NativeObjectId) != null)
 			{
-				LunyLogger.LogWarning($"{lunyObject} already runs a script", this);
+				LunyLogger.LogWarning($"{lunyGameObject} already runs a script", this);
 				return;
 			}
 
 			// Activate script on dynamically created object
 			if (!_isLoadingScene)
-				ScriptBuilder.BuildAndActivateLunyScript(this, lunyObject);
+				ScriptBuilder.BuildAndActivateLunyScript(this, lunyGameObject);
 		}
 
-		public void OnObjectUnregistered(ILunyObject lunyObject)
+		public void OnObjectUnregistered(ILunyGameObject lunyGameObject)
 		{
 			// Cleanup context for engine-side auto-destroyed objects (scene load)
-			var context = _contexts.GetByNativeObjectID(lunyObject.NativeObjectId);
+			var context = _contexts.GetByNativeObjectID(lunyGameObject.NativeObjectId);
 			if (context != null)
 			{
 				LunyLogger.LogInfo($"{nameof(OnObjectUnregistered)}: unregistering {context} ({context.GetHashCode()})");

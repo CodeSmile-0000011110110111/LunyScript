@@ -24,12 +24,12 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var currentRotation = context.LunyObject.Transform.Rotation;
+			var currentRotation = context.LunyGameObject.Transform.Rotation;
 			if (!TryGetTargetRotation(context, currentRotation, _worldUp, out var targetRotation, out var deltaAngle))
 				return;
 
 			var t = ComputeStep();
-			context.LunyObject.Transform.Rotation = _interpolation switch
+			context.LunyGameObject.Transform.Rotation = _interpolation switch
 			{
 				LunyInterpolation.Spherical => LunyQuaternion.Slerp(currentRotation, targetRotation, t),
 				LunyInterpolation.Linear => LunyQuaternion.Lerp(currentRotation, targetRotation, t),

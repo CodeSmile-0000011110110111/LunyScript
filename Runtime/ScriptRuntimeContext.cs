@@ -13,7 +13,7 @@ namespace LunyScript
 	{
 		ScriptId ScriptId { get; }
 		Type ScriptType { get; }
-		ILunyObject LunyObject { get; }
+		ILunyGameObject LunyGameObject { get; }
 		ITable GlobalVariables { get; }
 		ITable LocalVariables { get; }
 		/// <summary>
@@ -35,7 +35,7 @@ namespace LunyScript
 		private static readonly ITable s_GlobalVariables = new Table();
 
 		private readonly IScriptDefinition _scriptDef;
-		private readonly LunyObject _lunyObject;
+		private readonly LunyGameObject _lunyGameObject;
 
 		private ScriptEventScheduler _scheduler;
 		private ScriptDebugHooks _debugHooks;
@@ -56,7 +56,7 @@ namespace LunyScript
 		/// <summary>
 		/// The engine object/node this script operates on.
 		/// </summary>
-		public ILunyObject LunyObject => _lunyObject;
+		public ILunyGameObject LunyGameObject => _lunyGameObject;
 		/// <summary>
 		/// Global variables shared across all scripts.
 		/// </summary>
@@ -95,10 +95,10 @@ namespace LunyScript
 		internal static void ClearGlobalVariables() => s_GlobalVariables?.RemoveAll();
 		internal static ITable GetGlobalVariables() => s_GlobalVariables;
 
-		public ScriptRuntimeContext(IScriptDefinition definition, ILunyObject lunyObject)
+		public ScriptRuntimeContext(IScriptDefinition definition, ILunyGameObject lunyGameObject)
 		{
 			_scriptDef = definition ?? throw new ArgumentNullException(nameof(definition));
-			_lunyObject = lunyObject as LunyObject ?? throw new ArgumentNullException(nameof(lunyObject));
+			_lunyGameObject = lunyGameObject as LunyGameObject ?? throw new ArgumentNullException(nameof(lunyGameObject));
 			//LunyLogger.LogInfo($"new {this} ({GetHashCode()})", this);
 		}
 
@@ -113,7 +113,7 @@ namespace LunyScript
 
 		internal void SetEventArgs(Object eventArgs) => _eventArgs = eventArgs;
 
-		internal void Activate() => _lunyObject.Initialize();
+		internal void Activate() => _lunyGameObject.Initialize();
 
 		internal void Shutdown()
 		{
@@ -128,6 +128,6 @@ namespace LunyScript
 		}
 
 		~ScriptRuntimeContext() => LunyTraceLogger.LogInfoFinalized(this);
-		public override String ToString() => $"{ScriptType.Name} ({ScriptId}) on Object: {LunyObject}";
+		public override String ToString() => $"{ScriptType.Name} ({ScriptId}) on Object: {LunyGameObject}";
 	}
 }

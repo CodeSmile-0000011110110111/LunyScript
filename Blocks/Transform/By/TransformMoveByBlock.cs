@@ -62,7 +62,7 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var transform = context.LunyObject.Transform;
+			var transform = context.LunyGameObject.Transform;
 			var speed = _speed.Value * LunyTime.DeltaTime;
 
 			if (_useDirection)

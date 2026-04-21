@@ -11,7 +11,7 @@ namespace LunyScript.Blocks
 		private ObjectDestroySelfBlock(LunyStackTrace trace)
 			: base(trace) {}
 
-		protected internal override void Execute(IScriptRuntimeContext context) => context.LunyObject.Destroy();
+		protected internal override void Execute(IScriptRuntimeContext context) => context.LunyGameObject.Destroy();
 		public override String ToString() => "self";
 	}
 

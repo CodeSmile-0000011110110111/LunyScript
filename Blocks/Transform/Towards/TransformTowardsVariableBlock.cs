@@ -22,7 +22,7 @@ namespace LunyScript.Blocks
 		/// </summary>
 		protected Boolean TryGetScaleDelta(IScriptRuntimeContext ctx, out LunyVector3 current, out LunyVector3 maskedTarget)
 		{
-			var transform = ctx.LunyObject.Transform;
+			var transform = ctx.LunyGameObject.Transform;
 			current = transform.LocalScale;
 			var delta = (TargetScale.Value - current) * LockAxis;
 			maskedTarget = current + delta;

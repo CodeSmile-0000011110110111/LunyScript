@@ -14,7 +14,7 @@ namespace LunyScript.Blocks
 			: base(trace) => _uniformScale = uniformScale;
 
 		protected internal override void Execute(IScriptRuntimeContext context) =>
-			context.LunyObject.Transform.LocalScale = LunyVector3.Uniform(_uniformScale.Value);
+			context.LunyGameObject.Transform.LocalScale = LunyVector3.Uniform(_uniformScale.Value);
 
 		public override String ToString() => _uniformScale.ToString();
 	}

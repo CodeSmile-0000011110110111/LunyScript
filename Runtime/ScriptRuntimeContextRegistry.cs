@@ -30,7 +30,7 @@ namespace LunyScript
 
 		~ScriptRuntimeContextRegistry() => LunyTraceLogger.LogInfoFinalized(this);
 
-		public ScriptRuntimeContext CreateContext(ScriptDefinition scriptDef, ILunyObject sceneObject)
+		public ScriptRuntimeContext CreateContext(ScriptDefinition scriptDef, ILunyGameObject sceneObject)
 		{
 			var context = new ScriptRuntimeContext(scriptDef, sceneObject);
 			Register(context);
@@ -45,12 +45,12 @@ namespace LunyScript
 			if (runtimeContext == null)
 				throw new ArgumentNullException(nameof(runtimeContext));
 
-			var lunyID = runtimeContext.LunyObject.LunyObjectId;
+			var lunyID = runtimeContext.LunyGameObject.LunyObjectId;
 			if (_contextsByObjectID.ContainsKey(lunyID))
-				throw new LunyScriptException($"Context for object {runtimeContext.LunyObject.Name} ({lunyID}) already registered, replacing");
+				throw new LunyScriptException($"Context for object {runtimeContext.LunyGameObject.Name} ({lunyID}) already registered, replacing");
 
 			_contextsByObjectID[lunyID] = runtimeContext;
-			_contextsByNativeID[runtimeContext.LunyObject.NativeObjectId] = runtimeContext;
+			_contextsByNativeID[runtimeContext.LunyGameObject.NativeObjectId] = runtimeContext;
 			_isSortedContextsDirty = true;
 		}
 
@@ -60,12 +60,12 @@ namespace LunyScript
 		internal Boolean Unregister(ScriptRuntimeContext runtimeContext)
 		{
 			//LunyLogger.LogInfo($"Unregistering ... {runtimeContext} ({runtimeContext.GetHashCode()})", this);
-			var lunyID = runtimeContext.LunyObject.LunyObjectId;
+			var lunyID = runtimeContext.LunyGameObject.LunyObjectId;
 			if (!_contextsByObjectID.Remove(lunyID))
 				return false;
 
 			_isSortedContextsDirty = true;
-			_contextsByNativeID.Remove(runtimeContext.LunyObject.NativeObjectId);
+			_contextsByNativeID.Remove(runtimeContext.LunyGameObject.NativeObjectId);
 			runtimeContext.Shutdown();
 
 			//LunyLogger.LogInfo($"Unregistered: {runtimeContext} ({runtimeContext.GetHashCode()})", this);
@@ -96,7 +96,7 @@ namespace LunyScript
 		{
 			_isSortedContextsDirty = false;
 			return _contextsByObjectID.Values
-				.OrderBy(ctx => ctx.LunyObject.LunyObjectId)
+				.OrderBy(ctx => ctx.LunyGameObject.LunyObjectId)
 				.ToArray();
 		}
 

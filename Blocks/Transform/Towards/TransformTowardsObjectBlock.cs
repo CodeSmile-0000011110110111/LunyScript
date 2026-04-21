@@ -5,7 +5,7 @@ using System;
 namespace LunyScript.Blocks
 {
 	/// <summary>
-	/// Abstract base for Towards blocks whose target is an <see cref="ILunyObject"/> in the scene
+	/// Abstract base for Towards blocks whose target is an <see cref="ILunyGameObject"/> in the scene
 	/// (Move and Rotate towards).
 	/// </summary>
 	public abstract class TransformTowardsObjectBlock : TransformTowardsBlock
@@ -40,7 +40,7 @@ namespace LunyScript.Blocks
 		protected Boolean TryGetTargetRotation(IScriptRuntimeContext ctx, LunyQuaternion currentRot, LunyVector3 worldUp,
 			out LunyQuaternion targetRot, out Double deltaAngle)
 		{
-			var transform = ctx.LunyObject.Transform;
+			var transform = ctx.LunyGameObject.Transform;
 			currentRot = transform.Rotation;
 			targetRot = LunyQuaternion.Identity;
 			deltaAngle = 0f;

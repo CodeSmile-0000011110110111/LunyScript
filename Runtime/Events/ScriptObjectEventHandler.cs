@@ -43,7 +43,7 @@ namespace LunyScript
 
 		public void OnHeartbeat(ScriptRuntimeContext runtimeContext)
 		{
-			if (runtimeContext.LunyObject.IsEnabled)
+			if (runtimeContext.LunyGameObject.IsEnabled)
 			{
 				var sequences = runtimeContext.Scheduler.GetObjectEventSequences(LunyObjectEvent.Heartbeat);
 				LunyScriptRunner.Run(sequences, runtimeContext);
@@ -52,7 +52,7 @@ namespace LunyScript
 
 		public void OnFrameUpdate(ScriptRuntimeContext runtimeContext)
 		{
-			var lunyObject = runtimeContext.LunyObject;
+			var lunyObject = runtimeContext.LunyGameObject;
 			if (lunyObject.IsEnabled)
 			{
 				var sequences = runtimeContext.Scheduler.GetObjectEventSequences(LunyObjectEvent.FrameUpdate);
@@ -62,7 +62,7 @@ namespace LunyScript
 
 		public void OnFrameLateUpdate(ScriptRuntimeContext runtimeContext)
 		{
-			if (runtimeContext.LunyObject.IsEnabled)
+			if (runtimeContext.LunyGameObject.IsEnabled)
 			{
 				var sequences = runtimeContext.Scheduler.GetObjectEventSequences(LunyObjectEvent.AfterFrameUpdate);
 				LunyScriptRunner.Run(sequences, runtimeContext);
@@ -93,7 +93,7 @@ namespace LunyScript
 
 			private void RegisterAllCallbacks()
 			{
-				var lunyObject = _runtimeContext.LunyObject;
+				var lunyObject = _runtimeContext.LunyGameObject;
 				lunyObject.OnCreated += OnCreated;
 				lunyObject.OnDestroyed += OnDestroyed;
 				lunyObject.OnReady += OnReady;
@@ -115,7 +115,7 @@ namespace LunyScript
 
 			internal void UnregisterAllCallbacks()
 			{
-				var lunyObject = _runtimeContext.LunyObject;
+				var lunyObject = _runtimeContext.LunyGameObject;
 				lunyObject.OnCreated -= OnCreated;
 				lunyObject.OnDestroyed -= OnDestroyed;
 				lunyObject.OnReady -= OnReady;
@@ -175,7 +175,7 @@ namespace LunyScript
 			private void UnscheduleOnceOnlyEvent(LunyObjectEvent objectEvent)
 			{
 				// Note: during the event, the script may have run Object.Destroy() on its object, thus invalidating it
-				var lunyObject = _runtimeContext.LunyObject;
+				var lunyObject = _runtimeContext.LunyGameObject;
 				if (!lunyObject.IsValid)
 					return;
 

@@ -22,7 +22,7 @@ namespace LunyScript.Blocks
 				return;
 
 			var t = ComputeStep();
-			context.LunyObject.Transform.LocalScale = _interpolation switch
+			context.LunyGameObject.Transform.LocalScale = _interpolation switch
 			{
 				LunyInterpolation.Spherical => LunyVector3.Slerp(current, maskedTarget, t),
 				LunyInterpolation.Linear => LunyVector3.Lerp(current, maskedTarget, t),

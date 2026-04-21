@@ -14,11 +14,11 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var rigidbody = context.LunyObject.Rigidbody;
+			var rigidbody = context.LunyGameObject.Rigidbody;
 			if (rigidbody == null)
 			{
-				LunyLogger.LogWarning($"{nameof(RigidbodySetKinematicBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyObject.Name}'",
-					context.LunyObject);
+				LunyLogger.LogWarning($"{nameof(RigidbodySetKinematicBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyGameObject.Name}'",
+					context.LunyGameObject);
 				return;
 			}
 			rigidbody.IsKinematic = _enabled.Variable.IsTrue;

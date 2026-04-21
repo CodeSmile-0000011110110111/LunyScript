@@ -49,12 +49,12 @@ namespace LunyScript.Blocks
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var rigidbody = context.LunyObject.Rigidbody;
+			var rigidbody = context.LunyGameObject.Rigidbody;
 			if (rigidbody == null)
 			{
 				LunyLogger.LogWarning(
-					$"{nameof(RigidbodyDynamicAddForceAtPositionBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyObject.Name}'",
-					context.LunyObject);
+					$"{nameof(RigidbodyDynamicAddForceAtPositionBlock)}: no {nameof(ILunyRigidbody)} on '{context.LunyGameObject.Name}'",
+					context.LunyGameObject);
 				return;
 			}
 
@@ -63,7 +63,7 @@ namespace LunyScript.Blocks
 				rigidbody.IsKinematic = false;
 
 			var worldPosition = _useLocalOffset
-				? context.LunyObject.Transform.TransformPoint(_offsetOrWorldPos)
+				? context.LunyGameObject.Transform.TransformPoint(_offsetOrWorldPos)
 				: _offsetOrWorldPos;
 
 			var offsetChild = _offsetChild?.Value;
