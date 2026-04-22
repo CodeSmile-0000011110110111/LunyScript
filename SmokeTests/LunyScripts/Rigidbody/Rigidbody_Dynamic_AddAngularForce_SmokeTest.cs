@@ -3,7 +3,7 @@ using LunyScript;
 
 public class Rigidbody_AddAngularForce_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var applyForce = GVar.Define("Fire!", false);
 
@@ -27,14 +27,14 @@ public class Rigidbody_AddAngularForce_SmokeTest : Script
 
 public class Rigidbody_AddAngularForce_IgnoreMass_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+	public override void Build() => On.Heartbeat(
 		If(GVar["Fire!"]).Then(Rigidbody.Dynamic.AddAngularForce(new LunyVector3(1f, 0f, -0.1) * 35).IgnoreMass())
 	);
 }
 
 public class Rigidbody_AddAngularImpulse_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+	public override void Build() => On.Heartbeat(
 		If(GVar["Fire!"] && !Var["did fire"])
 			.Then(Var["did fire"].Set(true),
 				Rigidbody.Dynamic.AddAngularImpulse(new LunyVector3(1f, 0f, -0.1) * 35).IgnoreMass())
@@ -43,7 +43,7 @@ public class Rigidbody_AddAngularImpulse_SmokeTest : Script
 
 public class Rigidbody_AddAngularImpulse_IgnoreMass_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+	public override void Build() => On.Heartbeat(
 		If(GVar["Fire!"] && !Var["did fire"])
 			.Then(Var["did fire"].Set(true),
 				Rigidbody.Dynamic.AddAngularImpulse(new LunyVector3(1f, 0f, -0.1) * 35).IgnoreMass())

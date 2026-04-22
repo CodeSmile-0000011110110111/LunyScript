@@ -6,7 +6,7 @@ namespace LunyScript.SmokeTests
 	{
 		private const Int32 N = 10;
 
-		public override void Build(ScriptBuildContext context)
+		public override void Build()
 		{
 			// Note: Heartbeats run multiple times per frame and decoupled from frame update, and its frequency
 			// is configurable. In Unity: Project Settings / Time / Fixed Timestep (default: 0.02 => 50 Hz)

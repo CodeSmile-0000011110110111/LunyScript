@@ -61,8 +61,7 @@ namespace LunyScript
 		/// Users construct their blocks (sequences, statemachines, behaviors) for execution here.
 		/// Users can use regular C# syntax (ie call methods, use loops) to construct complex and/or reusable blocks.
 		/// </summary>
-		/// <param name="context"></param>
-		public abstract void Build(ScriptBuildContext context);
+		public abstract void Build();
 
 		internal BuilderToken CreateBuilderToken(String name, String type)
 		{

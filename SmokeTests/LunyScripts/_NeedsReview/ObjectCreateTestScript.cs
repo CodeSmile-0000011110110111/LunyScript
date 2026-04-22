@@ -7,7 +7,7 @@ namespace LunyScript.SmokeTests
 		public const String AutoDestroyObjectName = "will be destroyed";
 		public const String ParentName = "Created Objects";
 
-		public override void Build(ScriptBuildContext context)
+		public override void Build()
 		{
 			var isDestroyed = Var.Define("isDestroyed", false);
 

@@ -2,7 +2,7 @@
 
 public class Transform_SetUniformScale_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var positionRoutine = Coroutine("set scale")
 			.Every(1)
@@ -16,7 +16,7 @@ public class Transform_SetUniformScale_SmokeTest : Script
 
 public class Transform_SetUniformScale_Variable_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var scale = Var.Define("scale", 1);
 		On.FrameUpdate(scale.Add(0.02), Transform.SetScale(scale), If(scale > 1.5).Then(scale.Set(0)));

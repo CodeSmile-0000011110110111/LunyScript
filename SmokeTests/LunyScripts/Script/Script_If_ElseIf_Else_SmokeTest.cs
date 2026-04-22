@@ -4,7 +4,7 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 {
 	public class Script_If_ElseIf_Else_SmokeTest : Script
 	{
-		public override void Build(ScriptBuildContext context)
+		public override void Build()
 		{
 			var fact = Var.Define("fact", true);
 			var altFact = Var.Define("alt. fact", false);

@@ -4,7 +4,7 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 {
 	public class Script_ForLoop_SmokeTest : Script
 	{
-		public override void Build(ScriptBuildContext context)
+		public override void Build()
 		{
 			// Loops are safeguarded against infinite loops, they exit with an error after ScriptEngine.MaxLoopIterations (default: 32k)
 			var counterFor = Var.Define("counter For()");

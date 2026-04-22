@@ -4,7 +4,7 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 {
 	public class Script_CheckBlock_SmokeTest : Script
 	{
-		public override void Build(ScriptBuildContext context)
+		public override void Build()
 		{
 			Coroutine("literal test")
 				.Every(.5)

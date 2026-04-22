@@ -4,7 +4,7 @@ namespace LunyScript.SmokeTests
 {
 	public sealed class VariablesTest : Script
 	{
-		public override void Build(ScriptBuildContext context)
+		public override void Build()
 		{
 			// Object-bound (local) variables use 'Var'
 			var variable = Var.Define("variable"); // will have a value of 0

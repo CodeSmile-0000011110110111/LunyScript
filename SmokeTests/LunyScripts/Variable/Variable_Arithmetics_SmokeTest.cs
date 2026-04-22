@@ -5,7 +5,7 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 {
 	public class Variable_Arithmetics_SmokeTest : Script
 	{
-		public override void Build(ScriptBuildContext context)
+		public override void Build()
 		{
 			const Double factor = 1.111111111111111;
 

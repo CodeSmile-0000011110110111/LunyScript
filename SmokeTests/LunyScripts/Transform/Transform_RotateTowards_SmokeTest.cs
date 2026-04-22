@@ -2,7 +2,7 @@
 
 public class Transform_RotateTowards_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var startingSpeed = 1.1;
 		var speed = GVar.Define("rotate speed", startingSpeed);
@@ -35,35 +35,35 @@ public class Transform_RotateTowards_SmokeTest : Script
 
 public class Transform_RotateTowards_Instant_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.FrameUpdate(Transform.RotateTowards("follow target").Instant());
+	public override void Build() => On.FrameUpdate(Transform.RotateTowards("follow target").Instant());
 }
 
 public class Transform_RotateTowards_Lerp_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) =>
+	public override void Build() =>
 		On.FrameUpdate(Transform.RotateTowards("follow target").Linear().Speed(GVar["rotate speed"]));
 }
 
 public class Transform_RotateTowards_Slerp_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) =>
+	public override void Build() =>
 		On.FrameUpdate(Transform.RotateTowards("follow target").Spherical().Speed(GVar["rotate speed"]));
 }
 
 public class Transform_RotateTowards_LockX_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) =>
+	public override void Build() =>
 		On.FrameUpdate(Transform.RotateTowards("follow target axislock").Instant().LockX());
 }
 
 public class Transform_RotateTowards_LockY_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) =>
+	public override void Build() =>
 		On.FrameUpdate(Transform.RotateTowards("follow target axislock").Instant().LockY());
 }
 
 public class Transform_RotateTowards_LockZ_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) =>
+	public override void Build() =>
 		On.FrameUpdate(Transform.RotateTowards("follow target axislock").Instant().LockZ());
 }

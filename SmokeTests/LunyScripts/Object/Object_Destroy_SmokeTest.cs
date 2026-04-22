@@ -2,7 +2,7 @@ using LunyScript;
 
 public class Object_Destroy_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		On.Ready(Object.Destroy("Object_Destroyed_OnLaunch"));
 
@@ -25,5 +25,5 @@ public class Object_Destroy_SmokeTest : Script
 public class Object_DestroySelf_SmokeTest : Script
 {
 	// destroys itself immediately
-	public override void Build(ScriptBuildContext context) => On.Created(Object.Destroy());
+	public override void Build() => On.Created(Object.Destroy());
 }

@@ -2,7 +2,7 @@
 
 public class Transform_SetLocalPosition_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var positionRoutine = Coroutine("set local position")
 			.Every(1)
@@ -16,7 +16,7 @@ public class Transform_SetLocalPosition_SmokeTest : Script
 
 public class Transform_SetWorldPosition_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var positionRoutine = Coroutine("set world position")
 			.Every(1)

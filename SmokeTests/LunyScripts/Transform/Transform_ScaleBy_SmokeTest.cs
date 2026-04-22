@@ -3,7 +3,7 @@ using LunyScript;
 
 public class Transform_ScaleBy_Uniform_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var dir = Var.Define("scale up/down", 1);
 		On.FrameUpdate(If(dir == 1)
@@ -21,7 +21,7 @@ public class Transform_ScaleBy_Uniform_SmokeTest : Script
 
 public class Transform_ScaleByX_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var dir = Var.Define("scale up/down", 1);
 		On.FrameUpdate(If(dir == 1)
@@ -39,7 +39,7 @@ public class Transform_ScaleByX_SmokeTest : Script
 
 public class Transform_ScaleByY_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var dir = Var.Define("scale up/down", 1);
 		On.FrameUpdate(If(dir == 1)
@@ -57,7 +57,7 @@ public class Transform_ScaleByY_SmokeTest : Script
 
 public class Transform_ScaleByZ_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var dir = Var.Define("scale up/down", 1);
 		On.FrameUpdate(If(dir == 1)
@@ -75,7 +75,7 @@ public class Transform_ScaleByZ_SmokeTest : Script
 
 public class Transform_ScaleBy_Clamp_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var dir = Var.Define("scale up/down", 1);
 		On.FrameUpdate(If(dir == 1)

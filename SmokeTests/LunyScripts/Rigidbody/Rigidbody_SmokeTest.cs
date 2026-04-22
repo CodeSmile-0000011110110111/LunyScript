@@ -2,7 +2,7 @@
 
 public class Rigidbody_ToggleKinematic_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var kinematic = Var.Define("is kinematic", false);
 
@@ -19,7 +19,7 @@ public class Rigidbody_ToggleKinematic_SmokeTest : Script
 
 public class Rigidbody_ToggleGravity_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var useGravity = Var.Define("uses gravity", false);
 

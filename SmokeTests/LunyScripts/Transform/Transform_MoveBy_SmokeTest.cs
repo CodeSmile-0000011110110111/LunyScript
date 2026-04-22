@@ -8,7 +8,7 @@ using LunyScript;
 
 public class Transform_MoveByX_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var targetNum = Var.Define("current dir", 2);
 		On.FrameUpdate(If(targetNum == 1)
@@ -28,7 +28,7 @@ public class Transform_MoveByX_SmokeTest : Script
 
 public class Transform_MoveByX_InWorldSpace_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var targetNum = Var.Define("current dir", 2);
 		On.FrameUpdate(If(targetNum == 1)
@@ -46,7 +46,7 @@ public class Transform_MoveByX_InWorldSpace_SmokeTest : Script
 
 public class Transform_MoveByZ_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var targetNum = Var.Define("current dir", 2);
 		On.FrameUpdate(If(targetNum == 1)
@@ -64,7 +64,7 @@ public class Transform_MoveByZ_SmokeTest : Script
 
 public class Transform_MoveByZ_InWorldSpace_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var targetNum = Var.Define("current dir", 2);
 		On.FrameUpdate(If(targetNum == 1)

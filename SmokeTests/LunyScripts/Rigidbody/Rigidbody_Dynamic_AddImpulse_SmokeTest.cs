@@ -3,7 +3,7 @@ using LunyScript;
 
 public class Rigidbody_AddImpulse_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var applyForce = GVar.Define("Fire!", false);
 		var didFire = GVar.Define("did Fire!", false);
@@ -29,14 +29,14 @@ public class Rigidbody_AddImpulse_SmokeTest : Script
 
 public class Rigidbody_AddImpulse_IgnoreMass_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+	public override void Build() => On.Heartbeat(
 		If(GVar["Fire!"]).Then(Rigidbody.Dynamic.AddImpulse(new LunyVector3(0.02, 1f, 0.1f) * 15).IgnoreMass())
 	);
 }
 
 public class Rigidbody_AddImpulse_AtChildPosition_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+	public override void Build() => On.Heartbeat(
 		If(GVar["Fire!"])
 			.Then(Rigidbody.Dynamic.AddImpulse(new LunyVector3(0.02, 1f, 0.1f) * 15)
 				.AtPosition("AddImpulse_AtPosition_Child"))
@@ -45,7 +45,7 @@ public class Rigidbody_AddImpulse_AtChildPosition_SmokeTest : Script
 
 public class Rigidbody_AddImpulse_IgnoreMass_AtChildPosition_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+	public override void Build() => On.Heartbeat(
 		If(GVar["Fire!"])
 			.Then(Rigidbody.Dynamic.AddImpulse(new LunyVector3(0.02, 1f, 0.1f) * 15)
 				.IgnoreMass()
@@ -55,7 +55,7 @@ public class Rigidbody_AddImpulse_IgnoreMass_AtChildPosition_SmokeTest : Script
 
 public class Rigidbody_AddImpulse_AtPosition_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+	public override void Build() => On.Heartbeat(
 		If(GVar["Fire!"])
 			.Then(Rigidbody.Dynamic.AddImpulse(new LunyVector3(0.02, 1f, 0.1f) * 15)
 				.AtPosition(new LunyVector3(-0.45, -0.6, -0.45)))
@@ -64,7 +64,7 @@ public class Rigidbody_AddImpulse_AtPosition_SmokeTest : Script
 
 public class Rigidbody_AddImpulse_IgnoreMass_AtPosition_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context) => On.Heartbeat(
+	public override void Build() => On.Heartbeat(
 		If(GVar["Fire!"])
 			.Then(Rigidbody.Dynamic.AddImpulse(new LunyVector3(0.02, 1f, 0.1f) * 15)
 				.IgnoreMass()

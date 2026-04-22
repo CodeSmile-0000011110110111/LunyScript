@@ -2,7 +2,7 @@ namespace LunyScript.SmokeTests
 {
 	public sealed class InputTest : Script
 	{
-		public override void Build(ScriptBuildContext context)
+		public override void Build()
 		{
 			var upscale = Var.Constant("Upscale", 1.2);
 

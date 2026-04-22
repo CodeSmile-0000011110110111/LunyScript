@@ -3,7 +3,7 @@ using LunyScript;
 
 public class Transform_ScaleTowards_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var startingSpeed = 0.2;
 		var speed = GVar.Define("scale speed", startingSpeed);

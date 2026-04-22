@@ -5,7 +5,7 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 {
 	public class Variable_Comparisons_SmokeTest : Script
 	{
-		public override void Build(ScriptBuildContext context)
+		public override void Build()
 		{
 			var setVar = Var.Define("set");
 			var incVar = Var.Define("inc");

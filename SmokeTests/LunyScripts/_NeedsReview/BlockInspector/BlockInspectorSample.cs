@@ -2,7 +2,7 @@
 {
 	public class BlockInspectorSample : Script
 	{
-		public override void Build(ScriptBuildContext context)
+		public override void Build()
 		{
 			On.Created(Debug.Log($"Hello, {nameof(BlockInspectorSample)}!"));
 

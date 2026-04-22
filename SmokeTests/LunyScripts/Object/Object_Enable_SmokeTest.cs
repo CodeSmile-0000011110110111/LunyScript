@@ -2,7 +2,7 @@ using LunyScript;
 
 public class Object_Enable_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var blinkName = "will blink";
 		var alsoBlinkName = "will also blink";

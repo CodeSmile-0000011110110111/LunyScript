@@ -2,7 +2,7 @@ using LunyScript;
 
 public class Object_Create_SmokeTest : Script
 {
-	public override void Build(ScriptBuildContext context)
+	public override void Build()
 	{
 		var parentName = "empty";
 		On.Ready(Object.Create(parentName));

@@ -58,7 +58,7 @@ namespace LunyScript
 			runner.InvokeOnScriptInstantiated(buildContext, runtimeContext);
 
 			scriptInstance.Initialize(buildContext, runtimeContext);
-			scriptInstance.Build(buildContext);
+			scriptInstance.Build();
 			scriptInstance.Shutdown();
 
 			runner.InvokeOnScriptBuilt(runtimeContext);

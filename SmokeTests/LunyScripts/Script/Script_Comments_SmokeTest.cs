@@ -4,7 +4,7 @@ namespace LunyScript.SmokeTests.Blocks.Variables
 {
 	public class Script_Comments_SmokeTest : Script
 	{
-		public override void Build(ScriptBuildContext context) => Coroutine("comments")
+		public override void Build() => Coroutine("comments")
 			.Every(2)
 			.Seconds()
 			.WhenElapsed(
