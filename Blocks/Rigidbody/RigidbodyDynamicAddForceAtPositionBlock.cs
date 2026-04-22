@@ -14,7 +14,7 @@ namespace LunyScript.Blocks
 		// When _useLocalOffset is true, _offsetOrWorldPos is a local-space offset resolved at runtime via TransformPoint.
 		// When _useLocalOffset is false, _offsetOrWorldPos is a baked world position (from child ref resolved at build time).
 		private readonly Boolean _useLocalOffset;
-		private readonly LunyObjectRef _offsetChild;
+		private readonly LunyGameObjectRef _offsetChild;
 		private LunyVector3 _offsetOrWorldPos;
 
 		internal static RigidbodyDynamicAddForceAtPositionBlock CreateAxisWithLocalOffset(VariableBlock amount, LunyAxis axis,
@@ -25,15 +25,15 @@ namespace LunyScript.Blocks
 			LunyVector3 localOffset, LunyStackTrace trace) => new(null, default, force, true, forceMode, localOffset, null, true, trace);
 
 		internal static RigidbodyDynamicAddForceAtPositionBlock CreateAxisWithWorldPosition(VariableBlock amount, LunyAxis axis,
-			LunyForceMode forceMode, LunyObjectRef offsetChild, LunyStackTrace trace) => new(amount, axis, default, false, forceMode,
+			LunyForceMode forceMode, LunyGameObjectRef offsetChild, LunyStackTrace trace) => new(amount, axis, default, false, forceMode,
 			LunyVector3.Zero, offsetChild, false, trace);
 
 		internal static RigidbodyDynamicAddForceAtPositionBlock CreateVectorWithWorldPosition(LunyVector3 force, LunyForceMode forceMode,
-			LunyObjectRef offsetChild, LunyStackTrace trace) =>
+			LunyGameObjectRef offsetChild, LunyStackTrace trace) =>
 			new(null, default, force, true, forceMode, LunyVector3.Zero, offsetChild, false, trace);
 
 		private RigidbodyDynamicAddForceAtPositionBlock(VariableBlock amount, LunyAxis axis, LunyVector3 force, Boolean useForce,
-			LunyForceMode forceMode, LunyVector3 offsetOrWorldPos, LunyObjectRef offsetChild, Boolean useLocalOffset, LunyStackTrace trace)
+			LunyForceMode forceMode, LunyVector3 offsetOrWorldPos, LunyGameObjectRef offsetChild, Boolean useLocalOffset, LunyStackTrace trace)
 			: base(trace)
 		{
 			_amount = amount;

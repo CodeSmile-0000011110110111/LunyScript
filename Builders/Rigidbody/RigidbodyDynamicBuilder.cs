@@ -73,7 +73,7 @@ namespace LunyScript
 		public Boolean IgnoreMass;
 		public Boolean HasAtPositionOffset;
 		public LunyVector3 AtPositionOffset;
-		public LunyObjectRef AtPositionChildRef;
+		public LunyGameObjectRef AtPositionChildRef;
 		public LunyTransformSpace Space;
 	}
 }

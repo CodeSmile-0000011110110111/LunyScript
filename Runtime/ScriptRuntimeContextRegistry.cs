@@ -30,7 +30,7 @@ namespace LunyScript
 
 		~ScriptRuntimeContextRegistry() => LunyTraceLogger.LogInfoFinalized(this);
 
-		public ScriptRuntimeContext CreateContext(ScriptDefinition scriptDef, ILunyGameObject sceneObject)
+		public ScriptRuntimeContext CreateContext(ScriptDefinition scriptDef, LunyGameObject sceneObject)
 		{
 			var context = new ScriptRuntimeContext(scriptDef, sceneObject);
 			Register(context);

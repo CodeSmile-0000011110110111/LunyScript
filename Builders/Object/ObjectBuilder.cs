@@ -26,17 +26,17 @@ namespace LunyScript
 		}
 
 		[NeedsReview] [NeedsSmokeTest]
-		public ActionBlock Enable(LunyObjectRef target = null) => target == null
+		public ActionBlock Enable(LunyGameObjectRef target = null) => target == null
 			? ObjectEnableSelfBlock.Create(_trace.Add(nameof(Enable)))
 			: ObjectEnableTargetBlock.Create(target, _trace.Add(nameof(Enable)));
 
 		[NeedsReview] [NeedsSmokeTest]
-		public ActionBlock Disable(LunyObjectRef target = null) => target == null
+		public ActionBlock Disable(LunyGameObjectRef target = null) => target == null
 			? ObjectDisableSelfBlock.Create(_trace.Add(nameof(Disable)))
 			: ObjectDisableTargetBlock.Create(target, _trace.Add(nameof(Disable)));
 
 		[NeedsReview] [NeedsSmokeTest]
-		public ActionBlock SetEnabled(LunyObjectRef target, VariableBlock enabled) =>
+		public ActionBlock SetEnabled(LunyGameObjectRef target, VariableBlock enabled) =>
 			ObjectSetEnabledBlock.Create(target, enabled, _trace.Add(nameof(SetEnabled)));
 
 		[NeedsReview] [NeedsSmokeTest]
@@ -49,7 +49,7 @@ namespace LunyScript
 		}
 
 		[NeedsReview] [NeedsSmokeTest]
-		public ActionBlock Destroy(LunyObjectRef target = null) => target == null
+		public ActionBlock Destroy(LunyGameObjectRef target = null) => target == null
 			? ObjectDestroySelfBlock.Create(_trace.Add(nameof(Destroy)))
 			: ObjectDestroyTargetBlock.Create(target, _trace.Add(nameof(Destroy)));
 	}
@@ -102,7 +102,7 @@ namespace LunyScript
 		public static implicit operator ActionBlock(ObjectCreateBuilder<T> builder) =>
 			Finish(builder.Options.Script, builder.Options.Token, builder.Options);
 
-		public ObjectCreateBuilder<T> Parent(LunyObjectRef parent) => new(Options with { Parent = parent });
+		public ObjectCreateBuilder<T> Parent(LunyGameObjectRef parent) => new(Options with { Parent = parent });
 		public ObjectCreateBuilder<T> Position(Double x, Double y, Double z) => new(Options with { LocalPosition = new LunyVector3(x, y, z) });
 		public ObjectCreateBuilder<T> Position(LunyVector3 localPosition) => new(Options with { LocalPosition = localPosition });
 
@@ -156,7 +156,7 @@ namespace LunyScript
 		public ObjectCreationMode CreateMode;
 		public LunyPrimitiveType PrimitiveType;
 		public String AssetName;
-		public LunyObjectRef Parent;
+		public LunyGameObjectRef Parent;
 		public String TemplateName;
 		public LunyVector3 LocalPosition;
 		public LunyQuaternion LocalRotation;

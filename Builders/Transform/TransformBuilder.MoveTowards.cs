@@ -12,7 +12,7 @@ namespace LunyScript
 		/// Chain <c>.Speed(n)</c>, <c>.Responsiveness(n)</c>, <c>.DeadZone(n)</c>, <c>.LockX/Y/Z()</c>
 		/// then call <c>.Do()</c> (linear), <c>.Lerp()</c> or <c>.Slerp()</c>.
 		/// </summary>
-		public TransformMoveTowardsBuilder<TransformBuilderReady> MoveTowards(LunyObjectRef target)
+		public TransformMoveTowardsBuilder<TransformBuilderReady> MoveTowards(LunyGameObjectRef target)
 		{
 			var options = new TransformMoveTowardsOptions
 			{
@@ -110,7 +110,7 @@ namespace LunyScript
 		public BuilderToken Token;
 		public LunyStackTrace Trace;
 
-		public LunyObjectRef Target;
+		public LunyGameObjectRef Target;
 		public VariableBlock Speed;
 		public VariableBlock DeadZone;
 		public LunyVector3 LockAxis;

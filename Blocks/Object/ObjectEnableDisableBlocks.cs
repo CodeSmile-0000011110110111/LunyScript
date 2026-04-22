@@ -28,10 +28,10 @@ namespace LunyScript.Blocks
 
 	internal sealed class ObjectEnableTargetBlock : ActionBlock
 	{
-		private readonly LunyObjectRef _target;
-		public static ActionBlock Create(LunyObjectRef target, LunyStackTrace trace) => new ObjectEnableTargetBlock(target, trace);
+		private readonly LunyGameObjectRef _target;
+		public static ActionBlock Create(LunyGameObjectRef target, LunyStackTrace trace) => new ObjectEnableTargetBlock(target, trace);
 
-		private ObjectEnableTargetBlock(LunyObjectRef target, LunyStackTrace trace)
+		private ObjectEnableTargetBlock(LunyGameObjectRef target, LunyStackTrace trace)
 			: base(trace) => _target = target;
 
 		protected internal override void Execute(IScriptRuntimeContext context)
@@ -48,10 +48,10 @@ namespace LunyScript.Blocks
 
 	internal sealed class ObjectDisableTargetBlock : ActionBlock
 	{
-		private readonly LunyObjectRef _target;
-		public static ActionBlock Create(LunyObjectRef target, LunyStackTrace trace) => new ObjectDisableTargetBlock(target, trace);
+		private readonly LunyGameObjectRef _target;
+		public static ActionBlock Create(LunyGameObjectRef target, LunyStackTrace trace) => new ObjectDisableTargetBlock(target, trace);
 
-		private ObjectDisableTargetBlock(LunyObjectRef target, LunyStackTrace trace)
+		private ObjectDisableTargetBlock(LunyGameObjectRef target, LunyStackTrace trace)
 			: base(trace) => _target = target;
 
 		protected internal override void Execute(IScriptRuntimeContext context)
@@ -68,13 +68,13 @@ namespace LunyScript.Blocks
 
 	internal sealed class ObjectSetEnabledBlock : ActionBlock
 	{
-		private readonly LunyObjectRef _target;
+		private readonly LunyGameObjectRef _target;
 		private readonly VariableBlock _enabled;
 
-		public static ActionBlock Create(LunyObjectRef target, VariableBlock enabled, LunyStackTrace trace) =>
+		public static ActionBlock Create(LunyGameObjectRef target, VariableBlock enabled, LunyStackTrace trace) =>
 			new ObjectSetEnabledBlock(target, enabled, trace);
 
-		private ObjectSetEnabledBlock(LunyObjectRef target, VariableBlock enabled, LunyStackTrace trace)
+		private ObjectSetEnabledBlock(LunyGameObjectRef target, VariableBlock enabled, LunyStackTrace trace)
 			: base(trace)
 		{
 			_target = target;

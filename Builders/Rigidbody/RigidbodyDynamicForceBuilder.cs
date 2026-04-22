@@ -21,7 +21,7 @@ namespace LunyScript
 		/// Apply force at the world position of a child object.
 		/// The child must exist at build time — its world position is captured immediately and stored in the block.
 		/// </summary>
-		public static RigidbodyDynamicForceBuilder AtPosition(this RigidbodyDynamicForceBuilder b, LunyObjectRef childRef) =>
+		public static RigidbodyDynamicForceBuilder AtPosition(this RigidbodyDynamicForceBuilder b, LunyGameObjectRef childRef) =>
 			new(b.Options with { HasAtPositionOffset = false, AtPositionChildRef = childRef });
 
 		/// <summary> Apply force in world space instead of local space. </summary>

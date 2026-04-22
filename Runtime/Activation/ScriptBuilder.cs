@@ -13,7 +13,7 @@ namespace LunyScript
 	/// </summary>
 	internal static class ScriptBuilder
 	{
-		public static void BuildAndActivateLunyScripts(LunyScriptRunner runner, IEnumerable<ILunyGameObject> lunyObjects)
+		public static void BuildAndActivateLunyScripts(LunyScriptRunner runner, IEnumerable<LunyGameObject> lunyObjects)
 		{
 			var sw = Stopwatch.StartNew();
 
@@ -34,7 +34,7 @@ namespace LunyScript
 			LunyLogger.LogInfo($"Built {activatedCount} script(s) in {ms} ms", nameof(ScriptBuilder));
 		}
 
-		public static void BuildAndActivateLunyScript(LunyScriptRunner runner, ILunyGameObject lunyGameObject)
+		public static void BuildAndActivateLunyScript(LunyScriptRunner runner, LunyGameObject lunyGameObject)
 		{
 			//LunyLogger.LogInfo($"{lunyObject} Activating Script ...", nameof(ScriptBuilder));
 
@@ -80,7 +80,7 @@ namespace LunyScript
 		/// Processes the current scene, finding objects and binding them to scripts.
 		/// Creates run contexts for matching object-script pairs.
 		/// </summary>
-		private static IReadOnlyList<ScriptRuntimeContext> CreateRuntimeContexts(IEnumerable<ILunyGameObject> lunyObjects,
+		private static IReadOnlyList<ScriptRuntimeContext> CreateRuntimeContexts(IEnumerable<LunyGameObject> lunyObjects,
 			ScriptDefinitionRegistry scripts, ScriptRuntimeContextRegistry contexts)
 		{
 			var createdContexts = new List<ScriptRuntimeContext>();
@@ -98,7 +98,7 @@ namespace LunyScript
 		}
 
 		private static ScriptRuntimeContext TryCreateRuntimeContext(ScriptDefinitionRegistry scripts, ScriptRuntimeContextRegistry contexts,
-			ILunyGameObject lunyGameObject)
+			LunyGameObject lunyGameObject)
 		{
 			if (lunyGameObject == null || !lunyGameObject.IsValid)
 				return null;

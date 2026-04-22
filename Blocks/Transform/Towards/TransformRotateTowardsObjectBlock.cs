@@ -9,12 +9,12 @@ namespace LunyScript.Blocks
 		private readonly LunyVector3 _worldUp;
 		private readonly LunyInterpolation _interpolation;
 
-		public static TransformRotateTowardsObjectBlock Create(LunyObjectRef target, VariableBlock speed, VariableBlock deadZone,
+		public static TransformRotateTowardsObjectBlock Create(LunyGameObjectRef target, VariableBlock speed, VariableBlock deadZone,
 			LunyVector3 lockAxis = default, LunyInterpolation interpolation = LunyInterpolation.Towards,
 			LunyVector3 worldUp = default, LunyStackTrace trace = null) =>
 			new(target, speed, deadZone, lockAxis, interpolation, worldUp, trace);
 
-		private TransformRotateTowardsObjectBlock(LunyObjectRef target, VariableBlock speed, VariableBlock deadZone, LunyVector3 lockAxis,
+		private TransformRotateTowardsObjectBlock(LunyGameObjectRef target, VariableBlock speed, VariableBlock deadZone, LunyVector3 lockAxis,
 			LunyInterpolation interpolation, LunyVector3 worldUp, LunyStackTrace trace)
 			: base(target, speed, deadZone, lockAxis, trace)
 		{

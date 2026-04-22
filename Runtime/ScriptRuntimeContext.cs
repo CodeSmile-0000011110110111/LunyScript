@@ -13,7 +13,7 @@ namespace LunyScript
 	{
 		ScriptId ScriptId { get; }
 		Type ScriptType { get; }
-		ILunyGameObject LunyGameObject { get; }
+		LunyGameObject LunyGameObject { get; }
 		ITable GlobalVariables { get; }
 		ITable LocalVariables { get; }
 		/// <summary>
@@ -56,7 +56,7 @@ namespace LunyScript
 		/// <summary>
 		/// The engine object/node this script operates on.
 		/// </summary>
-		public ILunyGameObject LunyGameObject => _lunyGameObject;
+		public LunyGameObject LunyGameObject => _lunyGameObject;
 		/// <summary>
 		/// Global variables shared across all scripts.
 		/// </summary>
@@ -95,7 +95,7 @@ namespace LunyScript
 		internal static void ClearGlobalVariables() => s_GlobalVariables?.RemoveAll();
 		internal static ITable GetGlobalVariables() => s_GlobalVariables;
 
-		public ScriptRuntimeContext(IScriptDefinition definition, ILunyGameObject lunyGameObject)
+		public ScriptRuntimeContext(IScriptDefinition definition, LunyGameObject lunyGameObject)
 		{
 			_scriptDef = definition ?? throw new ArgumentNullException(nameof(definition));
 			_lunyGameObject = lunyGameObject as LunyGameObject ?? throw new ArgumentNullException(nameof(lunyGameObject));

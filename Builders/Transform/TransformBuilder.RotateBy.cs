@@ -83,6 +83,10 @@ namespace LunyScript
 		public static TransformRotateByBuilder<TransformBuilderReady> InWorldSpace<T>(this TransformRotateByBuilder<T> b)
 			where T : struct, ITransformBuilderReady => new(b.Options with { Space = LunyTransformSpace.World });
 
+		/// <summary> Specify the target of the operation. </summary>
+		public static TransformRotateByBuilder<TransformBuilderReady> Target<T>(this TransformRotateByBuilder<T> b, LunyGameObjectRef target)
+			where T : struct, ITransformBuilderReady => new(b.Options with { Target = target });
+
 		/// <summary> Set speed multiplier for rotation. </summary>
 		[NeedsSmokeTest]
 		public static TransformRotateByBuilder<TransformBuilderReady> Speed<T>(this TransformRotateByBuilder<T> b, VariableBlock speed)
@@ -157,9 +161,9 @@ namespace LunyScript
 		{
 			options.Script.MarkBuilderTokenFinished(options.Token);
 			if (options.UseEuler)
-				return TransformRotateByBlock.CreateEuler(options.EulerAngles, options.Speed, options.Space, options.Trace);
+				return TransformRotateByBlock.CreateEuler(options.EulerAngles, options.Speed, options.Space, options.Target, options.Trace);
 
-			return TransformRotateByBlock.Create(options.Amount, options.Axis, options.Speed, options.Space, options.MinAngle, options.MaxAngle,
+			return TransformRotateByBlock.Create(options.Amount, options.Axis, options.Speed, options.Space, options.Target, options.MinAngle, options.MaxAngle,
 				options.Trace);
 		}
 	}
@@ -170,6 +174,7 @@ namespace LunyScript
 		public BuilderToken Token;
 		public LunyStackTrace Trace;
 
+		public LunyGameObjectRef Target;
 		public LunyTransformSpace Space;
 		public VariableBlock Amount;
 		public LunyVector3 Axis;

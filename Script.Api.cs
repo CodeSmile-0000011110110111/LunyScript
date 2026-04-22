@@ -11,7 +11,7 @@ namespace LunyScript
 		/// <summary>
 		/// Reference to script's engine object.
 		/// </summary>
-		[MaybeNull] protected ILunyGameObject Self => _runtimeContext?.LunyGameObject;
+		[MaybeNull] protected LunyGameObject Self => _runtimeContext?.LunyGameObject;
 
 		[NotNull] public String Name => GetType().Name;
 

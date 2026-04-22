@@ -17,7 +17,7 @@ namespace LunyScript.Blocks
 	internal abstract class ObjectCreateBlock : ActionBlock
 	{
 		protected readonly String Name;
-		protected readonly LunyObjectRef Parent;
+		protected readonly LunyGameObjectRef Parent;
 		protected readonly LunyVector3? LocalPosition;
 		protected readonly LunyQuaternion? LocalRotation;
 		protected readonly LunyVector3? LocalScale;

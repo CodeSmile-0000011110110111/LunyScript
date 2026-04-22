@@ -17,10 +17,10 @@ namespace LunyScript.Blocks
 
 	internal sealed class ObjectDestroyTargetBlock : ActionBlock
 	{
-		private readonly LunyObjectRef _target;
-		public static ActionBlock Create(LunyObjectRef target, LunyStackTrace trace) => new ObjectDestroyTargetBlock(target, trace);
+		private readonly LunyGameObjectRef _target;
+		public static ActionBlock Create(LunyGameObjectRef target, LunyStackTrace trace) => new ObjectDestroyTargetBlock(target, trace);
 
-		private ObjectDestroyTargetBlock(LunyObjectRef target, LunyStackTrace trace)
+		private ObjectDestroyTargetBlock(LunyGameObjectRef target, LunyStackTrace trace)
 			: base(trace) => _target = target;
 
 		protected internal override void Execute(IScriptRuntimeContext context)

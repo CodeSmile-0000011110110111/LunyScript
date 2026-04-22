@@ -6,6 +6,7 @@ namespace LunyScript.Blocks
 {
 	public sealed class TransformRotateByBlock : ActionBlock
 	{
+		private readonly LunyGameObjectRef _target;
 		private readonly VariableBlock _deltaAngle;
 		private readonly VariableBlock<LunyVector3> _eulerAnglesPerSecond;
 		private readonly VariableBlock _speed;
@@ -18,14 +19,16 @@ namespace LunyScript.Blocks
 		private Double _previousAngle;
 
 		public static TransformRotateByBlock Create(VariableBlock amount, LunyVector3 axis, VariableBlock speed,
-			LunyTransformSpace space, Double minAngle = Double.NegativeInfinity, Double maxAngle = Double.PositiveInfinity,
-			LunyStackTrace trace = null) => new(amount, axis, speed, space, minAngle, maxAngle, trace);
+			LunyTransformSpace space, LunyGameObjectRef target, Double minAngle = Double.NegativeInfinity,
+			Double maxAngle = Double.PositiveInfinity,
+			LunyStackTrace trace = null) => new(amount, axis, speed, space, target, minAngle, maxAngle, trace);
 
 		public static TransformRotateByBlock CreateEuler(VariableBlock<LunyVector3> eulerAnglesPerSecond, VariableBlock speed,
-			LunyTransformSpace space, LunyStackTrace trace = null) => new(eulerAnglesPerSecond, speed, space, trace);
+			LunyTransformSpace space, LunyGameObjectRef target, LunyStackTrace trace = null) =>
+			new(eulerAnglesPerSecond, speed, space, target, trace);
 
 		private TransformRotateByBlock(VariableBlock deltaAngle, LunyVector3 axis, VariableBlock speed,
-			LunyTransformSpace space, Double minAngle, Double maxAngle, LunyStackTrace trace)
+			LunyTransformSpace space, LunyGameObjectRef target, Double minAngle, Double maxAngle, LunyStackTrace trace)
 			: base(trace)
 		{
 			_deltaAngle = deltaAngle;
@@ -35,10 +38,11 @@ namespace LunyScript.Blocks
 			_minAngle = minAngle;
 			_maxAngle = maxAngle;
 			_useEuler = false;
+			_target = target;
 		}
 
 		private TransformRotateByBlock(VariableBlock<LunyVector3> eulerAnglesPerSecond, VariableBlock speed,
-			LunyTransformSpace space, LunyStackTrace trace)
+			LunyTransformSpace space, LunyGameObjectRef target, LunyStackTrace trace)
 			: base(trace)
 		{
 			_eulerAnglesPerSecond = eulerAnglesPerSecond;
@@ -47,11 +51,14 @@ namespace LunyScript.Blocks
 			_minAngle = Double.NegativeInfinity;
 			_maxAngle = Double.PositiveInfinity;
 			_useEuler = true;
+			_target = target;
 		}
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var transform = context.LunyGameObject.Transform;
+			var transform = _target != null ? _target.Value?.Transform : context.LunyGameObject.Transform;
+			if (transform == null)
+				return;
 
 			if (_useEuler)
 			{

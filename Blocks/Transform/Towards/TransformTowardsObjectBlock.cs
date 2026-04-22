@@ -5,14 +5,14 @@ using System;
 namespace LunyScript.Blocks
 {
 	/// <summary>
-	/// Abstract base for Towards blocks whose target is an <see cref="ILunyGameObject"/> in the scene
+	/// Abstract base for Towards blocks whose target is an <see cref="LunyGameObject"/> in the scene
 	/// (Move and Rotate towards).
 	/// </summary>
 	public abstract class TransformTowardsObjectBlock : TransformTowardsBlock
 	{
-		private readonly LunyObjectRef Target;
+		private readonly LunyGameObjectRef Target;
 
-		protected TransformTowardsObjectBlock(LunyObjectRef target, VariableBlock speed, VariableBlock deadZone, LunyVector3 lockAxis,
+		protected TransformTowardsObjectBlock(LunyGameObjectRef target, VariableBlock speed, VariableBlock deadZone, LunyVector3 lockAxis,
 			LunyStackTrace trace)
 			: base(speed, deadZone, lockAxis, trace) => Target = target;
 

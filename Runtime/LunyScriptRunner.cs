@@ -179,7 +179,7 @@ namespace LunyScript
 			_isLoadingScene = false;
 		}
 
-		public void OnObjectRegistered(ILunyGameObject lunyGameObject)
+		public void OnObjectRegistered(LunyGameObject lunyGameObject)
 		{
 			//LunyLogger.LogInfo($"{nameof(OnObjectRegistered)}: {lunyObject}", this);
 
@@ -195,7 +195,7 @@ namespace LunyScript
 				ScriptBuilder.BuildAndActivateLunyScript(this, lunyGameObject);
 		}
 
-		public void OnObjectUnregistered(ILunyGameObject lunyGameObject)
+		public void OnObjectUnregistered(LunyGameObject lunyGameObject)
 		{
 			// Cleanup context for engine-side auto-destroyed objects (scene load)
 			var context = _contexts.GetByNativeObjectID(lunyGameObject.NativeObjectId);
