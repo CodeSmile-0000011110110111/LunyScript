@@ -15,7 +15,7 @@ namespace LunyScript
 
 	internal interface IScriptEngineInternal
 	{
-		event Action<ScriptRuntimeContext> OnScriptInstantiated;
+		event Action<ScriptBuildContext, ScriptRuntimeContext> OnScriptInstantiated;
 		event Action<ScriptRuntimeContext> OnScriptBuilt;
 	}
 
@@ -63,18 +63,19 @@ namespace LunyScript
 		public IScriptRuntimeContext GetScriptContext(LunyNativeObjectId lunyNativeObjectID) =>
 			_runner.Contexts.GetByNativeObjectID(lunyNativeObjectID);
 
-		event Action<ScriptRuntimeContext> IScriptEngineInternal.OnScriptInstantiated
+		event Action<ScriptBuildContext, ScriptRuntimeContext> IScriptEngineInternal.OnScriptInstantiated
 		{
 			add => OnScriptInstantiated += value;
 			remove => OnScriptInstantiated -= value;
 		}
+
 		event Action<ScriptRuntimeContext> IScriptEngineInternal.OnScriptBuilt
 		{
 			add => OnScriptBuilt += value;
 			remove => OnScriptBuilt -= value;
 		}
 
-		private event Action<ScriptRuntimeContext> OnScriptInstantiated;
+		private event Action<ScriptBuildContext, ScriptRuntimeContext> OnScriptInstantiated;
 		private event Action<ScriptRuntimeContext> OnScriptBuilt;
 
 		~ScriptEngine() => LunyTraceLogger.LogInfoFinalized(this);
@@ -88,7 +89,9 @@ namespace LunyScript
 			LunyTraceLogger.LogInfoShutdownComplete(this);
 		}
 
-		internal void InvokeOnScriptInstantiated(ScriptRuntimeContext runtimeContext) => OnScriptInstantiated?.Invoke(runtimeContext);
+		internal void InvokeOnScriptInstantiated(ScriptBuildContext buildContext, ScriptRuntimeContext runtimeContext) =>
+			OnScriptInstantiated?.Invoke(buildContext, runtimeContext);
+
 		internal void InvokeOnScriptBuilt(ScriptRuntimeContext runtimeContext) => OnScriptBuilt?.Invoke(runtimeContext);
 	}
 }

@@ -1,4 +1,4 @@
-﻿using Luny;
+using Luny;
 using Luny.Engine.Bridge;
 using LunyScript.Blocks;
 using System;
@@ -28,6 +28,10 @@ namespace LunyScript
 		/// Instance variables (unique per script/object)
 		/// </summary>
 		[NotNull] public ScriptVariables Var => _instanceVariables;
+		/// <summary>
+		/// Engine references assigned in the Inspector. Only available during <see cref="Build"/>.
+		/// </summary>
+		[MaybeNull] public IEngineReferences Ref => _buildContext?.EngineReferences;
 
 		public ComponentApi Component => new(this, ScriptTrace.TryCreateStackTrace(nameof(Component)));
 		public DebugApi Debug => new(this, ScriptTrace.TryCreateStackTrace(nameof(Debug)));

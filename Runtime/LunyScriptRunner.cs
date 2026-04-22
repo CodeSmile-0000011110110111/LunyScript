@@ -239,8 +239,8 @@ namespace LunyScript
 
 		~LunyScriptRunner() => LunyTraceLogger.LogInfoFinalized(this);
 
-		internal void InvokeOnScriptInstantiated(ScriptRuntimeContext runtimeContext) =>
-			_scriptEngine.InvokeOnScriptInstantiated(runtimeContext);
+		internal void InvokeOnScriptInstantiated(ScriptBuildContext buildContext, ScriptRuntimeContext runtimeContext) =>
+			_scriptEngine.InvokeOnScriptInstantiated(buildContext, runtimeContext);
 
 		internal void InvokeOnScriptBuilt(ScriptRuntimeContext runtimeContext) => _scriptEngine.InvokeOnScriptBuilt(runtimeContext);
 	}

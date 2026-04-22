@@ -1,4 +1,4 @@
-using Luny;
+﻿using Luny;
 using System;
 using System.Collections.Generic;
 using StackFrame = System.Diagnostics.StackFrame;
@@ -28,6 +28,7 @@ namespace LunyScript
 	[Serializable]
 	public abstract partial class Script
 	{
+		private ScriptBuildContext _buildContext;
 		private IScriptRuntimeContext _runtimeContext;
 		private List<BuilderToken> _pendingBuilders;
 		private HashSet<BuilderToken> _finishedBuilders;
@@ -39,8 +40,9 @@ namespace LunyScript
 
 		public int _scriptDataTest;
 
-		internal void Initialize(IScriptRuntimeContext runtimeContext)
+		internal void Initialize(ScriptBuildContext buildContext, IScriptRuntimeContext runtimeContext)
 		{
+			_buildContext = buildContext ?? throw new ArgumentNullException(nameof(buildContext));
 			_runtimeContext = runtimeContext ?? throw new ArgumentNullException(nameof(runtimeContext));
 			_globalVariables = new ScriptVariables(_runtimeContext.GlobalVariables);
 			_instanceVariables = new ScriptVariables(_runtimeContext.LocalVariables);

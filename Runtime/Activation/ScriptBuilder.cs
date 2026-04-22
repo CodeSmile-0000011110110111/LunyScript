@@ -55,9 +55,9 @@ namespace LunyScript
 			// Create script instance, initialize with context, and call Build()
 			var scriptInstance = (Script)Activator.CreateInstance(runtimeContext.ScriptType);
 
-			runner.InvokeOnScriptInstantiated(runtimeContext);
+			runner.InvokeOnScriptInstantiated(buildContext, runtimeContext);
 
-			scriptInstance.Initialize(runtimeContext);
+			scriptInstance.Initialize(buildContext, runtimeContext);
 			scriptInstance.Build(buildContext);
 			scriptInstance.Shutdown();
 
