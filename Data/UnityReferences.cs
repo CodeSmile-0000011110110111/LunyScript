@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Luny;
+using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -34,20 +35,24 @@ namespace LunyScript
 				{
 					_didAcquirePlaceholder = true;
 					_placeholder = CreatePlaceholder();
+					LunyLogger.LogWarning($"Using {typeof(T).Name} placeholder: {_placeholder}", this);
 				}
 
 				return _placeholder;
 			}
 		}
-
 		public T[] Array { get => _array; set => _array = value; }
 
 		public T FirstOrNull => this[0];
 		public Int32 Length => _array?.Length ?? 0;
 
+		public static implicit operator T[](UnityReferences<T> refs) => refs.Array;
+
 		protected abstract T CreatePlaceholder();
 
 		private Boolean IsValidIndex(Int32 index) => _array != null && index >= 0 && index < _array.Length;
+
+		public override String ToString() => $"{GetType().Name}[{Length}]";
 	}
 
 	[Serializable] public sealed class GameObjectArray : UnityReferences<GameObject>

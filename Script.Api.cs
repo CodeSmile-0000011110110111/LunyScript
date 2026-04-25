@@ -47,34 +47,6 @@ namespace LunyScript
 		public TransformBuilder Transform => new(this, ScriptTrace.TryCreateStackTrace(nameof(Transform)));
 		public WhenGlobalEventBuilder When => new(this, ScriptTrace.TryCreateStackTrace(nameof(When)));
 
-		public T GetData<T>() where T : LunyScriptData
-		{
-			var go = _runtimeContext.LunyGameObject.NativeObject as GameObject;
-			var data = go.GetComponent<T>();
-			return data;
-		}
-
-		public T GetData<T>(int index) where T : LunyScriptData
-		{
-			var go = _runtimeContext.LunyGameObject.NativeObject as GameObject;
-			var data = go.GetComponents<T>();
-			return data != null && index >= 0 && index < data.Length ? data[index] : null;
-		}
-
-		public ScriptMaterials GetMaterials()
-		{
-			var go = _runtimeContext.LunyGameObject.NativeObject as GameObject;
-			var data = go.GetComponent<ScriptMaterials>();
-			return data;
-		}
-
-		public ScriptMaterials GetMaterials(int index)
-		{
-			var go = _runtimeContext.LunyGameObject.NativeObject as GameObject;
-			var data = go.GetComponents<ScriptMaterials>();
-			return data != null && index >= 0 && index < data.Length ? data[index] : null;
-		}
-
 		/// <summary>
 		/// Creates a named coroutine.
 		/// Usage: Coroutine("name").Duration(3).Seconds().OnUpdate(blocks).Elapsed(blocks);

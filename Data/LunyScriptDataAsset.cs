@@ -1,6 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace LunyScript
 {
-	public abstract class LunyScriptDataAsset : ScriptableObject {}
+	public abstract class LunyScriptDataAsset : ScriptableObject
+	{
+		[SerializeField] private String _key;
+
+		public String Key { get => _key; set => _key = value; }
+	}
 }
