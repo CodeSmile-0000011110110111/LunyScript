@@ -12,10 +12,15 @@ namespace LunyScript
 		/// </summary>
 		public ScriptRuntimeOptions Options;
 
+		private IEngineReferences _engineReferences;
 		/// <summary>
 		/// Engine references assigned in the Inspector, accessible via <see cref="Script.Ref"/>.
 		/// </summary>
-		public IEngineReferences EngineReferences { get; internal set; }
+		public IEngineReferences EngineReferences
+		{
+			get => _engineReferences ??= new EngineReferences(null);
+			internal set => _engineReferences = value;
+		}
 	}
 
 	/// <summary>

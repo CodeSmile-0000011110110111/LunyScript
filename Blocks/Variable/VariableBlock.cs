@@ -138,17 +138,17 @@ namespace LunyScript.Blocks
 
 		public override Int32 GetHashCode() => HashCode.Combine(Variable != null ? Variable.GetHashCode() : 0, Value);
 
+		private ActionBlock Set(Variable value, LunyStackTrace trace) => VariableSetValueBlock.Create(VarHandle,
+			LiteralVariableBlock.Create(value, trace), trace);
+
+		private ActionBlock Set(VariableBlock value, LunyStackTrace trace) => VariableSetValueBlock.Create(VarHandle, value, trace);
+
 		public ActionBlock Set(Variable value) => VariableSetValueBlock.Create(VarHandle,
 			LiteralVariableBlock.Create(value, ScriptTrace.TryCreateStackTrace(nameof(Set))),
 			ScriptTrace.TryCreateStackTrace(nameof(Set)));
 
 		public ActionBlock Set(VariableBlock value) =>
 			VariableSetValueBlock.Create(VarHandle, value, ScriptTrace.TryCreateStackTrace(nameof(Set)));
-
-		private ActionBlock Set(Variable value, LunyStackTrace trace) => VariableSetValueBlock.Create(VarHandle,
-			LiteralVariableBlock.Create(value, trace), trace);
-
-		private ActionBlock Set(VariableBlock value, LunyStackTrace trace) => VariableSetValueBlock.Create(VarHandle, value, trace);
 
 		public ActionBlock Add(Variable value) => Set(this + value, ScriptTrace.TryCreateStackTrace(nameof(Add)));
 		public ActionBlock Add(VariableBlock value) => Set(this + value, ScriptTrace.TryCreateStackTrace(nameof(Add)));
