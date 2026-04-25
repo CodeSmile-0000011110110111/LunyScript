@@ -3,7 +3,7 @@
 namespace LunyScript
 {
 	[CreateAssetMenu(fileName = nameof(LunyScriptMaterialsAsset), menuName = nameof(LunyScript) + "/" + nameof(LunyScriptMaterialsAsset))]
-	public class LunyScriptMaterialsAsset : LunyScriptDataAsset
+	public class LunyScriptMaterialsAsset : LunyScriptDataSO
 	{
 		[SerializeField] private MaterialArray _materials = new();
 

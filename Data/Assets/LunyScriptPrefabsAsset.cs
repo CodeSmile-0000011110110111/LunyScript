@@ -3,7 +3,7 @@
 namespace LunyScript
 {
 	[CreateAssetMenu(fileName = nameof(LunyScriptPrefabsAsset), menuName = nameof(LunyScript) + "/" + nameof(LunyScriptPrefabsAsset))]
-	public class LunyScriptPrefabsAsset : LunyScriptDataAsset
+	public class LunyScriptPrefabsAsset : LunyScriptDataSO
 	{
 		[SerializeField] private GameObjectArray _prefabs = new();
 

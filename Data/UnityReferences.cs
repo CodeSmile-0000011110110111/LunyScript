@@ -52,7 +52,7 @@ namespace LunyScript
 
 		private Boolean IsValidIndex(Int32 index) => _array != null && index >= 0 && index < _array.Length;
 
-		public override String ToString() => $"{GetType().Name}[{Length}]";
+		public override String ToString() => GetType().Name;
 	}
 
 	[Serializable] public sealed class GameObjectArray : UnityReferences<GameObject>

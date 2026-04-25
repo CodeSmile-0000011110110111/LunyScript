@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LunyScript
 {
-	public abstract class LunyScriptDataAsset : ScriptableObject
+	public abstract class LunyScriptDataBehaviour : MonoBehaviour
 	{
 		[SerializeField] private String _key;
 

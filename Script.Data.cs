@@ -8,7 +8,7 @@ namespace LunyScript
 	{
 		// TODO: FindChildren
 
-		public T GetData<T>() where T : LunyScriptData
+		public T GetData<T>() where T : LunyScriptDataBehaviour
 		{
 			var go = _runtimeContext.LunyGameObject.NativeObject as GameObject;
 			var data = go.GetComponent<T>();
@@ -18,7 +18,7 @@ namespace LunyScript
 			return data;
 		}
 
-		public T GetData<T>(String key) where T : LunyScriptData
+		public T GetData<T>(String key) where T : LunyScriptDataBehaviour
 		{
 			var go = _runtimeContext.LunyGameObject.NativeObject as GameObject;
 			var data = go.GetComponents<T>();

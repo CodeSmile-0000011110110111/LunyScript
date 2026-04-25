@@ -4,7 +4,7 @@ using UnityEngine;
 namespace LunyScript
 {
 	[CanEditMultipleObjects]
-	public class LunyScriptMaterials : LunyScriptData
+	public class LunyScriptMaterials : LunyScriptDataBehaviour
 	{
 		[SerializeField] private LunyScriptMaterialsAsset _materialsAsset;
 		[SerializeField] private MaterialArray _materials;

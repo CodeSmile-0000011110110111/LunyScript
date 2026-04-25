@@ -4,7 +4,7 @@ using UnityEngine;
 namespace LunyScript
 {
 	[CanEditMultipleObjects]
-	public class LunyScriptSceneObjects : LunyScriptData
+	public class LunyScriptSceneObjects : LunyScriptDataBehaviour
 	{
 		[SerializeField] private GameObjectArray _gameObjects = new();
 

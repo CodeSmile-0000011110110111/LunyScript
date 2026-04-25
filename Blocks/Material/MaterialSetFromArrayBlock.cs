@@ -27,11 +27,7 @@ namespace LunyScript.Blocks.Material
 
 		protected internal override void Execute(IScriptRuntimeContext context)
 		{
-			var index = Mathf.Abs(_materialIndex.Variable.AsInt32());
-			if (index >= _materials.Length)
-				index %= _materials.Length;
-
-			var material = _materials[index];
+			var material = TryGetMaterial();
 			if (material == null)
 				return;
 
@@ -50,6 +46,15 @@ namespace LunyScript.Blocks.Material
 			}
 		}
 
+		private UnityEngine.Material TryGetMaterial()
+		{
+			var index = Mathf.Abs(_materialIndex.Variable.AsInt32());
+			if (index >= _materials.Length)
+				index %= _materials.Length;
+
+			return _materials[index];
+		}
+
 		private void AssignRendererMaterial(GameObject go, UnityEngine.Material material)
 		{
 			var renderers = go.GetComponents<Renderer>();
@@ -62,6 +67,11 @@ namespace LunyScript.Blocks.Material
 			}
 		}
 
-		public override String ToString() => $"{_materials}[{_materialIndex}], targets:{_targets}, useShared:{_useSharedMaterial}";
+		public override String ToString()
+		{
+			var unique = _useSharedMaterial ? "" : "unique: ";
+			var targets = _targets != null ? $", targets:{_targets.Length}" : "";
+			return $"{unique}{TryGetMaterial()?.name}{targets}";
+		}
 	}
 }
