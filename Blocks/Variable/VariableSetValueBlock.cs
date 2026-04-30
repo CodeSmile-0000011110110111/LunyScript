@@ -20,11 +20,7 @@ namespace LunyScript.Blocks
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		protected internal override void Execute(IScriptRuntimeContext context)
-		{
-			var value = _variable.Variable;
-			_handle.Variable = value;
-		}
+		protected internal override void Execute(IScriptRuntimeContext context) => _handle.Variable = _variable.Variable;
 
 		public override String ToString()
 		{
