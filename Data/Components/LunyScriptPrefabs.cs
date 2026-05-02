@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace LunyScript
 {
-	[CanEditMultipleObjects]
 	public class LunyScriptPrefabs : LunyScriptDataBehaviour
 	{
 		[SerializeField] private GameObjectArray _prefabs = new();

@@ -1,9 +1,7 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace LunyScript
 {
-	[CanEditMultipleObjects]
 	public class LunyScriptMaterials : LunyScriptDataBehaviour
 	{
 		[SerializeField] private LunyScriptMaterialsAsset _materialsAsset;
@@ -21,7 +19,6 @@ namespace LunyScript
 					_materials = value;
 			}
 		}
-
 
 		public static implicit operator Material[](LunyScriptMaterials data) => data.Materials;
 		public static implicit operator MaterialArray(LunyScriptMaterials data) => data.Materials;

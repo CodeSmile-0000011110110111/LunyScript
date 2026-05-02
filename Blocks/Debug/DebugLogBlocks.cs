@@ -55,9 +55,9 @@ namespace LunyScript.Blocks
 #endif
 		}
 
+#if DEBUG || LUNYSCRIPT_DEBUG
 		public override String ToString() => _variableBlock is not null ? $"{_variableBlock}={_variableBlock.Variable}" : $"\"{_message}\"";
 
-#if DEBUG || LUNYSCRIPT_DEBUG
 		protected String _message;
 		protected VariableBlock _variableBlock;
 		private LogLevel _logLevel;

@@ -1,9 +1,7 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace LunyScript
 {
-	[CanEditMultipleObjects]
 	public class LunyScriptScriptableObjects : LunyScriptDataBehaviour
 	{
 		[SerializeField] private ScriptableObjectArray _assets = new();
