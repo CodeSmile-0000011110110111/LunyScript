@@ -26,9 +26,9 @@ namespace LunyScript
 		[NotNull] private ScriptInputEventHandler _inputEventHandler;
 
 		private ILunyTimeService _engineTime;
-		private Table.VarHandle gvar_Time_HeartbeatCount;
-		private Table.VarHandle gvar_Time_FrameCount;
-		private Table.VarHandle gvar_Time_ElapsedSeconds;
+		// private Table.VarHandle gvar_Time_HeartbeatCount;
+		// private Table.VarHandle gvar_Time_FrameCount;
+		// private Table.VarHandle gvar_Time_ElapsedSeconds;
 
 		private Boolean _isLoadingScene;
 
@@ -114,9 +114,9 @@ namespace LunyScript
 				LunyTraceLogger.LogInfoStartingUp(this);
 
 				var gvars = ScriptRuntimeContext.GetGlobalVariables();
-				gvar_Time_HeartbeatCount = gvars.GetHandle("Time.HeartbeatCount");
-				gvar_Time_FrameCount = gvars.GetHandle("Time.FrameCount");
-				gvar_Time_ElapsedSeconds = gvars.GetHandle("Time.ElapsedSeconds");
+				// gvar_Time_HeartbeatCount = gvars.GetHandle("Time.HeartbeatCount");
+				// gvar_Time_FrameCount = gvars.GetHandle("Time.FrameCount");
+				// gvar_Time_ElapsedSeconds = gvars.GetHandle("Time.ElapsedSeconds");
 			}
 			catch (Exception)
 			{
@@ -214,8 +214,8 @@ namespace LunyScript
 
 		public void OnEngineHeartbeat()
 		{
-			gvar_Time_ElapsedSeconds.Variable = _engineTime.ElapsedSeconds;
-			gvar_Time_HeartbeatCount.Variable = _engineTime.HeartbeatCount;
+			// gvar_Time_ElapsedSeconds.Variable = _engineTime.ElapsedSeconds;
+			// gvar_Time_HeartbeatCount.Variable = _engineTime.HeartbeatCount;
 
 			foreach (var context in _contexts.AllContexts)
 				_objectEventHandler.OnHeartbeat(context);
@@ -223,8 +223,8 @@ namespace LunyScript
 
 		public void OnEngineFrameUpdate()
 		{
-			gvar_Time_ElapsedSeconds.Variable = _engineTime.ElapsedSeconds;
-			gvar_Time_FrameCount.Variable = _engineTime.FrameCount;
+			// gvar_Time_ElapsedSeconds.Variable = _engineTime.ElapsedSeconds;
+			// gvar_Time_FrameCount.Variable = _engineTime.FrameCount;
 
 			foreach (var context in _contexts.AllContexts)
 				_objectEventHandler.OnFrameUpdate(context);
